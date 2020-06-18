@@ -1,0 +1,468 @@
+{% extends 'base.html' %}
+
+<title>
+  {% block title %}Gastronaut{% endblock %}
+</title>
+
+<div>
+  {% block head %}
+  <link rel="stylesheet" href="../static/css/index.css" />
+  <script src="../static/js/three.r95.min.js"></script>
+  <script src="../static/js/vanta.globe.min.js"></script>
+  <script defer src="../static/js/geolocate.js"></script>
+  <script defer src="../static/js/index.js"></script>
+  {% endblock %}
+</div>
+
+<main>
+  {% block main %}
+  <div class="hero-animation container-fluid">
+    <div
+      class="row justify-content-around align-items-center"
+      style="height: 100%;"
+    >
+      <div class="col-5 text-center" style="font-size: 5px;">
+        <h1 class="display-1-k txt-orange brand-outline">Gastronaut</h1>
+        <h2 class="display-2-k lead-k">Explore the world of food.</h2>
+        <a href="#main-interface" class="btn btn-lg btn-outline-success"
+          >Explore</a
+        >
+      </div>
+      <div class="col-3"></div>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="row" id="main-interface">
+      <div
+        class="col-10 col-sm-8 col-md-7 col-lg-5 col-xl-4 bg-secondary control-panel"
+      >
+        <div class="row">
+          <div class="col-6 col-lg-5 py-3 main-form" id="scrl1">
+            <form action="#" id="main-form">
+              <label class="sr-only" for="location">Location</label>
+              <div class="input-group mb-2 mr-sm-2">
+                <div class="input-group-prepend">
+                  <div
+                    class="input-group-text"
+                    id="detect-location"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title="Detect Location"
+                  >
+                    <i
+                      class="fas fa-street-view"
+                      id="detect-location-glyph"
+                    ></i>
+                  </div>
+                </div>
+                <input
+                  type="text"
+                  class="form-control form-control-sm"
+                  id="location"
+                  name="location"
+                  placeholder="Location"
+                />
+              </div>
+              <label class="sr-only" for="search-term">Search Term</label>
+              <div class="input-group mb-2 mr-sm-2">
+                <input
+                  type="text"
+                  class="form-control form-control-sm"
+                  id="search-term"
+                  name="term"
+                  placeholder="Keywords"
+                />
+                <div
+                  class="input-group-append"
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title="Clear Search Term"
+                >
+                  <div class="input-group-text" id="clear-term">
+                    <i class="fas fa-recycle" id="clear-term-glyph"></i>
+                  </div>
+                </div>
+              </div>
+              <a
+                data-toggle="collapse"
+                href="#timing-group"
+                role="button"
+                aria-expanded="true"
+                aria-controls="timing-group"
+              >
+                <h5 class="museo">Timing</h5></a
+              >
+              <div class="collapse show" id="timing-group">
+                <div class="form-check">
+                  <input
+                    class="onChange form-check-input"
+                    type="checkbox"
+                    id="open-now"
+                    name="open_now"
+                    value="true"
+                  />
+                  <label class="form-check-label" for="open-now">
+                    Open Now
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="onChange form-check-input"
+                    type="checkbox"
+                    id="open-at"
+                    value="true"
+                  />
+                  <label class="form-check-label" for="open-at">
+                    Open At
+                  </label>
+                </div>
+                <div class="input-group mb-2 mr-sm-2">
+                  <input
+                    type="datetime-local"
+                    class="form-control form-control-sm"
+                    id="open-at-datetime"
+                    name="open_at"
+                    disabled
+                  />
+                </div>
+              </div>
+              <a
+                data-toggle="collapse"
+                href="#interface-group"
+                role="button"
+                aria-expanded="true"
+                aria-controls="interface-group"
+              >
+                <h5 class="museo">Interface</h5></a
+              >
+              <div class="collapse show" id="interface-group">
+                <div class="form-check">
+                  <input
+                    class="onChange form-check-input interface"
+                    type="checkbox"
+                    value="delivery"
+                    id="delivery"
+                    checked
+                  />
+                  <label class="form-check-label" for="delivery">
+                    Delivery
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="onChange form-check-input interface"
+                    type="checkbox"
+                    value="pickup"
+                    id="pickup"
+                    checked
+                  />
+                  <label class="form-check-label" for="pickup">
+                    Pickup
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="onChange form-check-input interface"
+                    type="checkbox"
+                    value="reservations"
+                    id="reservations"
+                    checked
+                  />
+                  <label class="form-check-label" for="reservations">
+                    Reservations
+                  </label>
+                </div>
+              </div>
+              <a
+                data-toggle="collapse"
+                href="#price-group"
+                role="button"
+                aria-expanded="true"
+                aria-controls="price-group"
+              >
+                <h5 class="museo">Price</h5></a
+              >
+              <div class="collapse show" id="price-group">
+                <div class="form-check">
+                  <input
+                    class="onChange form-check-input"
+                    type="checkbox"
+                    value="1"
+                    id="price-1"
+                    name="price"
+                    checked
+                  />
+                  <label class="form-check-label" for="price-1">
+                    $
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="onChange form-check-input"
+                    type="checkbox"
+                    value="2"
+                    id="price-2"
+                    name="price"
+                    checked
+                  />
+                  <label class="form-check-label" for="price-2">
+                    $$
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="onChange form-check-input"
+                    type="checkbox"
+                    value="3"
+                    id="price-3"
+                    name="price"
+                    checked
+                  />
+                  <label class="form-check-label" for="price-3">
+                    $$$
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="onChange form-check-input"
+                    type="checkbox"
+                    value="4"
+                    id="price-4"
+                    name="price"
+                    checked
+                  />
+                  <label class="form-check-label" for="price-4">
+                    $$$$
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="onChange form-check-input"
+                    type="checkbox"
+                    value="5"
+                    id="price-5"
+                    name="price"
+                    checked
+                  />
+                  <label class="form-check-label" for="price-5">
+                    $$$$$
+                  </label>
+                </div>
+              </div>
+              <a
+                data-toggle="collapse"
+                href="#sort-by-group"
+                role="button"
+                aria-expanded="true"
+                aria-controls="sort-by-group"
+              >
+                <h5 class="museo">Sort By</h5></a
+              >
+              <div class="collapse show" id="sort-by-group">
+                <div class="form-check">
+                  <input
+                    class="onChange form-check-input"
+                    type="radio"
+                    id="best-match"
+                    name="sort_by"
+                    value="best_match"
+                    checked
+                  />
+                  <label class="form-check-label" for="best-match">
+                    Best Match
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="onChange form-check-input"
+                    type="radio"
+                    id="rating"
+                    name="sort_by"
+                    value="rating"
+                  />
+                  <label class="form-check-label" for="rating">
+                    Rating
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="onChange form-check-input"
+                    type="radio"
+                    id="review-count"
+                    name="sort_by"
+                    value="review_count"
+                  />
+                  <label class="form-check-label" for="review-count">
+                    Review Count
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="onChange form-check-input"
+                    type="radio"
+                    id="distance"
+                    name="sort_by"
+                    value="distance"
+                  />
+                  <label class="form-check-label" for="distance">
+                    Distance
+                  </label>
+                </div>
+              </div>
+              <a
+                data-toggle="collapse"
+                href="#attributes"
+                role="button"
+                aria-expanded="false"
+                aria-controls="collapseExample"
+              >
+                <h5 class="museo">Attributes</h5></a
+              >
+              <div class="collapse" id="attributes">
+                <div class="form-check">
+                  <input
+                    class="onChange form-check-input"
+                    type="checkbox"
+                    id="hot-new"
+                    name="hot-new"
+                    value="hot_and_new"
+                  />
+                  <label class="form-check-label" for="hot-new">
+                    Hot and New!
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="onChange form-check-input"
+                    type="checkbox"
+                    id="yelp-reservation"
+                    name="yelp_reservation"
+                    value="reservation "
+                  />
+                  <label class="form-check-label" for="yelp-reservation">
+                    Yelp Reservations
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="onChange form-check-input"
+                    type="checkbox"
+                    id="cashback"
+                    name="cashback"
+                    value="cashback "
+                  />
+                  <label class="form-check-label" for="cashback">
+                    Yelp Cashback
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="onChange form-check-input"
+                    type="checkbox"
+                    id="deals"
+                    name="deals"
+                    value="deals"
+                  />
+                  <label class="form-check-label" for="deals">
+                    Yelp Deals
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="onChange form-check-input"
+                    type="checkbox"
+                    id="wheelchair"
+                    name="wheelchair"
+                    value="wheelchair_accessible"
+                  />
+                  <label class="form-check-label" for="wheelchair">
+                    Wheelchair Accessible
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="onChange form-check-input"
+                    type="checkbox"
+                    id="open-all"
+                    name="open-all"
+                    value="open_to_all"
+                  />
+                  <label class="form-check-label" for="open-all">
+                    Open to All
+                  </label>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="col-1 bg-light" id="scrl2">
+            <div class="text-center list-group" id="first-list">
+              {% for let in first_set %}
+              <a
+                class="list-group-item list-group-item-action first-letter"
+                href="#{{let}}"
+                >{{let}}</a
+              >
+              {% endfor %}
+            </div>
+          </div>
+          <div
+            class="col-5 col-lg-6 py-3 bg-light text-center"
+            id="scrl3"
+            data-spy="scroll"
+            data-target="#first-list"
+            data-offset="10"
+          >
+            <div class="list-group" id="cat-btns">
+              {% for show, category in cat_data %}
+              <button
+                type="button"
+                class="list-group-item list-group-item-action cat-btn"
+                value="{{category}}"
+                id="{{show[0]}}"
+              >
+                {{show}}
+              </button>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col bg-stars1 card-zone">
+        <div class="sidebar-toggle-btn pl-1">
+          <i class="fas fa-angle-double-left" aria-hidden="true"></i>
+        </div>
+        <div
+          class="filter-display bg-secondary rounded-bottom opaque text-center"
+        >
+          <span class="cat-display filter-d-text"></span>
+          <span class="keyword-display filter-d-text"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    VANTA.GLOBE({
+      el: '.hero-animation',
+      mouseControls: true,
+      touchControls: true,
+      minHeight: 200.0,
+      minWidth: 200.0,
+      scale: 1.0,
+      scaleMobile: 1.0,
+      color: 0x3bdb53,
+      size: 1.4,
+      backgroundColor: 0x1d0842,
+    });
+  </script>
+  {% endblock %}
+</main>
+
+<!-- <div>
+  {% block endbody %}
+  <script>
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+  </script>
+  {% endblock %}
+</div> -->

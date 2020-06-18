@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+<title>
+  {% block title %}Edit Product{% endblock %}
+</title>
+
+<main>
+  {% block main %}
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-6">
+        <form id="prod-edit-form" method="POST" enctype="multipart/form-data">
+          {% include 'include_form.html' with context %}
+          <button type="submit" class="btn btn-primary">Edit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endblock %}
+</main>
