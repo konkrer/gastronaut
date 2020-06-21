@@ -10,7 +10,14 @@
   <script src="../static/js/three.r95.min.js"></script>
   <script src="../static/js/vanta.globe.min.js"></script>
   <script defer src="../static/js/geolocate.js"></script>
+  <script src="../static/js/modernizer.js"></script>
   <script defer src="../static/js/index.js"></script>
+  <script src="https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.js"></script>
+  <!--defer?-->
+  <link
+    href="https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.css"
+    rel="stylesheet"
+  />
   {% endblock %}
 </div>
 
@@ -34,16 +41,16 @@
   <div class="container-fluid">
     <div class="row" id="main-interface">
       <div
-        class="col-10 col-sm-8 col-md-7 col-lg-5 col-xl-4 bg-secondary control-panel"
+        class="col-10 col-sm-7 col-md-6 col-lg-5 col-xl-4 bg-secondary control-panel"
       >
         <div class="row">
           <div class="col-6 col-lg-5 py-3 main-form" id="scrl1">
-            <form action="#" id="main-form">
+            <form action="#" id="main-form" class="txt-whitesmoke">
               <label class="sr-only" for="location">Location</label>
               <div class="input-group mb-2 mr-sm-2">
                 <div class="input-group-prepend">
                   <div
-                    class="input-group-text"
+                    class="input-group-text jsPulser"
                     id="detect-location"
                     data-toggle="tooltip"
                     data-placement="top"
@@ -62,8 +69,24 @@
                   name="location"
                   placeholder="Location"
                 />
+                <div
+                  class="input-group-append"
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title="Show mini-map"
+                >
+                  <div
+                    class="input-group-text white-a jsGrow showMap"
+                    id="show-map"
+                    role="button"
+                    aria-expanded="false"
+                    aria-controls="map-track"
+                  >
+                    <i class="fas fa-map-marked-alt"></i>
+                  </div>
+                </div>
               </div>
-              <label class="sr-only" for="search-term">Search Term</label>
+              <label class="sr-only" for="search-term">Keywords</label>
               <div class="input-group mb-2 mr-sm-2">
                 <input
                   type="text"
@@ -76,9 +99,9 @@
                   class="input-group-append"
                   data-toggle="tooltip"
                   data-placement="top"
-                  title="Clear Search Term"
+                  title="Clear Keywords"
                 >
-                  <div class="input-group-text" id="clear-term">
+                  <div class="input-group-text jsPulser" id="clear-term">
                     <i class="fas fa-recycle" id="clear-term-glyph"></i>
                   </div>
                 </div>
@@ -93,34 +116,34 @@
                 <h5 class="museo">Timing</h5></a
               >
               <div class="collapse show" id="timing-group">
-                <div class="form-check">
+                <div class="custom-control custom-switch">
                   <input
-                    class="onChange form-check-input"
+                    class="onChange custom-control-input"
                     type="checkbox"
-                    id="open-now"
+                    id="open_now"
                     name="open_now"
                     value="true"
                   />
-                  <label class="form-check-label" for="open-now">
+                  <label class="custom-control-label" for="open_now">
                     Open Now
                   </label>
                 </div>
-                <div class="form-check">
+                <div class="custom-control custom-switch openAt">
                   <input
-                    class="onChange form-check-input"
+                    class="onChange custom-control-input"
                     type="checkbox"
                     id="open-at"
                     value="true"
                   />
-                  <label class="form-check-label" for="open-at">
+                  <label class="custom-control-label" for="open-at">
                     Open At
                   </label>
                 </div>
-                <div class="input-group mb-2 mr-sm-2">
+                <div class="input-group mb-2 mr-sm-2 openAt">
                   <input
                     type="datetime-local"
-                    class="form-control form-control-sm"
-                    id="open-at-datetime"
+                    class="onChange form-control form-control-sm"
+                    id="open_at"
                     name="open_at"
                     disabled
                   />
@@ -136,39 +159,39 @@
                 <h5 class="museo">Interface</h5></a
               >
               <div class="collapse show" id="interface-group">
-                <div class="form-check">
+                <div class="custom-control custom-switch">
                   <input
-                    class="onChange form-check-input interface"
+                    class="onChange custom-control-input interface"
                     type="checkbox"
                     value="delivery"
                     id="delivery"
                     checked
                   />
-                  <label class="form-check-label" for="delivery">
+                  <label class="custom-control-label" for="delivery">
                     Delivery
                   </label>
                 </div>
-                <div class="form-check">
+                <div class="custom-control custom-switch">
                   <input
-                    class="onChange form-check-input interface"
+                    class="onChange custom-control-input interface"
                     type="checkbox"
                     value="pickup"
                     id="pickup"
                     checked
                   />
-                  <label class="form-check-label" for="pickup">
+                  <label class="custom-control-label" for="pickup">
                     Pickup
                   </label>
                 </div>
-                <div class="form-check">
+                <div class="custom-control custom-switch">
                   <input
-                    class="onChange form-check-input interface"
+                    class="onChange custom-control-input interface"
                     type="checkbox"
                     value="reservations"
                     id="reservations"
                     checked
                   />
-                  <label class="form-check-label" for="reservations">
+                  <label class="custom-control-label" for="reservations">
                     Reservations
                   </label>
                 </div>
@@ -178,74 +201,90 @@
                 href="#price-group"
                 role="button"
                 aria-expanded="true"
+                `
                 aria-controls="price-group"
               >
                 <h5 class="museo">Price</h5></a
               >
-              <div class="collapse show" id="price-group">
-                <div class="form-check">
+              <div class="collapse show text-dark" id="price-group">
+                <div class="form-check p-0 txt-green">
                   <input
                     class="onChange form-check-input"
                     type="checkbox"
                     value="1"
                     id="price-1"
-                    name="price"
+                    name="price-1"
                     checked
+                    hidden
                   />
                   <label class="form-check-label" for="price-1">
-                    $
+                    <i class="fas fa-dollar-sign"></i>
                   </label>
                 </div>
-                <div class="form-check">
+                <div class="form-check p-0 txt-green">
                   <input
                     class="onChange form-check-input"
                     type="checkbox"
                     value="2"
                     id="price-2"
-                    name="price"
+                    name="price-2"
                     checked
+                    hidden
                   />
                   <label class="form-check-label" for="price-2">
-                    $$
+                    <i class="fas fa-dollar-sign mr-1"></i
+                    ><i class="fas fa-dollar-sign mr-1"></i>
                   </label>
                 </div>
-                <div class="form-check">
+                <div class="form-check p-0 txt-green">
                   <input
                     class="onChange form-check-input"
                     type="checkbox"
                     value="3"
                     id="price-3"
-                    name="price"
+                    name="price-3"
                     checked
+                    hidden
                   />
                   <label class="form-check-label" for="price-3">
-                    $$$
+                    <i class="fas fa-dollar-sign mr-1"></i
+                    ><i class="fas fa-dollar-sign mr-1"></i
+                    ><i class="fas fa-dollar-sign mr-1"></i>
                   </label>
                 </div>
-                <div class="form-check">
+                <div class="form-check p-0 txt-green">
                   <input
                     class="onChange form-check-input"
                     type="checkbox"
                     value="4"
                     id="price-4"
-                    name="price"
+                    name="price-4"
                     checked
+                    hidden
                   />
                   <label class="form-check-label" for="price-4">
-                    $$$$
+                    <i class="fas fa-dollar-sign mr-1"></i
+                    ><i class="fas fa-dollar-sign mr-1"></i
+                    ><i class="fas fa-dollar-sign mr-1"></i
+                    ><i class="fas fa-dollar-sign mr-1"></i>
                   </label>
                 </div>
-                <div class="form-check">
+                <div class="form-check p-0 txt-green">
                   <input
                     class="onChange form-check-input"
                     type="checkbox"
                     value="5"
                     id="price-5"
-                    name="price"
+                    name="price-5"
                     checked
+                    hidden
                   />
                   <label class="form-check-label" for="price-5">
-                    $$$$$
+                    <i class="fas fa-dollar-sign mr-1"></i
+                    ><i class="fas fa-dollar-sign mr-1"></i
+                    ><i class="fas fa-dollar-sign mr-1"></i
+                    ><i class="fas fa-dollar-sign mr-1"></i
+                    ><i class="fas fa-dollar-sign mr-1"></i>
                   </label>
                 </div>
               </div>
@@ -259,135 +298,175 @@
                 <h5 class="museo">Sort By</h5></a
               >
               <div class="collapse show" id="sort-by-group">
-                <div class="form-check">
+                <div class="custom-control custom-radio">
                   <input
-                    class="onChange form-check-input"
+                    class="onChange custom-control-input"
                     type="radio"
-                    id="best-match"
+                    id="best_match"
                     name="sort_by"
                     value="best_match"
                     checked
                   />
-                  <label class="form-check-label" for="best-match">
+                  <label class="custom-control-label" for="best_match">
                     Best Match
                   </label>
                 </div>
-                <div class="form-check">
+                <div class="custom-control custom-radio">
                   <input
-                    class="onChange form-check-input"
+                    class="onChange custom-control-input"
                     type="radio"
                     id="rating"
                     name="sort_by"
                     value="rating"
                   />
-                  <label class="form-check-label" for="rating">
+                  <label class="custom-control-label" for="rating">
                     Rating
                   </label>
                 </div>
-                <div class="form-check">
+                <div class="custom-control custom-radio">
                   <input
-                    class="onChange form-check-input"
+                    class="onChange custom-control-input"
                     type="radio"
-                    id="review-count"
+                    id="review_count"
                     name="sort_by"
                     value="review_count"
                   />
-                  <label class="form-check-label" for="review-count">
+                  <label class="custom-control-label" for="review_count">
                     Review Count
                   </label>
                 </div>
-                <div class="form-check">
+                <div class="custom-control custom-radio">
                   <input
-                    class="onChange form-check-input"
+                    class="onChange custom-control-input"
                     type="radio"
                     id="distance"
                     name="sort_by"
                     value="distance"
                   />
-                  <label class="form-check-label" for="distance">
+                  <label class="custom-control-label" for="distance">
                     Distance
                   </label>
                 </div>
               </div>
               <a
                 data-toggle="collapse"
+                href="#radius-collapse"
+                role="button"
+                aria-expanded="true"
+                aria-controls="collapseExample"
+              >
+                <h5 class="museo">Search Radius</h5></a
+              >
+              <div class="collapse show" id="radius-collapse">
+                <div class="form-group mb-0">
+                  <div class="">
+                    <input
+                      class="onChange form-check-input"
+                      type="checkbox"
+                      id="search-check"
+                      hidden
+                    /><label class="form-check-label" for="search-check">
+                      <i class="fas fa-power-off fa-lg"></i>
+                      <span class="radius-display text-light bg-disabled"
+                        >10</span
+                      >
+                      <span class="txt-whitesmoke">mi</span>
+                    </label>
+                  </div>
+                  <input
+                    type="range"
+                    class="custom-range onChange"
+                    id="radius"
+                    name="radius"
+                    min="1000"
+                    max="40000"
+                    value="16094"
+                    disabled
+                  />
+                </div>
+              </div>
+              <a
+                data-toggle="collapse"
                 href="#attributes"
                 role="button"
-                aria-expanded="false"
+                aria-expanded="true"
                 aria-controls="collapseExample"
               >
                 <h5 class="museo">Attributes</h5></a
               >
-              <div class="collapse" id="attributes">
-                <div class="form-check">
+              <div class="collapse show" id="attributes">
+                <div class="custom-control custom-switch">
                   <input
-                    class="onChange form-check-input"
+                    class="onChange custom-control-input"
                     type="checkbox"
-                    id="hot-new"
-                    name="hot-new"
+                    id="hot_and_new"
+                    name="hot_and_new"
                     value="hot_and_new"
                   />
-                  <label class="form-check-label" for="hot-new">
+                  <label class="custom-control-label" for="hot_and_new">
                     Hot and New!
                   </label>
                 </div>
-                <div class="form-check">
+                <div class="custom-control custom-switch">
                   <input
-                    class="onChange form-check-input"
+                    class="onChange custom-control-input"
                     type="checkbox"
-                    id="yelp-reservation"
+                    id="yelp_reservation"
                     name="yelp_reservation"
                     value="reservation "
                   />
-                  <label class="form-check-label" for="yelp-reservation">
+                  <label class="custom-control-label" for="yelp_reservation">
                     Yelp Reservations
                   </label>
                 </div>
-                <div class="form-check">
+                <div class="custom-control custom-switch">
                   <input
-                    class="onChange form-check-input"
+                    class="onChange custom-control-input"
                     type="checkbox"
                     id="cashback"
                     name="cashback"
                     value="cashback "
                   />
-                  <label class="form-check-label" for="cashback">
+                  <label class="custom-control-label" for="cashback">
                     Yelp Cashback
                   </label>
                 </div>
-                <div class="form-check">
+                <div class="custom-control custom-switch">
                   <input
-                    class="onChange form-check-input"
+                    class="onChange custom-control-input"
                     type="checkbox"
                     id="deals"
                     name="deals"
                     value="deals"
                   />
-                  <label class="form-check-label" for="deals">
+                  <label class="custom-control-label" for="deals">
                     Yelp Deals
                   </label>
                 </div>
-                <div class="form-check">
+                <div class="custom-control custom-switch">
                   <input
-                    class="onChange form-check-input"
+                    class="onChange custom-control-input"
                     type="checkbox"
-                    id="wheelchair"
-                    name="wheelchair"
+                    id="wheelchair_accessible"
+                    name="wheelchair_accessible"
                     value="wheelchair_accessible"
                   />
-                  <label class="form-check-label" for="wheelchair">
+                  <label
+                    class="custom-control-label"
+                    for="wheelchair_accessible"
+                  >
                     Wheelchair Accessible
                   </label>
                 </div>
-                <div class="form-check">
+                <div class="custom-control custom-switch">
                   <input
-                    class="onChange form-check-input"
+                    class="onChange custom-control-input"
                     type="checkbox"
-                    id="open-all"
-                    name="open-all"
+                    id="open_to_all"
+                    name="open_to_all"
                     value="open_to_all"
                   />
-                  <label class="form-check-label" for="open-all">
+                  <label class="custom-control-label" for="open_to_all">
                     Open to All
                   </label>
                 </div>
@@ -429,7 +508,16 @@
       </div>
       <div class="col bg-stars1 card-zone">
         <div class="sidebar-toggle-btn pl-1">
-          <i class="fas fa-angle-double-left" aria-hidden="true"></i>
+          <div class="arrow-wrapper">
+            <i
+              class="fas fa-angle-double-left toggle-outline"
+              aria-hidden="true"
+            ></i>
+            <i
+              class="fas fa-angle-double-right toggle-outline d-none"
+              aria-hidden="true"
+            ></i>
+          </div>
         </div>
         <div
           class="filter-display bg-secondary rounded-bottom opaque text-center"
@@ -437,9 +525,31 @@
           <span class="cat-display filter-d-text"></span>
           <span class="keyword-display filter-d-text"></span>
         </div>
+        <!-- <div class="card-zone"> -->
+        <div class="card-track">
+          <div class="card-map-close showMap">
+            <i class="fas fa-map-marked-alt fa-2x toggle-outline"></i>
+          </div>
+        </div>
+        <!-- <div class="bg-info map-track"></div> -->
+        <!-- </div> -->
+
+        <div class="bg-light map-track border-top border-secondary">
+          <div id="map" class="">
+            <script src="../static/js/map.js"></script>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+  <script>
+    // remove "Open At" option when no browser datetime input.
+    if (!Modernizr.inputtypes['datetime-local']) {
+      document.querySelectorAll('.openAt').forEach(div => {
+        div.style.display = 'none';
+      });
+    }
+  </script>
   <script>
     VANTA.GLOBE({
       el: '.hero-animation',

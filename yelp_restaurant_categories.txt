@@ -1,4 +1,4 @@
-All,all
+All,restaurants
 Afghan,afghani
 African,african
 American (New),newamerican
@@ -76,7 +76,7 @@ Live/Raw Food,raw_food
 Malaysian,malaysian
 Mediterranean,mediterranean
 Mexican,mexican
-Middle Easter,mideastern
+Middle Eastern,mideastern
 Modern European,modern_european
 Mongolian,mongolian
 Moroccan,moroccan

@@ -27,13 +27,19 @@
 }
 
 #detect-location:hover,
-#clear-term:hover {
+#clear-term:hover,
+#show-map:hover {
   color: rgb(98, 98, 255);
-  cursor: crosshair;
+  cursor: pointer;
+}
+
+.grow-1_3 {
+  transform: scale(1.3);
+  transition: transform 0.4s;
 }
 
 .pulse {
-  animation: pulse 0.5s ease-in infinite;
+  animation: pulse 0.5s ease-in 5;
 }
 
 @keyframes pulse {
@@ -48,17 +54,35 @@
   }
 }
 
-form h5.museo {
-  color: #ff8b3f;
+.white-a {
+  color: whitesmoke;
 }
 
-.form-check-label {
-  color: whitesmoke !important;
+form h5.museo {
+  color: #ff8b3f;
+  margin-bottom: 5px;
+  margin-top: 10px;
+}
+
+form label:hover {
+  color: #2a9fd6;
+}
+
+.radius-display {
+  height: 19px;
+  width: 40px;
+  background-color: whitesmoke;
+  text-align: center;
+  font-size: 18px;
+  line-height: 0.95;
+  border-radius: 5px;
+  display: inline-block;
+  margin-left: 40px;
 }
 
 .cat-btn {
   color: whitesmoke !important;
-  transition: all 0.2s !important;
+  transition: transform 0.2s !important;
   font-weight: 300 !important;
   font-style: italic;
 }
@@ -117,19 +141,29 @@ button.cat-btn.active {
   border-radius: 5px;
 }
 
-.sidebar-toggle-btn {
-  text-shadow: wheat 1px 1px 1px, wheat -1px -1px 1px, wheat 1px -1px 1px,
-    wheat -1px 1px 1px;
-  position: absolute;
-  left: 0;
-  top: 5vh;
-  font-size: 6vh;
-  transition: transform 0.4s;
+.card-zone {
+  display: grid;
+  padding: 0;
+  grid-template-rows: auto calc(calc(100vh - 54px) / 2);
+  grid-template-columns: auto;
+  grid-template-areas:
+    'card-track'
+    'map-track';
 }
 
-.sidebar-toggle-btn:hover {
+.sidebar-toggle-btn {
+  position: absolute;
+  left: 0;
+  top: 30vh;
+  font-size: 6vh;
+  z-index: 100;
+}
+
+.sidebar-toggle-btn:hover,
+.card-map-close:hover {
   color: #3fff5b;
   transform: scale(1.2);
+  transition: transform 0.4s;
 }
 
 .filter-display {
@@ -140,6 +174,7 @@ button.cat-btn.active {
   left: calc(50vw - 15vw);
   transition: 1s opacity;
   overflow: hidden;
+  z-index: 100;
 }
 
 .filter-d-text {
@@ -148,10 +183,57 @@ button.cat-btn.active {
   color: whitesmoke;
 }
 
+.card-track {
+  grid-area: card-track;
+  position: relative;
+}
+
+.card-map-close {
+  position: absolute;
+  bottom: -40px;
+  right: 60px;
+  z-index: 100000000000000;
+}
+
+.bottom-5 {
+  bottom: 10px;
+}
+
+.map-track {
+  grid-area: map-track;
+  position: relative;
+  width: 100%;
+}
+
+#map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+.map-collapse {
+  animation: mapCollapse 0s forwards;
+}
+
+@keyframes mapCollapse {
+  0% {
+    grid-template-rows: auto calc(calc(100vh - 54px) / 2);
+  }
+  100% {
+    grid-template-rows: auto 0px;
+  }
+}
+
 @media screen and (max-width: 420px) {
+  #detect-location,
+  #clear-term,
+  #show-map {
+    padding: 6px 5px;
+  }
   .cat-btn {
     padding: 4px 5px !important;
-    font-size: 0.7rem !important;
+    font-size: 0.67rem !important;
   }
   #scrl2 {
     padding: 16px 5px;
@@ -161,9 +243,21 @@ button.cat-btn.active {
     width: 94vw;
     left: calc(50vw - 47vw);
   }
+  .card-map-close {
+    right: calc(50% - 125px);
+  }
 }
 
 @media screen and (min-width: 420px) and (max-width: 840px) {
+  #detect-location,
+  #clear-term,
+  #show-map {
+    padding: 6px 8px;
+  }
+  .cat-btn {
+    padding: 4px 5px !important;
+    font-size: 0.8rem !important;
+  }
   .filter-display {
     height: 25px;
     width: 60vw;
@@ -179,16 +273,18 @@ button.cat-btn.active {
 }
 
 @media screen and (min-width: 840px) and (max-width: 1200px) {
-  .cat-btn {
-    padding: 4px 5px !important;
-    font-size: 0.7rem !important;
-  }
-  #scrl2 {
-    padding: 16px 5px;
-  }
   .filter-display {
     height: 25px;
     width: 50vw;
     left: calc(50vw - 25vw);
+  }
+}
+
+@media screen and (min-width: 2000px) {
+  .cat-btn {
+    font-size: large;
+  }
+  label {
+    font-size: medium;
   }
 }

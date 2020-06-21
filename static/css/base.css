@@ -26,12 +26,42 @@ main {
 .museo {
   font-family: 'MuseoModerno', cursive;
 }
+
+.txt-whitesmoke {
+  color: whitesmoke !important;
+}
+
 .txt-orange {
   color: #ff8b3f !important;
 }
 
+.txt-green {
+  color: #3fff5b !important;
+}
+
 .bg-black {
   background-color: black;
+}
+
+.bg-disabled {
+  background-color: #888888 !important;
+}
+
+.navbar-traverse {
+  height: 56px;
+  width: 56px;
+  top: 0px;
+  right: -56px;
+  position: fixed;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+}
+
+.fa-rocket {
+  transform: rotate(225deg);
 }
 
 .navbar {
@@ -43,6 +73,11 @@ main {
 .brand-outline {
   text-shadow: 1px 1px 1px cyan, -1px -1px 1px cyan, -1px 1px 1px cyan,
     1px -1px 1px cyan;
+}
+
+.toggle-outline {
+  text-shadow: black 1px 1px 1px, black -1px -1px 1px, black 1px -1px 1px,
+    black -1px 1px 1px;
 }
 
 .hidden {
