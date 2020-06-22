@@ -73,7 +73,7 @@
                   class="input-group-append"
                   data-toggle="tooltip"
                   data-placement="top"
-                  title="Show mini-map"
+                  title="Toggle mini-map"
                 >
                   <div
                     class="input-group-text white-a jsGrow showMap"
@@ -165,7 +165,6 @@
                     type="checkbox"
                     value="delivery"
                     id="delivery"
-                    checked
                   />
                   <label class="custom-control-label" for="delivery">
                     Delivery
@@ -177,7 +176,6 @@
                     type="checkbox"
                     value="pickup"
                     id="pickup"
-                    checked
                   />
                   <label class="custom-control-label" for="pickup">
                     Pickup
@@ -187,11 +185,10 @@
                   <input
                     class="onChange custom-control-input interface"
                     type="checkbox"
-                    value="reservations"
-                    id="reservations"
-                    checked
+                    value="trans-reservations"
+                    id="trans-reservations"
                   />
-                  <label class="custom-control-label" for="reservations">
+                  <label class="custom-control-label" for="trans-reservations">
                     Reservations
                   </label>
                 </div>
@@ -264,24 +261,6 @@
                   />
                   <label class="form-check-label" for="price-4">
                     <i class="fas fa-dollar-sign mr-1"></i
-                    ><i class="fas fa-dollar-sign mr-1"></i
-                    ><i class="fas fa-dollar-sign mr-1"></i
-                    ><i class="fas fa-dollar-sign mr-1"></i>
-                  </label>
-                </div>
-                <div class="form-check p-0 txt-green">
-                  <input
-                    class="onChange form-check-input"
-                    type="checkbox"
-                    value="5"
-                    id="price-5"
-                    name="price-5"
-                    checked
-                    hidden
-                  />
-                  <label class="form-check-label" for="price-5">
-                    <i class="fas fa-dollar-sign mr-1"></i
-                    ><i class="fas fa-dollar-sign mr-1"></i
                     ><i class="fas fa-dollar-sign mr-1"></i
                     ><i class="fas fa-dollar-sign mr-1"></i
                     ><i class="fas fa-dollar-sign mr-1"></i>
@@ -401,7 +380,7 @@
                     type="checkbox"
                     id="hot_and_new"
                     name="hot_and_new"
-                    value="hot_and_new"
+                    value="true"
                   />
                   <label class="custom-control-label" for="hot_and_new">
                     Hot and New!
@@ -411,11 +390,11 @@
                   <input
                     class="onChange custom-control-input"
                     type="checkbox"
-                    id="yelp_reservation"
-                    name="yelp_reservation"
-                    value="reservation "
+                    id="reservation"
+                    name="reservation"
+                    value="true "
                   />
-                  <label class="custom-control-label" for="yelp_reservation">
+                  <label class="custom-control-label" for="reservation">
                     Yelp Reservations
                   </label>
                 </div>
@@ -425,7 +404,7 @@
                     type="checkbox"
                     id="cashback"
                     name="cashback"
-                    value="cashback "
+                    value="true "
                   />
                   <label class="custom-control-label" for="cashback">
                     Yelp Cashback
@@ -437,25 +416,26 @@
                     type="checkbox"
                     id="deals"
                     name="deals"
-                    value="deals"
+                    value="true"
                   />
                   <label class="custom-control-label" for="deals">
                     Yelp Deals
                   </label>
                 </div>
+
                 <div class="custom-control custom-switch">
                   <input
                     class="onChange custom-control-input"
                     type="checkbox"
-                    id="wheelchair_accessible"
-                    name="wheelchair_accessible"
-                    value="wheelchair_accessible"
+                    id="gender_neutral_restrooms"
+                    name="gender_neutral_restrooms"
+                    value="true"
                   />
                   <label
                     class="custom-control-label"
-                    for="wheelchair_accessible"
+                    for="gender_neutral_restrooms"
                   >
-                    Wheelchair Accessible
+                    Gender Neutral Restrooms
                   </label>
                 </div>
                 <div class="custom-control custom-switch">
@@ -464,10 +444,25 @@
                     type="checkbox"
                     id="open_to_all"
                     name="open_to_all"
-                    value="open_to_all"
+                    value="true"
                   />
                   <label class="custom-control-label" for="open_to_all">
                     Open to All
+                  </label>
+                </div>
+                <div class="custom-control custom-switch">
+                  <input
+                    class="onChange custom-control-input"
+                    type="checkbox"
+                    id="wheelchair_accessible"
+                    name="wheelchair_accessible"
+                    value="true"
+                  />
+                  <label
+                    class="custom-control-label"
+                    for="wheelchair_accessible"
+                  >
+                    Wheelchair Accessible
                   </label>
                 </div>
               </div>
@@ -475,7 +470,7 @@
           </div>
           <div class="col-1 bg-light" id="scrl2">
             <div class="text-center list-group" id="first-list">
-              {% for let in first_set %}
+              {% for let in first_letters %}
               <a
                 class="list-group-item list-group-item-action first-letter"
                 href="#{{let}}"
@@ -492,7 +487,7 @@
             data-offset="10"
           >
             <div class="list-group" id="cat-btns">
-              {% for show, category in cat_data %}
+              {% for show, category in yelp_categories %}
               <button
                 type="button"
                 class="list-group-item list-group-item-action cat-btn"
@@ -526,17 +521,29 @@
           <span class="keyword-display filter-d-text"></span>
         </div>
         <!-- <div class="card-zone"> -->
-        <div class="card-track">
-          <div class="card-map-close showMap">
-            <i class="fas fa-map-marked-alt fa-2x toggle-outline"></i>
-          </div>
-        </div>
+        <div class="card-track"></div>
         <!-- <div class="bg-info map-track"></div> -->
         <!-- </div> -->
 
         <div class="bg-light map-track border-top border-secondary">
           <div id="map" class="">
             <script src="../static/js/map.js"></script>
+          </div>
+          <div
+            class="map-info"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="Hold ctrl/cmnd to tilt and rotate map with mouse drag"
+          >
+            <i class="fas fa-info-circle toggle-outline"></i>
+          </div>
+          <div
+            class="map-close bottom-10 showMap"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="Toggle map"
+          >
+            <i class="fas fa-map-marked-alt fa-2x toggle-outline"></i>
           </div>
         </div>
       </div>
@@ -551,6 +558,7 @@
     }
   </script>
   <script>
+    // Globe amimation
     VANTA.GLOBE({
       el: '.hero-animation',
       mouseControls: true,

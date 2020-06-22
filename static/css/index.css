@@ -39,6 +39,25 @@
 }
 
 .pulse {
+  animation: pulseColor 0.5s ease-in infinite;
+}
+
+@keyframes pulseColor {
+  0% {
+    transform: scale(1);
+    color: whitesmoke;
+  }
+  50% {
+    transform: scale(1.14);
+    color: rgb(217, 217, 233);
+  }
+  100% {
+    transform: scale(1.6);
+    color: rgb(0, 0, 255);
+  }
+}
+
+.pulse-5 {
   animation: pulse 0.5s ease-in 5;
 }
 
@@ -60,7 +79,7 @@
 
 form h5.museo {
   color: #ff8b3f;
-  margin-bottom: 5px;
+  margin-bottom: 0px;
   margin-top: 10px;
 }
 
@@ -160,7 +179,7 @@ button.cat-btn.active {
 }
 
 .sidebar-toggle-btn:hover,
-.card-map-close:hover {
+.map-close:hover {
   color: #3fff5b;
   transform: scale(1.2);
   transition: transform 0.4s;
@@ -188,15 +207,22 @@ button.cat-btn.active {
   position: relative;
 }
 
-.card-map-close {
+.map-info {
+  visibility: hidden;
   position: absolute;
-  bottom: -40px;
-  right: 60px;
-  z-index: 100000000000000;
+  color: white;
+  top: 12px;
+  left: 20px;
 }
 
-.bottom-5 {
-  bottom: 10px;
+.map-close {
+  position: absolute;
+  top: -40px;
+  right: 52px;
+}
+
+.bottom-10 {
+  top: 12px;
 }
 
 .map-track {
@@ -243,7 +269,7 @@ button.cat-btn.active {
     width: 94vw;
     left: calc(50vw - 47vw);
   }
-  .card-map-close {
+  .map-close {
     right: calc(50% - 125px);
   }
 }
@@ -286,5 +312,11 @@ button.cat-btn.active {
   }
   label {
     font-size: medium;
+  }
+}
+
+@media screen and (hover: hover) {
+  .map-info {
+    visibility: visible;
   }
 }

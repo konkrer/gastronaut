@@ -1,19 +1,22 @@
-from flask import (   # noqa F401
-    Flask, request, flash, make_response, Response,
-    render_template, session, redirect, jsonify, abort,
-    url_for
-)
+"""Restaurant discovery, food exploration web app."""
+
+from flask import (  # noqa F401
+    Flask, request, flash, make_response, Response, render_template, session,
+    redirect, jsonify, abort, url_for)
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 from werkzeug.utils import secure_filename
 from werkzeug.exceptions import Unauthorized
+import requests
 import os
-from models import (
-    db, connect_db, Product, Category, User
-)
+from models import (db, connect_db, Product, Category, User)
 from forms import AddProductForm, AddUserForm, EditUserForm, LoginForm
+from static.py_modules.yelp_helper import (yelp_categories, first_letters,
+                                           parse_query_params)
 
 app = Flask(__name__)
+URL = 'https://api.yelp.com/v3'
+API_KEY = 'u1b-Z7caHA_CxfhHTOyJOUZN06hZ4TZmta3Mr8StGsWlMO3N6zTh8jwtlasNRwaao2W6fkZOGX80cKQuBKQKVTXsBZMNzaF7iiL_W-b52DXx9aS_wp-mQ73kpmDgXnYx'  # noqa E501
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///database_name'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -28,16 +31,19 @@ connect_db(app)
 @app.route("/")
 def index():
     """Home view."""
-    # better way to hard code data than reading from file each time??
-    # get yelp categories data in tuples as: (display name, category name)
-    with open('yelp_restaurant_categories.txt') as f:
-        cat_data = f.read().splitlines()  
-    cat_data = [tuple(x.split(',')) for x in cat_data]
-    # get alphabetized first letter list of categories
-    first_set = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'P', 'R', 'S', 'T', 'U', 'V', 'W']
-        
-    return render_template('index.html', cat_data=cat_data, first_set=first_set)
+    # TODO: ADD IP geolocation, pass data in hidden input
+    return render_template('index.html',
+                           yelp_categories=yelp_categories,
+                           first_letters=first_letters)
 
+
+#
+#  8$$$$$$  $$$$$$$$  h$+   h$  +$$$$$$|
+# $$+   $$q $$    o$d h$+   h$  +$h   $$a
+# $$        $$$$$$$$  h$+   h$  +$h    $$
+# $$        $$$$$$    h$+   h$  +$h    $$
+# $$0   $$< $$   $$$  ;$$   $$  +$h   O$$
+#   $$$$$   $$    $$$  $$$$$$$  +$$$$$$/
 #
 # User CRUD, login, logout
 #
@@ -53,8 +59,10 @@ def signup():
 
     if form.validate_on_submit():
         password = form.password.data
-        relevant_data = {k: v for k, v in form.data.items()
-                         if k in Product.set_get()}
+        relevant_data = {
+            k: v
+            for k, v in form.data.items() if k in Product.set_get()
+        }
 
         try:
             new_user = User.register(password, **relevant_data)
@@ -137,6 +145,7 @@ def delete_user(username):
 #
 #
 
+
 @app.route("/<int:id_>", methods=['GET', 'POST'])
 def index_id(id_):
     """Home view."""
@@ -157,8 +166,8 @@ def index_id(id_):
 def add_product():
     """Product add view."""
     form = AddProductForm()
-    form.category_code.choices = db.session.query(
-        Category.code, Category.name).all()
+    form.category_code.choices = db.session.query(Category.code,
+                                                  Category.name).all()
 
     if form.validate_on_submit():
         # name = form.name.data
@@ -166,8 +175,10 @@ def add_product():
         # price = form.price.data
         # db.session.add(Product(name=name, category_code=c_c, price=price))
         data = form.data
-        relevant_data = {k: v for k, v in data.items()
-                         if k in Product.set_get()}
+        relevant_data = {
+            k: v
+            for k, v in data.items() if k in Product.set_get()
+        }
 
         if form.photo_file.data:
             f = form.photo_file.data
@@ -209,9 +220,31 @@ def edit_product(id_):
 
     return render_template("edit_product.html", form=form)
 
-#
-# Api
-#
+
+#       $$$    $$$$$$%  $x
+#      .$.$[   $$   $$  $x
+#      $$ $$   $$$$$$$  $x
+#     0$$$$$$  $$$$x    $x
+#     $$   %$~ $$       $x
+#    $$     $$ $$       $x
+
+
+@app.route('/v1/search')
+def search_yelp():
+    """API endpoint to relay search to Yelp search."""
+    headers = {'Authorization': f'Bearer {API_KEY}'}
+    params = parse_query_params(request.args)
+
+    try:
+        res = requests.get(f'{URL}/businesses/search',
+                           params=params,
+                           headers=headers)
+    except Exception as e:
+        print(e)  # TODO: log errors
+        return jsonify({'error': e})
+    # check for json conversion errors?
+
+    return res.json()
 
 
 @app.route('/api/products')
@@ -226,8 +259,7 @@ def get_products_api():
 def add_product_api():
     """Api endpoint to add new product"""
     data = request.json
-    relevant_data = {k: v for k, v in data.items()
-                     if k in Product.set_get()}
+    relevant_data = {k: v for k, v in data.items() if k in Product.set_get()}
     prod = Product(**relevant_data)
     db.session.add(prod)
     db.session.commit()
@@ -243,12 +275,11 @@ def detail_product_api(id_):
     return jsonify(product=prod.serialize())
 
 
-@ app.route('/api/products/<int:id_>', methods=['PATCH'])
+@app.route('/api/products/<int:id_>', methods=['PATCH'])
 def patch_product_api(id_):
     """Api endpoint for patching product"""
     data = request.json
-    relevant_data = {k: v for k, v in data.items()
-                     if k in Product.set_get()}
+    relevant_data = {k: v for k, v in data.items() if k in Product.set_get()}
     p = Product.query.filter_by(id=id_)
     p.update(relevant_data)
     db.session.commit()
@@ -256,7 +287,7 @@ def patch_product_api(id_):
     return jsonify(product=p.one().serialize())
 
 
-@ app.route('/api/products/<int:id_>', methods=["DELETE"])
+@app.route('/api/products/<int:id_>', methods=["DELETE"])
 def delete_product_api(id_):
     """Api endpoint for individual product"""
     prod = Product.query.get_or_404(id_)
@@ -271,12 +302,12 @@ def delete_product_api(id_):
 #
 
 
-@ app.errorhandler(404)
+@app.errorhandler(404)
 def page_not_found(e):
     return render_template("404.html"), 404
 
 
-@ app.errorhandler(401)
+@app.errorhandler(401)
 def unauthorized(e):
     return render_template("401.html"), 401
 

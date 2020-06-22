@@ -18,7 +18,8 @@ function geoSuccess(result) {
   localStorage.setItem('geoAllowed', true);
   requestSearch();
   // map point on map
-  renderMiniMap([lng, lat], 10, [lng, lat], [-122.536, 37.908]);
+  renderMiniMap([lng, lat], 10, [lng, lat]);
+  $('#detect-location').children().removeClass('pulse');
 }
 
 function showError(error) {
@@ -36,5 +37,25 @@ function showError(error) {
     case error.UNKNOWN_ERROR:
       alert('An unknown error occurred.');
       break;
+  }
+  $('#detect-location').children().removeClass('pulse');
+}
+
+var options = {
+  enableHighAccuracy: true,
+  timeout: 10000,
+  maximumAge: 30000,
+};
+
+/*
+/* Detect location. 
+/* Set lat, lng. Set if user is sharing location.
+*/
+function detectLocation(e) {
+  if (navigator.geolocation) {
+    $('#detect-location').children().addClass('pulse');
+    navigator.geolocation.getCurrentPosition(geoSuccess, showError, options);
+  } else {
+    alert('Geolocation is not supported by this browser.');
   }
 }
