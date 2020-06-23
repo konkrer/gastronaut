@@ -11,8 +11,11 @@ let keyupTimer;
 let latitude = null;
 let longitude = null;
 let category = 'restaurants';
-let hasScrolledCategory = false;
-let firstRenderMap = true;
+let hasScrolledToCategory = false;
+let markedUser = false;
+const coordsPercision = 5;
+let locationChange;
+// let mappyBoi;
 
 /*
 /* Get current form data plus lat, lng, and category
@@ -68,33 +71,40 @@ function errorCard(data) {
 function checkParameterChange() {
   const currFormState = JSON.stringify($mainForm.serializeArray());
   const prevFormState = localStorage.getItem('formData');
-  const coords = JSON.parse(localStorage.getItem('coords'));
+  const prevCoords = JSON.parse(localStorage.getItem('coords'));
   const prevCategory = localStorage.getItem('category');
   const transactions = JSON.stringify(getTransactions());
   const prevTransactions = localStorage.getItem('transactions');
+  // change flag.
+  // set change to true if a new API call is waranted.
   let change = false;
+  // location change flag.
+  // set locationChange to true if coords have significant change.
+  locationChange = false;
 
   // if form data changed warrants API call
   if (currFormState !== prevFormState) {
     change = true;
     setFormDataArray();
   }
-  if (longitude && !coords) {
+  // if there is lng/lat data but no previous stored coords data
+  if (longitude && !prevCoords) {
+    locationChange = true;
+    localStorage.setItem('coords', JSON.stringify([longitude, latitude]));
     // if there is not a search term having coords warrants an API call
     if (!$searchTerm.val()) change = true;
-    localStorage.setItem(
-      'coords',
-      JSON.stringify([longitude.toFixed(3), latitude.toFixed(3)])
-    );
-  } else if (longitude && coords) {
-    const [prevLng, prevLat] = coords;
-    if (longitude.toFixed(3) !== prevLng || latitude.toFixed(3) !== prevLat) {
+    //
+  } else if (longitude && prevCoords) {
+    const [prevLng, prevLat] = prevCoords;
+    // if coords have changed
+    if (
+      longitude.toFixed(coordsPercision) !== prevLng.toFixed(coordsPercision) ||
+      latitude.toFixed(coordsPercision) !== prevLat.toFixed(coordsPercision)
+    ) {
+      locationChange = true;
+      localStorage.setItem('coords', JSON.stringify([longitude, latitude]));
       // if there is not a search term new coords warrant an API call
       if (!$searchTerm.val()) change = true;
-      localStorage.setItem(
-        'coords',
-        JSON.stringify([longitude.toFixed(3), latitude.toFixed(3)])
-      );
     }
   }
   // category change warrants an API call
@@ -109,12 +119,112 @@ function checkParameterChange() {
 }
 
 /*
-/* Make a requst to /search endpoint. Needs location.
-/* If queryData is unchaged from last request interface (transactions)
-/* choices must have changed, skip api call. When making api
-/* call store query parameters, latest data, and form state.
+/* Make a requst to /v1/search endpoint. 
 */
-async function requestSearch() {
+async function searchApiCall() {
+  const queryData = getFormData();
+  // axios get search endpoint with query data
+  try {
+    var data = await axios.get(`/v1/search?${queryData}`);
+  } catch (error) {
+    alert(`Yelp API Error${error.message}`);
+    return;
+  }
+  if (data.data.error) {
+    errorCard(data.data);
+    return;
+  }
+  return data;
+}
+
+/*
+/* Use Yelp lng/lat data if new lng/lat data or if rendering first coords map. 
+*/
+function yelpSetLocation(data) {
+  // extract lng/lat from new yelp data
+  const {
+    data: {
+      region: {
+        center: { longitude: lng, latitude: lat },
+      },
+    },
+  } = data;
+  // if lng/lat has changed or coords map has not been rendered yet
+  if (longitude !== lng || latitude !== lat || !markedUser) {
+    longitude = lng;
+    latitude = lat;
+    // Set location placeholder back to 'Location'
+    $locationInput.prop('placeholder', `Location`);
+    // store coords, render map, note rendered first coords map
+    localStorage.setItem('coords', JSON.stringify([lng, lat]));
+    if (userMarker) userMarker.remove();
+    userMarker = addUserMarker([longitude, latitude]);
+    markedUser = true;
+  }
+}
+
+/*
+/* Render map from storage if rendering first coords map and lng/lat data.. 
+*/
+function renderMapFromStorage() {
+  // no new Yelp data block.
+  // if coords map not rendered yet and there are stored coords
+  // use stored coords to render map.
+  if (!markedUser && latitude) {
+    userMarker = addUserMarker([longitude, latitude]);
+    markedUser = true;
+  }
+}
+
+/*
+/* Render map on location change or if rendering first coords map. 
+*/
+function renderOnLocationChangeOrFirstCoordsMap() {
+  // no text location given block.
+  // if there was a location change and coords map was
+  // not rendered yet, render map.
+  if (locationChange || !markedUser) {
+    if (userMarker) userMarker.remove();
+    userMarker = addUserMarker([longitude, latitude]);
+    markedUser = true;
+  }
+}
+
+/*
+/* Determine if new map rendering is needed after making or not making new Yelp API call.
+/* 
+/* If using text location to search Yelp use the coords Yelp returned
+/* to map location. But if Yelp coords are the same as the stored data skip
+/* mapping as there's nothing new to map, unless rendering the first map 
+/* with user coordinates since page refresh.
+/*
+/* If using text location and page just loaded and there is no new data (using 
+/* cached data) render new map if there is lng/lat data.
+/*
+/* Otherwise, render new map if the location changed or if rendering the first map 
+/* with user coordinates since page refresh.
+/* 
+*/
+function mappingAndCoordsLogic(data) {
+  // if text location given
+  if ($locationInput.val()) {
+    // if new Yelp data
+    if (data) {
+      yelpSetLocation(data);
+    } else {
+      renderMapFromStorage();
+    }
+  } else {
+    renderOnLocationChangeOrFirstCoordsMap();
+  }
+}
+
+/*
+/* Search request handler. Needs location.
+/* If queryData is unchaged from last request 
+/* transactions choices must have changed, skip API call.
+*/
+async function searchYelp() {
   // Make sure there is a location to search.
   if (!latitude && $locationInput.val() === '') {
     alert('Enter a location or press detect location.');
@@ -122,80 +232,17 @@ async function requestSearch() {
   }
   // if yelp parameters have changed call api endpoint
   if (checkParameterChange()) {
-    console.log(
-      'new search api call <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<******<<'
-    );
-    const queryData = getFormData();
-    // axios get search endpoint with query data
-    try {
-      var data = await axios.get(`/v1/search?${queryData}`);
-    } catch (error) {
-      alert(`Yelp API Error${error.message}`);
-      return;
-    }
-    if (data.data.error) {
-      errorCard(data.data);
-      return;
-    }
+    console.log('new search api call <<<<<<<<<<<<<<<<<<<******<<');
+    var data = await searchApiCall();
     // save new data in local storage
-    // to reload as necessary.
     localStorage.setItem('currData', JSON.stringify(data));
-
     console.log(data);
   }
-  // get previous lng/lat data
-  const coords = JSON.parse(localStorage.getItem('coords'));
-  const [prevLng, prevLat] = coords ? coords : [undefined, undefined];
-  // if text location given
-  if ($locationInput.val()) {
-    console.log('in loc given');
-    // if new data
-    if (data) {
-      // extract lng/lat from new data
-      const {
-        data: {
-          region: {
-            center: { longitude: lng, latitude: lat },
-          },
-        },
-      } = data;
-      // if lng/lat has changed or this map has not been rendered yet
-      if (
-        prevLng !== lng.toFixed(3) ||
-        prevLat !== lat.toFixed(3) ||
-        firstRenderMap
-      ) {
-        localStorage.setItem(
-          'coords',
-          JSON.stringify([lng.toFixed(3), lat.toFixed(3)])
-        );
-        renderMiniMap([lng, lat], 10, [lng, lat]);
-        firstRenderMap = false;
-        console.log('map rendering new coors or first');
-      }
-    } else {
-      console.log('in loc else');
-      // if no new data
-      // if map not rendered yet and stored coords use stored coords
-      if (firstRenderMap && prevLng) {
-        renderMiniMap([prevLng, prevLat], 10, [prevLng, prevLat]);
-        firstRenderMap = false;
-      }
-    }
-  } else {
-    // if stored coords are different than curr coords
-    // render map and store current coords.
-    // Needed when switching from text location back to last detected location.
-    if (prevLng !== longitude.toFixed(3) || prevLat !== latitude.toFixed(3)) {
-      renderMiniMap([longitude, latitude], 10, [longitude, latitude]);
-      localStorage.setItem(
-        'coords',
-        JSON.stringify([longitude.toFixed(3), latitude.toFixed(3)])
-      );
-      console.log('map rendering bottom else');
-    }
-  }
+  mappingAndCoordsLogic(data);
   // TODO: add cards filter by transactions
+  var data = data ? data : JSON.parse(localStorage.getItem('currData'));
+  addCards(data);
+  location.href = '#1';
 }
 
 /*
@@ -203,9 +250,11 @@ async function requestSearch() {
 */
 $locationInput.on('keyup', function (e) {
   clearTimeout(keyupTimer);
-  keyupTimer = setTimeout(function () {
-    requestSearch();
-  }, autoSearchDelay);
+  if ($locationInput.val()) {
+    keyupTimer = setTimeout(function () {
+      searchYelp();
+    }, autoSearchDelay);
+  }
 });
 
 /*
@@ -217,7 +266,7 @@ $searchTerm.on('keyup', function (e) {
   if (term) $('.keyword-display').text(` - ${term}`);
   else $('.keyword-display').text('');
   keyupTimer = setTimeout(function () {
-    requestSearch();
+    searchYelp();
   }, autoSearchDelay);
 });
 
@@ -235,7 +284,7 @@ $mainForm.on('change', '.onChange', function (e) {
   )
     return;
   keyupTimer = setTimeout(function () {
-    requestSearch();
+    searchYelp();
   }, autoSearchDelay);
 });
 
@@ -256,7 +305,7 @@ $categoryButtons.on('click', 'button', function (e) {
     });
   $(this).addClass('active');
   keyupTimer = setTimeout(function () {
-    requestSearch();
+    searchYelp();
   }, autoSearchDelay);
 });
 
@@ -277,7 +326,7 @@ $('.showMap').each(function (index) {
     $('#map').toggle();
     $('.map-info').toggle();
     $('.map-track').toggleClass(['border-top', 'border-secondary']);
-    $('.map-close').toggleClass('bottom-10');
+    $('.map-close').toggleClass('top-10');
   });
 });
 
@@ -287,7 +336,7 @@ $('.showMap').each(function (index) {
 $('#clear-term').on('click', function (e) {
   $searchTerm.val('');
   $('.keyword-display').text('');
-  requestSearch();
+  searchYelp();
 });
 
 /*
@@ -399,6 +448,7 @@ function setCategoryFromStorage() {
     localStorage.setItem('category', 'restaurants');
     currCat = 'restaurants';
   }
+  category = currCat;
   // set list-group button to active for current category
   $categoryButtons.children().each(function (index) {
     if ($(this).val() === currCat) {
@@ -482,7 +532,7 @@ function setForm(data) {
 }
 
 /*
-/* Check localStorage for data to bring form to last state on page navigation/refresh.
+/* Check localStorage for data to bring form to last state.
 */
 function updateFormFromStorage() {
   // check for data if none return
@@ -490,15 +540,31 @@ function updateFormFromStorage() {
   if (!data) return;
   data = JSON.parse(data);
 
-  // set location, term, and rest of form inputs
+  // set location, term
   const [location, term, ...rest] = data;
   if (location.value) $locationInput.val(location.value);
   if (term.value) {
     $searchTerm.val(term.value);
     $('.keyword-display').text(` - ${term.value}`);
   }
+  // set the rest of the Yelp parameters
   setForm(rest);
+  // set the interface (transactions) options on the form
   setFormTransactions(JSON.parse(localStorage.getItem('transactions')));
+}
+
+/*
+/* Check localStorage for coordinate data.
+/* Set script lng/lat. Return coords.
+*/
+function setCoordsFromStorage() {
+  const coords = localStorage.getItem('coords');
+  if (coords) {
+    const [lng, lat] = JSON.parse(coords);
+    latitude = +lat;
+    longitude = +lng;
+    return [lng, lat];
+  }
 }
 
 /*
@@ -508,15 +574,21 @@ function updateFormFromStorage() {
 function checkLocalStorage() {
   setCategoryFromStorage();
   updateFormFromStorage();
+  const coords = setCoordsFromStorage();
   // if there is given location request search
-  if ($locationInput.val()) requestSearch();
+  if ($locationInput.val()) searchYelp();
   // if no given location but allowing location sharing detect location
-  else if (localStorage.getItem('geoAllowed')) {
-    detectLocation();
-    firstRenderMap = false;
+  else if (localStorage.getItem('geoAllowed') === 'true') detectLocation();
+  // if not sharing location but stored coords use those to center map.
+  else if (coords) {
+    userMarker = userMarker = addUserMarker(coords);
   }
 }
 checkLocalStorage();
+
+/*
+/* Restaurant categories auto scroll to last choosen category.
+*/
 
 /*
 /* S.O. adapted https://stackoverflow.com/a/3898152/11164558
@@ -527,15 +599,14 @@ function scrollCategoriesToCurrent() {
   currCat = currCat === 'restaurants' ? 'A' : currCat[0].toUpperCase();
   location.href = '#';
   location.href = `#${currCat}`;
-  hasScrolledCategory = true;
+  hasScrolledToCategory = true;
   $locationInput.focus();
   $locationInput.blur();
 }
-
 /*
-/* S.O. adapted https://stackoverflow.com/a/3898152/11164558
 /* If page loads scrolled to bottom call scrollCategoriesToCurrent.
 /* Otherwise when user scroll to bottom of page call scrollCategoriesToCurrent.
+/* Only call once.
 */
 if ($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
   scrollCategoriesToCurrent();
@@ -545,7 +616,7 @@ if ($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
       $(window).scrollTop() + $(window).height() >
       $(document).height() - 100
     ) {
-      if (!hasScrolledCategory) {
+      if (!hasScrolledToCategory) {
         scrollCategoriesToCurrent();
       }
     }

@@ -16,9 +16,9 @@ function geoSuccess(result) {
   );
   // note user allowed geolocation
   localStorage.setItem('geoAllowed', true);
-  requestSearch();
+  searchYelp();
   // map point on map
-  renderMiniMap([lng, lat], 10, [lng, lat]);
+  // renderMiniMap([lng, lat], 10, [lng, lat]);
   $('#detect-location').children().removeClass('pulse');
 }
 
