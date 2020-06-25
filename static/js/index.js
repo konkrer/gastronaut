@@ -15,7 +15,6 @@ let hasScrolledToCategory = false;
 let markedUser = false;
 const coordsPercision = 4;
 let locationChange;
-// let mappyBoi;
 
 /*
 /* Get current form data plus lat, lng, and category
@@ -46,6 +45,8 @@ function getTransactions() {
   $('.interface:checked').each(function (index) {
     transactions.push($(this).val());
   });
+  if (transactions.length > 0) $('.resultsCount').addClass('bg-disabled');
+  else $('.resultsCount').removeClass('bg-disabled');
   return transactions;
 }
 
@@ -65,25 +66,47 @@ function errorCard(data) {
 }
 
 /*
+/* If filters are on show filter indicator.
+*/
+function filterIndicatorCheck(formArray) {
+  let initLength = formArray.length;
+  const withoutPrices = formArray.filter(obj => obj.name[0] !== 'p');
+  const numPrices = initLength - withoutPrices.length;
+  // no need to show filter indicator for these inputs
+  const notFilters = ['term', 'location', 'sort_by'];
+  if (
+    numPrices === 1 ||
+    numPrices === 2 ||
+    numPrices === 3 ||
+    getTransactions().length > 0 ||
+    withoutPrices.some(obj => {
+      if (!notFilters.includes(obj.name)) return true;
+    })
+  )
+    $('.filter-icon-display').show();
+  else $('.filter-icon-display').hide();
+}
+
+/*
 /* Check for changes that warrant a new API call.
 /* Form, category, or significant GPS change.
 */
 function checkParameterChange() {
-  const currFormState = JSON.stringify($mainForm.serializeArray());
+  const currFormState = $mainForm.serializeArray();
   const prevFormState = localStorage.getItem('formData');
   const prevCoords = JSON.parse(localStorage.getItem('coords'));
   const prevCategory = localStorage.getItem('category');
   const transactions = JSON.stringify(getTransactions());
   const prevTransactions = localStorage.getItem('transactions');
-  // change flag.
+
+  filterIndicatorCheck(currFormState);
   // set change to true if a new API call is waranted.
   let change = false;
-  // location change flag.
   // set locationChange to true if coords have significant change.
   locationChange = false;
 
   // if form data changed warrants API call
-  if (currFormState !== prevFormState) {
+  if (JSON.stringify(currFormState) !== prevFormState) {
     change = true;
     setFormDataArray();
   }
@@ -195,7 +218,7 @@ function renderOnLocationChangeOrFirstCoordsMap() {
 /* 
 /* If using text location to search Yelp use the coords Yelp returned
 /* to map location. But if Yelp coords are the same as the stored data skip
-/* mapping as there's nothing new to map, unless rendering the first map 
+/* mapping as there's no new user location to map, unless rendering the first map 
 /* with user coordinates since page refresh.
 /*
 /* If using text location and page just loaded and there is no new data (using 
@@ -310,11 +333,15 @@ $categoryButtons.on('click', 'button', function (e) {
 });
 
 /*
-/* Detect location button fuctionality. Call detectLocation.
+/* Navbar search function.
 */
-$('#detect-location').on('click', function (e) {
-  $(this).children().removeClass('pulse-5');
-  detectLocation(e);
+$('.navbar form').submit(function (e) {
+  e.preventDefault();
+  const term = $(this).children().val();
+  $searchTerm.val(term);
+  if (term) $('.keyword-display').text(` - ${term}`);
+  else $('.keyword-display').text('');
+  searchYelp();
 });
 
 /*
@@ -322,6 +349,16 @@ $('#detect-location').on('click', function (e) {
 */
 $('.explore').on('click', function (e) {
   e.preventDefault();
+  console.log('in explore');
+  $('.hero-animation').toggle();
+});
+
+/*
+/* Detect location button fuctionality. Call detectLocation.
+*/
+$('#detect-location').on('click', function (e) {
+  $(this).children().removeClass('pulse-5');
+  detectLocation(e);
 });
 
 /*
@@ -339,9 +376,9 @@ function toggleMap() {
   $('.map-close').toggleClass('top-10');
 }
 
-/* Show restaurant marker and fit bounds when address clicked.
+/* Show restaurant marker and fit bounds when address or map button is clicked.
  */
-$('.card-track-inner').on('click', '.cardAddress', function (e) {
+$('.card-track-inner').on('click', '.cardMapButton', function (e) {
   e.preventDefault();
   const lng = $(this).data('lng');
   const lat = $(this).data('lat');
@@ -410,7 +447,7 @@ $('#search-check').on('click', function () {
     $radius.prop('disabled', true);
   }
   $('.radiusDisplay').toggleClass('bg-disabled');
-  $radius.prev().toggleClass('txt-green');
+  $radius.prev().toggleClass(['txt-green', 'dark-green-outline']);
 });
 
 /*
@@ -525,7 +562,8 @@ function setForm(data) {
   $('#price-group')
     .children()
     .each(function (index) {
-      if (!$(this).children().prop('checked')) $(this).removeClass('txt-green');
+      if (!$(this).children().prop('checked'))
+        $(this).removeClass(['txt-green', 'dark-green-outline']);
     });
   // if open_at data enable datetime input, add value, and check box.
   if (data.open_at) {
@@ -545,6 +583,7 @@ function setForm(data) {
       .val(data.radius)
       .prev()
       .addClass('txt-green')
+      .addClass('dark-green-outline')
       .children()
       .prop('checked');
     $('.radiusDisplay')

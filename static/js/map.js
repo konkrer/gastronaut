@@ -2,7 +2,7 @@
 
 let userMarker;
 let restMarker;
-const markerOptions = { color: '#3fff5b' };
+const markerOptions = { color: '#3bdb53' };
 const fitBoundsOptions = {
   padding: { top: 10, bottom: 10, left: 10, right: 10 }, // { top: 70, bottom: 40, left: 145, right: 145 }
 };

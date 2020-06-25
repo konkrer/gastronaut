@@ -37,7 +37,11 @@
       <div class="col-5 text-center" style="font-size: 5px;">
         <h1 class="display-1-k txt-orange brand-outline">Gastronaut</h1>
         <h2 class="display-2-k lead-k">Explore the world of food.</h2>
-        <a href="#main-interface" class="btn btn-lg btn-outline-success"
+        <a
+          href="#main-interface"
+          class="btn btn-lg btn-outline-success explore"
+          data-toggle="tool-tip"
+          title="Lock Control Panel View"
           >Explore</a
         >
       </div>
@@ -75,7 +79,7 @@
                   name="location"
                   placeholder="Location"
                 />
-                <div
+                <!-- <div
                   class="input-group-append"
                   data-toggle="tooltip"
                   data-placement="top"
@@ -90,7 +94,7 @@
                   >
                     <i class="fas fa-map-marked-alt"></i>
                   </div>
-                </div>
+                </div> -->
               </div>
               <label class="sr-only" for="search-term">Keywords</label>
               <div class="input-group mb-2 mr-sm-2">
@@ -113,7 +117,7 @@
                 </div>
               </div>
               <div class="">
-                <label for="">Found</label>
+                <label class="m-0" for="">Found</label>
                 <span class="form-num-display resultsCount text-light">0</span>
               </div>
               <a
@@ -195,7 +199,7 @@
                   <input
                     class="onChange custom-control-input interface"
                     type="checkbox"
-                    value="trans-reservations"
+                    value="restaurant_reservation"
                     id="trans-reservations"
                   />
                   <label class="custom-control-label" for="trans-reservations">
@@ -214,7 +218,7 @@
                 <h5 class="museo">Price</h5></a
               >
               <div class="collapse show text-dark" id="price-group">
-                <div class="form-check p-0 txt-green">
+                <div class="form-check p-0 txt-green dark-green-outline">
                   <input
                     class="onChange form-check-input"
                     type="checkbox"
@@ -228,7 +232,7 @@
                     <i class="fas fa-dollar-sign"></i>
                   </label>
                 </div>
-                <div class="form-check p-0 txt-green">
+                <div class="form-check p-0 txt-green dark-green-outline">
                   <input
                     class="onChange form-check-input"
                     type="checkbox"
@@ -243,7 +247,7 @@
                     ><i class="fas fa-dollar-sign mr-1"></i>
                   </label>
                 </div>
-                <div class="form-check p-0 txt-green">
+                <div class="form-check p-0 txt-green dark-green-outline">
                   <input
                     class="onChange form-check-input"
                     type="checkbox"
@@ -259,7 +263,7 @@
                     ><i class="fas fa-dollar-sign mr-1"></i>
                   </label>
                 </div>
-                <div class="form-check p-0 txt-green">
+                <div class="form-check p-0 txt-green dark-green-outline">
                   <input
                     class="onChange form-check-input"
                     type="checkbox"
@@ -479,7 +483,7 @@
               </div>
             </form>
           </div>
-          <div class="col-1 bg-light" id="scrl2">
+          <div class="col-1 bg-light p-0" id="scrl2">
             <div class="text-center list-group" id="first-list">
               {% for let in first_letters %}
               <a
@@ -491,7 +495,7 @@
             </div>
           </div>
           <div
-            class="col-5 col-lg-6 py-3 bg-light text-center"
+            class="col-5 col-lg-6 py-3 bg-light text-center p-0"
             id="scrl3"
             data-spy="scroll"
             data-target="#first-list"
@@ -523,6 +527,14 @@
         <div
           class="filter-display bg-secondary rounded-bottom opaque text-center d-none"
         >
+          <span class="filter-icon-display filter-d-text">
+            <i class="fas fa-filter fa-sm txt-orange mr-3 mt-1"></i>
+            <!-- <img
+              src="../static/images/settings.png"
+              class="mr-3"
+              alt="filters set icon"
+            /> -->
+          </span>
           <span class="cat-display filter-d-text"></span>
           <span class="keyword-display filter-d-text"></span>
         </div>
@@ -580,13 +592,3 @@
   </script>
   {% endblock %}
 </main>
-
-<!-- <div>
-  {% block endbody %}
-  <script>
-    $(function () {
-      $('[data-toggle="tooltip"]').tooltip();
-    });
-  </script>
-  {% endblock %}
-</div> -->

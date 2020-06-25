@@ -1,7 +1,16 @@
+:root {
+  --font-main: 'Source Sans Pro', sans-serif;
+  --vh-minus-navbar: calc(100vh - 52px);
+  --my-warning: #ff8b3f;
+  --my-green: #3bdb53;
+  --my-info: #1d0842;
+}
+
 body {
   position: relative;
   font-family: 'Source Sans Pro', sans-serif;
   min-height: 100vh;
+  padding-top: 52px !important;
 }
 
 .flx-std {
@@ -42,16 +51,24 @@ body {
   color: whitesmoke !important;
 }
 
+.txt-black {
+  color: black !important;
+}
+
 .txt-orange {
-  color: #ff8b3f !important;
+  color: var(--my-warning) !important;
 }
 
 .txt-green {
-  color: #3fff5b !important;
+  color: var(--my-green) !important;
+}
+
+.bg-green {
+  background-color: var(--my-green) !important;
 }
 
 .bg-purp {
-  background-color: #1d0842;
+  background-color: var(--my-info);
 }
 
 .bg-black {
@@ -63,7 +80,7 @@ body {
 }
 
 .bg-trans-p {
-  background-color: #2a9fd6d2;
+  background-color: var(--primary) d2;
   padding: 10px 20px;
   border-radius: 5px;
 }
@@ -97,13 +114,19 @@ body {
 }
 
 .toggle-outline {
+  color: whitesmoke;
   text-shadow: black 1px 1px 1px, black -1px -1px 1px, black 1px -1px 1px,
     black -1px 1px 1px;
 }
 
-.yellow-glow {
+.yellow-outline {
   text-shadow: yellow 1px 1px 1px, yellow -1px -1px 1px, yellow 1px -1px 1px,
     yellow -1px 1px 1px;
+}
+
+.dark-green-outline {
+  text-shadow: darkgreen 1px 1px 1px, darkgreen -1px -1px 1px,
+    darkgreen 1px -1px 1px, darkgreen -1px 1px 1px;
 }
 
 .hidden {
@@ -122,7 +145,7 @@ body::-webkit-scrollbar {
 }
 
 body::-webkit-scrollbar-thumb {
-  background-color: #ff8b3f;
+  background-color: var(--my-warning);
   border-radius: 5px;
 }
 
