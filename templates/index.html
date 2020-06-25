@@ -29,7 +29,7 @@
 
 <main>
   {% block main %}
-  <div class="hero-animation container-fluid">
+  <div class="hero-animation">
     <div
       class="row justify-content-around align-items-center"
       style="height: 100%;"
@@ -111,6 +111,10 @@
                     <i class="fas fa-recycle" id="clear-term-glyph"></i>
                   </div>
                 </div>
+              </div>
+              <div class="">
+                <label for="">Found</label>
+                <span class="form-num-display resultsCount text-light">0</span>
               </div>
               <a
                 data-toggle="collapse"
@@ -352,7 +356,8 @@
                       hidden
                     /><label class="form-check-label" for="search-check">
                       <i class="fas fa-power-off fa-lg"></i>
-                      <span class="radius-display text-light bg-disabled"
+                      <span
+                        class="form-num-display radiusDisplay text-light bg-disabled"
                         >10</span
                       >
                       <span class="txt-whitesmoke">mi</span>
@@ -507,17 +512,11 @@
           </div>
         </div>
       </div>
-      <div class="col bg-stars1 card-zone">
+      <div class="col bg-stars1 card-map-zone">
         <div class="sidebar-toggle-btn pl-1">
-          <div class="arrow-wrapper">
-            <i
-              class="fas fa-angle-double-left toggle-outline"
-              aria-hidden="true"
-            ></i>
-            <i
-              class="fas fa-angle-double-right toggle-outline d-none"
-              aria-hidden="true"
-            ></i>
+          <div class="arrow-wrapper toggle-outline toggle-outline-mobile">
+            <i class="fas fa-angle-double-left" aria-hidden="true"></i>
+            <i class="fas fa-angle-double-right d-none" aria-hidden="true"></i>
           </div>
         </div>
 

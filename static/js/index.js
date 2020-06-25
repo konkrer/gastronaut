@@ -13,7 +13,7 @@ let longitude = null;
 let category = 'restaurants';
 let hasScrolledToCategory = false;
 let markedUser = false;
-const coordsPercision = 5;
+const coordsPercision = 4;
 let locationChange;
 // let mappyBoi;
 
@@ -225,6 +225,7 @@ function mappingAndCoordsLogic(data) {
 /* transactions choices must have changed, skip API call.
 */
 async function searchYelp() {
+  console.log('searchYelp');
   // Make sure there is a location to search.
   if (!latitude && $locationInput.val() === '') {
     alert('Enter a location or press detect location.');
@@ -242,7 +243,6 @@ async function searchYelp() {
   // TODO: add cards filter by transactions
   var data = data ? data : JSON.parse(localStorage.getItem('currData'));
   addCards(data);
-  location.href = '#1';
 }
 
 /*
@@ -318,16 +318,38 @@ $('#detect-location').on('click', function (e) {
 });
 
 /*
+/* Explore buttons lock view to bottom.
+*/
+$('.explore').on('click', function (e) {
+  e.preventDefault();
+});
+
+/*
 /* Show map button fuctionality. Open and close map.
 */
 $('.showMap').each(function (index) {
-  $(this).on('click', function () {
-    $('.card-zone').toggleClass('map-collapse');
-    $('#map').toggle();
-    $('.map-info').toggle();
-    $('.map-track').toggleClass(['border-top', 'border-secondary']);
-    $('.map-close').toggleClass('top-10');
-  });
+  $(this).on('click', toggleMap);
+});
+
+function toggleMap() {
+  $('.card-map-zone').toggleClass('map-collapse');
+  $('#map').toggle();
+  $('.map-info').toggle();
+  $('.map-track').toggleClass(['border-top', 'border-secondary']);
+  $('.map-close').toggleClass('top-10');
+}
+
+/* Show restaurant marker and fit bounds when address clicked.
+ */
+$('.card-track-inner').on('click', '.cardAddress', function (e) {
+  e.preventDefault();
+  const lng = $(this).data('lng');
+  const lat = $(this).data('lat');
+  const name = $(this).data('name');
+  fitBounds([longitude, latitude], [+lng, +lat], name);
+  if ($('.card-map-zone').hasClass('map-collapse')) {
+    toggleMap();
+  }
 });
 
 /*
@@ -387,7 +409,7 @@ $('#search-check').on('click', function () {
   } else {
     $radius.prop('disabled', true);
   }
-  $('.radius-display').toggleClass('bg-disabled');
+  $('.radiusDisplay').toggleClass('bg-disabled');
   $radius.prev().toggleClass('txt-green');
 });
 
@@ -395,7 +417,7 @@ $('#search-check').on('click', function () {
 /* Update radius display with range input change.
 */
 $('#radius').on('change', function () {
-  $('.radius-display').text(metersToMiles($(this).val()));
+  $('.radiusDisplay').text(metersToMiles($(this).val()));
 });
 
 /*
@@ -453,7 +475,7 @@ function setCategoryFromStorage() {
   $categoryButtons.children().each(function (index) {
     if ($(this).val() === currCat) {
       $(this).addClass('active');
-      // set card-zone filter display to category name
+      // set card-map-zone filter display to category name
       $('.cat-display').text($(this).text());
     }
   });
@@ -525,7 +547,7 @@ function setForm(data) {
       .addClass('txt-green')
       .children()
       .prop('checked');
-    $('.radius-display')
+    $('.radiusDisplay')
       .removeClass('bg-disabled')
       .text(metersToMiles(data.radius));
   }

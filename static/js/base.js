@@ -14,6 +14,7 @@ function sidebarToggle() {
   // accomadate filter display
   if (sidebarState === true) {
     $('.arrow-wrapper')
+      .removeClass('toggle-outline-mobile')
       .children()
       .each(function () {
         $(this).toggleClass('d-none');

@@ -4,7 +4,7 @@ let userMarker;
 let restMarker;
 const markerOptions = { color: '#3fff5b' };
 const fitBoundsOptions = {
-  padding: { top: 70, bottom: 40, left: 145, right: 145 },
+  padding: { top: 10, bottom: 10, left: 10, right: 10 }, // { top: 70, bottom: 40, left: 145, right: 145 }
 };
 
 function renderMiniMap(mapCenter = [-85, 26.8], zoom = 1.3) {
@@ -12,13 +12,13 @@ function renderMiniMap(mapCenter = [-85, 26.8], zoom = 1.3) {
     'pk.eyJ1Ijoia29ua3JlciIsImEiOiJjanZwdjB5dnUwNWNrNDVteHJjNHhxNnpiIn0.aPtNXMoZYfLs09Jth-0jMw';
   var map = new mapboxgl.Map({
     container: 'map',
-    style: 'mapbox://styles/konkrer/ckbo4owz330931in4cemh5xla',
+    style: 'mapbox://styles/konkrer/ckbslmn3x00y31hp7vh351zxb',
     center: mapCenter,
     pitch: 34,
     zoom,
   });
   map.addControl(new mapboxgl.FullscreenControl());
-  map.addControl(new mapboxgl.NavigationControl());
+  // map.addControl(new mapboxgl.NavigationControl());
 
   return map;
 }
@@ -26,7 +26,9 @@ function renderMiniMap(mapCenter = [-85, 26.8], zoom = 1.3) {
 function addUserMarker(coords) {
   userMarker = new mapboxgl.Marker(markerOptions)
     .setLngLat(coords)
+    .setPopup(new mapboxgl.Popup().setHTML(`<b><em>You</em></b>`))
     .addTo(mappyBoi);
+  userMarker.togglePopup();
   return userMarker;
 }
 

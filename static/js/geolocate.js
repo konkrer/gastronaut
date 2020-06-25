@@ -14,12 +14,11 @@ function geoSuccess(result) {
     'placeholder',
     `lat: ${lat.toFixed(2)}, lng: ${longitude.toFixed(2)}`
   );
+  // stop detect location icon from pulsing.
+  $('#detect-location').children().removeClass('pulse');
   // note user allowed geolocation
   localStorage.setItem('geoAllowed', true);
   searchYelp();
-  // map point on map
-  // renderMiniMap([lng, lat], 10, [lng, lat]);
-  $('#detect-location').children().removeClass('pulse');
 }
 
 function showError(error) {
@@ -39,11 +38,14 @@ function showError(error) {
       break;
   }
   $('#detect-location').children().removeClass('pulse');
+  if (longitude) {
+    userMarker = addUserMarker([longitude, latitude]);
+  }
 }
 
 var options = {
   enableHighAccuracy: true,
-  timeout: 10000,
+  timeout: 20000,
   maximumAge: 30000,
 };
 
@@ -51,11 +53,14 @@ var options = {
 /* Detect location. 
 /* Set lat, lng. Set if user is sharing location.
 */
-function detectLocation(e) {
+function detectLocation(coords) {
   if (navigator.geolocation) {
     $('#detect-location').children().addClass('pulse');
     navigator.geolocation.getCurrentPosition(geoSuccess, showError, options);
   } else {
     alert('Geolocation is not supported by this browser.');
+    if (longitude) {
+      userMarker = addUserMarker([longitude, latitude]);
+    }
   }
 }
