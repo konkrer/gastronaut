@@ -105,7 +105,7 @@ body {
 .navbar {
   font-family: 'MuseoModerno', cursive;
   font-size: 0.8rem;
-  border-bottom: 0 solid black !important;
+  /* border-bottom: 0 solid black !important; */
 }
 
 .brand-outline {
