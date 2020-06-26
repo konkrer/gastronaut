@@ -54,7 +54,7 @@
         class="col-10 col-sm-7 col-md-6 col-lg-5 col-xl-4 bg-secondary control-panel"
       >
         <div class="row">
-          <div class="col-6 col-lg-5 py-3 main-form" id="scrl1">
+          <div class="col-6 col-lg-5 py-3 main-form-div" id="scrl1">
             <form action="#" id="main-form" class="txt-whitesmoke">
               <label class="sr-only" for="location">Location</label>
               <div class="input-group mb-2 mr-sm-2">
@@ -79,22 +79,6 @@
                   name="location"
                   placeholder="Location"
                 />
-                <!-- <div
-                  class="input-group-append"
-                  data-toggle="tooltip"
-                  data-placement="top"
-                  title="Toggle mini-map"
-                >
-                  <div
-                    class="input-group-text white-a jsGrow showMap"
-                    id="show-map"
-                    role="button"
-                    aria-expanded="false"
-                    aria-controls="map-track"
-                  >
-                    <i class="fas fa-map-marked-alt"></i>
-                  </div>
-                </div> -->
               </div>
               <label class="sr-only" for="search-term">Keywords</label>
               <div class="input-group mb-2 mr-sm-2">
@@ -109,17 +93,24 @@
                   class="input-group-append"
                   data-toggle="tooltip"
                   data-placement="top"
-                  title="Clear Keywords"
+                  title="Clear All Filters"
                 >
-                  <div class="input-group-text jsPulser" id="clear-term">
-                    <i class="fas fa-recycle" id="clear-term-glyph"></i>
+                  <div class="input-group-text jsPulser" id="clear-filters">
+                    <i class="fas fa-recycle"></i>
                   </div>
                 </div>
               </div>
               <div class="">
                 <label class="m-0" for="">Found</label>
-                <span class="form-num-display resultsCount text-light">0</span>
+                <span
+                  class="form-num-display resultsCount ml-1 ml-sm-4 text-light"
+                  >0</span
+                >
+                <span class="filter-icon-display">
+                  <i class="fas fa-filter txt-orange ml-2 ml-md-3"></i>
+                </span>
               </div>
+
               <a
                 data-toggle="collapse"
                 href="#timing-group"
@@ -200,9 +191,12 @@
                     class="onChange custom-control-input interface"
                     type="checkbox"
                     value="restaurant_reservation"
-                    id="trans-reservations"
+                    id="restaurant_reservation"
                   />
-                  <label class="custom-control-label" for="trans-reservations">
+                  <label
+                    class="custom-control-label"
+                    for="restaurant_reservation"
+                  >
                     Reservations
                   </label>
                 </div>
@@ -361,7 +355,7 @@
                     /><label class="form-check-label" for="search-check">
                       <i class="fas fa-power-off fa-lg"></i>
                       <span
-                        class="form-num-display radiusDisplay text-light bg-disabled"
+                        class="form-num-display radiusDisplay ml-1 ml-sm-4 text-light bg-disabled ml-5"
                         >10</span
                       >
                       <span class="txt-whitesmoke">mi</span>
@@ -517,7 +511,7 @@
         </div>
       </div>
       <div class="col bg-stars1 card-map-zone">
-        <div class="sidebar-toggle-btn pl-1">
+        <div class="sidebar-toggle-btn txt-whitesmoke pl-1">
           <div class="arrow-wrapper toggle-outline toggle-outline-mobile">
             <i class="fas fa-angle-double-left" aria-hidden="true"></i>
             <i class="fas fa-angle-double-right d-none" aria-hidden="true"></i>
@@ -556,7 +550,7 @@
             <i class="fas fa-info-circle toggle-outline"></i>
           </div>
           <div
-            class="map-close top-10 showMap"
+            class="map-close top-10 showMap txt-whitesmoke"
             data-toggle="tooltip"
             data-placement="top"
             title="Toggle map"

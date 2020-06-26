@@ -24,7 +24,11 @@ main {
   background-size: cover;
 }
 
-.main-form,
+.control-panel {
+  transition: all 0.4s;
+}
+
+.main-form-div,
 .card-map-zone,
 #scrl2,
 #scrl3 {
@@ -39,49 +43,9 @@ main {
 }
 
 #detect-location:hover,
-#clear-term:hover,
+#clear-filters:hover,
 #show-map:hover {
   color: rgb(98, 98, 255);
-}
-
-.grow-1_3 {
-  transform: scale(1.3);
-  transition: transform 0.4s;
-}
-
-.pulse {
-  animation: pulseColor 0.5s ease-in infinite;
-}
-
-@keyframes pulseColor {
-  0% {
-    transform: scale(1);
-    color: whitesmoke;
-  }
-  50% {
-    transform: scale(1.14);
-    color: rgb(217, 217, 233);
-  }
-  100% {
-    transform: scale(1.6);
-    color: rgb(0, 0, 255);
-  }
-}
-
-.pulse-5 {
-  animation: pulse 0.5s ease-in 5;
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.14);
-  }
-  100% {
-    transform: scale(1.6);
-  }
 }
 
 .white-a {
@@ -111,13 +75,13 @@ form label:hover {
   line-height: 0.95;
   border-radius: 5px;
   display: inline-block;
-  margin-left: 40px;
+  /* margin-left: 40px; */
   text-shadow: none;
 }
 
-/* #radius-collapse span { eliminate mi (miles) turning green
-  text-shadow: none;
-} */
+.filter-icon-display {
+  display: none;
+}
 
 .cat-btn {
   color: whitesmoke !important;
@@ -234,9 +198,6 @@ button.cat-btn.active {
 .card-track {
   grid-area: card-track;
   position: relative;
-  /* display: flex;
-  justify-content: space-around;
-  align-items: center; */
   overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
@@ -250,11 +211,8 @@ button.cat-btn.active {
 .card-track-inner {
   height: 100%;
   width: 100%;
-  /* display: flex;
-  justify-content: start;
-  align-items: center; */
   position: relative;
-  padding-left: calc(50% - 18%);
+  padding-left: calc(50% - 16.6%);
 }
 
 .my-card {
@@ -265,12 +223,23 @@ button.cat-btn.active {
   border-radius: 5px;
   font-family: var(--font-main);
   white-space: normal;
-  min-width: 350px;
+  min-width: 342px;
+}
+
+.mr-card {
+  margin-right: 50px;
 }
 
 .my-card::-webkit-scrollbar {
   -webkit-appearance: none;
   width: 0;
+}
+
+.no-results {
+  background: url('https://media.giphy.com/media/Txh1UzI7d0aqs/giphy.gif');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .my-card-img-div {
@@ -318,6 +287,10 @@ button.cat-btn.active {
   top: 12px;
 }
 
+.map-collapse {
+  grid-template-rows: auto 0px;
+}
+
 .map-track {
   grid-area: map-track;
   position: relative;
@@ -342,13 +315,15 @@ button.cat-btn.active {
   border-bottom-color: var(--my-info) !important;
 }
 
-.map-collapse {
-  grid-template-rows: auto 0px;
-}
+/* Breakpoints */
+/* Breakpoints */
+/* Breakpoints */
+/* Breakpoints */
+/* Breakpoints */
 
 @media screen and (max-width: 420px) {
   #detect-location,
-  #clear-term,
+  #clear-filters,
   #show-map {
     padding: 6px 5px;
   }
@@ -371,7 +346,7 @@ button.cat-btn.active {
 
 @media screen and (min-width: 420px) and (max-width: 840px) {
   #detect-location,
-  #clear-term,
+  #clear-filters,
   #show-map {
     padding: 6px 8px;
   }
@@ -402,7 +377,7 @@ button.cat-btn.active {
     top: 25vh;
   }
   .hero-animation,
-  .main-form,
+  .main-form-div,
   .card-map-zone,
   #scrl2,
   #scrl3 {
@@ -413,6 +388,9 @@ button.cat-btn.active {
   }
   .card-track {
     padding-top: 5px;
+  }
+  .card-track-inner {
+    padding-left: calc(50% - 125px) !important;
   }
   .my-card {
     width: 250px;
@@ -442,6 +420,18 @@ button.cat-btn.active {
   }
 }
 
+@media screen and (max-width: 1000px) {
+  .card-track-inner {
+    padding-left: calc(50% - 171px);
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .mr-card {
+    margin-right: 60px;
+  }
+}
+
 @media screen and (min-width: 1450px) {
   .control-panel {
     max-width: 32vw;
@@ -466,7 +456,7 @@ button.cat-btn.active {
   }
   .sidebar-toggle-btn:hover,
   .map-close:hover {
-    color: var(--my-green);
+    color: var(--my-green) !important;
     transform: scale(1.2);
     transition: transform 0.4s;
   }
@@ -474,9 +464,40 @@ button.cat-btn.active {
     background-color: var(--my-green) !important;
     color: var(--my-info) !important;
   }
+  .my-card button.cardMapButton:hover {
+    color: white !important;
+  }
   .card-link:hover,
   .my-card li a:hover {
     color: white;
+  }
+}
+
+/* Animations  */
+/* Animations  */
+/* Animations  */
+/* Animations  */
+/* Animations  */
+
+.grow-1_3 {
+  transform: scale(1.3);
+  transition: transform 0.4s;
+}
+
+/* Pulse 5 times */
+.pulse-5 {
+  animation: pulse 0.5s ease-in 5;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.14);
+  }
+  100% {
+    transform: scale(1.6);
   }
 }
 
@@ -490,4 +511,28 @@ button.cat-btn.active {
       var(--my-green) -10px -10px 10px, var(--my-green) 10px -10px 10px,
       var(--my-green) -10px 10px 10px;
   }
+}
+
+/* pulse and change color. animation shakes. */
+.pulse {
+  animation: pulseColor 0.5s ease-in infinite;
+}
+
+@keyframes pulseColor {
+  0% {
+    transform: scale(1);
+    color: whitesmoke;
+  }
+  50% {
+    transform: scale(1.14);
+    color: rgb(217, 217, 233);
+  }
+  100% {
+    transform: scale(1.6);
+    color: rgb(0, 0, 255);
+  }
+}
+
+.sidebarCollapse {
+  max-width: 0px;
 }

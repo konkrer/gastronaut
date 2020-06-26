@@ -7,12 +7,12 @@ function sidebarToggleListener() {
 }
 
 function sidebarToggle() {
-  // toggle display of sidebar
-  $('.control-panel').toggle();
   // change arrow state, filter display,
   // and top padding of card-trak-inner to
   // accomadate filter display
   if (sidebarState === true) {
+    $('.control-panel').toggleClass('sidebarCollapse');
+    setTimeout(() => $('.control-panel').toggle(), 300);
     $('.arrow-wrapper')
       .removeClass('toggle-outline-mobile')
       .children()
@@ -24,6 +24,8 @@ function sidebarToggle() {
     setTimeout(() => $('.filter-display').toggleClass('opaque'), 10);
     $('.card-track-inner').toggleClass('padtop-card-filter-d');
   } else {
+    $('.control-panel').toggle();
+    $('.control-panel').toggleClass('sidebarCollapse');
     $('.arrow-wrapper')
       .children()
       .each(function () {

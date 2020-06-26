@@ -6,7 +6,7 @@ const $searchTerm = $('#search-term');
 const $mainForm = $('#main-form');
 const $categoryButtons = $('#cat-btns');
 
-const autoSearchDelay = 1500;
+const autoSearchDelay = 2000;
 let keyupTimer;
 let latitude = null;
 let longitude = null;
@@ -15,6 +15,17 @@ let hasScrolledToCategory = false;
 let markedUser = false;
 const coordsPercision = 4;
 let locationChange;
+let firstCardsAdded = false;
+
+const defaultFormState = [
+  { name: 'location', value: '' },
+  { name: 'term', value: '' },
+  { name: 'price-1', value: '1' },
+  { name: 'price-2', value: '2' },
+  { name: 'price-3', value: '3' },
+  { name: 'price-4', value: '4' },
+  { name: 'sort_by', value: 'best_match' },
+];
 
 /*
 /* Get current form data plus lat, lng, and category
@@ -22,7 +33,7 @@ let locationChange;
 */
 function getFormData() {
   let data = $mainForm.serialize();
-  data = `${data}&categories=${category}`;
+  data = `${data}&categories=${category}&limit=50`;
   if (latitude) data = `${data}&latitude=${latitude}&longitude=${longitude}`;
   return data;
 }
@@ -69,22 +80,28 @@ function errorCard(data) {
 /* If filters are on show filter indicator.
 */
 function filterIndicatorCheck(formArray) {
+  // no need to show filter indicator for these inputs
+  const notFilters = ['location', 'sort_by'];
   let initLength = formArray.length;
   const withoutPrices = formArray.filter(obj => obj.name[0] !== 'p');
+  // number of price options slected
   const numPrices = initLength - withoutPrices.length;
-  // no need to show filter indicator for these inputs
-  const notFilters = ['term', 'location', 'sort_by'];
   if (
     numPrices === 1 ||
     numPrices === 2 ||
     numPrices === 3 ||
     getTransactions().length > 0 ||
     withoutPrices.some(obj => {
-      if (!notFilters.includes(obj.name)) return true;
+      if (!notFilters.includes(obj.name) && obj.value !== '') return true;
     })
   )
-    $('.filter-icon-display').show();
-  else $('.filter-icon-display').hide();
+    $('.filter-icon-display').each(function () {
+      $(this).show();
+    });
+  else
+    $('.filter-icon-display').each(function () {
+      $(this).hide();
+    });
 }
 
 /*
@@ -96,8 +113,6 @@ function checkParameterChange() {
   const prevFormState = localStorage.getItem('formData');
   const prevCoords = JSON.parse(localStorage.getItem('coords'));
   const prevCategory = localStorage.getItem('category');
-  const transactions = JSON.stringify(getTransactions());
-  const prevTransactions = localStorage.getItem('transactions');
 
   filterIndicatorCheck(currFormState);
   // set change to true if a new API call is waranted.
@@ -135,8 +150,6 @@ function checkParameterChange() {
     change = true;
     localStorage.setItem('category', category);
   }
-  // transactions change does not warrant an API call
-  if (transactions !== prevTransactions) setTransactions();
 
   return change;
 }
@@ -189,7 +202,7 @@ function yelpSetLocation(data) {
 /*
 /* Render map from storage if rendering first coords map and lng/lat data.. 
 */
-function renderMapFromStorage() {
+function renderFirstMapFromStorage() {
   // no new Yelp data block.
   // if coords map not rendered yet and there are stored coords
   // use stored coords to render map.
@@ -235,11 +248,28 @@ function mappingAndCoordsLogic(data) {
     if (data) {
       yelpSetLocation(data);
     } else {
-      renderMapFromStorage();
+      renderFirstMapFromStorage();
     }
   } else {
     renderOnLocationChangeOrFirstCoordsMap();
   }
+}
+
+/*
+/* Returen bool representing if no new data and transactions
+/* haven't changed. If so nothing new to display.
+/* But if first cards not added yet return false.
+*/
+function transactionsNoChangeAndNONewData(newData) {
+  if (!firstCardsAdded) {
+    firstCardsAdded = true;
+    return false;
+  }
+  const transactions = JSON.stringify(getTransactions());
+  const prevTransactions = localStorage.getItem('transactions');
+  if (!newData && transactions === prevTransactions) return true;
+  setTransactions();
+  return false;
 }
 
 /*
@@ -262,8 +292,12 @@ async function searchYelp() {
     localStorage.setItem('currData', JSON.stringify(data));
     console.log(data);
   }
+  if (transactionsNoChangeAndNONewData(!!data)) return;
+  // determine what location to use (text, coords) and if
+  // updating map is necessary.
   mappingAndCoordsLogic(data);
-  // TODO: add cards filter by transactions
+
+  // If no new data use last data.
   var data = data ? data : JSON.parse(localStorage.getItem('currData'));
   addCards(data);
 }
@@ -392,9 +426,9 @@ $('.card-track-inner').on('click', '.cardMapButton', function (e) {
 /*
 /* Clear search term button fuctionality.
 */
-$('#clear-term').on('click', function (e) {
-  $searchTerm.val('');
-  $('.keyword-display').text('');
+$('#clear-filters').on('click', function (e) {
+  setForm(defaultFormState);
+  setFormTransactions([]);
   searchYelp();
 });
 
@@ -522,7 +556,7 @@ function setCategoryFromStorage() {
 /* Set interface checkboxes.
 */
 function setFormTransactions(transactions) {
-  ['delivery', 'pickup', 'trans-reservations'].forEach(id => {
+  ['delivery', 'pickup', 'restaurant_reservation'].forEach(id => {
     if (transactions.includes(id)) $(`#${id}`).prop('checked', true);
     else $(`#${id}`).prop('checked', false);
   });
@@ -544,7 +578,6 @@ function setForm(data) {
     'price-2',
     'price-3',
     'price-4',
-    'price-5',
     'hot_and_new',
     'reservation',
     'cashback',
@@ -553,6 +586,15 @@ function setForm(data) {
     'open_to_all',
     'gender_neutral_restrooms',
   ];
+  // set location, term
+  if (data.location) $locationInput.val(data.location);
+  if (data.term) {
+    $searchTerm.val(data.term);
+    $('.keyword-display').text(` - ${data.term}`);
+  } else {
+    $searchTerm.val('');
+    $('.keyword-display').text(``);
+  }
   // if data has input id as a key make that input checked, otherwise un-check.
   inputIds.forEach(id => {
     if (data[id]) $(`#${id}`).prop('checked', true);
@@ -562,8 +604,8 @@ function setForm(data) {
   $('#price-group')
     .children()
     .each(function (index) {
-      if (!$(this).children().prop('checked'))
-        $(this).removeClass(['txt-green', 'dark-green-outline']);
+      if ($(this).children().prop('checked')) $(this).addClass('txt-green');
+      else $(this).removeClass('txt-green');
     });
   // if open_at data enable datetime input, add value, and check box.
   if (data.open_at) {
@@ -589,6 +631,16 @@ function setForm(data) {
     $('.radiusDisplay')
       .removeClass('bg-disabled')
       .text(metersToMiles(data.radius));
+  } else {
+    $('#radius')
+      .prop('disabled', true)
+      .val(16094)
+      .prev()
+      .removeClass('txt-green')
+      .removeClass('dark-green-outline')
+      .children()
+      .prop('checked', false);
+    $('.radiusDisplay').addClass('bg-disabled').text(10);
   }
 }
 
@@ -599,17 +651,7 @@ function updateFormFromStorage() {
   // check for data if none return
   let data = localStorage.getItem('formData');
   if (!data) return;
-  data = JSON.parse(data);
-
-  // set location, term
-  const [location, term, ...rest] = data;
-  if (location.value) $locationInput.val(location.value);
-  if (term.value) {
-    $searchTerm.val(term.value);
-    $('.keyword-display').text(` - ${term.value}`);
-  }
-  // set the rest of the Yelp parameters
-  setForm(rest);
+  setForm(JSON.parse(data));
   // set the interface (transactions) options on the form
   setFormTransactions(JSON.parse(localStorage.getItem('transactions')));
 }

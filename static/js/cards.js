@@ -1,5 +1,7 @@
 'use strict';
 
+let cardsMade;
+
 function makeCategoriesText(categories) {
   return categories.reduce((acc, obj, i) => {
     if (i === 0) return `${acc}${obj.title}`;
@@ -32,15 +34,18 @@ function makeTransactionsText(transactions) {
   }, '');
 }
 
-function makeCard(business, i) {
-  // map first business
-  if (i === 0) {
+function makeCard(business) {
+  // string to be added to create id for first element
+  let idHtml = '';
+  // map first business and add an id="1".
+  if (cardsMade === false) {
     const { longitude: lng, latitude: lat } = business.coordinates;
     // fitbounds [user coords, restaurant coords]
     fitBounds([longitude, latitude], [lng, lat], business.name);
+    // label first card id=1 for auto scrolling (href)
+    idHtml = 'id="1"';
+    cardsMade = true;
   }
-  // label first card id=1 for auto scrolling (href)
-  const idHtml = i === 0 ? 'id="1"' : '';
   // unpack data items for card display
   const {
     name,
@@ -66,7 +71,7 @@ function makeCard(business, i) {
 
   return `
     <div
-      class="my-card d-inline-block mx-4 mx-lg-5 bg-dark txt-black"
+      class="my-card d-inline-block mr-card bg-dark txt-black"
       data-id="${id}"
       ${idHtml}
     >
@@ -84,14 +89,22 @@ function makeCard(business, i) {
         <p class="card-text">
           ${makeCategoriesText(categories)} ${is_closed ? '- Closed' : ''}
         </p>
-        <button class="btn btn-primary font-weight-bold mr-2 ">Details</button>
+        <button class="btn btn-primary font-weight-bold mr-2 mr-sm-1 mr-md-2 px-3 px-sm-2 px-md--3">Details</button>
         <button
-          class="btn btn-primary font-weight-bold cardMapButton"
+          class="btn btn-primary font-weight-bold cardMapButton mr-2 mr-sm-1 mr-md-2 px-3 px-sm-2 px-md--3"
           data-lat="${lat}"
           data-lng="${lng}"
           data-name="${name}"
+          data-toggle="tooltip"
+          title="Show on Map"
         >
-          Map
+        <i class="fas fa-map-marked-alt fa-lg toggle-outline"></i>
+        </button>
+        <button
+          class="btn btn-primary font-weight-bold px-3 px-sm-2 px-md--3" data-toggle="tooltip" title="Add to Mission"
+        >
+        <i class="fas fa-plus-square mr-2"></i>
+        <i class="fas fa-rocket fa-lg txt-orange brand-outline"></i>
         </button>
       </div>
       <ul class="list-group list-group-flush bg-transparent">
@@ -110,11 +123,6 @@ function makeCard(business, i) {
           <div>${city ? city : ''}</div>
         </li>
       </ul>
-      <a href="#" class="card-link">
-        <div class="card-body">
-          <b>Add to Mission</b>
-        </div>
-      </a>
     </div>
     `;
 }
@@ -122,8 +130,7 @@ function makeCard(business, i) {
 function showNoResults() {
   restMarker?.remove();
   let html = `
-  <div class="my-card flx-std"
-  style="background: url('https://media.giphy.com/media/Txh1UzI7d0aqs/giphy.gif'); background-size: cover; background-repeat: no-repeat; background-position: center;" 
+  <div class="my-card flx-std no-results"
   >
     <div class="txt-orange brand-outline txt-xxl">
     No Results!
@@ -132,6 +139,20 @@ function showNoResults() {
   `;
   $('.card-track-inner').html(html);
   $('.resultsCount').text('0');
+}
+
+function filterForTransactions(transactions, business) {
+  // if no transactrions selected no filtering
+  if (transactions.length === 0) return makeCard(business);
+  else if (
+    // if transactions specified and business has one of specifed
+    // transactions make card.
+    transactions.length > 0 &&
+    business.transactions.some(str => transactions.includes(str))
+  ) {
+    return makeCard(business);
+  }
+  return '';
 }
 
 function makeArrowPulse() {
@@ -145,16 +166,11 @@ function addCards(data) {
     showNoResults();
     return;
   }
+  cardsMade = false;
   let cards = '';
-  data.data.businesses.forEach((business, i) => {
-    const transactions = getTransactions();
-    if (transactions.length === 0) cards += makeCard(business, i);
-    else if (
-      transactions.length > 0 &&
-      business.transactions.some(str => transactions.includes(str))
-    ) {
-      cards += makeCard(business, i);
-    }
+  const transactions = getTransactions();
+  data.data.businesses.forEach(business => {
+    cards += filterForTransactions(transactions, business);
   });
   $('.card-track-inner').hide().html(cards).fadeIn(1000);
   $('.resultsCount').text(data.data.total);

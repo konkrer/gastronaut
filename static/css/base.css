@@ -98,7 +98,7 @@ body {
   z-index: 1050;
 }
 
-.fa-rocket {
+.horiz-rocket {
   transform: rotate(225deg);
 }
 
@@ -114,7 +114,6 @@ body {
 }
 
 .toggle-outline {
-  color: whitesmoke;
   text-shadow: black 1px 1px 1px, black -1px -1px 1px, black 1px -1px 1px,
     black -1px 1px 1px;
 }
