@@ -10,9 +10,11 @@ function makeCategoriesText(categories) {
 }
 
 function makePriceDollars(price) {
+  if (!price) return 'UNKNOWN';
   let dollars = '';
   for (let idx = 0; idx < price.length; idx++) {
-    dollars = `${dollars}${'<i class="fas fa-dollar-sign fa-lg dark-green-outline txt-green mr-2"></i>'}`;
+    dollars +=
+      '<i class="fas fa-dollar-sign fa-lg dark-green-outline txt-green mr-2"></i>';
   }
   return dollars;
 }
@@ -111,7 +113,7 @@ function makeCard(business) {
         <li class="list-group-item bg-transparent text-secondary card-text-noHover">
           ${stars}
         </li>
-        <li class="list-group-item bg-transparent">${dollars}</li>
+        <li class="list-group-item bg-transparent card-text-noHover">${dollars}</li>
         <li class="list-group-item bg-transparent card-text-noHover">
           ${trans_text}
         </li>
@@ -174,6 +176,6 @@ function addCards(data) {
   });
   $('.card-track-inner').hide().html(cards).fadeIn(1000);
   $('.resultsCount').text(data.data.total);
-  location.href = '#1';
+  $('#scrl4').scrollLeft(0);
   makeArrowPulse();
 }

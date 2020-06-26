@@ -16,6 +16,7 @@ let markedUser = false;
 const coordsPercision = 4;
 let locationChange;
 let firstCardsAdded = false;
+let mapOpen = true;
 
 const defaultFormState = [
   { name: 'location', value: '' },
@@ -124,6 +125,7 @@ function checkParameterChange() {
   if (JSON.stringify(currFormState) !== prevFormState) {
     change = true;
     setFormDataArray();
+    console.log('form data changed');
   }
   // if there is lng/lat data but no previous stored coords data
   if (longitude && !prevCoords) {
@@ -131,6 +133,7 @@ function checkParameterChange() {
     localStorage.setItem('coords', JSON.stringify([longitude, latitude]));
     // if there is not a search term having coords warrants an API call
     if (!$searchTerm.val()) change = true;
+    console.log('was blank now coords');
     //
   } else if (longitude && prevCoords) {
     const [prevLng, prevLat] = prevCoords;
@@ -143,12 +146,14 @@ function checkParameterChange() {
       localStorage.setItem('coords', JSON.stringify([longitude, latitude]));
       // if there is not a search term new coords warrant an API call
       if (!$searchTerm.val()) change = true;
+      console.log('coords have changed');
     }
   }
   // category change warrants an API call
   if (prevCategory !== category) {
     change = true;
     localStorage.setItem('category', category);
+    console.log('category changed');
   }
 
   return change;
@@ -406,11 +411,15 @@ function toggleMap() {
   $('.card-map-zone').toggleClass('map-collapse');
   $('#map').toggle();
   $('.map-info').toggle();
-  $('.map-track').toggleClass(['border-top', 'border-secondary']);
   $('.map-close').toggleClass('top-10');
+  $('.map-track').toggleClass(['border-top', 'border-secondary']);
+  if (!$('.card-map-zone').hasClass('map-collapse')) {
+    mappyBoi.resize();
+    mapOpen = true;
+  } else mapOpen = false;
 }
 
-/* Show restaurant marker and fit bounds when address or map button is clicked.
+/* Show restaurant marker and fit bounds map button is clicked.
  */
 $('.card-track-inner').on('click', '.cardMapButton', function (e) {
   e.preventDefault();
@@ -700,7 +709,7 @@ checkLocalStorage();
 function scrollCategoriesToCurrent() {
   let currCat = localStorage.getItem('category');
   currCat = currCat === 'restaurants' ? 'A' : currCat[0].toUpperCase();
-  location.href = '#';
+  // location.href = '#';
   location.href = `#${currCat}`;
   hasScrolledToCategory = true;
   $locationInput.focus();
@@ -725,3 +734,13 @@ if ($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
     }
   });
 }
+
+$('#scrl4').scroll(function (e) {
+  console.log(e);
+  console.log(
+    $(this).scrollLeft(),
+    $(this).width(),
+    $('.card-track-inner').width()
+  );
+  console.log($(this).get(0));
+});

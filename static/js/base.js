@@ -1,6 +1,6 @@
 'use strict';
 
-let sidebarState = true;
+let sidebarOpen = true;
 
 function sidebarToggleListener() {
   $('.sidebar-toggle-btn').on('click', sidebarToggle);
@@ -10,7 +10,7 @@ function sidebarToggle() {
   // change arrow state, filter display,
   // and top padding of card-trak-inner to
   // accomadate filter display
-  if (sidebarState === true) {
+  if (sidebarOpen === true) {
     $('.control-panel').toggleClass('sidebarCollapse');
     setTimeout(() => $('.control-panel').toggle(), 300);
     $('.arrow-wrapper')
@@ -19,9 +19,8 @@ function sidebarToggle() {
       .each(function () {
         $(this).toggleClass('d-none');
       });
-    sidebarState = false;
-    $('.filter-display').toggleClass('d-none');
-    setTimeout(() => $('.filter-display').toggleClass('opaque'), 10);
+    sidebarOpen = false;
+    $('.filter-display').slideDown();
     $('.card-track-inner').toggleClass('padtop-card-filter-d');
   } else {
     $('.control-panel').toggle();
@@ -31,11 +30,14 @@ function sidebarToggle() {
       .each(function () {
         $(this).toggleClass('d-none');
       });
-    sidebarState = true;
-    $('.filter-display').toggleClass(['opaque', 'd-none']);
+    sidebarOpen = true;
+    $('.filter-display').slideUp();
     $('.card-track-inner').toggleClass('padtop-card-filter-d');
-    scrollCategoriesToCurrent();
+    setTimeout(() => {
+      scrollCategoriesToCurrent();
+    }, 100);
   }
+  if (mapOpen) setTimeout(() => mappyBoi.resize(), 290);
 }
 
 function navbarAnimation() {

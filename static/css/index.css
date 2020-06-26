@@ -182,7 +182,8 @@ button.cat-btn.active {
   overflow: hidden;
   z-index: 100;
   font-family: var(--font-main);
-  /* background-color: #357b97; */
+  display: none;
+  background-color: var(--primary);
 }
 
 .filter-d-text {
@@ -210,9 +211,10 @@ button.cat-btn.active {
 
 .card-track-inner {
   height: 100%;
-  width: 100%;
+  /* width: 100%; */
   position: relative;
   padding-left: calc(50% - 16.6%);
+  transition: padding 0.4s;
 }
 
 .my-card {
@@ -334,6 +336,7 @@ button.cat-btn.active {
   #scrl2 {
     padding: 16px 5px;
   }
+
   .filter-display {
     height: 25px;
     width: 94vw;
@@ -370,7 +373,7 @@ button.cat-btn.active {
     display: none;
   }
   .filter-display {
-    display: none;
+    display: none !important;
   }
   .sidebar-toggle-btn {
     font-size: 10vh;
