@@ -1,5 +1,6 @@
 'use strict';
 
+let mappyBoi;
 let userMarker;
 let restMarker;
 const markerOptions = { color: '#3bdb53' };
@@ -41,5 +42,3 @@ function fitBounds(userCoords, restCoords, name) {
     .addTo(mappyBoi);
   restMarker.togglePopup();
 }
-
-let mappyBoi = renderMiniMap();

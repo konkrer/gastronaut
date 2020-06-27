@@ -1,6 +1,6 @@
 'use strict';
 
-let cardsMade;
+// let firstCardMade;
 
 function makeCategoriesText(categories) {
   return categories.reduce((acc, obj, i) => {
@@ -37,17 +37,6 @@ function makeTransactionsText(transactions) {
 }
 
 function makeCard(business) {
-  // string to be added to create id for first element
-  let idHtml = '';
-  // map first business and add an id="1".
-  if (cardsMade === false) {
-    const { longitude: lng, latitude: lat } = business.coordinates;
-    // fitbounds [user coords, restaurant coords]
-    fitBounds([longitude, latitude], [lng, lat], business.name);
-    // label first card id=1 for auto scrolling (href)
-    idHtml = 'id="1"';
-    cardsMade = true;
-  }
   // unpack data items for card display
   const {
     name,
@@ -73,9 +62,8 @@ function makeCard(business) {
 
   return `
     <div
-      class="my-card d-inline-block mr-card bg-dark txt-black"
+      class="my-card mr-card bg-dark txt-black"
       data-id="${id}"
-      ${idHtml}
     >
       <div
         style="
@@ -129,23 +117,10 @@ function makeCard(business) {
     `;
 }
 
-function showNoResults() {
-  restMarker?.remove();
-  let html = `
-  <div class="my-card flx-std no-results"
-  >
-    <div class="txt-orange brand-outline txt-xxl">
-    No Results!
-    </div>
-  </div>
-  `;
-  $('.card-track-inner').html(html);
-  $('.resultsCount').text('0');
-}
-
 function filterForTransactions(transactions, business) {
   // if no transactrions selected no filtering
   if (transactions.length === 0) return makeCard(business);
+  // filter for transactions
   else if (
     // if transactions specified and business has one of specifed
     // transactions make card.
@@ -157,25 +132,35 @@ function filterForTransactions(transactions, business) {
   return '';
 }
 
-function makeArrowPulse() {
-  // make arrows to close side bar pulse to show user to close sidebar (on mobile)
-  $('.arrow-wrapper').removeClass('toggle-outline-mobile');
-  setTimeout(() => $('.arrow-wrapper').addClass('toggle-outline-mobile'), 10);
-}
-
-function addCards(data) {
-  if (data.data.businesses.length == 0) {
-    showNoResults();
-    return;
-  }
-  cardsMade = false;
+/*
+/* Add cards. Filter for transactions.
+*/
+function getCards(data) {
   let cards = '';
   const transactions = getTransactions();
-  data.data.businesses.forEach(business => {
+  data.businesses.forEach(business => {
     cards += filterForTransactions(transactions, business);
   });
-  $('.card-track-inner').hide().html(cards).fadeIn(1000);
-  $('.resultsCount').text(data.data.total);
-  $('#scrl4').scrollLeft(0);
-  makeArrowPulse();
+  return cards;
+}
+
+function showNoResults() {
+  const html = `
+  <div class="my-card flx-std no-results"
+  >
+    <div class="txt-orange brand-outline txt-xxl">
+    No Results!
+    </div>
+  </div>
+  `;
+  $('.card-track-inner').html(html);
+}
+
+function addDummyCard() {
+  const html = `
+  <div class="my-card">
+    <div class="my-card-img-div"></div>
+  </div>
+  `;
+  $('.card-track-inner').append(html);
 }

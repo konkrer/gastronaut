@@ -58,8 +58,13 @@ form h5.museo {
   margin-top: 10px;
 }
 
+form label.results-label {
+  width: 38px;
+}
+
 form label {
   font-family: var(--font-main);
+  width: 100%;
 }
 
 form label:hover {
@@ -176,14 +181,14 @@ button.cat-btn.active {
   position: absolute;
   height: 25px;
   width: 30vw;
-  top: 0;
+  top: 0px;
   left: calc(50vw - 15vw);
   transition: 1s opacity;
   overflow: hidden;
-  z-index: 100;
   font-family: var(--font-main);
   display: none;
   background-color: var(--primary);
+  z-index: 1100;
 }
 
 .filter-d-text {
@@ -193,7 +198,7 @@ button.cat-btn.active {
 }
 
 .padtop-card-filter-d {
-  padding-top: 27px;
+  padding-top: 20px;
 }
 
 .card-track {
@@ -202,7 +207,7 @@ button.cat-btn.active {
   overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
-  padding: 0.5% 0 0.5% 0;
+  padding: 8px 0;
   cursor: grab;
   cursor: -o-grab;
   cursor: -moz-grab;
@@ -226,6 +231,7 @@ button.cat-btn.active {
   font-family: var(--font-main);
   white-space: normal;
   min-width: 342px;
+  display: inline-block;
 }
 
 .mr-card {
@@ -359,8 +365,8 @@ button.cat-btn.active {
   }
   .filter-display {
     height: 25px;
-    width: 60vw;
-    left: calc(50vw - 30vw);
+    width: 50vw;
+    left: calc(50vw - 25vw);
   }
 }
 
@@ -387,7 +393,7 @@ button.cat-btn.active {
     height: 100vh;
   }
   .padtop-card-filter-d {
-    padding-top: 0px;
+    padding-top: 0px !important;
   }
   .card-track {
     padding-top: 5px;
@@ -413,13 +419,17 @@ button.cat-btn.active {
   .toggle-outline-mobile {
     animation: greenGlowPulseulse 0.6s ease-in 10;
   }
+  .filter-display {
+    position: absolute;
+    top: 1px;
+  }
 }
 
 @media screen and (min-width: 840px) and (max-width: 1200px) {
   .filter-display {
     height: 25px;
-    width: 50vw;
-    left: calc(50vw - 25vw);
+    width: 40vw;
+    left: calc(50vw - 20vw);
   }
 }
 
@@ -433,11 +443,23 @@ button.cat-btn.active {
   .mr-card {
     margin-right: 60px;
   }
+  .filter-display {
+    width: 34vw;
+    left: calc(50vw - 17vw);
+  }
 }
 
 @media screen and (min-width: 1450px) {
   .control-panel {
     max-width: 32vw;
+  }
+  .filter-display {
+    position: fixed;
+    width: 24vw;
+    left: calc(50vw - 12vw);
+  }
+  .padtop-card-filter-d {
+    padding-top: 0px !important;
   }
 }
 
@@ -451,6 +473,10 @@ button.cat-btn.active {
   .control-panel {
     max-width: 25vw;
   }
+  /* .filter-display {
+    width: 30vw;
+    left: calc(50vw - 15vw);
+  } */
 }
 
 @media screen and (hover: hover) {
@@ -473,6 +499,15 @@ button.cat-btn.active {
   .card-link:hover,
   .my-card li a:hover {
     color: white;
+  }
+}
+
+@media screen and (min-width: 576px) and (max-width: 991px) {
+  .filter-display {
+    position: fixed;
+  }
+  .padtop-card-filter-d {
+    padding-top: 0px !important;
   }
 }
 

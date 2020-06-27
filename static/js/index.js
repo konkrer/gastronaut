@@ -7,16 +7,18 @@ const $mainForm = $('#main-form');
 const $categoryButtons = $('#cat-btns');
 
 const autoSearchDelay = 2000;
+const coordsPercision = 3;
 let keyupTimer;
 let latitude = null;
 let longitude = null;
 let category = 'restaurants';
-let hasScrolledToCategory = false;
+// let hasScrolledToCategory = false;
 let markedUser = false;
-const coordsPercision = 4;
 let locationChange;
 let firstCardsAdded = false;
 let mapOpen = true;
+let resultsRemaining;
+let offset;
 
 const defaultFormState = [
   { name: 'location', value: '' },
@@ -35,7 +37,10 @@ const defaultFormState = [
 function getFormData() {
   let data = $mainForm.serialize();
   data = `${data}&categories=${category}&limit=50`;
-  if (latitude) data = `${data}&latitude=${latitude}&longitude=${longitude}`;
+  if (latitude)
+    data += `&latitude=${latitude.toFixed(3)}&longitude=${longitude.toFixed(
+      3
+    )}`;
   return data;
 }
 
@@ -43,8 +48,9 @@ function getFormData() {
 /* Get current form data as obj array.
 /* Store in local storage as "formData".
 */
-function setFormDataArray() {
-  let data = $mainForm.serializeArray();
+function setFormDataArray(data) {
+  data = data ? data : $mainForm.serializeArray();
+  console.log(data);
   localStorage.setItem('formData', JSON.stringify(data));
 }
 
@@ -65,8 +71,9 @@ function getTransactions() {
 /*
 /* Save transactions data in local storage.
 */
-function setTransactions() {
-  localStorage.setItem('transactions', JSON.stringify(getTransactions()));
+function setTransactions(transactions) {
+  transactions = transactions ? transactions : getTransactions();
+  localStorage.setItem('transactions', JSON.stringify(transactions));
 }
 
 /*
@@ -109,7 +116,7 @@ function filterIndicatorCheck(formArray) {
 /* Check for changes that warrant a new API call.
 /* Form, category, or significant GPS change.
 */
-function checkParameterChange() {
+function checkParameterChange(lastData) {
   const currFormState = $mainForm.serializeArray();
   const prevFormState = localStorage.getItem('formData');
   const prevCoords = JSON.parse(localStorage.getItem('coords'));
@@ -124,7 +131,7 @@ function checkParameterChange() {
   // if form data changed warrants API call
   if (JSON.stringify(currFormState) !== prevFormState) {
     change = true;
-    setFormDataArray();
+    setFormDataArray(currFormState);
     console.log('form data changed');
   }
   // if there is lng/lat data but no previous stored coords data
@@ -155,6 +162,10 @@ function checkParameterChange() {
     localStorage.setItem('category', category);
     console.log('category changed');
   }
+  // if there is no stored yelp data must make api call
+  if (!lastData || ['undefined', 'false'].includes(lastData)) {
+    change = true;
+  }
 
   return change;
 }
@@ -162,18 +173,19 @@ function checkParameterChange() {
 /*
 /* Make a requst to /v1/search endpoint. 
 */
-async function searchApiCall() {
-  const queryData = getFormData();
+async function searchApiCall(useOffset) {
+  let queryData = getFormData();
+  if (useOffset) queryData += `&offset=${offset * 50}`;
   // axios get search endpoint with query data
   try {
     var data = await axios.get(`/v1/search?${queryData}`);
   } catch (error) {
     alert(`Yelp API Error${error.message}`);
-    return;
+    return false;
   }
   if (data.data.error) {
     errorCard(data.data);
-    return;
+    return false;
   }
   return data;
 }
@@ -184,10 +196,8 @@ async function searchApiCall() {
 function yelpSetLocation(data) {
   // extract lng/lat from new yelp data
   const {
-    data: {
-      region: {
-        center: { longitude: lng, latitude: lat },
-      },
+    region: {
+      center: { longitude: lng, latitude: lat },
     },
   } = data;
   // if lng/lat has changed or coords map has not been rendered yet
@@ -261,20 +271,61 @@ function mappingAndCoordsLogic(data) {
 }
 
 /*
+/* Check if transactions have changed.
+/* Compare form data to storage data.
+*/
+function checkTransactionsChange() {
+  const transactions = JSON.stringify(getTransactions());
+  const prevTransactions = localStorage.getItem('transactions');
+  return transactions !== prevTransactions;
+}
+
+/*
 /* Returen bool representing if no new data and transactions
 /* haven't changed. If so nothing new to display.
 /* But if first cards not added yet return false.
 */
-function transactionsNoChangeAndNONewData(newData) {
+function transactionsNoChangeAndNoNewData(newData) {
   if (!firstCardsAdded) {
     firstCardsAdded = true;
     return false;
   }
-  const transactions = JSON.stringify(getTransactions());
-  const prevTransactions = localStorage.getItem('transactions');
-  if (!newData && transactions === prevTransactions) return true;
+  const transactionsChanged = checkTransactionsChange();
+
+  if (!transactionsChanged && !newData) return true;
   setTransactions();
   return false;
+}
+
+/*
+/* Map first business. 
+*/
+function mapFirstBusiness(data) {
+  const {
+    businesses: [first, ...rest],
+  } = data;
+  const { longitude: lng, latitude: lat } = first.coordinates;
+  fitBounds([longitude, latitude], [lng, lat], first.name);
+}
+
+/*
+/* Map first business. 
+*/
+function mapAndAddCardsForNewApiCall(data) {
+  if (data.businesses.length == 0) {
+    showNoResults();
+    restMarker?.remove();
+    $('.resultsCount').text('0');
+    return;
+  }
+  mappingAndCoordsLogic(data);
+  mapFirstBusiness(data);
+  const cards = getCards(data);
+  $('.card-track-inner').hide().html(cards).fadeIn(1000);
+  if (!resultsRemaining) addDummyCard();
+  $('.resultsCount').text(data.total);
+  $('#scrl4').scrollLeft(0);
+  makeArrowPulse();
 }
 
 /*
@@ -284,27 +335,53 @@ function transactionsNoChangeAndNONewData(newData) {
 */
 async function searchYelp() {
   console.log('searchYelp');
+
   // Make sure there is a location to search.
   if (!latitude && $locationInput.val() === '') {
     alert('Enter a location or press detect location.');
     return;
   }
+  // Get last search results from API call.
+  const lastData = localStorage.getItem('currData');
+
   // if yelp parameters have changed call api endpoint
-  if (checkParameterChange()) {
+  if (checkParameterChange(lastData)) {
     console.log('new search api call <<<<<<<<<<<<<<<<<<<******<<');
+
     var data = await searchApiCall();
+
+    // Check if new data is different from last data.
+    // If not, set data to null so card repaint is avoided
+    // usless transactions have changed.
+    // NOTE: ["delivery", "pickup"] text changes places in
+    //  JSON from Yelp. Equality test only effective sometimes.
+    const jsonData = JSON.stringify(data.data);
+    if (jsonData === lastData) data = null;
     // save new data in local storage
-    localStorage.setItem('currData', JSON.stringify(data));
+    else localStorage.setItem('currData', jsonData);
     console.log(data);
   }
-  if (transactionsNoChangeAndNONewData(!!data)) return;
-  // determine what location to use (text, coords) and if
-  // updating map is necessary.
-  mappingAndCoordsLogic(data);
+  if (transactionsNoChangeAndNoNewData(!!data)) return;
 
   // If no new data use last data.
-  var data = data ? data : JSON.parse(localStorage.getItem('currData'));
-  addCards(data);
+  var data = data ? data.data : JSON.parse(lastData);
+  resultsRemaining = data.total - data.businesses.length;
+  offset = 1;
+  mapAndAddCardsForNewApiCall(data);
+}
+
+/*
+/* If more results remain, call API, make cards. 
+*/
+async function addNextCards() {
+  if (!resultsRemaining) {
+    addDummyCard();
+    return;
+  }
+  const data = await searchApiCall(true);
+  offset++;
+  resultsRemaining -= data.data.businesses.length;
+  $('.card-track-inner').append(getCards(data.data));
 }
 
 /*
@@ -388,8 +465,7 @@ $('.navbar form').submit(function (e) {
 */
 $('.explore').on('click', function (e) {
   e.preventDefault();
-  console.log('in explore');
-  $('.hero-animation').toggle();
+  hideHeroAndSearchMap();
 });
 
 /*
@@ -565,6 +641,7 @@ function setCategoryFromStorage() {
 /* Set interface checkboxes.
 */
 function setFormTransactions(transactions) {
+  if (!transactions) return;
   ['delivery', 'pickup', 'restaurant_reservation'].forEach(id => {
     if (transactions.includes(id)) $(`#${id}`).prop('checked', true);
     else $(`#${id}`).prop('checked', false);
@@ -659,7 +736,10 @@ function setForm(data) {
 function updateFormFromStorage() {
   // check for data if none return
   let data = localStorage.getItem('formData');
-  if (!data) return;
+  if (!data) {
+    setTransactions([]);
+    return;
+  }
   setForm(JSON.parse(data));
   // set the interface (transactions) options on the form
   setFormTransactions(JSON.parse(localStorage.getItem('transactions')));
@@ -680,25 +760,6 @@ function setCoordsFromStorage() {
 }
 
 /*
-/* Check localStorage for data to bring form to last state
-/* set category active, and search.
-*/
-function checkLocalStorage() {
-  setCategoryFromStorage();
-  updateFormFromStorage();
-  const coords = setCoordsFromStorage();
-  // if there is given location request search
-  if ($locationInput.val()) searchYelp();
-  // if no given location but allowing location sharing detect location
-  else if (localStorage.getItem('geoAllowed') === 'true') detectLocation();
-  // if not sharing location but stored coords use those to center map.
-  else if (coords) {
-    userMarker = userMarker = addUserMarker(coords);
-  }
-}
-checkLocalStorage();
-
-/*
 /* Restaurant categories auto scroll to last choosen category.
 */
 
@@ -708,39 +769,68 @@ checkLocalStorage();
 */
 function scrollCategoriesToCurrent() {
   let currCat = localStorage.getItem('category');
-  currCat = currCat === 'restaurants' ? 'A' : currCat[0].toUpperCase();
-  // location.href = '#';
-  location.href = `#${currCat}`;
-  hasScrolledToCategory = true;
+  const converter = {
+    raw_food: 'L',
+    restaurants: 'A',
+    newamerican: 'A',
+    tradamerican: 'A',
+    hotdogs: 'F',
+  };
+  if (currCat in converter) currCat = converter[currCat];
+  location.href = '#';
+  location.href = `#${currCat[0].toUpperCase()}`;
+  // hasScrolledToCategory = true;
   $locationInput.focus();
   $locationInput.blur();
 }
+
+function hideHeroAndSearchMap() {
+  $('.hero-animation').toggle();
+  scrollCategoriesToCurrent();
+  // if there is given location request search
+  if ($locationInput.val()) searchYelp();
+  // if no given location but allowing location sharing detect location
+  else if (localStorage.getItem('geoAllowed') === 'true') detectLocation();
+  // if not sharing location but stored coords use those to center map.
+  else if (coords) {
+    userMarker = userMarker = addUserMarker(coords);
+  }
+}
+
 /*
 /* If page loads scrolled to bottom call scrollCategoriesToCurrent.
 /* Otherwise when user scroll to bottom of page call scrollCategoriesToCurrent.
 /* Only call once.
 */
-if ($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
-  scrollCategoriesToCurrent();
-} else {
+function MapOnScrollBottom(coords) {
   $(window).scroll(function () {
-    if (
-      $(window).scrollTop() + $(window).height() >
-      $(document).height() - 100
-    ) {
-      if (!hasScrolledToCategory) {
-        scrollCategoriesToCurrent();
-      }
+    // when bottom of screen is scrolle to.
+    if ($(window).scrollTop() + $(window).height() > $(document).height()) {
+      hideHeroAndSearchMap();
     }
   });
 }
 
-$('#scrl4').scroll(function (e) {
-  console.log(e);
-  console.log(
-    $(this).scrollLeft(),
-    $(this).width(),
-    $('.card-track-inner').width()
-  );
-  console.log($(this).get(0));
-});
+/*
+/* Check localStorage for data to bring form to last state
+/* set category active, and search.
+*/
+function checkLocalStorage() {
+  setCategoryFromStorage();
+  updateFormFromStorage();
+  const coords = setCoordsFromStorage();
+  MapOnScrollBottom(coords);
+}
+
+checkLocalStorage();
+mappyBoi = renderMiniMap();
+
+// $('#scrl4').scroll(function (e) {
+//   console.log(e);
+//   console.log(
+//     $(this).scrollLeft(),
+//     $(this).width(),
+//     $('.card-track-inner').width()
+//   );
+//   console.log($(this).get(0));
+// });

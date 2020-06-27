@@ -12,6 +12,7 @@
   <script defer src="../static/js/geolocate.js"></script>
   <script src="../static/js/modernizer.js"></script>
   <script defer src="../static/js/cards.js"></script>
+  <script defer src="../static/js/animations.js"></script>
   <script defer src="../static/js/index.js"></script>
   <script src="https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.js"></script>
   <script
@@ -37,11 +38,7 @@
       <div class="col-5 text-center" style="font-size: 5px;">
         <h1 class="display-1-k txt-orange brand-outline">Gastronaut</h1>
         <h2 class="display-2-k lead-k">Explore the world of food.</h2>
-        <a
-          href="#main-interface"
-          class="btn btn-lg btn-outline-success explore"
-          data-toggle="tool-tip"
-          title="Lock Control Panel View"
+        <a href="#main-interface" class="btn btn-lg btn-outline-success explore"
           >Explore</a
         >
       </div>
@@ -101,7 +98,7 @@
                 </div>
               </div>
               <div class="">
-                <label class="m-0" for="">Found</label>
+                <label class="m-0 results-label">Found</label>
                 <span
                   class="form-num-display resultsCount ml-1 ml-sm-4 text-light"
                   >0</span
