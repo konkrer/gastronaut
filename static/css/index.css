@@ -17,6 +17,10 @@ main {
   font-weight: 200;
 }
 
+.hero-lead {
+  max-width: 80%;
+}
+
 .bg-stars1 {
   background: url('../images/stars2.jpg'), black;
   background-repeat: no-repeat;
@@ -388,9 +392,9 @@ button.cat-btn.active {
 
 /* portrait on phones */
 @media screen and (orientation: portrait) and (max-width: 450px) and (max-height: 840px) {
-  header div {
+  header {
     background-color: var(--secondary);
-    opacity: 0.925;
+    opacity: 0.95;
     border-radius: 10px;
     padding: 10px 2px;
   }
@@ -429,6 +433,9 @@ button.cat-btn.active {
     width: 34vw;
     left: calc(50vw - 17vw);
   }
+  .hero-lead {
+    max-width: 140%;
+  }
 }
 
 @media screen and (min-width: 1450px) {
@@ -443,6 +450,9 @@ button.cat-btn.active {
   .padtop-card-filter-d {
     padding-top: 0px !important;
   }
+  .hero-lead {
+    max-width: 90%;
+  }
 }
 
 @media screen and (min-width: 1768px) {
@@ -454,6 +464,9 @@ button.cat-btn.active {
   }
   .control-panel {
     max-width: 25vw;
+  }
+  .hero-lead {
+    max-width: 100%;
   }
   /* .filter-display {
     width: 30vw;
