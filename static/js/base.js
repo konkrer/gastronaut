@@ -37,7 +37,7 @@ function sidebarToggle() {
       scrollCategoriesToCurrent();
     }, 100);
   }
-  if (mapOpen) setTimeout(() => mappyBoi.resize(), 290);
+  if (mapOpen) setTimeout(() => mappyBoi.resize(), 350);
 }
 
 function navbarAnimation() {

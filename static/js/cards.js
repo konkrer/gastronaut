@@ -158,7 +158,7 @@ function showNoResults() {
 
 function addDummyCard() {
   const html = `
-  <div class="my-card">
+  <div class="my-card dummy-card">
     <div class="my-card-img-div"></div>
   </div>
   `;
