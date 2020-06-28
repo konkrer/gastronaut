@@ -6,10 +6,10 @@ verify_ssl = true
 [dev-packages]
 flake8 = "*"
 yapf = "*"
+flask-debugtoolbar = "*"
 
 [packages]
 flask = "*"
-flask-debugtoolbar = "*"
 psycopg2-binary = "*"
 flask-sqlalchemy = "*"
 flask-wtf = "*"

@@ -784,7 +784,7 @@ function scrollCategoriesToCurrent() {
   $locationInput.blur();
 }
 
-function hideHeroAndSearchMap() {
+function hideHeroAndSearchMap(coords) {
   $('.hero-animation').toggle();
   scrollCategoriesToCurrent();
   // if there is given location request search
@@ -802,11 +802,13 @@ function hideHeroAndSearchMap() {
 /* Otherwise when user scroll to bottom of page call scrollCategoriesToCurrent.
 /* Only call once.
 */
+let $scrollListener;
 function MapOnScrollBottom(coords) {
-  $(window).scroll(function () {
-    // when bottom of screen is scrolle to.
-    if ($(window).scrollTop() + $(window).height() > $(document).height()) {
-      hideHeroAndSearchMap();
+  $scrollListener = $(window).on('scroll', function () {
+    // when bottom of screen is scrolled to.
+    if ($(window).scrollTop() + $(window).height() > $(document).height() - 1) {
+      hideHeroAndSearchMap(coords);
+      $scrollListener.off();
     }
   });
 }
