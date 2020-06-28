@@ -18,7 +18,7 @@ app = Flask(__name__)
 URL = 'https://api.yelp.com/v3'
 API_KEY = 'u1b-Z7caHA_CxfhHTOyJOUZN06hZ4TZmta3Mr8StGsWlMO3N6zTh8jwtlasNRwaao2W6fkZOGX80cKQuBKQKVTXsBZMNzaF7iiL_W-b52DXx9aS_wp-mQ73kpmDgXnYx'  # noqa E501
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///database_name'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///gastronaut'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
 app.config["SECRET_KEY"] = "L0;kla02j08sd39020-3kdsh_(082"
