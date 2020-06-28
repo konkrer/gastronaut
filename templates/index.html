@@ -476,10 +476,10 @@
           </div>
           <div class="col-1 bg-light p-0" id="scrl2">
             <div class="text-center list-group" id="first-list">
-              {% for let in first_letters %}
+              {% for let, id in first_letters %}
               <a
                 class="list-group-item list-group-item-action first-letter"
-                href="#{{let}}"
+                href="#{{id}}"
                 >{{let}}</a
               >
               {% endfor %}
@@ -498,7 +498,7 @@
                 type="button"
                 class="list-group-item list-group-item-action cat-btn"
                 value="{{category}}"
-                id="{{show[0]}}"
+                id="{{show[0:3]}}"
               >
                 {{show}}
               </button>

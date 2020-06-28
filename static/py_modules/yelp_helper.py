@@ -115,11 +115,14 @@ yelp_categories = [('All', 'restaurants'), ('Afghan', 'afghani'),
                    ('Uzbek', 'uzbek'), ('Vegan', 'vegan'),
                    ('Vegetarian', 'vegetarian'), ('Vietnamese', 'vietnamese'),
                    ('Waffles', 'waffles'), ('Wraps', 'wraps')]
-# get alphabetized first letter list of categories
-first_letters = [
-    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'P',
-    'R', 'S', 'T', 'U', 'V', 'W'
-]
+
+# get alphabetized first letter list of categories. [first_let, #id_to_call]
+first_letters = [('A', 'All'), ('B', 'Ban'), ('C', 'Caf'), ('D', 'Del'),
+                 ('E', 'Eri'), ('F', 'Fas'), ('G', 'Gam'), ('H', 'Hal'),
+                 ('I', 'Ibe'), ('J', 'Jap'), ('K', 'Keb'), ('L', 'Lao'),
+                 ('M', 'Mal'), ('N', 'New'), ('P', 'Pak'), ('R', 'Rus'),
+                 ('S', 'Sal'), ('T', 'Tai'), ('U', 'Ukr'), ('V', 'Veg'),
+                 ('W', 'Waf')]
 
 # from csv:
 # get yelp categories data in tuples as: (display name, category name)

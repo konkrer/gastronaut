@@ -770,15 +770,15 @@ function setCoordsFromStorage() {
 function scrollCategoriesToCurrent() {
   let currCat = localStorage.getItem('category');
   const converter = {
-    raw_food: 'L',
-    restaurants: 'A',
-    newamerican: 'A',
-    tradamerican: 'A',
-    hotdogs: 'F',
+    raw_food: 'Liv',
+    restaurants: 'All',
+    newamerican: 'Ame',
+    tradamerican: 'Ame',
+    hotdogs: 'Fas',
   };
   if (currCat in converter) currCat = converter[currCat];
   location.href = '#';
-  location.href = `#${currCat[0].toUpperCase()}`;
+  location.href = `#${currCat[0].toUpperCase()}${currCat.substr(1, 2)}`;
   // hasScrolledToCategory = true;
   $locationInput.focus();
   $locationInput.blur();
