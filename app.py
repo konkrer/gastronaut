@@ -3,7 +3,7 @@
 from flask import (  # noqa F401
     Flask, request, flash, make_response, Response, render_template, session,
     redirect, jsonify, abort, url_for)
-from flask_debugtoolbar import DebugToolbarExtension
+# from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 from werkzeug.utils import secure_filename
 from werkzeug.exceptions import Unauthorized
