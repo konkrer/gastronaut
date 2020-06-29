@@ -32,7 +32,7 @@ connect_db(app)
 def index():
     """Home view."""
     # get IP address
-    ip_address_raw = request.environ.get('HTTP_X_FOWARDED_FOR',
+    ip_address_raw = request.environ.get('HTTP_X_FORWARDED_FOR',
                                          request.remote_addr)
     print(ip_address_raw)
     ip_address = ip_address_raw.split(',')[0]
