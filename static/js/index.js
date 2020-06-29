@@ -463,6 +463,15 @@ $('.navbar form').submit(function (e) {
 /*
 /* Explore buttons lock view to bottom.
 */
+$('.explore-nav').on('click', function (e) {
+  e.preventDefault();
+  $('.hero-animation').toggle();
+  LockOnScrollBottom();
+});
+
+/*
+/* Hero explore button lock view to bottom and search.
+*/
 $('.explore').on('click', function (e) {
   e.preventDefault();
   hideHeroAndSearchMap();
@@ -809,6 +818,22 @@ function MapOnScrollBottom(coords) {
     if ($(window).scrollTop() + $(window).height() > $(document).height() - 1) {
       hideHeroAndSearchMap(coords);
       $scrollListener.off();
+    }
+  });
+}
+
+/*
+/* If page loads scrolled to bottom call scrollCategoriesToCurrent.
+/* Otherwise when user scroll to bottom of page call scrollCategoriesToCurrent.
+/* Only call once.
+*/
+let $scrollListener2;
+function LockOnScrollBottom() {
+  $scrollListener2 = $(window).on('scroll', function () {
+    // when bottom of screen is scrolled to.
+    if ($(window).scrollTop() + $(window).height() > $(document).height() - 1) {
+      $('.hero-animation').hide();
+      $scrollListener2.off();
     }
   });
 }
