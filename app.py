@@ -51,18 +51,13 @@ def index():
     lat = data.get('latitude', '')
     lng = data.get('longitude', '')
 
-    a = []
-    d = dict(request.environ)
-    for itm in d.items():
-        a.append(itm)
-
-    return render_template('index.html',
-                           yelp_categories=yelp_categories,
-                           first_letters=first_letters,
-                           lat=lat,
-                           lng=lng,
-                           ip_address=a,
-                           ip_address_raw=ip_address_raw)
+    return render_template(
+        'index.html',
+        yelp_categories=yelp_categories,
+        first_letters=first_letters,
+        lat=lat,
+        lng=lng,
+    )
 
 
 #

@@ -799,13 +799,10 @@ function hideHeroAndSearchMap(coords) {
   $('.hero-animation').hide();
   scrollCategoriesToCurrent();
   // if there is given location request search
-  if ($locationInput.val()) searchYelp();
+  if ($locationInput.val() || longitude) searchYelp();
+  // Below disabled only to allow user input to geolocate.
   // if no given location but allowing location sharing detect location
-  else if (localStorage.getItem('geoAllowed') === 'true') detectLocation();
-  // if not sharing location but stored coords use those to center map.
-  else if (longitude) {
-    searchYelp();
-  }
+  // else if (localStorage.getItem('geoAllowed') === 'true') detectLocation();
 }
 
 /*
@@ -849,7 +846,7 @@ function checkLocalStorage() {
   longitude = +$('#main-form input[name=lng]').val();
   setCategoryFromStorage();
   updateFormFromStorage();
-  setCoordsFromStorage(); // disable?
+  if (!latitude) setCoordsFromStorage();
   MapOnScrollBottom();
 }
 
