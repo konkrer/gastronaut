@@ -33,7 +33,11 @@ connect_db(app)
 def index():
     """Home view."""
     # get IP address
-    ip_address = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
+    ip_address = request.environ.get('HTTP_X_FOWARDED_FOR',
+                                     request.remote_addr)
+    print(ip_address)
+    ip_address = ip_address.split(',')[0]
+    print(ip_address)
     # IP geolocation
     try:
         res = requests.get(f'http://ipwhois.app/json/{ip_address}')
