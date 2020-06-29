@@ -89,7 +89,7 @@ function errorCard(data) {
 */
 function filterIndicatorCheck(formArray) {
   // no need to show filter indicator for these inputs
-  const notFilters = ['location', 'sort_by'];
+  const notFilters = ['location', 'sort_by', 'lng', 'lat'];
   let initLength = formArray.length;
   const withoutPrices = formArray.filter(obj => obj.name[0] !== 'p');
   // number of price options slected
@@ -365,6 +365,8 @@ async function searchYelp() {
 
   // If no new data use last data.
   var data = data ? data.data : JSON.parse(lastData);
+  // bug hunt!
+  if (!data.businesses) alert(data);
   resultsRemaining = data.total - data.businesses.length;
   offset = 1;
   mapAndAddCardsForNewApiCall(data);
@@ -794,15 +796,15 @@ function scrollCategoriesToCurrent() {
 }
 
 function hideHeroAndSearchMap(coords) {
-  $('.hero-animation').toggle();
+  $('.hero-animation').hide();
   scrollCategoriesToCurrent();
   // if there is given location request search
   if ($locationInput.val()) searchYelp();
   // if no given location but allowing location sharing detect location
   else if (localStorage.getItem('geoAllowed') === 'true') detectLocation();
   // if not sharing location but stored coords use those to center map.
-  else if (coords) {
-    userMarker = userMarker = addUserMarker(coords);
+  else if (longitude) {
+    searchYelp();
   }
 }
 
@@ -812,11 +814,11 @@ function hideHeroAndSearchMap(coords) {
 /* Only call once.
 */
 let $scrollListener;
-function MapOnScrollBottom(coords) {
+function MapOnScrollBottom() {
   $scrollListener = $(window).on('scroll', function () {
     // when bottom of screen is scrolled to.
     if ($(window).scrollTop() + $(window).height() > $(document).height() - 1) {
-      hideHeroAndSearchMap(coords);
+      hideHeroAndSearchMap();
       $scrollListener.off();
     }
   });
@@ -843,10 +845,12 @@ function LockOnScrollBottom() {
 /* set category active, and search.
 */
 function checkLocalStorage() {
+  latitude = +$('#main-form input[name=lat]').val();
+  longitude = +$('#main-form input[name=lng]').val();
   setCategoryFromStorage();
   updateFormFromStorage();
-  const coords = setCoordsFromStorage();
-  MapOnScrollBottom(coords);
+  setCoordsFromStorage(); // disable?
+  MapOnScrollBottom();
 }
 
 checkLocalStorage();

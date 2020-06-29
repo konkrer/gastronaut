@@ -8,6 +8,7 @@ from sqlalchemy.exc import IntegrityError
 from werkzeug.utils import secure_filename
 from werkzeug.exceptions import Unauthorized
 import requests
+import json
 import os
 from models import (db, connect_db, Product, Category, User)
 from forms import AddProductForm, AddUserForm, EditUserForm, LoginForm
@@ -31,10 +32,26 @@ connect_db(app)
 @app.route("/")
 def index():
     """Home view."""
-    # TODO: ADD IP geolocation, pass data in hidden input
+    # get IP address
+    ip_address = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
+    # IP geolocation
+    try:
+        res = requests.get(f'http://ipwhois.app/json/{ip_address}')
+        data = res.json()
+    except Exception as e:
+        # move to logging
+        print(e, "<<<<<<<<<<")
+
+    if data.get('message'):
+        print(data['message'])
+    # pass lng/lat data in hidden input
+    lat = data.get('latitude', '')
+    lng = data.get('longitude', '')
     return render_template('index.html',
                            yelp_categories=yelp_categories,
-                           first_letters=first_letters)
+                           first_letters=first_letters,
+                           lat=lat,
+                           lng=lng)
 
 
 #
