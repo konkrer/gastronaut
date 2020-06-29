@@ -15,17 +15,20 @@ from static.py_modules.yelp_helper import (yelp_categories, first_letters,
                                            parse_query_params)
 
 app = Flask(__name__)
-URL = 'https://api.yelp.com/v3'
-API_KEY = 'u1b-Z7caHA_CxfhHTOyJOUZN06hZ4TZmta3Mr8StGsWlMO3N6zTh8jwtlasNRwaao2W6fkZOGX80cKQuBKQKVTXsBZMNzaF7iiL_W-b52DXx9aS_wp-mQ73kpmDgXnYx'  # noqa E501
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///gastronaut'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
-app.config["SECRET_KEY"] = "L0;kla02j08sd39020-3kdsh_(082"
+app.config["SECRET_KEY"] = os.environ.get('SECRET_KEY')
 app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
 # debug = DebugToolbarExtension(app)
 
 connect_db(app)
+
+YELP_URL = 'https://api.yelp.com/v3'
+API_KEY = os.environ.get('YELP_API_KEY')
+if not API_KEY:
+    from local_settings import *
 
 
 @app.route("/")
@@ -259,7 +262,7 @@ def search_yelp():
     params = parse_query_params(request.args)
 
     try:
-        res = requests.get(f'{URL}/businesses/search',
+        res = requests.get(f'{YELP_URL}/businesses/search',
                            params=params,
                            headers=headers)
     except Exception as e:
