@@ -8,7 +8,6 @@ from sqlalchemy.exc import IntegrityError
 from werkzeug.utils import secure_filename
 from werkzeug.exceptions import Unauthorized
 import requests
-import json
 import os
 from models import (db, connect_db, Product, Category, User)
 from forms import AddProductForm, AddUserForm, EditUserForm, LoginForm
@@ -33,10 +32,10 @@ connect_db(app)
 def index():
     """Home view."""
     # get IP address
-    ip_address = request.environ.get('HTTP_X_FOWARDED_FOR',
-                                     request.remote_addr)
-    print(ip_address)
-    ip_address = ip_address.split(',')[0]
+    ip_address_raw = request.environ.get('HTTP_X_FOWARDED_FOR',
+                                         request.remote_addr)
+    print(ip_address_raw)
+    ip_address = ip_address_raw.split(',')[0]
     print(ip_address)
     # IP geolocation
     try:
@@ -55,7 +54,9 @@ def index():
                            yelp_categories=yelp_categories,
                            first_letters=first_letters,
                            lat=lat,
-                           lng=lng)
+                           lng=lng,
+                           ip_address=ip_address,
+                           ip_address_raw=ip_address_raw)
 
 
 #
