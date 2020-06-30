@@ -1,11 +1,11 @@
 # Gastronaut
 
-### _Restaurant Discovery and Food Exploration Website_
+### *Restaurant Discovery and Food Exploration Website*
 
 <br/>
 <br/>
 
-### Do you find yourself eating the same things you always eat? Try something new, become a Gastronaut!
+#### *Do you find yourself eating the same things you always eat? Try something new, become a Gastronaut!*
 
 <br/>
 
