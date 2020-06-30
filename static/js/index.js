@@ -389,7 +389,10 @@ async function addNextCards() {
   offset++;
   resultsRemaining -= data.data.businesses.length;
   $('.card-track-inner').append(getCards(data.data));
-  if (resultsRemaining) addNextCardsListener();
+  if (resultsRemaining)
+    setTimeout(() => {
+      addNextCardsListener();
+    }, 3000);
 }
 
 /*
@@ -850,10 +853,13 @@ function checkLocalStorage() {
 checkLocalStorage();
 mappyBoi = renderMiniMap();
 
+/*
+/* When cards scrolled almost to end add next cards.
+*/
 let paginationListener;
 function addNextCardsListener() {
   paginationListener = $('#scrl4').scroll(function (e) {
-    if ($(this).scrollLeft() + $(this).width() > e.target.scrollWidth * 0.8) {
+    if ($(this).scrollLeft() + $(this).width() > e.target.scrollWidth * 0.96) {
       addNextCards();
       paginationListener.off();
     }
