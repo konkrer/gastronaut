@@ -494,8 +494,13 @@ button.cat-btn.active {
   .sidebar-toggle-btn:hover,
   .map-close:hover {
     color: var(--my-green) !important;
-    transform: scale(1.2);
     transition: transform 0.4s;
+  }
+  .sidebar-toggle-btn:hover {
+    transform: scale(1.3);
+  }
+  .map-close:hover {
+    transform: scale(1.09);
   }
   .my-card button:hover {
     background-color: var(--my-green) !important;

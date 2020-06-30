@@ -320,12 +320,17 @@ function mapAndAddCardsForNewApiCall(data) {
   }
   mappingAndCoordsLogic(data);
   mapFirstBusiness(data);
-  const cards = getCards(data);
-  $('.card-track-inner').hide().html(cards).fadeIn(1000);
-  if (!resultsRemaining) addDummyCard();
   $('.resultsCount').text(data.total);
+  const cards = getCards(data);
   $('#scrl4').scrollLeft(0);
+  $('.card-track-inner').hide().html(cards).fadeIn(1000);
   makeArrowPulse();
+
+  if (resultsRemaining) {
+    addNextCardsListener();
+  } else {
+    addDummyCard();
+  }
 }
 
 /*
@@ -384,6 +389,7 @@ async function addNextCards() {
   offset++;
   resultsRemaining -= data.data.businesses.length;
   $('.card-track-inner').append(getCards(data.data));
+  if (resultsRemaining) addNextCardsListener();
 }
 
 /*
@@ -468,7 +474,7 @@ $('.navbar form').submit(function (e) {
 $('.explore-nav').on('click', function (e) {
   e.preventDefault();
   $('.hero-animation').toggle();
-  LockOnScrollBottom();
+  lockOnScrollBottom(false);
 });
 
 /*
@@ -811,28 +817,13 @@ function hideHeroAndSearchMap(coords) {
 /* Only call once.
 */
 let $scrollListener;
-function MapOnScrollBottom() {
+function lockOnScrollBottom(map = true) {
   $scrollListener = $(window).on('scroll', function () {
     // when bottom of screen is scrolled to.
     if ($(window).scrollTop() + $(window).height() > $(document).height() - 1) {
-      hideHeroAndSearchMap();
+      if (map) hideHeroAndSearchMap();
+      else $('.hero-animation').hide();
       $scrollListener.off();
-    }
-  });
-}
-
-/*
-/* If page loads scrolled to bottom call scrollCategoriesToCurrent.
-/* Otherwise when user scroll to bottom of page call scrollCategoriesToCurrent.
-/* Only call once.
-*/
-let $scrollListener2;
-function LockOnScrollBottom() {
-  $scrollListener2 = $(window).on('scroll', function () {
-    // when bottom of screen is scrolled to.
-    if ($(window).scrollTop() + $(window).height() > $(document).height() - 1) {
-      $('.hero-animation').hide();
-      $scrollListener2.off();
     }
   });
 }
@@ -847,18 +838,18 @@ function checkLocalStorage() {
   setCategoryFromStorage();
   updateFormFromStorage();
   if (!latitude) setCoordsFromStorage();
-  MapOnScrollBottom();
+  lockOnScrollBottom();
 }
 
 checkLocalStorage();
 mappyBoi = renderMiniMap();
 
-// $('#scrl4').scroll(function (e) {
-//   console.log(e);
-//   console.log(
-//     $(this).scrollLeft(),
-//     $(this).width(),
-//     $('.card-track-inner').width()
-//   );
-//   console.log($(this).get(0));
-// });
+let paginationListener;
+function addNextCardsListener() {
+  paginationListener = $('#scrl4').scroll(function (e) {
+    if ($(this).scrollLeft() + $(this).width() > e.target.scrollWidth * 0.8) {
+      addNextCards();
+      paginationListener.off();
+    }
+  });
+}

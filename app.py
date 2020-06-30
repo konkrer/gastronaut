@@ -3,7 +3,6 @@
 from flask import (  # noqa F401
     Flask, request, flash, make_response, Response, render_template, session,
     redirect, jsonify, abort, url_for)
-# from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 from werkzeug.utils import secure_filename
 from werkzeug.exceptions import Unauthorized
@@ -16,19 +15,24 @@ from static.py_modules.yelp_helper import (yelp_categories, first_letters,
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///gastronaut'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
+    'DATABASE_URL', 'postgresql:///gastronaut')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_ECHO'] = True
 app.config["SECRET_KEY"] = os.environ.get('SECRET_KEY')
-app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
-# debug = DebugToolbarExtension(app)
 
 connect_db(app)
 
 YELP_URL = 'https://api.yelp.com/v3'
 API_KEY = os.environ.get('YELP_API_KEY')
+
+# if on development server
 if not API_KEY:
-    from local_settings import *
+    from flask_debugtoolbar import DebugToolbarExtension
+    from local_settings import API_KEY, SECRET_KEY
+    app.config["SECRET_KEY"] = SECRET_KEY
+    app.config['SQLALCHEMY_ECHO'] = True
+    app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
+    debug = DebugToolbarExtension(app)
 
 
 @app.route("/")
@@ -37,9 +41,7 @@ def index():
     # get IP address
     ip_address_raw = request.environ.get('HTTP_X_FORWARDED_FOR',
                                          request.remote_addr)
-    print(ip_address_raw)
-    ip_address = ip_address_raw.split(',')[0]
-    print(ip_address)
+    ip_address = ip_address_raw.split(',')[0].strip()
     # IP geolocation
     try:
         res = requests.get(f'http://ipwhois.app/json/{ip_address}')

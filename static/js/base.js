@@ -57,5 +57,5 @@ function navbarAnimationTiming() {
 
 $(function () {
   sidebarToggleListener();
-  navbarAnimationTiming();
+  // navbarAnimationTiming();
 });
