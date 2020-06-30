@@ -385,7 +385,7 @@ button.cat-btn.active {
     width: 250px;
     min-width: 250px;
   }
-  .toggle-outline-mobile {
+  .black-outline-mobile {
     animation: greenGlowPulseulse 0.6s ease-in 10;
   }
 }
@@ -402,7 +402,7 @@ button.cat-btn.active {
     width: 342px;
     min-width: 342px;
   }
-  .toggle-outline-mobile {
+  .black-outline-mobile {
     animation: greenGlowPulseulse 0.6s ease-in 10;
   }
   .filter-display {

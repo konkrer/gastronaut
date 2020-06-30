@@ -88,7 +88,7 @@ function makeCard(business) {
           data-toggle="tooltip"
           title="Show on Map"
         >
-        <i class="fas fa-map-marked-alt fa-lg toggle-outline"></i>
+        <i class="fas fa-map-marked-alt fa-lg black-outline"></i>
         </button>
         <button
           class="btn btn-primary font-weight-bold px-3 px-sm-2 px-md--3" data-toggle="tooltip" title="Add to Mission"

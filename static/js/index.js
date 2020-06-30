@@ -410,8 +410,13 @@ $locationInput.on('keyup', function (e) {
 $searchTerm.on('keyup', function (e) {
   clearTimeout(keyupTimer);
   const term = $searchTerm.val();
-  if (term) $('.keyword-display').text(` - ${term}`);
-  else $('.keyword-display').text('');
+  if (term) {
+    $searchTerm.addClass('bg-orange');
+    $('.keyword-display').text(` - ${term}`);
+  } else {
+    $searchTerm.removeClass('bg-orange');
+    $('.keyword-display').text('');
+  }
   keyupTimer = setTimeout(function () {
     searchYelp();
   }, autoSearchDelay);
@@ -692,10 +697,11 @@ function setForm(data) {
   // set location, term
   if (data.location) $locationInput.val(data.location);
   if (data.term) {
-    $searchTerm.val(data.term);
+    $searchTerm.val(data.term).addClass('bg-orange');
     $('.keyword-display').text(` - ${data.term}`);
   } else {
     $searchTerm.val('');
+    $searchTerm.val(data.term).removeClass('bg-orange');
     $('.keyword-display').text(``);
   }
   // if data has input id as a key make that input checked, otherwise un-check.

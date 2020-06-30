@@ -14,7 +14,7 @@ function sidebarToggle() {
     $('.control-panel').toggleClass('sidebarCollapse');
     setTimeout(() => $('.control-panel').toggle(), 300);
     $('.arrow-wrapper')
-      .removeClass('toggle-outline-mobile')
+      .removeClass('black-outline-mobile')
       .children()
       .each(function () {
         $(this).toggleClass('d-none');
