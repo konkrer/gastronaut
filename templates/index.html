@@ -30,6 +30,11 @@
 
 <main>
   {% block main %}
+  <div class="spinner-zone flx-std rounded-bottom" style="display: none;">
+    <div class="spinner-border txt-green" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
   <div class="hero-animation">
     <div
       class="row justify-content-around align-items-center"
@@ -54,11 +59,12 @@
   </div>
   <div class="container-fluid">
     <div class="row" id="main-interface">
-      <div
-        class="col-10 col-sm-7 col-md-6 col-lg-5 col-xl-4 bg-secondary control-panel"
-      >
+      <div class="col-10 col-sm-7 col-md-6 col-lg-5 col-xl-4 control-panel">
         <div class="row">
-          <div class="col-6 col-lg-5 py-3 main-form-div" id="scrl1">
+          <div
+            class="col-6 col-lg-5 py-3 main-form-div bg-secondary"
+            id="scrl1"
+          >
             <form action="#" id="main-form" class="txt-whitesmoke">
               <input type="hidden" name="lat" value="{{lat}}" />
               <input type="hidden" name="lng" value="{{lng}}" />
@@ -517,7 +523,9 @@
         </div>
       </div>
       <div class="col bg-stars1 card-map-zone">
-        <div class="sidebar-toggle-btn txt-whitesmoke pl-1">
+        <div
+          class="sidebar-toggle-btn txt-whitesmoke pl-1 border border-secondary border-left-0"
+        >
           <div class="arrow-wrapper black-outline">
             <i class="fas fa-angle-double-left" aria-hidden="true"></i>
             <i class="fas fa-angle-double-right d-none" aria-hidden="true"></i>
@@ -549,7 +557,7 @@
             <i class="fas fa-info-circle black-outline"></i>
           </div>
           <div
-            class="map-close top-10 showMap txt-whitesmoke"
+            class="map-close top-10 showMap txt-whitesmoke flx-std"
             data-toggle="tooltip"
             data-placement="top"
             title="Toggle map"

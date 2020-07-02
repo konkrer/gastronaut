@@ -50,7 +50,6 @@ function getFormData() {
 */
 function setFormDataArray(data) {
   data = data ? data : $mainForm.serializeArray();
-  console.log(data);
   localStorage.setItem('formData', JSON.stringify(data));
 }
 
@@ -312,8 +311,9 @@ function mapFirstBusiness(data) {
 /* Map first business. 
 */
 function mapAndAddCardsForNewApiCall(data) {
+  $('.arrow-wrapper').removeClass('pulse-outline-mobile');
   if (data.businesses.length == 0) {
-    showNoResults();
+    $('.card-track-inner').html(getNoResultsCard());
     restMarker?.remove();
     $('.resultsCount').text('0');
     return;
@@ -322,9 +322,12 @@ function mapAndAddCardsForNewApiCall(data) {
   mapFirstBusiness(data);
   $('.resultsCount').text(data.total);
   const cards = getCards(data);
+  currCard = 0;
   $('#scrl4').scrollLeft(0);
   $('.card-track-inner').hide().html(cards).fadeIn(1000);
-  makeArrowPulse();
+  setTrackerMaper();
+
+  if (cards) $('.arrow-wrapper').addClass('pulse-outline-mobile');
 
   if (resultsRemaining) {
     addNextCardsListener();
@@ -343,6 +346,7 @@ async function searchYelp() {
 
   // Make sure there is a location to search.
   if (!latitude && $locationInput.val() === '') {
+    $('.spinner-zone').hide();
     alert('Enter a location or press detect location.');
     return;
   }
@@ -354,6 +358,14 @@ async function searchYelp() {
     console.log('new search api call <<<<<<<<<<<<<<<<<<<******<<');
 
     var data = await searchApiCall();
+    $('.spinner-zone').hide();
+    if (data === false) return;
+    // bug hunt!
+    if (!data.data.businesses) {
+      alert('no businesses data');
+      console.error('no businesses data');
+      console.log(data);
+    }
 
     // Check if new data is different from last data.
     // If not, set data to null so card repaint is avoided
@@ -366,12 +378,12 @@ async function searchYelp() {
     else localStorage.setItem('currData', jsonData);
     console.log(data);
   }
+  $('.spinner-zone').hide();
   if (transactionsNoChangeAndNoNewData(!!data)) return;
 
   // If no new data use last data.
   var data = data ? data.data : JSON.parse(lastData);
-  // bug hunt!
-  if (!data.businesses) alert(data);
+
   resultsRemaining = data.total - data.businesses.length;
   offset = 1;
   mapAndAddCardsForNewApiCall(data);
@@ -381,18 +393,26 @@ async function searchYelp() {
 /* If more results remain, call API, make cards. 
 */
 async function addNextCards() {
-  if (!resultsRemaining) {
+  if (!resultsRemaining || offset === 20) {
+    cardScrollTrackerAndMapper.off();
     addDummyCard();
+    setTimeout(() => {
+      setTrackerMaper();
+    }, 1000);
     return;
   }
+  console.log('adding next cards <<<<<<<<<<<<<<<<<<<<<<<<<<<+++++++++++++++<<');
   const data = await searchApiCall(true);
   offset++;
+  if (data === false) return;
   resultsRemaining -= data.data.businesses.length;
+  cardScrollTrackerAndMapper.off();
   $('.card-track-inner').append(getCards(data.data));
+  setTrackerMaper();
   if (resultsRemaining)
     setTimeout(() => {
       addNextCardsListener();
-    }, 3000);
+    }, 10000);
 }
 
 /*
@@ -400,6 +420,7 @@ async function addNextCards() {
 */
 $locationInput.on('keyup', function (e) {
   clearTimeout(keyupTimer);
+  $('.spinner-zone').show();
   if ($locationInput.val()) {
     keyupTimer = setTimeout(function () {
       searchYelp();
@@ -412,6 +433,7 @@ $locationInput.on('keyup', function (e) {
 */
 $searchTerm.on('keyup', function (e) {
   clearTimeout(keyupTimer);
+  $('.spinner-zone').show();
   const term = $searchTerm.val();
   if (term) {
     $searchTerm.addClass('bg-orange');
@@ -430,6 +452,7 @@ $searchTerm.on('keyup', function (e) {
 */
 $mainForm.on('change', '.onChange', function (e) {
   clearTimeout(keyupTimer);
+  $('.spinner-zone').show();
   // if the form change is the checking of "open at"
   // but no datetime entered yet return.
   if (
@@ -450,6 +473,7 @@ $mainForm.on('change', '.onChange', function (e) {
 */
 $categoryButtons.on('click', 'button', function (e) {
   clearTimeout(keyupTimer);
+  $('.spinner-zone').show();
   category = e.target.value;
   $('.cat-display').text(e.target.textContent);
   $(this)
@@ -469,6 +493,7 @@ $categoryButtons.on('click', 'button', function (e) {
 */
 $('.navbar form').submit(function (e) {
   e.preventDefault();
+  $('.spinner-zone').show();
   const term = $(this).children().val();
   $searchTerm.val(term);
   if (term) $('.keyword-display').text(` - ${term}`);

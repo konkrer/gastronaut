@@ -62,7 +62,7 @@ function makeCard(business) {
 
   return `
     <div
-      class="my-card mr-card bg-dark txt-black"
+      class="my-card mr-card bg-dark txt-black d-inline-block"
       data-id="${id}"
     >
       <div
@@ -141,11 +141,11 @@ function getCards(data) {
   data.businesses.forEach(business => {
     cards += filterForTransactions(transactions, business);
   });
-  return cards;
+  return cards ? cards : getNoResultsCard();
 }
 
-function showNoResults() {
-  const html = `
+function getNoResultsCard() {
+  return `
   <div class="my-card flx-std no-results"
   >
     <div class="txt-orange brand-outline txt-xxl">
@@ -153,12 +153,11 @@ function showNoResults() {
     </div>
   </div>
   `;
-  $('.card-track-inner').html(html);
 }
 
 function addDummyCard() {
   const html = `
-  <div class="my-card dummy-card">
+  <div class="my-card dummy-card d-inline-block">
     <div class="my-card-img-div"></div>
   </div>
   `;
