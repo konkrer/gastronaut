@@ -839,10 +839,11 @@ function hideHeroAndSearchMap(coords) {
   $('.hero-animation').hide();
   scrollCategoriesToCurrent();
   // if there is given location request search
-  if ($locationInput.val() || longitude) searchYelp();
-  // Below disabled only to allow user input to geolocate.
+  if ($locationInput.val()) searchYelp();
   // if no given location but allowing location sharing detect location
-  // else if (localStorage.getItem('geoAllowed') === 'true') detectLocation();
+  else if (localStorage.getItem('geoAllowed') === 'true') detectLocation();
+  // If coords use those to search.
+  else if (longitude) searchYelp();
 }
 
 /*
