@@ -328,7 +328,6 @@ function mapAndAddCardsForNewApiCall(data) {
     .hide()
     .html(cards ? cards : getNoResultsCard())
     .fadeIn(1000);
-
   if (cards) {
     $('.arrow-wrapper').addClass('pulse-outline-mobile');
     setTrackerMaper();

@@ -439,7 +439,7 @@ button.cat-btn.active {
     min-width: 342px;
   }
   .sidebar-toggle-btn {
-    height: 3vh;
+    font-size: 3vh;
   }
   .pulse-outline-mobile {
     animation: greenGlowPulseulse 0.6s ease-in 10;
