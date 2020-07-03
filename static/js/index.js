@@ -335,7 +335,7 @@ function mapAndAddCardsForNewApiCall(data) {
     if (resultsRemaining) {
       addNextCardsListener();
     } else {
-      addDummyCard();
+      if (data.total !== 1) addDummyCard();
     }
   }
 }
