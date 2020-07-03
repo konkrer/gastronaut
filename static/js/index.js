@@ -322,16 +322,21 @@ function mapAndAddCardsForNewApiCall(data) {
   $('.resultsCount').text(data.total);
   const cards = getCards(data);
   currCard = 0;
-  $('#scrl4').scrollLeft(0);
-  $('.card-track-inner').hide().html(cards).fadeIn(1000);
-  // if (!$('.my-card').eq(1).hasClass('dummy-card')) setTrackerMaper();
-  setTrackerMaper();
-  if (cards) $('.arrow-wrapper').addClass('pulse-outline-mobile');
 
-  if (resultsRemaining) {
-    addNextCardsListener();
-  } else {
-    addDummyCard();
+  $('#scrl4').scrollLeft(0);
+  $('.card-track-inner')
+    .hide()
+    .html(cards ? cards : getNoResultsCard())
+    .fadeIn(1000);
+
+  if (cards) {
+    $('.arrow-wrapper').addClass('pulse-outline-mobile');
+    setTrackerMaper();
+    if (resultsRemaining) {
+      addNextCardsListener();
+    } else {
+      addDummyCard();
+    }
   }
 }
 

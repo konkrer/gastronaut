@@ -141,7 +141,7 @@ function getCards(data) {
   data.businesses.forEach(business => {
     cards += filterForTransactions(transactions, business);
   });
-  return cards ? cards : getNoResultsCard();
+  return cards;
 }
 
 function getNoResultsCard() {
