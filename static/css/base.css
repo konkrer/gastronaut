@@ -1,6 +1,6 @@
 :root {
   --font-main: 'Source Sans Pro', sans-serif;
-  --vh-minus-navbar: calc(100vh - 52px);
+  --vh-minus-navbar: calc(100vh - 53px);
   --my-warning: #ff8b3f;
   --my-green: #3bdb53;
   --my-info: #1d0842;
@@ -10,7 +10,7 @@ body {
   position: relative;
   font-family: 'Source Sans Pro', sans-serif;
   min-height: 100vh;
-  padding-top: 52px !important;
+  padding-top: 53px !important;
 }
 
 .flx-std {

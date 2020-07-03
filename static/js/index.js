@@ -515,7 +515,7 @@ $('.explore-nav').on('click', function (e) {
 */
 $('.explore').on('click', function (e) {
   e.preventDefault();
-  hideHeroAndSearchMap();
+  hideHeroAndSearch();
 });
 
 /*
@@ -835,7 +835,7 @@ function scrollCategoriesToCurrent() {
   $locationInput.blur();
 }
 
-function hideHeroAndSearchMap(coords) {
+function hideHeroAndSearch(coords) {
   $('.hero-animation').hide();
   scrollCategoriesToCurrent();
   // if there is given location request search
@@ -855,8 +855,11 @@ let $scrollListener;
 function lockOnScrollBottom(map = true) {
   $scrollListener = $(window).on('scroll', function () {
     // when bottom of screen is scrolled to.
-    if ($(window).scrollTop() + $(window).height() > $(document).height() - 1) {
-      if (map) hideHeroAndSearchMap();
+    if (
+      $(window).scrollTop() + $(window).height() >
+      $(document).height() - 10
+    ) {
+      if (map) hideHeroAndSearch();
       else $('.hero-animation').hide();
       $scrollListener.off();
     }

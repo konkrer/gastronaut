@@ -1,12 +1,14 @@
 'use strict';
 
 function geoSuccess(result) {
+  // stop detect location icon from pulsing.
+  $('#detect-location').children().removeClass('pulse');
   clearTimeout(keyupTimer);
   const {
     coords: { latitude: lat, longitude: lng },
   } = result;
-  latitude = lat;
-  longitude = lng;
+  latitude = +lat;
+  longitude = +lng;
   // clear location text
   $('#location').val(``);
   // insert lng, lat as placeholder
@@ -14,8 +16,6 @@ function geoSuccess(result) {
     'placeholder',
     `lat: ${lat.toFixed(2)}, lng: ${longitude.toFixed(2)}`
   );
-  // stop detect location icon from pulsing.
-  $('#detect-location').children().removeClass('pulse');
   // note user allowed geolocation
   localStorage.setItem('geoAllowed', true);
   searchYelp();
