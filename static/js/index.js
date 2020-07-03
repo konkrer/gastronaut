@@ -310,6 +310,7 @@ function mapFirstBusiness(data) {
 /* Map first business. 
 */
 function mapAndAddCardsForNewApiCall(data) {
+  if (paginationListener) paginationListener.off();
   $('.arrow-wrapper').removeClass('pulse-outline-mobile');
   if (data.businesses.length == 0) {
     $('.card-track-inner').html(getNoResultsCard());
@@ -318,7 +319,6 @@ function mapAndAddCardsForNewApiCall(data) {
     return;
   }
   mappingAndCoordsLogic(data);
-  mapFirstBusiness(data);
   $('.resultsCount').text(data.total);
   const cards = getCards(data);
   currCard = 0;
@@ -329,13 +329,16 @@ function mapAndAddCardsForNewApiCall(data) {
     .html(cards ? cards : getNoResultsCard())
     .fadeIn(1000);
   if (cards) {
+    mapFirstBusiness(data);
     $('.arrow-wrapper').addClass('pulse-outline-mobile');
-    setTrackerMaper();
-    if (resultsRemaining) {
+    setCardScrollTrackerMapper();
+    setTimeout(() => {
       addNextCardsListener();
-    } else {
-      if (data.total !== 1) addDummyCard();
-    }
+    }, 1000);
+
+    if (!resultsRemaining && data.total !== 1) addDummyCard();
+  } else {
+    if (restMarker) restMarker.remove();
   }
 }
 
@@ -400,8 +403,8 @@ async function addNextCards() {
     cardScrollTrackerAndMapper.off();
     addDummyCard();
     setTimeout(() => {
-      setTrackerMaper();
-    }, 1000);
+      setCardScrollTrackerMapper();
+    }, 100);
     return;
   }
   console.log('adding next cards <<<<<<<<<<<<<<<<<<<<<<<<<<<+++++++++++++++<<');
@@ -411,11 +414,11 @@ async function addNextCards() {
   resultsRemaining -= data.data.businesses.length;
   cardScrollTrackerAndMapper.off();
   $('.card-track-inner').append(getCards(data.data));
-  setTrackerMaper();
-  if (resultsRemaining)
-    setTimeout(() => {
-      addNextCardsListener();
-    }, 10000);
+  setCardScrollTrackerMapper();
+  setTimeout(() => {
+    addNextCardsListener();
+  }, 10000);
+  if (!resultsRemaining) addDummyCard();
 }
 
 /*
@@ -864,8 +867,20 @@ mappyBoi = renderMiniMap();
 /* When cards scrolled almost to end add next cards.
 */
 let paginationListener;
+let pagiRefreshTimer;
 function addNextCardsListener() {
+  if (resultsRemaining === 0) return;
   paginationListener = $('#scrl4').scroll(function (e) {
+    // if (sidebarInTransition) {
+    //   paginationListener.off();
+    //   clearTimeout(pagiRefreshTimer);
+    //   pagiRefreshTimer = setTimeout(() => {
+    //     debugger;
+    //     addNextCardsListener();
+    //   }, 1000);
+    //   return;
+    // }
+
     if ($(this).scrollLeft() + $(this).width() > e.target.scrollWidth * 0.96) {
       addNextCards();
       paginationListener.off();

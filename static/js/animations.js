@@ -6,12 +6,12 @@ const $cardTrack = $('#scrl4');
 
 let cardScrollTrackerAndMapper;
 
-function setTrackerMaper() {
+function setCardScrollTrackerMapper() {
   cardScrollTrackerAndMapper = $cardTrack.on('scroll', function () {
     clearTimeout(cardScrollTimer);
     if (!mapOpen || !$('.my-card')[0]) return;
     cardScrollTimer = setTimeout(function () {
-      const margin = window.innerWidth >= 1200 ? 62.6 : 52.8;
+      const margin = window.innerWidth >= 1200 ? 62.7 : 52.8;
       const $sL = $cardTrack.scrollLeft();
       const $cardWidth = $('.my-card').width() + margin;
       const rawCardsLeft = $sL / $cardWidth;
@@ -32,12 +32,18 @@ function setTrackerMaper() {
 }
 
 let sidebarOpen = true;
+// let sidebarInTransition = false;
 
 function sidebarToggleListener() {
   $('.sidebar-toggle-btn').on('click', sidebarToggle);
 }
 
 function sidebarToggle() {
+  // sidebarInTransition = true;
+  cardScrollTrackerAndMapper.off();
+  // vars for reseting scroll position
+  // as sidebar opens and closes changing
+  // card width on non-phone devices.
   let margin;
   let $sL;
   let cardWidth;
@@ -46,7 +52,13 @@ function sidebarToggle() {
     margin = window.innerWidth >= 1200 ? 62.6 : 52.8;
     $sL = $cardTrack.scrollLeft();
     cardWidth = $('.my-card').width() + margin;
+    // Count of card widths when mesuring scrollLeft
+    // by card widths.
     cardsLeft = $sL / cardWidth;
+  }
+  const onMobile = isMobileScreen();
+  if (!onMobile) {
+    $('.card-track-inner').hide();
   }
 
   // change arrow state, filter display,
@@ -71,15 +83,20 @@ function sidebarToggle() {
   $('.filter-display').slideToggle();
   if (mapOpen) setTimeout(() => mappyBoi.resize(), 500);
   setTimeout(() => {
+    if (!onMobile) $('.card-track-inner').addClass('opaque').show();
     cardWidth = $('.my-card').width() + margin;
     if (cardsLeft) $cardTrack.scrollLeft(cardWidth * cardsLeft);
+    $('.card-track-inner').removeClass('opaque');
     $('.arrow-wrapper')
       .removeClass('pulse-outline-mobile')
       .children()
       .each(function () {
         $(this).toggleClass('d-none');
       });
-  }, 400);
+    // sidebarInTransition = false;
+    setCardScrollTrackerMapper();
+    addNextCardsListener();
+  }, 500);
 }
 
 /*
@@ -102,6 +119,12 @@ function scrollCategoriesToCurrent() {
   // hasScrolledToCategory = true;
   $locationInput.focus();
   $locationInput.blur();
+}
+
+// check if screen size is mobile.
+function isMobileScreen() {
+  if (window.innerWidth <= 840) return true;
+  return false;
 }
 
 sidebarToggleListener();

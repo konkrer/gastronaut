@@ -211,11 +211,12 @@ button.cat-btn.active {
   position: relative;
   padding-left: calc(50% - 16.6%);
   transition: padding 0.4s;
+  transition: opacity 0.5s;
 }
 
 .my-card {
   height: 100%;
-  width: 50%;
+  width: 80%;
   overflow-x: hidden;
   overflow-y: auto;
   border-radius: 5px;
@@ -476,6 +477,9 @@ button.cat-btn.active {
   }
   .hero-lead {
     max-width: 140%;
+  }
+  .my-card {
+    width: 50%;
   }
 }
 
