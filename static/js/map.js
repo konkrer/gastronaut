@@ -1,5 +1,6 @@
 'use strict';
 
+let mapOpen = true;
 let mappyBoi;
 let userMarker;
 let restMarker;

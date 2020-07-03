@@ -16,7 +16,6 @@ let category = 'restaurants';
 let markedUser = false;
 let locationChange;
 let firstCardsAdded = false;
-let mapOpen = true;
 let resultsRemaining;
 let offset;
 
@@ -314,7 +313,7 @@ function mapAndAddCardsForNewApiCall(data) {
   $('.arrow-wrapper').removeClass('pulse-outline-mobile');
   if (data.businesses.length == 0) {
     $('.card-track-inner').html(getNoResultsCard());
-    restMarker?.remove();
+    if (restMarker) restMarker.remove();
     $('.resultsCount').text('0');
     return;
   }
