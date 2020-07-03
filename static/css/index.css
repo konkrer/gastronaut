@@ -421,10 +421,11 @@ button.cat-btn.active {
 /* portrait on phones */
 @media screen and (orientation: portrait) and (max-width: 450px) and (max-height: 840px) {
   header {
-    background-color: var(--secondary);
-    opacity: 0.95;
+    background-color: var(--light);
+    opacity: 0.9;
     border-radius: 10px;
     padding: 10px 2px;
+    border: black 1px solid;
   }
   .my-card {
     width: 342px;
