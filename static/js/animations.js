@@ -24,7 +24,13 @@ function setTrackerMaper() {
       const lat = $mapButton.data('lat');
       const lng = $mapButton.data('lng');
       const name = $mapButton.data('name');
-      fitBounds([longitude, latitude], [lng, lat], name);
+      // bug hunt remove later.
+      if (isNaN(lat)) {
+        console.error('currCard', '$focusCard');
+        console.error(currCard, $focusCard);
+        return;
+      }
+      fitBounds([longitude, latitude], [+lng, +lat], name);
     }, 1500);
   });
 }
@@ -78,6 +84,27 @@ function sidebarToggle() {
         $(this).toggleClass('d-none');
       });
   }, 400);
+}
+
+/*
+/* Restaurant categories auto scroll to last choosen category.
+/* Function to scroll last selected category into view.
+*/
+function scrollCategoriesToCurrent() {
+  let currCat = localStorage.getItem('category');
+  const converter = {
+    raw_food: 'Liv',
+    restaurants: 'All',
+    newamerican: 'Ame',
+    tradamerican: 'Ame',
+    hotdogs: 'Fas',
+  };
+  if (currCat in converter) currCat = converter[currCat];
+  location.href = '#';
+  location.href = `#${currCat[0].toUpperCase()}${currCat.substr(1, 2)}`;
+  // hasScrolledToCategory = true;
+  $locationInput.focus();
+  $locationInput.blur();
 }
 
 sidebarToggleListener();

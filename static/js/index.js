@@ -324,8 +324,8 @@ function mapAndAddCardsForNewApiCall(data) {
   currCard = 0;
   $('#scrl4').scrollLeft(0);
   $('.card-track-inner').hide().html(cards).fadeIn(1000);
+  // if (!$('.my-card').eq(1).hasClass('dummy-card')) setTrackerMaper();
   setTrackerMaper();
-
   if (cards) $('.arrow-wrapper').addClass('pulse-outline-mobile');
 
   if (resultsRemaining) {
@@ -807,31 +807,6 @@ function setCoordsFromStorage() {
     longitude = +lng;
     return [lng, lat];
   }
-}
-
-/*
-/* Restaurant categories auto scroll to last choosen category.
-*/
-
-/*
-/* S.O. adapted https://stackoverflow.com/a/3898152/11164558
-/* Function to scroll last selected category into view.
-*/
-function scrollCategoriesToCurrent() {
-  let currCat = localStorage.getItem('category');
-  const converter = {
-    raw_food: 'Liv',
-    restaurants: 'All',
-    newamerican: 'Ame',
-    tradamerican: 'Ame',
-    hotdogs: 'Fas',
-  };
-  if (currCat in converter) currCat = converter[currCat];
-  location.href = '#';
-  location.href = `#${currCat[0].toUpperCase()}${currCat.substr(1, 2)}`;
-  // hasScrolledToCategory = true;
-  $locationInput.focus();
-  $locationInput.blur();
 }
 
 function hideHeroAndSearch(coords) {
