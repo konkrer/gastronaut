@@ -20,16 +20,12 @@ function setTrackerMaper() {
       if (focusCardIdx === currCard) return;
       currCard = focusCardIdx;
       const $focusCard = $('.my-card').eq(focusCardIdx);
+      if ($focusCard.hasClass('dummy-card')) return;
       const $mapButton = $focusCard.find('.cardMapButton');
       const lat = $mapButton.data('lat');
       const lng = $mapButton.data('lng');
       const name = $mapButton.data('name');
-      // bug hunt remove later.
-      if (isNaN(lat)) {
-        console.error('currCard', '$focusCard');
-        console.error(currCard, $focusCard);
-        return;
-      }
+
       fitBounds([longitude, latitude], [+lng, +lat], name);
     }, 1500);
   });

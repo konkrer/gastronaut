@@ -835,7 +835,7 @@ function lockOnScrollBottom(map = true) {
     // when bottom of screen is scrolled to.
     if (
       $(window).scrollTop() + $(window).height() >
-      $(document).height() - 10
+      $(document).height() - 100
     ) {
       if (map) hideHeroAndSearch();
       else $('.hero-animation').hide();
