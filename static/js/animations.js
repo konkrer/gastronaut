@@ -92,6 +92,7 @@ function sidebarToggle() {
 */
 function scrollCategoriesToCurrent() {
   let currCat = localStorage.getItem('category');
+  if (!currCat) return;
   const converter = {
     raw_food: 'Liv',
     restaurants: 'All',
