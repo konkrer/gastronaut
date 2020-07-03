@@ -382,6 +382,13 @@ button.cat-btn.active {
   .navbar {
     display: none;
   }
+  header {
+    background-color: var(--light);
+    opacity: 0.95;
+    border-radius: 10px;
+    padding: 10px 2px;
+    border: black 1px solid;
+  }
   #main-interface {
     height: 100vh;
     overflow: hidden;
@@ -430,6 +437,9 @@ button.cat-btn.active {
   .my-card {
     width: 342px;
     min-width: 342px;
+  }
+  .sidebar-toggle-btn {
+    height: 3vh;
   }
   .pulse-outline-mobile {
     animation: greenGlowPulseulse 0.6s ease-in 10;
@@ -499,10 +509,6 @@ button.cat-btn.active {
   .hero-lead {
     max-width: 100%;
   }
-  /* .filter-display {
-    width: 30vw;
-    left: calc(50vw - 15vw);
-  } */
 }
 
 @media screen and (hover: hover) {
