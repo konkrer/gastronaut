@@ -116,7 +116,7 @@ function scrollCategoriesToCurrent() {
   const $scrl3 = $('#scrl3');
   // move scrolled category a little lower for better visibility.
   const sT = $scrl3.scrollTop();
-  if (sT >= 100) $scrl3.scrollTop(sT - 100);
+  if (sT >= 50) $scrl3.scrollTop(sT - 50);
   else $scrl3.scrollTop(0);
 
   $locationInput.focus();
