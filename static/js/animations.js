@@ -110,6 +110,7 @@ function scrollCategoriesToCurrent() {
     tradamerican: 'Ame',
     hotdogs: 'Fas',
     bbq: 'Bar',
+    hkcafe: 'Hon',
   };
   if (currCat in converter) currCat = converter[currCat];
   location.href = '#';

@@ -37,6 +37,11 @@ main {
   height: var(--vh-minus-navbar);
   overflow: hidden;
 }
+.main-form-div {
+  padding-left: 0;
+  padding-right: 0;
+}
+
 .main-form-div,
 .card-map-zone,
 #scrl2,
@@ -74,10 +79,18 @@ main {
   height: 6px;
 }
 
-#scrl1::-webkit-scrollbar-thumb,
-#scrl3::-webkit-scrollbar-thumb,
+#scrl1::-webkit-scrollbar-thumb {
+  background-color: var(--my-warning);
+  border-radius: 5px;
+}
+
+#scrl3::-webkit-scrollbar-thumb {
+  background-color: var(--secondary);
+  border-radius: 5px;
+}
+
 #scrl4::-webkit-scrollbar-thumb {
-  background-color: var(--dark);
+  background-color: var(--my-warning);
   border-radius: 5px;
 }
 
@@ -507,6 +520,11 @@ a.first-letter.active {
   .hero-lead {
     max-width: 90%;
   }
+  .form-check,
+  .switch-wrapper {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+  }
 }
 
 @media screen and (min-width: 1768px) {
@@ -532,8 +550,12 @@ a.first-letter.active {
   #clear-filters:hover {
     color: rgb(98, 98, 255);
   }
-  form label:hover {
+  form label:not(.noHoverCl):hover {
     color: var(--primary);
+  }
+  .form-check:hover,
+  .switch-wrapper:not(.noHoverBg):hover {
+    background: #422424;
   }
   .first-letter:hover {
     background-color: var(--primary) !important;
