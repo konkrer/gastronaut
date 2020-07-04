@@ -639,6 +639,9 @@ button.cat-btn.active {
   0% {
     opacity: 1;
   }
+  50% {
+    padding: 0px;
+  }
   100% {
     max-width: 0px;
     opacity: 0;
@@ -654,6 +657,9 @@ button.cat-btn.active {
   0% {
     max-width: 0px;
     opacity: 0;
+    padding: 0px;
+  }
+  50% {
     padding: 0px;
   }
   100% {

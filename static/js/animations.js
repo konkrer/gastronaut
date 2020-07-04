@@ -74,10 +74,6 @@ function sidebarToggle() {
     $('.control-panel')
       .addClass('sidebarExpand')
       .removeClass('sidebarCollapse');
-
-    setTimeout(() => {
-      scrollCategoriesToCurrent();
-    }, 100);
   }
   $('.card-track-inner').toggleClass('padtop-card-filter-d');
   $('.filter-display').slideToggle();
@@ -96,6 +92,7 @@ function sidebarToggle() {
     // sidebarInTransition = false;
     setCardScrollTrackerMapper();
     addNextCardsListener();
+    if (sidebarOpen) scrollCategoriesToCurrent();
   }, 500);
 }
 
