@@ -113,7 +113,12 @@ function scrollCategoriesToCurrent() {
   if (currCat in converter) currCat = converter[currCat];
   location.href = '#';
   location.href = `#${currCat[0].toUpperCase()}${currCat.substr(1, 2)}`;
-  // hasScrolledToCategory = true;
+  const $scrl3 = $('#scrl3');
+  // move scrolled category a little lower for better visibility.
+  const sT = $scrl3.scrollTop();
+  if (sT >= 100) $scrl3.scrollTop(sT - 100);
+  else $scrl3.scrollTop(0);
+
   $locationInput.focus();
   $locationInput.blur();
 }
