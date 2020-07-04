@@ -318,6 +318,7 @@ function mapAndAddCardsForNewApiCall(data) {
     $('.resultsCount').text('0');
     return;
   }
+  $('.card-track-inner').hide();
   mappingAndCoordsLogic(data);
   $('.resultsCount').text(data.total);
   const cards = getCards(data);
@@ -325,9 +326,10 @@ function mapAndAddCardsForNewApiCall(data) {
 
   $('#scrl4').scrollLeft(0);
   $('.card-track-inner')
-    .hide()
+    .addClass('opaque')
+    .show()
     .html(cards ? cards : getNoResultsCard())
-    .fadeIn(1000);
+    .removeClass('opaque');
   if (cards) {
     mapFirstBusiness(data);
     $('.arrow-wrapper').addClass('pulse-outline-mobile');
