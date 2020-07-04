@@ -48,7 +48,43 @@ main {
 }
 
 #scrl3 {
+  padding: 0 !important;
   font-size: 1rem;
+  position: relative;
+}
+
+#scrl2::-webkit-scrollbar,
+.my-card::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 0;
+}
+
+#scrl1::-webkit-scrollbar,
+#scrl3::-webkit-scrollbar {
+  width: 6px;
+  background-color: #6c757d;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+#scrl4::-webkit-scrollbar {
+  -webkit-appearance: none;
+}
+#scrl4::-webkit-scrollbar:horizontal {
+  height: 6px;
+}
+
+#scrl1::-webkit-scrollbar-thumb,
+#scrl3::-webkit-scrollbar-thumb,
+#scrl4::-webkit-scrollbar-thumb {
+  background-color: var(--my-warning);
+  border-radius: 5px;
+}
+
+#scrl1::-webkit-scrollbar-thumb:hover,
+#scrl3::-webkit-scrollbar-thumb:hover,
+#scrl4::-webkit-scrollbar-thumb:hover {
+  background-color: #ff6701;
 }
 
 .white-a {
@@ -106,46 +142,6 @@ button.cat-btn.active {
 .first-letter {
   padding: 0.7vh !important;
   transition: all 0.2s !important;
-}
-
-#scrl3 {
-  padding: 0 !important;
-  font-size: 1rem;
-  position: relative;
-  height: var(--vh-minus-navbar);
-  overflow-y: scroll;
-  overflow-x: hidden;
-}
-
-#scrl1::-webkit-scrollbar,
-#scrl2::-webkit-scrollbar,
-#scrl3::-webkit-scrollbar {
-  width: 6px;
-  background-color: #6c757d;
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-}
-
-#scrl4::-webkit-scrollbar {
-  -webkit-appearance: none;
-}
-#scrl4::-webkit-scrollbar:horizontal {
-  height: 6px;
-}
-
-#scrl1::-webkit-scrollbar-thumb,
-#scrl2::-webkit-scrollbar-thumb,
-#scrl3::-webkit-scrollbar-thumb,
-#scrl4::-webkit-scrollbar-thumb {
-  background-color: var(--my-warning);
-  border-radius: 5px;
-}
-
-#scrl1::-webkit-scrollbar-thumb:hover,
-#scrl2::-webkit-scrollbar-thumb:hover,
-#scrl3::-webkit-scrollbar-thumb:hover,
-#scrl4::-webkit-scrollbar-thumb:hover {
-  background-color: #ff6701;
 }
 
 .card-map-zone {
@@ -228,11 +224,6 @@ button.cat-btn.active {
 
 .mr-card {
   margin-right: 50px;
-}
-
-.my-card::-webkit-scrollbar {
-  -webkit-appearance: none;
-  width: 0;
 }
 
 .no-results {
