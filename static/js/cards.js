@@ -79,19 +79,23 @@ function makeCard(business) {
         <p class="card-text">
           ${makeCategoriesText(categories)} ${is_closed ? '- Closed' : ''}
         </p>
-        <button class="btn btn-primary font-weight-bold mr-2 mr-sm-1 mr-md-2 px-3 px-sm-2 px-md--3">Details</button>
+        <button class="btn btn-primary font-weight-bold mr-2 mr-sm-1 
+        mr-md-2 px-3 px-sm-2 px-md--3 black-outline-1"
+        >Details</button>
         <button
-          class="btn btn-primary font-weight-bold cardMapButton mr-2 mr-sm-1 mr-md-2 px-3 px-sm-2 px-md--3"
+          class="btn btn-primary font-weight-bold cardMapButton 
+          mr-2 mr-sm-1 mr-md-2 px-3 px-sm-2 px-md--3"
           data-lat="${lat}"
           data-lng="${lng}"
           data-name="${name}"
           data-toggle="tooltip"
           title="Show on Map"
         >
-        <i class="fas fa-map-marked-alt fa-lg black-outline"></i>
+        <i class="fas fa-map-marked-alt fa-lg black-outline-1"></i>
         </button>
         <button
-          class="btn btn-primary font-weight-bold px-3 px-sm-2 px-md--3" data-toggle="tooltip" title="Add to Mission"
+          class="btn btn-primary mission-btn font-weight-bold px-3 px-sm-2 px-md--3" 
+          data-toggle="tooltip" title="Add to Mission"
         >
         <i class="fas fa-plus-square mr-2"></i>
         <i class="fas fa-rocket fa-lg txt-orange brand-outline"></i>

@@ -26,7 +26,7 @@ function setCardScrollTrackerMapper() {
       const lng = $mapButton.data('lng');
       const name = $mapButton.data('name');
 
-      fitBounds([longitude, latitude], [+lng, +lat], name);
+      if (isFinite(lat)) fitBounds([longitude, latitude], [+lng, +lat], name);
     }, 1500);
   });
 }

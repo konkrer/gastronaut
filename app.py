@@ -38,6 +38,7 @@ if not API_KEY:
 @app.route("/")
 def index():
     """Home view."""
+    lat, lng = '', ''
     # get IP address
     ip_address_raw = request.environ.get('HTTP_X_FORWARDED_FOR',
                                          request.remote_addr)
@@ -50,11 +51,12 @@ def index():
         # move to logging
         print(e, "<<<<<<<<<<")
 
-    if data.get('message'):
-        print(data['message'])
-    # pass lng/lat data in hidden input
-    lat = data.get('latitude', '')
-    lng = data.get('longitude', '')
+    if data:
+        if data.get('message'):
+            print(data['message'])
+        # pass lng/lat data in hidden input
+        lat = data.get('latitude', '')
+        lng = data.get('longitude', '')
 
     return render_template(
         'index.html',

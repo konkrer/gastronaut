@@ -130,7 +130,7 @@
                 aria-expanded="true"
                 aria-controls="timing-group"
               >
-                <h5 class="museo">Timing</h5></a
+                <h5 class="museo black-outline-1">Timing</h5></a
               >
               <div class="collapse show" id="timing-group">
                 <div class="custom-control custom-switch">
@@ -173,7 +173,7 @@
                 aria-expanded="true"
                 aria-controls="interface-group"
               >
-                <h5 class="museo">Interface</h5></a
+                <h5 class="museo black-outline-1">Interface</h5></a
               >
               <div class="collapse show" id="interface-group">
                 <div class="custom-control custom-switch">
@@ -221,7 +221,7 @@
                 `
                 aria-controls="price-group"
               >
-                <h5 class="museo">Price</h5></a
+                <h5 class="museo black-outline-1">Price</h5></a
               >
               <div class="collapse show text-dark" id="price-group">
                 <div class="form-check p-0 txt-green dark-green-outline">
@@ -294,7 +294,7 @@
                 aria-expanded="true"
                 aria-controls="sort-by-group"
               >
-                <h5 class="museo">Sort By</h5></a
+                <h5 class="museo black-outline-1">Sort By</h5></a
               >
               <div class="collapse show" id="sort-by-group">
                 <div class="custom-control custom-radio">
@@ -354,7 +354,7 @@
                 aria-expanded="true"
                 aria-controls="collapseExample"
               >
-                <h5 class="museo">Search Radius</h5></a
+                <h5 class="museo black-outline-1">Search Radius</h5></a
               >
               <div class="collapse show" id="radius-collapse">
                 <div class="form-group mb-0">
@@ -392,7 +392,7 @@
                 aria-expanded="true"
                 aria-controls="collapseExample"
               >
-                <h5 class="museo">Attributes</h5></a
+                <h5 class="museo black-outline-1">Attributes</h5></a
               >
               <div class="collapse show" id="attributes">
                 <div class="custom-control custom-switch">
@@ -493,7 +493,7 @@
             <div class="text-center list-group" id="first-list">
               {% for let, id in first_letters %}
               <a
-                class="list-group-item list-group-item-action first-letter"
+                class="list-group-item list-group-item-action first-letter black-outline-1"
                 href="#{{id}}"
                 >{{let}}</a
               >
@@ -511,7 +511,7 @@
               {% for show, category in yelp_categories %}
               <button
                 type="button"
-                class="list-group-item list-group-item-action cat-btn"
+                class="list-group-item list-group-item-action cat-btn black-outline-1"
                 value="{{category}}"
                 id="{{show[0:3]}}"
               >
@@ -526,7 +526,7 @@
         <div
           class="sidebar-toggle-btn txt-whitesmoke pl-1 border border-secondary border-left-0"
         >
-          <div class="arrow-wrapper black-outline">
+          <div class="arrow-wrapper black-outline-1">
             <i class="fas fa-angle-double-left" aria-hidden="true"></i>
             <i class="fas fa-angle-double-right d-none" aria-hidden="true"></i>
           </div>
@@ -562,7 +562,7 @@
             data-placement="top"
             title="Toggle map"
           >
-            <i class="fas fa-map-marked-alt fa-2x black-outline"></i>
+            <i class="fas fa-map-marked-alt fa-2x black-outline-1"></i>
           </div>
         </div>
       </div>
@@ -588,7 +588,7 @@
       scaleMobile: 1.0,
       color: 0x3bdb53,
       size: 1.4,
-      backgroundColor: 0x1d0842,
+      backgroundColor: 0x050836,
     });
   </script>
   {% endblock %}
