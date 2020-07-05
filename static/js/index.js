@@ -506,7 +506,7 @@ $('.navbar form').submit(function (e) {
   $searchTerm.val(term);
   if (term) $('.keyword-display').text(` - ${term}`);
   else $('.keyword-display').text('');
-  searchYelp();
+  hideHeroAndSearch();
 });
 
 /*
@@ -633,13 +633,6 @@ $('#search-check').on('click', function () {
 $('#radius').on('change', function () {
   $('.radiusDisplay').text(metersToMiles($(this).val()));
 });
-
-/*
-/* Convert meters to miles to one decimal place.
-*/
-function metersToMiles(num) {
-  return (num * 0.00062137).toFixed(1);
-}
 
 /*
 /* Animations.
@@ -818,7 +811,7 @@ function setCoordsFromStorage() {
   }
 }
 
-function hideHeroAndSearch(coords) {
+function hideHeroAndSearch() {
   $('.hero-animation').hide();
   scrollCategoriesToCurrent();
   // if there is given location request search
@@ -869,20 +862,10 @@ mappyBoi = renderMiniMap();
 /* When cards scrolled almost to end add next cards.
 */
 let paginationListener;
-let pagiRefreshTimer;
+
 function addNextCardsListener() {
   if (resultsRemaining === 0) return;
   paginationListener = $('#scrl4').scroll(function (e) {
-    // if (sidebarInTransition) {
-    //   paginationListener.off();
-    //   clearTimeout(pagiRefreshTimer);
-    //   pagiRefreshTimer = setTimeout(() => {
-    //     debugger;
-    //     addNextCardsListener();
-    //   }, 1000);
-    //   return;
-    // }
-
     if ($(this).scrollLeft() + $(this).width() > e.target.scrollWidth * 0.96) {
       addNextCards();
       paginationListener.off();

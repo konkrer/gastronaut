@@ -50,6 +50,7 @@ function makeCard(business) {
     id,
     coordinates,
     is_closed,
+    distance,
     location: {
       display_address: [street, city],
     },
@@ -116,6 +117,9 @@ function makeCard(business) {
           <div>${street ? street : ''}</div>
           <div>${city ? city : ''}</div>
         </li>
+        <li class="list-group-item bg-transparent card-text-noHover">
+          ${metersToMiles(distance)} mi
+        </li>
       </ul>
     </div>
     `;
@@ -166,4 +170,11 @@ function addDummyCard() {
   </div>
   `;
   $('.card-track-inner').append(html);
+}
+
+/*
+/* Convert meters to miles to one decimal place.
+*/
+function metersToMiles(num) {
+  return (num * 0.00062137).toFixed(1);
 }
