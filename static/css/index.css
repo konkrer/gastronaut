@@ -406,6 +406,12 @@ a.first-letter.active {
   .navbar {
     display: none;
   }
+  .display-1-k {
+    font-size: 20vh;
+  }
+  .display-2-k {
+    font-size: 8vh;
+  }
   header {
     background-color: var(--light);
     opacity: 0.95;
