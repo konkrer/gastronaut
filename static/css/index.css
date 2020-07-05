@@ -462,8 +462,8 @@ a.first-letter.active {
     border: black 1px solid;
   }
   .my-card {
-    width: 342px;
-    min-width: 342px;
+    width: 320px;
+    min-width: 320px;
   }
   .sidebar-toggle-btn {
     font-size: 3.5vh;
