@@ -407,10 +407,10 @@ a.first-letter.active {
     display: none;
   }
   .display-1-k {
-    font-size: 20vh;
+    font-size: 11vh;
   }
   .display-2-k {
-    font-size: 8vh;
+    font-size: 5vh;
   }
   header {
     background-color: var(--light);
