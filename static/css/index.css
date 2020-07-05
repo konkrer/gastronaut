@@ -235,14 +235,14 @@ a.first-letter.active {
 .card-track-inner {
   height: 100%;
   position: relative;
-  padding-left: calc(50% - 16.6%);
+  padding-left: calc(50% - 26%);
   transition: padding 0.4s;
   transition: opacity 0.5s;
 }
 
 .my-card {
   height: 100%;
-  width: 80%;
+  width: 70%;
   overflow-x: hidden;
   overflow-y: auto;
   border-radius: 5px;
@@ -465,6 +465,9 @@ a.first-letter.active {
     width: 320px;
     min-width: 320px;
   }
+  .card-track-inner {
+    padding-left: calc(50% - 160px);
+  }
   .sidebar-toggle-btn {
     font-size: 3.5vh;
   }
@@ -487,11 +490,11 @@ a.first-letter.active {
   }
 }
 
-@media screen and (max-width: 1000px) {
+/* @media screen and (max-width: 1000px) {
   .card-track-inner {
-    padding-left: calc(50% - 171px);
+    padding-left: calc(50% - 160px);
   }
-}
+} */
 
 @media screen and (min-width: 1200px) {
   .mr-card {
@@ -506,6 +509,9 @@ a.first-letter.active {
   }
   .my-card {
     width: 50%;
+  }
+  .card-track-inner {
+    padding-left: calc(50% - 16.6%);
   }
 }
 
