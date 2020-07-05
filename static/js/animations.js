@@ -40,7 +40,7 @@ function sidebarToggleListener() {
 
 function sidebarToggle() {
   // sidebarInTransition = true;
-  cardScrollTrackerAndMapper.off();
+  if (cardScrollTrackerAndMapper) cardScrollTrackerAndMapper.off();
   // vars for reseting scroll position
   // as sidebar opens and closes changing
   // card width on non-phone devices.

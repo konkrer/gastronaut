@@ -402,7 +402,6 @@ async function searchYelp() {
 */
 async function addNextCards() {
   if (!resultsRemaining || offset === 20) {
-    cardScrollTrackerAndMapper.off();
     addDummyCard();
     setTimeout(() => {
       setCardScrollTrackerMapper();
@@ -414,7 +413,6 @@ async function addNextCards() {
   offset++;
   if (data === false) return;
   resultsRemaining -= data.data.businesses.length;
-  cardScrollTrackerAndMapper.off();
   $('.card-track-inner').append(getCards(data.data));
   setCardScrollTrackerMapper();
   setTimeout(() => {
