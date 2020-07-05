@@ -5,8 +5,9 @@ verify_ssl = true
 
 [dev-packages]
 flake8 = "*"
-yapf = "*"
 flask-debugtoolbar = "*"
+autopep8 = "*"
+ipython = "*"
 
 [packages]
 flask = "*"
@@ -20,6 +21,3 @@ requests = "*"
 
 [requires]
 python_version = "3.8"
-
-[pipenv]
-allow_prereleases = true

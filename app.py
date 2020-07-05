@@ -20,19 +20,20 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config["SECRET_KEY"] = os.environ.get('SECRET_KEY')
 
-connect_db(app)
-
-YELP_URL = 'https://api.yelp.com/v3'
 API_KEY = os.environ.get('YELP_API_KEY')
 
 # if on development server
-if not API_KEY:
+if not app.config["SECRET_KEY"]:
     from flask_debugtoolbar import DebugToolbarExtension
     from local_settings import API_KEY, SECRET_KEY
     app.config["SECRET_KEY"] = SECRET_KEY
     app.config['SQLALCHEMY_ECHO'] = True
     app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
     debug = DebugToolbarExtension(app)
+
+connect_db(app)
+
+YELP_URL = 'https://api.yelp.com/v3'
 
 
 @app.route("/")
@@ -53,6 +54,7 @@ def index():
 
     if data:
         if data.get('message'):
+            # move to logging
             print(data['message'])
         # pass lng/lat data in hidden input
         lat = data.get('latitude', '')

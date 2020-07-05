@@ -6,7 +6,6 @@
         "markdown",
         "latex"
     ],
-    "python.formatting.provider": "yapf",
     "python.linting.flake8Enabled": true,
     "python.linting.pylintEnabled": false
 }
