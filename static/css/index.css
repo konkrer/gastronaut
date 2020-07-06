@@ -40,6 +40,7 @@ main {
 .main-form-div {
   padding-left: 0;
   padding-right: 0;
+  background-color: var(--my-secondary);
 }
 
 .main-form-div,
@@ -82,7 +83,7 @@ main {
 #scrl1::-webkit-scrollbar-thumb,
 #scrl3::-webkit-scrollbar-thumb,
 #scrl4::-webkit-scrollbar-thumb {
-  background-color: #757575;
+  background-color: var(--secondary);
   border-radius: 5px;
 }
 
@@ -103,10 +104,10 @@ main {
 }
 
 form h5.museo {
-  color: var(--my-warning);
+  color: var(--warning);
   margin-bottom: 0px;
   margin-top: 10px;
-  font-weight: 400;
+  font-weight: 200;
 }
 
 form label.results-label {
@@ -116,6 +117,7 @@ form label.results-label {
 form label {
   font-family: var(--font-main);
   width: 100%;
+  font-weight: 600;
 }
 
 .form-num-display {
@@ -127,7 +129,6 @@ form label {
   line-height: 0.95;
   border-radius: 5px;
   display: inline-block;
-  /* margin-left: 40px; */
   text-shadow: none;
 }
 
@@ -195,7 +196,7 @@ a.first-letter.active {
 
 .filter-display {
   position: absolute;
-  height: 25px;
+  height: 23px;
   width: 30vw;
   top: 0px;
   left: calc(50vw - 15vw);
@@ -350,10 +351,18 @@ a.first-letter.active {
 /* Breakpoints */
 /* Breakpoints */
 
+@media screen and (max-width: 350px) {
+  h5 {
+    font-size: 1.3rem !important;
+  }
+}
 @media screen and (max-width: 420px) {
   #detect-location,
   #clear-filters {
     padding: 6px 5px;
+  }
+  h5 {
+    font-size: 1.5rem;
   }
   .cat-btn {
     padding: 4px 5px !important;
@@ -366,7 +375,6 @@ a.first-letter.active {
     padding: 16px 5px;
   }
   .filter-display {
-    height: 25px;
     width: 94vw;
     left: calc(50vw - 47vw);
   }
@@ -384,12 +392,14 @@ a.first-letter.active {
   #clear-filters {
     padding: 6px 8px;
   }
+  h5 {
+    font-size: 1.5rem;
+  }
   .cat-btn {
     padding: 4px 5px !important;
     font-size: 0.8rem !important;
   }
   .filter-display {
-    height: 25px;
     width: 50vw;
     left: calc(50vw - 25vw);
   }
@@ -561,7 +571,7 @@ a.first-letter.active {
     color: rgb(98, 98, 255);
   }
   form label:not(.noHoverCl):hover {
-    color: var(--primary);
+    color: white;
   }
   .form-check:hover,
   .switch-wrapper:not(.noHoverBg):hover {

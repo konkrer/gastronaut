@@ -458,7 +458,6 @@ $searchTerm.on('keyup', function (e) {
 */
 $mainForm.on('change', '.onChange', function (e) {
   clearTimeout(keyupTimer);
-  $('.spinner-zone').show();
   // if the form change is the checking of "open at"
   // but no datetime entered yet return.
   if (
@@ -467,6 +466,7 @@ $mainForm.on('change', '.onChange', function (e) {
     $('#open_at').val() === ''
   )
     return;
+  $('.spinner-zone').show();
   keyupTimer = setTimeout(function () {
     searchYelp();
   }, autoSearchDelay);
@@ -614,7 +614,7 @@ $('#price-group').on('change', function (e) {
 /* Turn button green when radius input is enabled.
 /* Turn display background muted or white.
 */
-$('#search-check').on('click', function () {
+$('#radius-check').on('click', function () {
   const $radius = $('#radius');
   if ($radius.prop('disabled') === true) {
     $radius.prop('disabled', false);
@@ -622,7 +622,7 @@ $('#search-check').on('click', function () {
     $radius.prop('disabled', true);
   }
   $('.radiusDisplay').toggleClass('bg-disabled');
-  $radius.prev().toggleClass(['txt-green', 'dark-green-outline']);
+  $radius.parent().prev().toggleClass(['txt-green', 'dark-green-outline']);
 });
 
 /*
@@ -759,6 +759,7 @@ function setForm(data) {
     $('#radius')
       .prop('disabled', false)
       .val(data.radius)
+      .parent()
       .prev()
       .addClass('txt-green')
       .addClass('dark-green-outline')

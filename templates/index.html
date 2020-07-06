@@ -61,11 +61,8 @@
     <div class="row" id="main-interface">
       <div class="col-10 col-sm-7 col-md-6 col-lg-5 col-xl-4 control-panel">
         <div class="row">
-          <div
-            class="col-6 col-lg-5 py-3 main-form-div bg-secondary"
-            id="scrl1"
-          >
-            <form action="#" id="main-form" class="txt-whitesmoke">
+          <div class="col-6 col-lg-5 py-3 main-form-div" id="scrl1">
+            <form action="#" id="main-form" class="txt-black">
               <input type="hidden" name="lat" value="{{lat}}" />
               <input type="hidden" name="lng" value="{{lng}}" />
               <label class="sr-only" for="location">Location</label>
@@ -118,8 +115,8 @@
                   class="form-num-display resultsCount ml-1 ml-sm-4 text-light"
                   >0</span
                 >
-                <span class="filter-icon-display">
-                  <i class="fas fa-filter txt-orange ml-2 ml-md-3"></i>
+                <span class="filter-icon-display black-outline-1">
+                  <i class="fas fa-filter text-warning ml-2 ml-md-3"></i>
                 </span>
               </div>
 
@@ -130,8 +127,9 @@
                 aria-expanded="true"
                 aria-controls="timing-group"
               >
-                <h5 class="museo black-outline-1 px-2">Timing</h5></a
-              >
+                <h5 class="museo black-outline-1 px-2">
+                  Timing <i class="fas fa-caret-down fa-xs text-dark"></i></h5
+              ></a>
               <div class="collapse show" id="timing-group">
                 <div class="switch-wrapper pl-2">
                   <div class="custom-control custom-switch">
@@ -179,8 +177,10 @@
                 aria-expanded="true"
                 aria-controls="interface-group"
               >
-                <h5 class="museo black-outline-1 px-2">Interface</h5></a
-              >
+                <h5 class="museo black-outline-1 px-2">
+                  Interface
+                  <i class="fas fa-caret-down fa-xs text-dark"></i></h5
+              ></a>
               <div class="collapse show" id="interface-group">
                 <div class="switch-wrapper pl-2">
                   <div class="custom-control custom-switch">
@@ -233,10 +233,11 @@
                 `
                 aria-controls="price-group"
               >
-                <h5 class="museo black-outline-1 px-2">Price</h5></a
-              >
+                <h5 class="museo black-outline-1 px-2">
+                  Price <i class="fas fa-caret-down fa-xs text-dark"></i></h5
+              ></a>
               <div class="collapse show text-dark" id="price-group">
-                <div class="form-check pl-2 txt-green dark-green-outline">
+                <div class="form-check pl-2 pb-1 txt-green dark-green-outline">
                   <input
                     class="onChange form-check-input"
                     type="checkbox"
@@ -247,10 +248,10 @@
                     hidden
                   />
                   <label class="form-check-label noHoverCl" for="price-1">
-                    <i class="fas fa-dollar-sign"></i>
+                    <i class="fas fa-dollar-sign fa-lg"></i>
                   </label>
                 </div>
-                <div class="form-check pl-2 txt-green dark-green-outline">
+                <div class="form-check pl-2 pb-1 txt-green dark-green-outline">
                   <input
                     class="onChange form-check-input"
                     type="checkbox"
@@ -261,11 +262,11 @@
                     hidden
                   />
                   <label class="form-check-label noHoverCl" for="price-2">
-                    <i class="fas fa-dollar-sign mr-1"></i
-                    ><i class="fas fa-dollar-sign mr-1"></i>
+                    <i class="fas fa-dollar-sign fa-lg mr-1"></i
+                    ><i class="fas fa-dollar-sign fa-lg mr-1"></i>
                   </label>
                 </div>
-                <div class="form-check pl-2 txt-green dark-green-outline">
+                <div class="form-check pl-2 pb-1 txt-green dark-green-outline">
                   <input
                     class="onChange form-check-input"
                     type="checkbox"
@@ -276,9 +277,9 @@
                     hidden
                   />
                   <label class="form-check-label noHoverCl" for="price-3">
-                    <i class="fas fa-dollar-sign mr-1"></i
-                    ><i class="fas fa-dollar-sign mr-1"></i
-                    ><i class="fas fa-dollar-sign mr-1"></i>
+                    <i class="fas fa-dollar-sign fa-lg mr-1"></i
+                    ><i class="fas fa-dollar-sign fa-lg mr-1"></i
+                    ><i class="fas fa-dollar-sign fa-lg mr-1"></i>
                   </label>
                 </div>
                 <div class="form-check pl-2 txt-green dark-green-outline">
@@ -292,10 +293,10 @@
                     hidden
                   />
                   <label class="form-check-label noHoverCl" for="price-4">
-                    <i class="fas fa-dollar-sign mr-1"></i
-                    ><i class="fas fa-dollar-sign mr-1"></i
-                    ><i class="fas fa-dollar-sign mr-1"></i
-                    ><i class="fas fa-dollar-sign mr-1"></i>
+                    <i class="fas fa-dollar-sign fa-lg mr-1"></i
+                    ><i class="fas fa-dollar-sign fa-lg mr-1"></i
+                    ><i class="fas fa-dollar-sign fa-lg mr-1"></i
+                    ><i class="fas fa-dollar-sign fa-lg mr-1"></i>
                   </label>
                 </div>
               </div>
@@ -306,8 +307,9 @@
                 aria-expanded="true"
                 aria-controls="sort-by-group"
               >
-                <h5 class="museo black-outline-1 px-2">Sort By</h5></a
-              >
+                <h5 class="museo black-outline-1 px-2">
+                  Sort By <i class="fas fa-caret-down fa-xs text-dark"></i></h5
+              ></a>
               <div class="collapse show" id="sort-by-group">
                 <div class="switch-wrapper pl-2">
                   <div class="custom-control custom-radio">
@@ -374,38 +376,45 @@
                 aria-expanded="true"
                 aria-controls="collapseExample"
               >
-                <h5 class="museo black-outline-1 px-2">Search Radius</h5></a
-              >
-              <div class="collapse show" id="radius-collapse">
+                <h5 class="museo black-outline-1 px-2">
+                  Search
+                  <span style="white-space: nowrap;">
+                    Radius <i class="fas fa-caret-down fa-xs text-dark"></i>
+                  </span></h5
+              ></a>
+              <div class="collapse show text-dark" id="radius-collapse">
                 <div class="form-group mb-0">
                   <div class="switch-wrapper pl-2">
                     <input
                       class="onChange form-check-input"
                       type="checkbox"
-                      id="search-check"
+                      id="radius-check"
                       hidden
                     /><label
                       class="form-check-label noHoverCl"
-                      for="search-check"
+                      for="radius-check"
+                      id="radius-power-btn"
                     >
                       <i class="fas fa-power-off fa-lg"></i>
                       <span
-                        class="form-num-display radiusDisplay ml-1 ml-sm-4 text-light bg-disabled ml-5"
+                        class="form-num-display radiusDisplay ml-2 ml-sm-4 ml-lg-5 text-light bg-disabled"
                         >10</span
                       >
                       <span class="txt-whitesmoke">mi</span>
                     </label>
                   </div>
-                  <input
-                    type="range"
-                    class="custom-range onChange px-2"
-                    id="radius"
-                    name="radius"
-                    min="1000"
-                    max="40000"
-                    value="16094"
-                    disabled
-                  />
+                  <div class="switch-wrapper px-2 noHoverBg">
+                    <input
+                      type="range"
+                      class="custom-range onChange"
+                      id="radius"
+                      name="radius"
+                      min="1000"
+                      max="40000"
+                      value="16094"
+                      disabled
+                    />
+                  </div>
                 </div>
               </div>
               <a
@@ -415,8 +424,11 @@
                 aria-expanded="true"
                 aria-controls="collapseExample"
               >
-                <h5 class="museo black-outline-1 px-2">Attributes</h5></a
-              >
+                <h5 class="museo black-outline-1 px-2 mt-1">
+                  <span style="white-space: nowrap;">
+                    Attributes <i class="fas fa-caret-down fa-xs text-dark"></i>
+                  </span></h5
+              ></a>
               <div class="collapse show" id="attributes">
                 <div class="switch-wrapper pl-2">
                   <div class="custom-control custom-switch">

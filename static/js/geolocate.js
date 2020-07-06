@@ -80,6 +80,6 @@ function watchSuccess(position) {
   );
 }
 
-function watchError(error) {
+function watchError(err) {
   console.warn('ERROR(' + err.code + '): ' + err.message);
 }

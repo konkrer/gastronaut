@@ -5,6 +5,7 @@
   --my-green: #3bdb53;
   --my-info: #050836;
   --my-purp: #1c0536;
+  --my-secondary: #757575;
 }
 
 body {
@@ -139,8 +140,8 @@ body {
 }
 
 .dark-green-outline {
-  text-shadow: darkgreen 1px 1px 1px, darkgreen -1px -1px 1px,
-    darkgreen 1px -1px 1px, darkgreen -1px 1px 1px;
+  text-shadow: darkgreen 1px 1px 2px, darkgreen -1px -1px 2px,
+    darkgreen 1px -1px 2px, darkgreen -1px 1px 2px;
 }
 
 .hidden {
