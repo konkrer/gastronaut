@@ -3,7 +3,7 @@
 var options = {
   enableHighAccuracy: true,
   timeout: 20000,
-  maximumAge: 30000,
+  maximumAge: 15000,
 };
 
 /*
@@ -78,6 +78,8 @@ function watchSuccess(position) {
     'placeholder',
     `lat: ${lat.toFixed(2)}, lng: ${longitude.toFixed(2)}`
   );
+  if (userMarker) userMarker.remove();
+  userMarker = addUserMarker([lng, lat]);
 }
 
 function watchError(err) {
