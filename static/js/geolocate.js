@@ -1,12 +1,34 @@
 'use strict';
 
-function geoSuccess(result) {
+var options = {
+  enableHighAccuracy: true,
+  timeout: 20000,
+  maximumAge: 30000,
+};
+
+/*
+/* Detect location. 
+/* Set lat, lng. Set if user is sharing location.
+*/
+function detectLocation(coords) {
+  if (navigator.geolocation) {
+    $('#detect-location').children().addClass('pulse');
+    navigator.geolocation.getCurrentPosition(geoSuccess, showError, options);
+  } else {
+    alert('Geolocation is not supported by this browser.');
+    if (longitude) {
+      userMarker = addUserMarker([longitude, latitude]);
+    }
+  }
+}
+
+function geoSuccess(position) {
   // stop detect location icon from pulsing.
   $('#detect-location').children().removeClass('pulse');
   clearTimeout(keyupTimer);
   const {
     coords: { latitude: lat, longitude: lng },
-  } = result;
+  } = position;
   latitude = +lat;
   longitude = +lng;
   // clear location text
@@ -18,6 +40,7 @@ function geoSuccess(result) {
   );
   // note user allowed geolocation
   localStorage.setItem('geoAllowed', true);
+  navigator.geolocation.watchPosition(watchSuccess, watchError, options);
   searchYelp();
 }
 
@@ -43,24 +66,20 @@ function showError(error) {
   }
 }
 
-var options = {
-  enableHighAccuracy: true,
-  timeout: 20000,
-  maximumAge: 30000,
-};
+function watchSuccess(position) {
+  const {
+    coords: { latitude: lat, longitude: lng },
+  } = position;
+  latitude = +lat;
+  longitude = +lng;
 
-/*
-/* Detect location. 
-/* Set lat, lng. Set if user is sharing location.
-*/
-function detectLocation(coords) {
-  if (navigator.geolocation) {
-    $('#detect-location').children().addClass('pulse');
-    navigator.geolocation.getCurrentPosition(geoSuccess, showError, options);
-  } else {
-    alert('Geolocation is not supported by this browser.');
-    if (longitude) {
-      userMarker = addUserMarker([longitude, latitude]);
-    }
-  }
+  // insert lng, lat as placeholder
+  $('#location').prop(
+    'placeholder',
+    `lat: ${lat.toFixed(2)}, lng: ${longitude.toFixed(2)}`
+  );
+}
+
+function watchError(error) {
+  console.warn('ERROR(' + err.code + '): ' + err.message);
 }
