@@ -11,7 +11,7 @@ const fitBoundsOptions = {
 
 function renderMiniMap(mapCenter = [-85, 26.8], zoom = 1.3) {
   mapboxgl.accessToken =
-    'pk.eyJ1Ijoia29ua3JlciIsImEiOiJjanZwdjB5dnUwNWNrNDVteHJjNHhxNnpiIn0.aPtNXMoZYfLs09Jth-0jMw';
+    'pk.eyJ1Ijoia29ua3JlciIsImEiOiJja2NiNnI3bjgyMjVnMnJvNmJ6dTF0enlmIn0.AH_5N70IYIX4_tslm49Kmw';
   var map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/konkrer/ckbslmn3x00y31hp7vh351zxb/draft',
@@ -30,7 +30,7 @@ function addUserMarker(coords) {
     .setLngLat(coords)
     .setPopup(new mapboxgl.Popup().setHTML(`<b><em>You</em></b>`))
     .addTo(mappyBoi);
-  userMarker.togglePopup();
+  // userMarker.togglePopup();
   return userMarker;
 }
 
