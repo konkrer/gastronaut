@@ -6,7 +6,7 @@ let userMarker;
 let restMarker;
 const markerOptions = { color: '#3bdb53' };
 const fitBoundsOptions = {
-  padding: { top: 40, bottom: 40, left: 80, right: 80 }, // { top: 70, bottom: 40, left: 145, right: 145 }
+  padding: { top: 80, bottom: 10, left: 80, right: 80 }, // { top: 70, bottom: 40, left: 145, right: 145 }
 };
 
 function renderMiniMap(mapCenter = [-85, 26.8], zoom = 1.3) {
