@@ -430,6 +430,12 @@ a.first-letter.active {
     height: 100vh;
     overflow: hidden;
   }
+  .card-map-zone {
+    grid-template-rows: auto 50vh;
+  }
+  .mapboxgl-popup-content {
+    padding: 5px 10px !important;
+  }
   .filter-display {
     display: none !important;
   }
