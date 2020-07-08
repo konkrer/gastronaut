@@ -1,10 +1,10 @@
 'use strict';
 
+const $cardTrack = $('#scrl4');
 let currCard = 0;
 let cardScrollTimer;
-const $cardTrack = $('#scrl4');
-
 let cardScrollTrackerAndMapper;
+let sidebarOpen = true;
 
 function setCardScrollTrackerMapper() {
   cardScrollTrackerAndMapper = $cardTrack.on('scroll', function () {
@@ -19,27 +19,27 @@ function setCardScrollTrackerMapper() {
 
       if (focusCardIdx === currCard) return;
       currCard = focusCardIdx;
-      const $focusCard = $('.my-card').eq(focusCardIdx);
-      if ($focusCard.hasClass('dummy-card')) return;
-      const $mapButton = $focusCard.find('.cardMapButton');
-      const lat = $mapButton.data('lat');
-      const lng = $mapButton.data('lng');
-      const name = $mapButton.data('name');
-
-      if (isFinite(lat)) fitBounds([longitude, latitude], [+lng, +lat], name);
+      mapCurrCard(currCard);
     }, 1000);
   });
 }
 
-let sidebarOpen = true;
-// let sidebarInTransition = false;
+function mapCurrCard() {
+  const $focusCard = $('.my-card').eq(currCard);
+  if ($focusCard.hasClass('dummy-card')) return;
+  const $mapButton = $focusCard.find('.cardMapButton');
+  const lat = $mapButton.data('lat');
+  const lng = $mapButton.data('lng');
+  const name = $mapButton.data('name');
+
+  if (isFinite(lat)) fitBounds([longitude, latitude], [+lng, +lat], name);
+}
 
 function sidebarToggleListener() {
   $('.sidebar-toggle-btn').on('click', sidebarToggle);
 }
 
 function sidebarToggle() {
-  // sidebarInTransition = true;
   if (cardScrollTrackerAndMapper) cardScrollTrackerAndMapper.off();
   // vars for reseting scroll position
   // as sidebar opens and closes changing
@@ -75,6 +75,7 @@ function sidebarToggle() {
       .addClass('sidebarExpand')
       .removeClass('sidebarCollapse');
   }
+
   $('.card-track-inner').toggleClass('padtop-card-filter-d');
   $('.filter-display').slideToggle();
   if (mapOpen) setTimeout(() => mappyBoi.resize(), 500);
@@ -89,10 +90,11 @@ function sidebarToggle() {
       .each(function () {
         $(this).toggleClass('d-none');
       });
-    // sidebarInTransition = false;
+
     setCardScrollTrackerMapper();
     addNextCardsListener();
     if (sidebarOpen) scrollCategoriesToCurrent();
+    if (isMobilePortrait()) mapCurrCard();
   }, 500);
 }
 
@@ -128,6 +130,12 @@ function scrollCategoriesToCurrent() {
 // check if screen size is mobile.
 function isMobileScreen() {
   if (window.innerWidth <= 840) return true;
+  return false;
+}
+
+// check if screen size is mobile.
+function isMobilePortrait() {
+  if (window.innerWidth <= 450) return true;
   return false;
 }
 

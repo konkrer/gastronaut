@@ -283,7 +283,7 @@ a.first-letter.active {
 }
 
 .map-info {
-  visibility: hidden;
+  display: none;
   position: absolute;
   color: white;
   top: 12px;
@@ -610,7 +610,7 @@ a.first-letter.active {
     color: white;
   }
   .map-info {
-    visibility: visible;
+    display: block;
   }
 }
 
