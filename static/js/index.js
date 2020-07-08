@@ -368,12 +368,6 @@ async function searchYelp() {
     var data = await searchApiCall();
     $('.spinner-zone').hide();
     if (data === false) return;
-    // bug hunt!
-    if (!data.data.businesses) {
-      alert('no businesses data');
-      console.error('no businesses data');
-      console.log(data);
-    }
 
     // Check if new data is different from last data.
     // If not, set data to null so card repaint is avoided
@@ -388,7 +382,7 @@ async function searchYelp() {
   }
   $('.spinner-zone').hide();
   if (transactionsNoChangeAndNoNewData(!!data)) return;
-
+  justSearchedYelp = true;
   // If no new data use last data.
   var data = data ? data.data : JSON.parse(lastData);
 
@@ -812,6 +806,7 @@ function setCoordsFromStorage() {
 
 function hideHeroAndSearch() {
   $('.hero-animation').hide();
+  mappyBoi.resize();
   scrollCategoriesToCurrent();
   // if there is given location request search
   if ($locationInput.val()) searchYelp();

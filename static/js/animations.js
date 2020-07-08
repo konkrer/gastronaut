@@ -5,6 +5,7 @@ let currCard = 0;
 let cardScrollTimer;
 let cardScrollTrackerAndMapper;
 let sidebarOpen = true;
+let justSearchedYelp = false;
 
 function setCardScrollTrackerMapper() {
   cardScrollTrackerAndMapper = $cardTrack.on('scroll', function () {
@@ -94,7 +95,8 @@ function sidebarToggle() {
     setCardScrollTrackerMapper();
     addNextCardsListener();
     if (sidebarOpen) scrollCategoriesToCurrent();
-    if (isMobilePortrait()) mapCurrCard();
+    if (justSearchedYelp && isMobilePortrait()) mapCurrCard();
+    justSearchedYelp = false;
   }, 500);
 }
 
