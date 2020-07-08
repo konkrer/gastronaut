@@ -385,6 +385,16 @@ a.first-letter.active {
   .map-close {
     right: calc(50% - 125px);
   }
+  #scrl4::-webkit-scrollbar:horizontal {
+    -webkit-appearance: none;
+    height: 0px;
+  }
+  #scrl4::-webkit-scrollbar-thumb {
+    -webkit-appearance: none;
+  }
+  #scrl4::-webkit-scrollbar-thumb:hover {
+    -webkit-appearance: none;
+  }
 }
 
 @media screen and (min-width: 420px) and (max-width: 840px) {
@@ -403,6 +413,16 @@ a.first-letter.active {
     width: 50vw;
     left: calc(50vw - 25vw);
   }
+  #scrl4::-webkit-scrollbar:horizontal {
+    -webkit-appearance: none;
+    height: 0px;
+  }
+  #scrl4::-webkit-scrollbar-thumb {
+    -webkit-appearance: none;
+  }
+  #scrl4::-webkit-scrollbar-thumb:hover {
+    -webkit-appearance: none;
+  }
 }
 
 /* landscape on phones */
@@ -419,6 +439,13 @@ a.first-letter.active {
   .display-2-k {
     font-size: 5vh;
   }
+  .hero-animation,
+  .main-form-div,
+  .card-map-zone,
+  #scrl2,
+  #scrl3 {
+    height: 100vh;
+  }
   header {
     background-color: var(--light);
     opacity: 0.95;
@@ -433,22 +460,15 @@ a.first-letter.active {
   .card-map-zone {
     grid-template-rows: auto 50vh;
   }
-  .mapboxgl-popup-content {
-    padding: 5px 10px !important;
-  }
-  .filter-display {
-    display: none !important;
-  }
   .sidebar-toggle-btn {
     font-size: 10vh;
     top: 25vh;
   }
-  .hero-animation,
-  .main-form-div,
-  .card-map-zone,
-  #scrl2,
-  #scrl3 {
-    height: 100vh;
+  .pulse-outline-mobile {
+    animation: greenGlowPulseulse 0.6s ease-in 10;
+  }
+  .filter-display {
+    display: none !important;
   }
   .padtop-card-filter-d {
     padding-top: 0px !important;
@@ -463,8 +483,8 @@ a.first-letter.active {
     width: 250px;
     min-width: 250px;
   }
-  .pulse-outline-mobile {
-    animation: greenGlowPulseulse 0.6s ease-in 10;
+  .mapboxgl-popup-content {
+    padding: 5px 10px !important;
   }
 }
 
