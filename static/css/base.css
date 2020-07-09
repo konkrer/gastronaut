@@ -125,8 +125,8 @@ body {
 }
 
 .black-outline-1 {
-  text-shadow: black 1px 1px 1px, black -1px -1px 1px, black 1px -1px 1px,
-    black -1px 1px 1px;
+  text-shadow: #333333 1px 1px 1px, #333333 -1px -1px 1px, #333333 1px -1px 1px,
+    #333333 -1px 1px 1px;
 }
 
 .black-outline {

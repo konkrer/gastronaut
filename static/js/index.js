@@ -536,6 +536,7 @@ $('.showMap').each(function (index) {
 function toggleMap() {
   $('.card-map-zone').toggleClass('map-collapse');
   $('#map').toggle();
+  $('.map-directions').toggle();
   $('.map-info').toggle();
   $('.map-toggle').toggleClass('toggle-on-map');
   $('.map-track').toggleClass(['border-top', 'border-secondary']);

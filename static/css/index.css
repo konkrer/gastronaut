@@ -284,9 +284,9 @@ a.first-letter.active {
 
 .map-directions {
   position: absolute;
-  color: white;
-  left: 10px;
-  top: 12px;
+  color: #333333;
+  left: 15px;
+  top: 15px;
 }
 
 .drive,
@@ -294,17 +294,16 @@ a.first-letter.active {
 .bike {
   height: 40px;
   width: 40px;
-  background-color: rgba(0, 0, 0, 0.589);
-  border: 1px solid var(--secondary);
+  background-color: rgb(255, 255, 255);
   border-radius: 5px;
 }
 
 .map-info {
   display: none;
   position: absolute;
-  color: var(--light);
-  top: 55px;
-  right: 64px;
+  color: #333;
+  top: 54px;
+  right: 58px;
 }
 
 .map-toggle {
@@ -312,6 +311,9 @@ a.first-letter.active {
   top: -42px;
   right: 52px;
   background-color: rgba(0, 0, 0, 0.589);
+  border: 1px solid var(--secondary);
+  border-radius: 5px;
+  color: white;
   border-radius: 5px;
   height: 40px;
   width: 40px;
@@ -319,9 +321,14 @@ a.first-letter.active {
 }
 
 .toggle-on-map {
-  top: 6px;
-  background-color: transparent;
+  top: 12px;
+  background-color: white;
+  color: #333;
   border: none;
+  text-shadow: none;
+  height: 29px;
+  width: 29px;
+  font-size: 10px;
 }
 
 .map-track {
@@ -406,6 +413,15 @@ a.first-letter.active {
   #scrl4::-webkit-scrollbar-thumb:hover {
     -webkit-appearance: none;
   }
+  .drive,
+  .bike,
+  .walk {
+    width: 30px;
+    height: 30px;
+  }
+  .map-directions div i {
+    font-size: 1.5em;
+  }
 }
 
 @media screen and (min-width: 420px) and (max-width: 840px) {
@@ -433,6 +449,15 @@ a.first-letter.active {
   }
   #scrl4::-webkit-scrollbar-thumb:hover {
     -webkit-appearance: none;
+  }
+  .drive,
+  .bike,
+  .walk {
+    width: 29px;
+    height: 29px;
+  }
+  .map-directions div i {
+    font-size: 1.5em;
   }
 }
 
@@ -622,8 +647,7 @@ a.first-letter.active {
     transform: scale(1.3);
     font-weight: 900 !important;
   }
-  .sidebar-toggle-btn:hover,
-  .map-toggle:hover {
+  .sidebar-toggle-btn:hover {
     color: var(--my-green) !important;
     transition: all 0.4s;
   }
@@ -645,11 +669,13 @@ a.first-letter.active {
   }
   .drive:hover,
   .walk:hover,
-  .bike:hover {
+  .bike:hover,
+  .map-toggle:hover {
     color: var(--my-warning);
+    transition: 0.4s;
   }
   .map-toggle:hover {
-    transform: scale(1.09);
+    transform: scale(1.1);
   }
   .map-info {
     display: block;
