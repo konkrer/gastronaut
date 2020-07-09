@@ -40,7 +40,7 @@ function sidebarToggleListener() {
   $('.sidebar-toggle-btn').on('click', sidebarToggle);
 }
 
-function sidebarToggle() {
+async function sidebarToggle() {
   if (cardScrollTrackerAndMapper) cardScrollTrackerAndMapper.off();
   // vars for reseting scroll position
   // as sidebar opens and closes changing
@@ -57,8 +57,11 @@ function sidebarToggle() {
     // by card widths.
     cardsLeft = $sL / cardWidth;
   }
+
   const onMobile = isMobileScreen();
   if (!onMobile) {
+    $('.card-track-inner').addClass('opaque');
+    await sleep(200);
     $('.card-track-inner').hide();
   }
 
@@ -81,7 +84,7 @@ function sidebarToggle() {
   $('.filter-display').slideToggle();
   if (mapOpen) setTimeout(() => mappyBoi.resize(), 500);
   setTimeout(() => {
-    if (!onMobile) $('.card-track-inner').addClass('opaque').show();
+    if (!onMobile) $('.card-track-inner').show();
     cardWidth = $('.my-card').width() + margin;
     if (cardsLeft) $cardTrack.scrollLeft(cardWidth * cardsLeft);
     $('.card-track-inner').removeClass('opaque');
@@ -139,6 +142,12 @@ function isMobileScreen() {
 function isMobilePortrait() {
   if (window.innerWidth <= 450) return true;
   return false;
+}
+
+function sleep(delay) {
+  return new Promise(resolve => {
+    setTimeout(resolve, delay);
+  });
 }
 
 sidebarToggleListener();

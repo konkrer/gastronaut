@@ -537,7 +537,7 @@ function toggleMap() {
   $('.card-map-zone').toggleClass('map-collapse');
   $('#map').toggle();
   $('.map-info').toggle();
-  $('.map-close').toggleClass('top-10');
+  $('.map-toggle').toggleClass('toggle-on-map');
   $('.map-track').toggleClass(['border-top', 'border-secondary']);
   if (!$('.card-map-zone').hasClass('map-collapse')) {
     mappyBoi.resize();

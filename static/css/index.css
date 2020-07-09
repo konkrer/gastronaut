@@ -164,10 +164,6 @@ a.first-letter.active {
   text-shadow: none; */
 }
 
-/* #scrl2 {
-  background-color: #211212 !important;
-} */
-
 .first-letter {
   padding: 0.7vh !important;
   transition: all 0.2s !important;
@@ -182,6 +178,10 @@ a.first-letter.active {
   grid-template-areas:
     'card-track'
     'map-track';
+}
+
+.card-map-zone.map-collapse {
+  grid-template-rows: auto 0px;
 }
 
 .sidebar-toggle-btn {
@@ -238,7 +238,7 @@ a.first-letter.active {
   position: relative;
   padding-left: calc(50% - 26%);
   transition: padding 0.4s;
-  transition: opacity 0.5s;
+  transition: opacity 0.25s;
 }
 
 .my-card {
@@ -282,15 +282,32 @@ a.first-letter.active {
   color: var(--my-info);
 }
 
+.map-directions {
+  position: absolute;
+  color: white;
+  left: 10px;
+  top: 12px;
+}
+
+.drive,
+.walk,
+.bike {
+  height: 40px;
+  width: 40px;
+  background-color: rgba(0, 0, 0, 0.589);
+  border: 1px solid var(--secondary);
+  border-radius: 5px;
+}
+
 .map-info {
   display: none;
   position: absolute;
-  color: white;
-  top: 12px;
-  left: 20px;
+  color: var(--light);
+  top: 55px;
+  right: 64px;
 }
 
-.map-close {
+.map-toggle {
   position: absolute;
   top: -42px;
   right: 52px;
@@ -301,14 +318,10 @@ a.first-letter.active {
   border: 1px solid var(--secondary);
 }
 
-.top-10 {
+.toggle-on-map {
   top: 6px;
   background-color: transparent;
   border: none;
-}
-
-.map-collapse {
-  grid-template-rows: auto 0px;
 }
 
 .map-track {
@@ -382,9 +395,6 @@ a.first-letter.active {
   .dummy-card {
     width: 0px;
     min-width: 0px;
-  }
-  .map-close {
-    right: calc(50% - 125px);
   }
   #scrl4::-webkit-scrollbar:horizontal {
     -webkit-appearance: none;
@@ -613,15 +623,12 @@ a.first-letter.active {
     font-weight: 900 !important;
   }
   .sidebar-toggle-btn:hover,
-  .map-close:hover {
+  .map-toggle:hover {
     color: var(--my-green) !important;
     transition: all 0.4s;
   }
   .sidebar-toggle-btn:hover {
     transform: scale(1.1);
-  }
-  .map-close:hover {
-    transform: scale(1.09);
   }
   .my-card button:hover {
     background-color: var(--my-green) !important;
@@ -635,6 +642,14 @@ a.first-letter.active {
   .card-link:hover,
   .my-card li a:hover {
     color: white;
+  }
+  .drive:hover,
+  .walk:hover,
+  .bike:hover {
+    color: var(--my-warning);
+  }
+  .map-toggle:hover {
+    transform: scale(1.09);
   }
   .map-info {
     display: block;
