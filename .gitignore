@@ -2,3 +2,4 @@ __pycache__/
 categories.json
 local_settings.py
 old*
+.vscode/

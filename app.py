@@ -6,12 +6,20 @@ from flask import (  # noqa F401
 from sqlalchemy.exc import IntegrityError
 from werkzeug.utils import secure_filename
 from werkzeug.exceptions import Unauthorized
+import sentry_sdk
+from sentry_sdk.integrations.flask import FlaskIntegration
 import requests
 import os
 from models import (db, connect_db, Product, Category, User)
 from forms import AddProductForm, AddUserForm, EditUserForm, LoginForm
 from static.py_modules.yelp_helper import (yelp_categories, first_letters,
                                            parse_query_params)
+
+sentry_sdk.init(
+    dsn="https://1faae11aaacf4e749bf6d9cc1ae5286a@o415488.ingest.sentry.io/5319947",
+    integrations=[FlaskIntegration()]
+)
+
 
 app = Flask(__name__)
 
