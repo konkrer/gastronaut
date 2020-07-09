@@ -230,7 +230,7 @@ a.first-letter.active {
   cursor: -moz-grab;
   cursor: -webkit-grab;
   padding-top: 4px;
-  padding-bottom: 4px;
+  padding-bottom: 5px;
 }
 
 .card-track-inner {
