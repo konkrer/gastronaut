@@ -328,6 +328,7 @@ a.first-letter.active {
   background-color: var(--my-info) !important;
   color: #929493;
   font-family: var(--font-main);
+  padding: 10px !important;
 }
 
 .mapboxgl-popup-tip {
