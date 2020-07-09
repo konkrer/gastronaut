@@ -534,16 +534,43 @@ $('.showMap').each(function (index) {
 });
 
 function toggleMap() {
+  if (mapOpen && $('.card-map-zone').hasClass('cards-collapse')) {
+    $('.card-map-zone').removeClass('cards-collapse');
+    $('.card-track').show();
+    $('.hideCards')
+      .children()
+      .each(function (index) {
+        $(this).toggleClass('d-none');
+      });
+  }
   $('.card-map-zone').toggleClass('map-collapse');
   $('#map').toggle();
-  $('.map-directions').toggle();
-  $('.map-info').toggle();
+  $('.mapBtns').toggle();
   $('.map-toggle').toggleClass('toggle-on-map');
   $('.map-track').toggleClass(['border-top', 'border-secondary']);
-  if (!$('.card-map-zone').hasClass('map-collapse')) {
-    mappyBoi.resize();
+  if (mapOpen) {
+    mapOpen = false;
+  } else {
     mapOpen = true;
-  } else mapOpen = false;
+    mappyBoi.resize();
+  }
+}
+
+/*
+/* Show/hide cards fuctionality. Big/small map.
+*/
+$('.hideCards').on('click', toggleCards);
+
+function toggleCards() {
+  $('.card-map-zone').toggleClass('cards-collapse');
+  // $('#map').toggle();
+  $('.card-track').toggle();
+  mappyBoi.resize();
+  $('.hideCards')
+    .children()
+    .each(function (index) {
+      $(this).toggleClass('d-none');
+    });
 }
 
 /* Show restaurant marker and fit bounds map button is clicked.
@@ -553,10 +580,8 @@ $('.card-track-inner').on('click', '.cardMapButton', function (e) {
   const lng = $(this).data('lng');
   const lat = $(this).data('lat');
   const name = $(this).data('name');
+  if (!mapOpen) toggleMap();
   fitBounds([longitude, latitude], [+lng, +lat], name);
-  if ($('.card-map-zone').hasClass('map-collapse')) {
-    toggleMap();
-  }
 });
 
 /*
