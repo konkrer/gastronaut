@@ -332,14 +332,14 @@ function mapAndAddCardsForNewApiCall(data) {
     .removeClass('opaque');
   if (cards) {
     mapFirstBusiness(data);
+    if (!resultsRemaining && data.total !== 1) addDummyCard();
     $('.arrow-wrapper').addClass('pulse-outline-mobile');
     setCardScrollTrackerMapper();
     setTimeout(() => {
       addNextCardsListener();
     }, 1000);
-
-    if (!resultsRemaining && data.total !== 1) addDummyCard();
   } else {
+    // if no cards no restMarker should be visible.
     if (restMarker) restMarker.remove();
   }
 }
@@ -383,6 +383,8 @@ async function searchYelp() {
   $('.spinner-zone').hide();
   if (transactionsNoChangeAndNoNewData(!!data)) return;
   justSearchedYelp = true;
+  showCardTrack();
+
   // If no new data use last data.
   var data = data ? data.data : JSON.parse(lastData);
 
@@ -494,6 +496,7 @@ $categoryButtons.on('click', 'button', function (e) {
 $('.navbar form').submit(function (e) {
   e.preventDefault();
   $('.spinner-zone').show();
+  $('.navbar-collapse').removeClass('open');
   const term = $(this).children().val();
   $searchTerm.val(term);
   if (term) $('.keyword-display').text(` - ${term}`);
@@ -539,7 +542,7 @@ function toggleMap() {
   if (mapOpen && $('.card-map-zone').hasClass('cards-collapse')) {
     $('.card-map-zone').removeClass('cards-collapse');
     $('.card-track').show();
-    $('.hideCards')
+    $('.toggleCards')
       .children()
       .each(function (index) {
         $(this).toggleClass('d-none');
@@ -561,18 +564,34 @@ function toggleMap() {
 /*
 /* Show/hide cards fuctionality. Big/small map.
 */
-$('.hideCards').on('click', toggleCards);
+$('.toggleCards').on('click', toggleCards);
 
 function toggleCards() {
   $('.card-map-zone').toggleClass('cards-collapse');
   // $('#map').toggle();
   $('.card-track').toggle();
   mappyBoi.resize();
-  $('.hideCards')
+  $('.toggleCards')
     .children()
     .each(function (index) {
       $(this).toggleClass('d-none');
     });
+}
+
+/*
+/* Show cards fuctionality for search Yelp.
+*/
+function showCardTrack() {
+  if ($('.card-map-zone').hasClass('cards-collapse')) {
+    $('.card-map-zone').removeClass('cards-collapse');
+    $('.card-track').show();
+    mappyBoi.resize();
+    $('.toggleCards')
+      .children()
+      .each(function (index) {
+        $(this).toggleClass('d-none');
+      });
+  }
 }
 
 /* Show restaurant marker and fit bounds map button is clicked.

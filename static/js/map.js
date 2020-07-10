@@ -20,7 +20,7 @@ function renderMiniMap(mapCenter = [-85, 26.8], zoom = 1.3) {
     zoom,
   });
   map.addControl(new mapboxgl.FullscreenControl());
-  map.addControl(new mapboxgl.NavigationControl());
+  // map.addControl(new mapboxgl.NavigationControl());
 
   return map;
 }
