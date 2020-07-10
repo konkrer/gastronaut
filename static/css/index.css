@@ -304,7 +304,7 @@ a.first-letter.active {
   position: absolute;
   color: #333333;
   left: 15px;
-  top: 15px;
+  top: 10px;
 }
 
 .drive,
@@ -331,7 +331,7 @@ a.first-letter.active {
 }
 
 .toggle-on-map {
-  top: 90px;
+  top: 100px;
   right: 10px;
   background-color: white;
   color: #333;
@@ -344,7 +344,7 @@ a.first-letter.active {
 
 .map-hide-cards {
   position: absolute;
-  top: 50px;
+  top: 55px;
   right: 10px;
   background-color: white;
   border-radius: 5px;
@@ -358,7 +358,7 @@ a.first-letter.active {
   display: none;
   position: absolute;
   color: #333;
-  top: 130px;
+  top: 140px;
   right: 17px;
 }
 
@@ -526,7 +526,7 @@ a.first-letter.active {
     top: 25vh;
   }
   .pulse-outline-mobile {
-    animation: greenGlowPulseulse 0.6s ease-in 10;
+    animation: greenGlowPulseulse 0.6s ease-in 5;
   }
   .filter-display {
     display: none !important;
@@ -573,7 +573,7 @@ a.first-letter.active {
     font-size: 3.5vh;
   }
   .pulse-outline-mobile {
-    animation: greenGlowPulseulse 0.6s ease-in 10;
+    animation: greenGlowPulseulse 0.6s ease-in 5;
   }
   .filter-display {
     display: none !important;
@@ -737,7 +737,7 @@ a.first-letter.active {
 
 /* Pulse 5 times */
 .pulse-5 {
-  animation: pulse 0.5s ease-in 3;
+  animation: pulse 0.5s ease-in 5;
 }
 
 @keyframes pulse {
