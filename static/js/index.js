@@ -140,7 +140,7 @@ function checkParameterChange(lastData) {
     if (!$searchTerm.val()) change = true;
     console.log('was blank now coords');
     //
-  } else if (longitude && prevCoords) {
+  } else if (!$locationInput.val() && longitude && prevCoords) {
     const [prevLng, prevLat] = prevCoords;
     // if coords have changed
     if (
@@ -507,6 +507,8 @@ $('.navbar form').submit(function (e) {
 $('.explore-nav').on('click', function (e) {
   e.preventDefault();
   $('.hero-animation').toggle();
+  window.dispatchEvent(new Event('resize'));
+  $('.navbar-collapse').removeClass('open');
   lockOnScrollBottom(false);
 });
 
@@ -892,3 +894,8 @@ function addNextCardsListener() {
     }
   });
 }
+
+window.addEventListener('resize', () => {
+  setCardsScrollLeft();
+  mappyBoi.resize();
+});

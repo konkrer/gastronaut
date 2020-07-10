@@ -241,7 +241,7 @@ a.first-letter.active {
   height: 100%;
   position: relative;
   padding-left: calc(50% - 26%);
-  transition: padding 0.4s;
+  /* transition: padding 0.4s; */
   transition: opacity 0.25s;
 }
 

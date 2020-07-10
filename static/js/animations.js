@@ -1,6 +1,7 @@
 'use strict';
 
 const $cardTrack = $('#scrl4');
+let cardsLeftGlobal;
 let currCard = 0;
 let cardScrollTimer;
 let cardScrollTrackerAndMapper;
@@ -9,16 +10,16 @@ let justSearchedYelp = false;
 
 function setCardScrollTrackerMapper() {
   cardScrollTrackerAndMapper = $cardTrack.on('scroll', function () {
+    countCards();
     clearTimeout(cardScrollTimer);
+
     if (!mapOpen || !$('.my-card')[0]) return;
+
     cardScrollTimer = setTimeout(function () {
-      const margin = window.innerWidth >= 1200 ? 62.7 : 52.8;
-      const $sL = $cardTrack.scrollLeft();
-      const $cardWidth = $('.my-card').width() + margin;
-      const rawCardsLeft = $sL / $cardWidth;
-      const focusCardIdx = Number.parseInt(rawCardsLeft + 0.5);
+      const focusCardIdx = Number.parseInt(cardsLeftGlobal + 0.5);
 
       if (focusCardIdx === currCard) return;
+
       currCard = focusCardIdx;
       mapCurrCard(currCard);
     }, 1000);
@@ -41,23 +42,11 @@ function sidebarToggleListener() {
 }
 
 async function sidebarToggle() {
+  // Prevent unnecessary scroll mapping events.
   if (cardScrollTrackerAndMapper) cardScrollTrackerAndMapper.off();
-  // vars for reseting scroll position
-  // as sidebar opens and closes changing
-  // card width on non-phone devices.
-  let margin;
-  let $sL;
-  let cardWidth;
-  let cardsLeft;
-  if ($('.my-card')[0]) {
-    margin = window.innerWidth >= 1200 ? 62.6 : 52.8;
-    $sL = $cardTrack.scrollLeft();
-    cardWidth = $('.my-card').width() + margin;
-    // Count of card widths when mesuring scrollLeft
-    // by card widths.
-    cardsLeft = $sL / cardWidth;
-  }
 
+  // If not on mobile -
+  // Fade cards out then hide cards.
   const onMobile = isMobileScreen();
   if (!onMobile) {
     $('.card-track-inner').addClass('opaque');
@@ -65,42 +54,71 @@ async function sidebarToggle() {
     $('.card-track-inner').hide();
   }
 
-  // change arrow state, filter display,
-  // and top padding of card-trak-inner to
-  // accomadate filter display
+  // Toggle sidebar.
+  // Note: Sidebar does not start with sidebarExpand class to avoid animation on load.
   if (sidebarOpen === true) {
-    sidebarOpen = false;
     $('.control-panel')
       .addClass('sidebarCollapse')
       .removeClass('sidebarExpand');
   } else {
-    sidebarOpen = true;
-    $('.control-panel')
-      .addClass('sidebarExpand')
-      .removeClass('sidebarCollapse');
+    $('.control-panel').toggleClass(['sidebarExpand', 'sidebarCollapse']);
   }
+  sidebarOpen = !sidebarOpen;
 
-  $('.card-track-inner').toggleClass('padtop-card-filter-d');
+  // Toggle filter display.
   $('.filter-display').slideToggle();
-  if (mapOpen) setTimeout(() => mappyBoi.resize(), 500);
-  setTimeout(() => {
-    if (!onMobile) $('.card-track-inner').show();
-    cardWidth = $('.my-card').width() + margin;
-    if (cardsLeft) $cardTrack.scrollLeft(cardWidth * cardsLeft);
-    $('.card-track-inner').removeClass('opaque');
-    $('.arrow-wrapper')
-      .removeClass('pulse-outline-mobile')
-      .children()
-      .each(function () {
-        $(this).toggleClass('d-none');
-      });
 
-    setCardScrollTrackerMapper();
-    addNextCardsListener();
-    if (sidebarOpen) scrollCategoriesToCurrent();
-    if (justSearchedYelp && isMobilePortrait()) mapCurrCard();
-    justSearchedYelp = false;
+  // Logic to run after sidebar has full expanded or collapsed.
+  setTimeout(() => {
+    sidebarFullyChangedLogic(onMobile);
   }, 500);
+}
+
+function countCards() {
+  if ($('.my-card')[0]) {
+    let margin = window.innerWidth >= 1200 ? 62.6 : 52.8;
+    let cardWidth = $('.my-card').width() + margin;
+    let $sL = $cardTrack.scrollLeft();
+    // Count cards by mesuring scrollLeft
+    // divided by card widths.
+    cardsLeftGlobal = $sL / cardWidth;
+  }
+}
+
+function setCardsScrollLeft() {
+  if (cardsLeftGlobal) {
+    let margin = window.innerWidth >= 1200 ? 62.6 : 52.8;
+    const cardWidth = $('.my-card').width() + margin;
+    $cardTrack.scrollLeft(cardWidth * cardsLeftGlobal);
+  }
+}
+
+function sidebarFullyChangedLogic(onMobile) {
+  if (mapOpen) mappyBoi.resize();
+  // Toggle class for width dependent additional padding.
+  $('.card-track-inner').toggleClass('padtop-card-filter-d');
+  // correct scroll and fade in on non mobile devices
+  if (!onMobile) {
+    $('.card-track-inner').show();
+    setCardsScrollLeft();
+    $('.card-track-inner').removeClass('opaque');
+  }
+  // Stop arrows pulsing green and toggle arrow direction
+  $('.arrow-wrapper')
+    .removeClass('pulse-outline-mobile')
+    .children()
+    .each(function () {
+      $(this).toggleClass('d-none');
+    });
+
+  // Listeners, current category display.
+  setCardScrollTrackerMapper();
+  addNextCardsListener();
+  if (sidebarOpen) scrollCategoriesToCurrent();
+
+  // On mobile portrait zoom into first business when sidebar closed.
+  if (justSearchedYelp && isMobilePortrait()) mapCurrCard();
+  justSearchedYelp = false;
 }
 
 /*
