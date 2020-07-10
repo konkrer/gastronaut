@@ -423,6 +423,7 @@ a.first-letter.active {
   .filter-display {
     width: 94vw;
     left: calc(50vw - 47vw);
+    z-index: 900;
   }
   .dummy-card {
     width: 0px;
@@ -487,7 +488,7 @@ a.first-letter.active {
 }
 
 /* landscape on phones */
-@media screen and (orientation: landscape) and (max-width: 840px) and (max-height: 450px) {
+@media screen and (orientation: landscape) and (max-width: 880px) and (max-height: 450px) {
   body {
     padding-top: 0px !important;
   }
@@ -550,7 +551,7 @@ a.first-letter.active {
 }
 
 /* portrait on phones */
-@media screen and (orientation: portrait) and (max-width: 450px) and (max-height: 840px) {
+@media screen and (orientation: portrait) and (max-width: 450px) and (max-height: 880px) {
   header {
     background-color: var(--light);
     opacity: 0.95;
@@ -590,12 +591,6 @@ a.first-letter.active {
     left: calc(50vw - 20vw);
   }
 }
-
-/* @media screen and (max-width: 1000px) {
-  .card-track-inner {
-    padding-left: calc(50% - 160px);
-  }
-} */
 
 @media screen and (min-width: 1200px) {
   .mr-card {

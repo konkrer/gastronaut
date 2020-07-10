@@ -153,7 +153,7 @@ function scrollCategoriesToCurrent() {
 
 // check if screen size is mobile.
 function isMobileScreen() {
-  if (window.innerWidth <= 840) return true;
+  if (window.innerWidth <= 880) return true;
   return false;
 }
 
