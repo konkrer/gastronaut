@@ -813,6 +813,7 @@ function setForm(data) {
     $('#radius')
       .prop('disabled', true)
       .val(16094)
+      .parent()
       .prev()
       .removeClass('txt-green')
       .removeClass('dark-green-outline')
