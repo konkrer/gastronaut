@@ -895,7 +895,11 @@ function addNextCardsListener() {
   });
 }
 
+let scrollResetTimer;
 window.addEventListener('resize', () => {
-  setCardsScrollLeft();
-  mappyBoi.resize();
+  clearTimeout(scrollResetTimer);
+  scrollResetTimer = setTimeout(() => {
+    setCardsScrollLeft();
+    mappyBoi.resize();
+  }, 600);
 });

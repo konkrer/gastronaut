@@ -6,19 +6,12 @@ from flask import (  # noqa F401
 from sqlalchemy.exc import IntegrityError
 from werkzeug.utils import secure_filename
 from werkzeug.exceptions import Unauthorized
-import sentry_sdk
-from sentry_sdk.integrations.flask import FlaskIntegration
 import requests
 import os
 from models import (db, connect_db, Product, Category, User)
 from forms import AddProductForm, AddUserForm, EditUserForm, LoginForm
 from static.py_modules.yelp_helper import (yelp_categories, first_letters,
                                            parse_query_params)
-
-sentry_sdk.init(
-    dsn="https://1faae11aaacf4e749bf6d9cc1ae5286a@o415488.ingest.sentry.io/5319947",
-    integrations=[FlaskIntegration()]
-)
 
 
 app = Flask(__name__)
@@ -30,14 +23,25 @@ app.config["SECRET_KEY"] = os.environ.get('SECRET_KEY')
 
 API_KEY = os.environ.get('YELP_API_KEY')
 
-# if on development server
+# if development server
 if not app.config["SECRET_KEY"]:
     from flask_debugtoolbar import DebugToolbarExtension
     from local_settings import API_KEY, SECRET_KEY
+
     app.config["SECRET_KEY"] = SECRET_KEY
     app.config['SQLALCHEMY_ECHO'] = True
     app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
     debug = DebugToolbarExtension(app)
+# if production server
+else:
+    import sentry_sdk
+    from sentry_sdk.integrations.flask import FlaskIntegration
+
+    sentry_sdk.init(
+        dsn="https://1faae11aaacf4e749bf6d9cc1ae5286a@o415488.ingest.sentry.io/5319947",  # NOQA E 501
+        integrations=[FlaskIntegration()]
+    )
+
 
 connect_db(app)
 
@@ -362,7 +366,7 @@ def some_function(*args, **kwargs):
 
 # If dev environment.
 if not os.environ.get('SECRET_KEY'):
-    ##############################################################################
+    ###########################################################################
     # Turn off all caching in Flask
     #   (useful for dev; in production, this kind of stuff is typically
     #   handled elsewhere)
