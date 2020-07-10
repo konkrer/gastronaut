@@ -7,6 +7,7 @@ let cardScrollTimer;
 let cardScrollTrackerAndMapper;
 let sidebarOpen = true;
 let justSearchedYelp = false;
+let windowResizeCardScrollResetTimer;
 
 function setCardScrollTrackerMapper() {
   cardScrollTrackerAndMapper = $cardTrack.on('scroll', function () {
@@ -167,5 +168,19 @@ function sleep(delay) {
     setTimeout(resolve, delay);
   });
 }
+
+/* 
+/* Reset card scroll position after resize events
+/* to keep same card centered.
+*/
+window.addEventListener('resize', () => {
+  clearTimeout(windowResizeCardScrollResetTimer);
+  // delay necessary for proper function.
+  // works correctly most of the time.
+  windowResizeCardScrollResetTimer = setTimeout(() => {
+    setCardsScrollLeft();
+    mappyBoi.resize();
+  }, 600);
+});
 
 sidebarToggleListener();

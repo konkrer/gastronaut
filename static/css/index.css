@@ -318,20 +318,21 @@ a.first-letter.active {
 
 .map-toggle {
   position: absolute;
-  top: -42px;
+  top: -32px;
   right: 20px;
   background-color: rgba(0, 0, 0, 0.589);
   border: 1px solid var(--secondary);
   border-radius: 5px;
   color: white;
   border-radius: 5px;
-  height: 40px;
-  width: 40px;
+  height: 30px;
+  width: 30px;
+  font-size: 10px;
 }
 
 .toggle-on-map {
   top: 10px;
-  right: 93px;
+  right: 51px;
   background-color: white;
   color: #333;
   border: none;
@@ -343,7 +344,7 @@ a.first-letter.active {
 
 .map-hide-cards {
   position: absolute;
-  top: 10px;
+  top: 50px;
   right: 51px;
   background-color: white;
   border-radius: 5px;
@@ -521,7 +522,7 @@ a.first-letter.active {
     grid-template-rows: auto 50vh;
   }
   .sidebar-toggle-btn {
-    font-size: 10vh;
+    font-size: 7vh;
     top: 25vh;
   }
   .pulse-outline-mobile {
@@ -556,6 +557,10 @@ a.first-letter.active {
     border-radius: 10px;
     padding: 10px 2px;
     border: black 1px solid;
+  }
+  .sidebar-toggle-btn {
+    left: -5px;
+    top: 26vh;
   }
   .my-card {
     width: 320px;
