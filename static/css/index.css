@@ -582,6 +582,9 @@ a.first-letter.active {
   .padtop-card-filter-d {
     padding-top: 0px !important;
   }
+  .mapboxgl-popup-content {
+    padding: 5px 10px !important;
+  }
 }
 
 @media screen and (min-width: 840px) and (max-width: 1200px) {

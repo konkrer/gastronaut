@@ -547,6 +547,9 @@ function toggleMap() {
       .each(function (index) {
         $(this).toggleClass('d-none');
       });
+    if (!$('.card-map-zone').hasClass('cards-collapse')) {
+      setCardsScrollLeft();
+    }
   }
   $('.card-map-zone').toggleClass('map-collapse');
   $('#map').toggle();
@@ -568,14 +571,17 @@ $('.toggleCards').on('click', toggleCards);
 
 function toggleCards() {
   $('.card-map-zone').toggleClass('cards-collapse');
-  // $('#map').toggle();
   $('.card-track').toggle();
   mappyBoi.resize();
+  // toggle up/down arrow
   $('.toggleCards')
     .children()
     .each(function (index) {
       $(this).toggleClass('d-none');
     });
+  if (!$('.card-map-zone').hasClass('cards-collapse')) {
+    setCardsScrollLeft();
+  }
 }
 
 /*
