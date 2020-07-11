@@ -374,7 +374,7 @@ a.first-letter.active {
   background-color: var(--my-info) !important;
   color: whitesmoke;
   font-family: var(--font-main);
-  padding: 10px !important;
+  padding: 5px 10px !important;
 }
 
 .mapboxgl-popup-tip {
@@ -546,9 +546,6 @@ a.first-letter.active {
     width: 250px;
     min-width: 250px;
   }
-  .mapboxgl-popup-content {
-    padding: 5px 10px !important;
-  }
 }
 
 /* portrait on phones */
@@ -582,9 +579,6 @@ a.first-letter.active {
   }
   .padtop-card-filter-d {
     padding-top: 0px !important;
-  }
-  .mapboxgl-popup-content {
-    padding: 5px 10px !important;
   }
 }
 
