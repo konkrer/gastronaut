@@ -80,7 +80,9 @@ function makeCard(business) {
         </p>
         <button class="btn btn-my-card font-weight-bold mr-2 mr-sm-1 
         mr-md-2 px-3 px-sm-2 px-md--3 black-outline-1"
-        >Details</button>
+        data-toggle="tooltip"
+        title="Details"
+        ><i class="fas fa-clipboard-list fa-lg"></i></button>
         <button
           class="btn btn-my-card font-weight-bold cardMapButton 
           mr-2 mr-sm-1 mr-md-2 px-3 px-sm-2 px-md--3"
