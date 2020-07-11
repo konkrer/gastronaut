@@ -208,7 +208,7 @@ a.first-letter.active {
   overflow: hidden;
   font-family: var(--font-main);
   display: none;
-  background-color: var(--primary);
+  background-color: var(--primary-alt);
   z-index: 1100;
 }
 
@@ -358,8 +358,9 @@ a.first-letter.active {
   display: none;
   position: absolute;
   color: #333;
-  top: 140px;
-  right: 17px;
+  bottom: 11.3px;
+  right: 14.5px;
+  z-index: 100;
 }
 
 #map {
@@ -371,7 +372,7 @@ a.first-letter.active {
 
 .mapboxgl-popup-content {
   background-color: var(--my-info) !important;
-  color: #929493;
+  color: whitesmoke;
   font-family: var(--font-main);
   padding: 10px !important;
 }

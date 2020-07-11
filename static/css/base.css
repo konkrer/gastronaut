@@ -6,6 +6,13 @@
   --my-info: #050836;
   --my-purp: #1c0536;
   --my-secondary: #757575;
+  --primary: rgb(3, 15, 155, 0.9) !important;
+  --primary-alt: #1b3044;
+}
+
+.btn-my-card {
+  background-color: var(--primary-alt) !important;
+  color: #e1e1e1 !important;
 }
 
 body {

@@ -151,18 +151,6 @@ function scrollCategoriesToCurrent() {
   $locationInput.blur();
 }
 
-// check if screen size is mobile.
-function isMobileScreen() {
-  if (window.innerWidth <= 880) return true;
-  return false;
-}
-
-// check if screen size is mobile.
-function isMobilePortrait() {
-  if (window.innerWidth <= 450) return true;
-  return false;
-}
-
 function sleep(delay) {
   return new Promise(resolve => {
     setTimeout(resolve, delay);

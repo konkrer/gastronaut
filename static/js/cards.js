@@ -1,7 +1,5 @@
 'use strict';
 
-// let firstCardMade;
-
 function makeCategoriesText(categories) {
   return categories.reduce((acc, obj, i) => {
     if (i === 0) return `${acc}${obj.title}`;
@@ -80,11 +78,11 @@ function makeCard(business) {
         <p class="card-text">
           ${makeCategoriesText(categories)} ${is_closed ? '- Closed' : ''}
         </p>
-        <button class="btn btn-primary font-weight-bold mr-2 mr-sm-1 
+        <button class="btn btn-my-card font-weight-bold mr-2 mr-sm-1 
         mr-md-2 px-3 px-sm-2 px-md--3 black-outline-1"
         >Details</button>
         <button
-          class="btn btn-primary font-weight-bold cardMapButton 
+          class="btn btn-my-card font-weight-bold cardMapButton 
           mr-2 mr-sm-1 mr-md-2 px-3 px-sm-2 px-md--3"
           data-lat="${lat}"
           data-lng="${lng}"
@@ -95,7 +93,7 @@ function makeCard(business) {
         <i class="fas fa-map-marked-alt fa-lg black-outline-1"></i>
         </button>
         <button
-          class="btn btn-primary mission-btn font-weight-bold px-3 px-sm-2 px-md--3" 
+          class="btn btn-my-card mission-btn font-weight-bold px-3 px-sm-2 px-md--3" 
           data-toggle="tooltip" title="Add to Mission"
         >
         <i class="fas fa-plus-square mr-2"></i>
