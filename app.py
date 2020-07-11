@@ -284,11 +284,16 @@ def search_yelp():
                            params=params,
                            headers=headers)
     except Exception as e:
-        print(e)  # TODO: log errors
-        return jsonify({'error': e})
-    # check for json conversion errors?
+        # TODO: log errors
+        return jsonify({'error': repr(e)})
 
-    return res.json()
+    if res.status_code == 200:
+        return res.json()
+
+    # TODO: log bad status code.
+    return jsonify({
+        'error': f'There seems to be a problem - {res.status_code}'
+    })
 
 
 @app.route('/api/products')

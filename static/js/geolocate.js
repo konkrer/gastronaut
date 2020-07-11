@@ -1,10 +1,12 @@
 'use strict';
 
-var options = {
+const options = {
   enableHighAccuracy: true,
   timeout: 20000,
   maximumAge: 15000,
 };
+
+let locationWatcher;
 
 /*
 /* Detect location. 
@@ -13,6 +15,7 @@ var options = {
 function detectLocation(coords) {
   if (navigator.geolocation) {
     $('#detect-location').children().addClass('pulse');
+    navigator.geolocation.clearWatch(locationWatcher);
     navigator.geolocation.getCurrentPosition(geoSuccess, showError, options);
   } else {
     alert('Geolocation is not supported by this browser.');
@@ -40,7 +43,11 @@ function geoSuccess(position) {
   );
   // note user allowed geolocation
   localStorage.setItem('geoAllowed', true);
-  navigator.geolocation.watchPosition(watchSuccess, watchError, options);
+  locationWatcher = navigator.geolocation.watchPosition(
+    watchSuccess,
+    watchError,
+    options
+  );
   searchYelp();
 }
 
@@ -61,6 +68,7 @@ function showError(error) {
       break;
   }
   $('#detect-location').children().removeClass('pulse');
+  $('.spinner-zone').hide();
   if (longitude) {
     userMarker = addUserMarker([longitude, latitude]);
   }

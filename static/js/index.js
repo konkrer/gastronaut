@@ -11,8 +11,7 @@ const coordsPercision = 3;
 let keyupTimer;
 let latitude = null;
 let longitude = null;
-let category = 'restaurants';
-// let hasScrolledToCategory = false;
+
 let markedUser = false;
 let locationChange;
 let firstCardsAdded = false;
@@ -427,7 +426,7 @@ $locationInput.on('keyup', function (e) {
     keyupTimer = setTimeout(function () {
       searchYelp();
     }, autoSearchDelay);
-  }
+  } else $('.spinner-zone').hide();
 });
 
 /*
@@ -437,13 +436,7 @@ $searchTerm.on('keyup', function (e) {
   clearTimeout(keyupTimer);
   $('.spinner-zone').show();
   const term = $searchTerm.val();
-  if (term) {
-    $searchTerm.addClass('bg-orange');
-    $('.keyword-display').text(` - ${term}`);
-  } else {
-    $searchTerm.removeClass('bg-orange');
-    $('.keyword-display').text('');
-  }
+  keywordDisplayLogic(term);
   keyupTimer = setTimeout(function () {
     searchYelp();
   }, autoSearchDelay);
@@ -478,17 +471,21 @@ $categoryButtons.on('click', 'button', function (e) {
   $('.spinner-zone').show();
   category = e.target.value;
   $('.cat-display').text(e.target.textContent);
-  $(this)
-    .parent()
-    .children()
-    .each(function (index) {
-      $(this).removeClass('active');
-    });
+  turnActiveOffCatBtns();
   $(this).addClass('active');
   keyupTimer = setTimeout(function () {
     searchYelp();
   }, autoSearchDelay);
 });
+
+/*
+/* Turn active off for all category buttons.
+*/
+function turnActiveOffCatBtns() {
+  $categoryButtons.children().each(function (index) {
+    $(this).removeClass('active');
+  });
+}
 
 /*
 /* Navbar search function.
@@ -499,10 +496,31 @@ $('.navbar form').submit(function (e) {
   $('.navbar-collapse').removeClass('open');
   const term = $(this).children().val();
   $searchTerm.val(term);
-  if (term) $('.keyword-display').text(` - ${term}`);
-  else $('.keyword-display').text('');
+  keywordDisplayLogic(term);
+  if (term) {
+    category = 'restaurants';
+    $('.cat-display').text('All');
+    turnActiveOffCatBtns();
+    $('#All').addClass('active');
+    location.href = '#';
+    location.href = '#All';
+  }
   hideHeroAndSearch();
 });
+
+/*
+/* Turn keyword input orange or not with keyword input
+/* and display keyword in keyword display.
+*/
+function keywordDisplayLogic(term) {
+  if (term) {
+    $searchTerm.addClass('bg-orange');
+    $('.keyword-display').text(` - ${term}`);
+  } else {
+    $searchTerm.removeClass('bg-orange');
+    $('.keyword-display').text('');
+  }
+}
 
 /*
 /* Explore buttons lock view to bottom.

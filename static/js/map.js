@@ -19,7 +19,7 @@ function renderMiniMap(mapCenter = [-85, 26.8], zoom = 1.3) {
     'pk.eyJ1Ijoia29ua3JlciIsImEiOiJja2NiNnI3bjgyMjVnMnJvNmJ6dTF0enlmIn0.AH_5N70IYIX4_tslm49Kmw';
   var map = new mapboxgl.Map({
     container: 'map',
-    style: 'mapbox://styles/konkrer/ckbslmn3x00y31hp7vh351zxb',
+    style: 'mapbox://styles/konkrer/ckbslmn3x00y31hp7vh351zxb/draft',
     center: mapCenter,
     pitch: 34,
     zoom,

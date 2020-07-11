@@ -122,12 +122,13 @@ function sidebarFullyChangedLogic(onMobile) {
   justSearchedYelp = false;
 }
 
+let category;
 /*
 /* Restaurant categories auto scroll to last choosen category.
 /* Function to scroll last selected category into view.
 */
 function scrollCategoriesToCurrent() {
-  let currCat = localStorage.getItem('category');
+  let currCat = category || localStorage.getItem('category');
   if (!currCat) return;
   const converter = {
     raw_food: 'Liv',
