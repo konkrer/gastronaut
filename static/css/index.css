@@ -276,9 +276,14 @@ a.first-letter.active {
   padding-bottom: 10px;
 }
 
-/* .card-body button {
-  font-size: 1.2em;
-} */
+.card-body h5 {
+  margin-bottom: 6px;
+}
+
+.btn-my-card {
+  background-color: var(--primary) !important;
+  padding: 7px 10px 5px 10px !important;
+}
 
 .my-card li a {
   color: black;

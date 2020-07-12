@@ -10,10 +10,6 @@
   --primary-alt: #1b3044;
 }
 
-.btn-my-card {
-  background-color: var(--primary) !important;
-}
-
 body {
   position: relative;
   font-family: 'Source Sans Pro', sans-serif;
