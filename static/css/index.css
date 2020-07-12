@@ -371,15 +371,15 @@ a.first-letter.active {
 }
 
 .mapboxgl-popup-content {
-  background-color: var(--my-info) !important;
+  background-color: var(--primary) !important;
   color: whitesmoke;
   font-family: var(--font-main);
   padding: 5px 10px !important;
 }
 
 .mapboxgl-popup-tip {
-  border-top-color: var(--my-info) !important;
-  border-bottom-color: var(--my-info) !important;
+  border-top-color: var(--primary) !important;
+  border-bottom-color: var(--primary) !important;
 }
 
 .spinner-zone {
