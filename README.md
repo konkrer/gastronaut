@@ -1,6 +1,7 @@
 # <span style="color: #1b3044;">Gastronaut</span>
 
 ## <span style="color: #1b3044;">_Restaurant Discovery and Food Exploration Website_</span>
+
 ### [<span style="color: #03109b;">Gastronaut.life</span>](https://gastronaut.life 'gastronaut.life')
 
 <br/>
@@ -9,7 +10,7 @@
 
 <br/>
 
-Gastronaut is a website to help you discover new and diverse restaurants in your area. Find some gems, plan a mission, eat the food, plant a flag!
+Gastronaut is a website to help you discover new and diverse restaurants in your area. Plan a mission, eat the food, plant a flag!
 
 _Why Gastronaut?_
 
@@ -23,8 +24,6 @@ _Why Gastronaut?_
   <br/>
   <br/>
 
-
-
 ![Gastronaut homepage image](https://repository-images.githubusercontent.com/273343895/72ed7000-c4a6-11ea-86d4-cc8412d6e11a)
 
 ## Stack
@@ -33,7 +32,7 @@ JavaScript, Python/Flask, Flask-SQLAlchemy, Postgres, jQuery, API integration (i
 
 ## APIs
 
-This app uses the Yelp API for business data  [Yelp](https://www.yelp.com/fusion 'yelp.com/fusion')  
+This app uses the Yelp API for business data [Yelp](https://www.yelp.com/fusion 'yelp.com/fusion')  
 and IPWHOIS API for IP geoloaction. [IPWHOIS](https://ipwhois.io/ 'ipwhois.io')
 
 \*_This app was created as a capstone project for Springboard Software Engineering online bootcamp. This is capstone one of two._

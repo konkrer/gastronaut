@@ -23,7 +23,7 @@ function setCardScrollTrackerMapper() {
 
       currCard = focusCardIdx;
       mapCurrCard(currCard);
-    }, 1000);
+    }, 700);
   });
 }
 
