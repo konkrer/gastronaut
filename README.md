@@ -24,7 +24,7 @@ _Why Gastronaut?_
 
 \*_This app was created as a capstone project for Springboard Software Engineering online bootcamp. This is capstone one of two. Uses Yelp Fusion API_
 
-![Gastronaut homepage image](https://repository-images.githubusercontent.com/273343895/22f6cc80-bae8-11ea-94ff-3a0f7dae6eb1)
+![Gastronaut homepage image](https://repository-images.githubusercontent.com/273343895/72ed7000-c4a6-11ea-86d4-cc8412d6e11a)
 
 ## _Stack_
 
