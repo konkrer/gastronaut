@@ -1,19 +1,16 @@
 'use strict';
-// should all/any this be in class?
 
 const $locationInput = $('#location');
 const $searchTerm = $('#search-term');
 const $mainForm = $('#main-form');
 const $categoryButtons = $('#cat-btns');
 
-const autoSearchDelay = 2000;
+const autoSearchDelay = 1500;
 const coordsPercision = 3;
 let keyupTimer;
 let latitude = null;
 let longitude = null;
 
-let markedUser = false;
-let locationChange;
 let firstCardsAdded = false;
 let resultsRemaining;
 let offset;
@@ -88,21 +85,28 @@ function filterIndicatorCheck(formArray) {
   // no need to show filter indicator for these inputs
   const notFilters = ['location', 'sort_by', 'lng', 'lat'];
   let initLength = formArray.length;
-  const withoutPrices = formArray.filter(obj => obj.name[0] !== 'p');
+  const withoutPrices = formArray.filter(
+    obj => obj.name.substring(0, 5) !== 'price'
+  );
   // number of price options slected
   const numPrices = initLength - withoutPrices.length;
   if (
+    // if prices filters in use
     numPrices === 1 ||
     numPrices === 2 ||
     numPrices === 3 ||
+    // if transactions filters in use
     getTransactions().length > 0 ||
+    // if any of the other filter inputs are n use
     withoutPrices.some(obj => {
       if (!notFilters.includes(obj.name) && obj.value !== '') return true;
     })
   )
+    // turn filter indicator on
     $('.filter-icon-display').each(function () {
       $(this).show();
     });
+  // turn filter indicator off
   else
     $('.filter-icon-display').each(function () {
       $(this).hide();
@@ -118,12 +122,8 @@ function checkParameterChange(lastData) {
   const prevFormState = localStorage.getItem('formData');
   const prevCoords = JSON.parse(localStorage.getItem('coords'));
   const prevCategory = localStorage.getItem('category');
-
-  filterIndicatorCheck(currFormState);
   // set change to true if a new API call is waranted.
   let change = false;
-  // set locationChange to true if coords have significant change.
-  locationChange = false;
 
   // if form data changed warrants API call
   if (JSON.stringify(currFormState) !== prevFormState) {
@@ -131,22 +131,29 @@ function checkParameterChange(lastData) {
     setFormDataArray(currFormState);
     console.log('form data changed');
   }
+  // Else if open now selected always make a new api call
+  else if ($('#open_now').prop('checked') === true) change = true;
+
+  // TODO: Add 30sec or greater data age then make new api call.
+  // when open_now selected.
+
+  // TODO: Add 1 day age or greater data age then make new api call
+  // general search functionality.
+
   // if there is lng/lat data but no previous stored coords data
   if (longitude && !prevCoords) {
-    locationChange = true;
     localStorage.setItem('coords', JSON.stringify([longitude, latitude]));
     // if there is not a search term having coords warrants an API call
     if (!$searchTerm.val()) change = true;
     console.log('was blank now coords');
     //
   } else if (!$locationInput.val() && longitude && prevCoords) {
-    const [prevLng, prevLat] = prevCoords;
     // if coords have changed
+    const [prevLng, prevLat] = prevCoords;
     if (
       longitude.toFixed(coordsPercision) !== prevLng.toFixed(coordsPercision) ||
       latitude.toFixed(coordsPercision) !== prevLat.toFixed(coordsPercision)
     ) {
-      locationChange = true;
       localStorage.setItem('coords', JSON.stringify([longitude, latitude]));
       // if there is not a search term new coords warrant an API call
       if (!$searchTerm.val()) change = true;
@@ -163,6 +170,7 @@ function checkParameterChange(lastData) {
   if (!lastData || ['undefined', 'false'].includes(lastData)) {
     change = true;
   }
+  filterIndicatorCheck(currFormState);
 
   return change;
 }
@@ -188,7 +196,7 @@ async function searchApiCall(useOffset) {
 }
 
 /*
-/* Use Yelp lng/lat data if new lng/lat data or if rendering first coords map. 
+/* Set lng/lat from Yelp data if it has changed. 
 */
 function yelpSetLocation(data) {
   // extract lng/lat from new yelp data
@@ -197,74 +205,38 @@ function yelpSetLocation(data) {
       center: { longitude: lng, latitude: lat },
     },
   } = data;
-  // if lng/lat has changed or coords map has not been rendered yet
-  if (longitude !== lng || latitude !== lat || !markedUser) {
+  // if lng/lat has changed
+  if (longitude !== lng || latitude !== lat) {
     longitude = lng;
     latitude = lat;
-    // Set location placeholder back to 'Location'
+    // Set location placeholder back to 'Location'.
     $locationInput.prop('placeholder', `Location`);
     // store coords, render map, note rendered first coords map
     localStorage.setItem('coords', JSON.stringify([lng, lat]));
-    if (userMarker) userMarker.remove();
-    userMarker = addUserMarker([longitude, latitude]);
-    markedUser = true;
   }
 }
 
 /*
-/* Render map from storage if rendering first coords map and lng/lat data.. 
+/* Mark user on map. 
 */
-function renderFirstMapFromStorage() {
-  // no new Yelp data block.
-  // if coords map not rendered yet and there are stored coords
-  // use stored coords to render map.
-  if (!markedUser && latitude) {
-    userMarker = addUserMarker([longitude, latitude]);
-    markedUser = true;
-  }
+function markUser() {
+  if (!longitude) return;
+  if (userMarker) userMarker.remove();
+  userMarker = addUserMarker([longitude, latitude]);
 }
 
 /*
-/* Render map on location change or if rendering first coords map. 
+/* Set lng/lat from Yelp data if user entered location.
+/* Mark user. 
 */
-function renderOnLocationChangeOrFirstCoordsMap() {
-  // no text location given block.
-  // if there was a location change and coords map was
-  // not rendered yet, render map.
-  if (locationChange || !markedUser) {
-    if (userMarker) userMarker.remove();
-    userMarker = addUserMarker([longitude, latitude]);
-    markedUser = true;
+function userMarkAndYelpCoordsLogic(data) {
+  // if text location given and new Yelp data
+  // use coords Yelp returned for lng, lat.
+  if ($locationInput.val() && data) {
+    navigator.geolocation.clearWatch(locationWatcher);
+    yelpSetLocation(data);
   }
-}
-
-/*
-/* Determine if new map rendering is needed after making or not making new Yelp API call.
-/* 
-/* If using text location to search Yelp use the coords Yelp returned
-/* to map location. But if Yelp coords are the same as the stored data skip
-/* mapping as there's no new user location to map, unless rendering the first map 
-/* with user coordinates since page refresh.
-/*
-/* If using text location and page just loaded and there is no new data (using 
-/* cached data) render new map if there is lng/lat data.
-/*
-/* Otherwise, render new map if the location changed or if rendering the first map 
-/* with user coordinates since page refresh.
-/* 
-*/
-function mappingAndCoordsLogic(data) {
-  // if text location given
-  if ($locationInput.val()) {
-    // if new Yelp data
-    if (data) {
-      yelpSetLocation(data);
-    } else {
-      renderFirstMapFromStorage();
-    }
-  } else {
-    renderOnLocationChangeOrFirstCoordsMap();
-  }
+  markUser();
 }
 
 /*
@@ -310,16 +282,17 @@ function mapFirstBusiness(data) {
 */
 function mapAndAddCardsForNewApiCall(data) {
   if (paginationListener) paginationListener.off();
+  $('.resultsCount').text(data.total);
   $('.arrow-wrapper').removeClass('pulse-outline-mobile');
+
   if (data.businesses.length == 0) {
     $('.card-track-inner').html(getNoResultsCard());
     if (restMarker) restMarker.remove();
-    $('.resultsCount').text('0');
     return;
   }
   $('.card-track-inner').hide();
-  mappingAndCoordsLogic(data);
-  $('.resultsCount').text(data.total);
+  userMarkAndYelpCoordsLogic(data);
+
   const cards = getCards(data);
   currCard = 0;
 
@@ -329,6 +302,7 @@ function mapAndAddCardsForNewApiCall(data) {
     .show()
     .html(cards ? cards : getNoResultsCard())
     .removeClass('opaque');
+
   if (cards) {
     mapFirstBusiness(data);
     if (!resultsRemaining && data.total !== 1) addDummyCard();
@@ -382,6 +356,7 @@ async function searchYelp() {
   $('.spinner-zone').hide();
   if (transactionsNoChangeAndNoNewData(!!data)) return;
   justSearchedYelp = true;
+  // show card track if it is hidden.
   showCardTrack();
 
   // If no new data use last data.
@@ -403,7 +378,7 @@ async function addNextCards() {
     }, 100);
     return;
   }
-  console.log('adding next cards <<<<<<<<<<<<<<<<<<<<<<<<<<<+++++++++++++++<<');
+  console.log('adding next cards <<<<<<<<<<<<<<<+++++++<<');
   const data = await searchApiCall(true);
   offset++;
   if (data === false) return;

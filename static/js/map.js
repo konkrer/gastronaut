@@ -10,7 +10,7 @@ const fitBoundsOptions = [
     padding: { top: 80, bottom: 10, left: 80, right: 80 },
   },
   {
-    padding: { top: 80, bottom: 40, left: 145, right: 145 },
+    padding: { top: 80, bottom: 40, left: 200, right: 200 },
   },
 ];
 
