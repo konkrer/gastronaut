@@ -29,3 +29,7 @@ _Why Gastronaut?_
 ## _Stack_
 
 JS, Python/Flask, Flask-SQLAlchemy, Postgres, jQuery, API integration (internal and external), Mabox, HTML, CSS, Flask-Bcrypt, WTForms, Heroku, Jinja.
+
+## API
+
+This app uses the Yelp API for business data. [link](https://www.yelp.com/fusion 'Yelp')

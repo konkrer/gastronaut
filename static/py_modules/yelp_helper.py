@@ -31,7 +31,7 @@ def parse_query_params(multi_dict):
         else:
             if value:
                 out[key] = value
-    # if 5 prices levels given omit price data.
+    # if price, attributes - remove trailing comma.
     if price:
         out['price'] = price.strip(',')
     if attributes:
