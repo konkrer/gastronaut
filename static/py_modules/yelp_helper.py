@@ -46,7 +46,8 @@ def parse_query_params(multi_dict):
 
 
 yelp_categories = [
-    ('All', 'restaurants'), ('Acai Bowls', 'acaibowls'), ('Afghan', 'afghani'),
+    ('All', 'restaurants,bars,food'), ('All Restaurants', 'restaurants'),
+    ('Acai Bowls', 'acaibowls'), ('Afghan', 'afghani'),
     ('African', 'african'), ('American (New)', 'newamerican'),
     ('American (Traditional)', 'tradamerican'), ('Arabian', 'arabian'),
     ('Argentine', 'argentine'), ('Armenian', 'armenian'),
