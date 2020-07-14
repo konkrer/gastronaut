@@ -8,11 +8,12 @@ from werkzeug.utils import secure_filename
 from werkzeug.exceptions import Unauthorized
 import requests
 import os
-from models import (db, connect_db, Product, Category, User)
-from forms import AddProductForm, AddUserForm, EditUserForm, LoginForm
+from models import (db, connect_db, User, Mission, UserMission,
+                    Prefrences, Business, Report, MissionBusiness)
+from forms import AddProductForm, AddUserForm, LoginForm
 from static.py_modules.yelp_helper import (yelp_categories, first_letters,
                                            parse_query_params)
-
+Product, Category = None, None  # remove me
 
 app = Flask(__name__)
 
