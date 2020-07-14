@@ -133,6 +133,7 @@ function scrollCategoriesToCurrent() {
   const converter = {
     raw_food: 'Liv',
     restaurants: 'All',
+    'restaurants,bars,food': 'All',
     newamerican: 'Ame',
     tradamerican: 'Ame',
     hotdogs: 'Fas',

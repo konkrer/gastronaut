@@ -473,7 +473,7 @@ $('.navbar form').submit(function (e) {
   $searchTerm.val(term);
   keywordDisplayLogic(term);
   if (term) {
-    category = 'restaurants';
+    category = 'restaurants,bars,food';
     $('.cat-display').text('All');
     turnActiveOffCatBtns();
     $('#All').addClass('active');
