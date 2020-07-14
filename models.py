@@ -4,7 +4,7 @@ from flask_bcrypt import Bcrypt
 db = SQLAlchemy()
 bcrypt = Bcrypt()
 
-DEFAULT_PET_IMAGE = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.MT9STn6tXEh8WpneZywb1AHaG7%26pid%3DApi&f=1"  # noqa E501
+DEFAULT_USER_IMAGE = "static/images/default_users_icon.jpg"
 
 
 def connect_db(app):
@@ -17,23 +17,50 @@ class User(db.Model):
 
     __tablename__ = 'user_profiles'
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True,
+                   autoincrement=True, unique=True)
 
-    email = db.Column(db.String(60), unique=True, nullable=False)
+    email = db.Column(db.String(60), primary_key=True, index=True)
 
-    username = db.Column(db.String(50), unique=True,
-                         nullable=False, index=True)
+    username = db.Column(db.String(50), primary_key=True)
 
     password = db.Column(db.String, nullable=False)
+
+    avatar = db.Column(db.String, nullable=True)
+
+    city = db.Column(db.String, nullable=True)
+
+    state = db.Column(db.String, nullable=True)
+
+    is_admin = db.Column(db.Boolean, default=False, nullable=False)
+
+    prefrences = db.relationship('Prefrences')
+
+    missions = db.relationship('Mission', secondary='users_missions',
+                               backref='users')
+
+    user_missions = db.relationship('UserMission', backref='user',
+                                    cascade='all, delete-orphan')
+    # missions user owns and can edit
+    my_missions = db.relationship('Mission', backref='user')
+
+    reports = db.relationship('Report', backref='user')
+
+    @property
+    def image_url(self):
+        """Return photo_url if set else default image"""
+        return self.avatar or DEFAULT_USER_IMAGE
 
     @classmethod
     def register(cls, email, username, password):
         """Create and return a new user instance with hashed password."""
 
-        hashed = bcrypt.generate_password_hash(password)
-        hashed_utf8 = hashed.decode("utf8")
+        hashed_utf8 = bcrypt.generate_password_hash(password).decode("utf8")
 
-        return cls(username=username, password=hashed_utf8, email=email)
+        user = cls(email=email, username=username, password=hashed_utf8)
+        db.session.add(user)
+
+        return user
 
     @classmethod
     def authenticate(cls, email, password):
@@ -68,73 +95,87 @@ class User(db.Model):
         return out
 
 
-class Product(db.Model):
-    """Product model"""
+class Prefrences(db.Model):
+    """User Prefrences Model"""
 
-    __tablename__ = 'products'
+    __tablename__ = 'prefrences'
+
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id), primary_key=True)
+
+    show_alcohol = db.Column(db.Integer, nullable=False, default=1)
+
+    @classmethod
+    def create(cls, **kwargs):
+        """
+        Return a new instance of Prefrences
+        that has been added to session.
+        """
+        try:
+            p = cls(**kwargs)
+        except Exception:
+            return False
+
+        db.session.add(p)
+        return p
+
+
+class Mission(db.Model):
+    """Mission model"""
+
+    __tablename__ = 'missions'
 
     id = db.Column(db.Integer,
                    primary_key=True,
                    autoincrement=True)
 
-    name = db.Column(db.String(50),
-                     nullable=False,
-                     unique=True,
-                     index=True)
+    editor = db.Column(db.Integer, db.ForeignKey(User.id))
 
-    category_code = db.Column(db.String(4), db.ForeignKey('categories.code'),
-                              nullable=False)
+    name = db.Column(db.String(50), nullable=False)
 
-    price = db.Column(db.Float,
-                      nullable=False, index=True)
+    is_public = db.Column(db.Boolean, default=False)
 
-    photo_file = db.Column(db.String(255))
+    date_shared = db.Column(db.DateTime, nullable=True)
 
-    category = db.relationship('Category', backref='products')
+    city = db.Column(db.String(55), index=True, nullable=True)
 
-    team = db.relationship(
-        'Employee', secondary='product_employee', backref="products")
+    state = db.Column(db.String(55), index=True, nullable=True)
 
-    prod_employ = db.relationship(
-        'ProductEmployee', backref="products", cascade="all, delete-orphan")
+    country = db.Column(db.String(55), nullable=True)
+
+    likes = db.Column(db.Integer, nullable=False, default=1)
+
+    user_missions = db.relationship('UserMission', backref='mission',
+                                    cascade='all, delete-orphan')
+
+    reports = db.relationship('Report', backref='mission')
+
+    businesses = db.relationship('Business', secondary='missions_businesses',
+                                 backref='missions')
+
+    mission_businesses = db.relationship(
+        'MissionBusiness', cascade='all, delete-orphan')
 
     __table_args__ = (
-        db.Index('order_price_desc', price.desc(),
-                 postgresql_using='btree', postgres_ops={'price': 'DESC'}),
+        db.Index('order_date_shared_desc', date_shared.desc(),
+                 postgresql_using='btree',
+                 postgres_ops={'date_shared': 'DESC'}),
         db.Index('name_like', 'name', postgres_ops={
                  'name': 'text_pattern_ops'}),
     )
 
     def __repr__(self):
-        p = self
-        return f"<product id={p.id} name={p.name} cat={p.category.name}>"
-
-    def sale(self, prcnt):
-        """Reduce price based on percent"""
-        self.price *= 1 - prcnt/100
-        self.price = max(self.price, 0)
+        m = self
+        return f"< mission id={m.id} name={m.name} >"
 
     @classmethod
-    def get_by_category(cls, category):
-        """Return products by category"""
-        cls.query.filter_by(category=category).all()
+    def get_by_city(cls, city):
+        """Return misions by city"""
+        cls.query.filter(cls.city.like(f'%{city}%')).all()
 
-    @property
-    def image_url(self):
-        """Return photo_url if set else default image"""
-        return self.photo_url or DEFAULT_PET_IMAGE
-
-    @property
-    def roles(self):
-        """Return active roles, names, emails for project."""
-        # With multiple querys
-        # return [(pe.role, pe.employees.name, pe.employees.email, self.name)
-        #         for pe in self.prod_employ]
-
-        # With single query.
-        return db.session.query(
-            ProductEmployee.role, Employee.name, Employee.email, Product.name
-        ).filter_by(product_id=self.id).join(Employee).join(Product).all()
+    @classmethod
+    def get_by_state(cls, state):
+        """Return misions by state"""
+        cls.query.filter(cls.state.like(f'%{state}%')).all()
 
     @classmethod
     def set_get(self):
@@ -150,43 +191,140 @@ class Product(db.Model):
         out['id'] = id
         return out
 
+    @classmethod
+    def create(cls, **kwargs):
+        """Return a new instance of Mission that has been added to session."""
+        try:
+            m = cls(**kwargs)
+        except Exception:
+            return False
 
-class Category(db.Model):
-    """Product categories"""
-
-    __tablename__ = 'categories'
-
-    code = db.Column(db.String(4), primary_key=True)
-
-    name = db.Column(db.String(25), nullable=False, unique=True)
-
-    details = db.Column(db.Text)
+        db.session.add(m)
+        return m
 
 
-class Employee(db.Model):
-    """Employee model"""
+class UserMission(db.Model):
+    """User-Mission Model."""
 
-    __tablename__ = 'employees'
+    __tablename__ = 'users_missions'
+
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id), primary_key=True)
+
+    mission_id = db.Column(
+        db.Integer, db.ForeignKey(Mission.id), primary_key=True)
+
+    mission_completed = db.Column(db.Boolean, default=False)
+
+    goals_completed = db.Column(db.PickleType, nullable=True)
+
+    @classmethod
+    def create(cls, **kwargs):
+        """
+        Return a new instance of UserMission
+        that has been added to session.
+        """
+        try:
+            u_m = cls(**kwargs)
+        except Exception:
+            return False
+
+        db.session.add(u_m)
+        return u_m
+
+
+class Business(db.Model):
+    """Business Model for Yelp businesses"""
+
+    __tablename__ = 'businesses'
+
+    id = db.Column(db.String, primary_key=True)
+
+    longitude = db.Column(db.Float, nullable=False)
+
+    latitude = db.Column(db.Float, nullable=False)
+
+    name = db.Column(db.String(), nullable=False)
+
+    reports = db.relationship('Report', backref='business')
+
+    missions_businesses = db.relationship('MissionBusiness',
+                                          cascade='all, delete-orphan')
+
+    @classmethod
+    def create(cls, **kwargs):
+        """Return a new instance of Business that has been added to session."""
+        try:
+            b = cls(**kwargs)
+        except Exception:
+            return False
+
+        db.session.add(b)
+        return b
+
+
+class Report(db.Model):
+    """Mission Report Model."""
+
+    __tablename__ = 'reports'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
-    name = db.Column(db.String(50), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id))
 
-    email = db.Column(db.String(55), unique=True, nullable=True)
+    mission_id = db.Column(
+        db.Integer, db.ForeignKey(Mission.id), nullable=True)
 
-    prod_employ = db.relationship(
-        'ProductEmployee', backref='employees', cascade='all, delete-orphan')
+    business_id = db.Column(
+        db.String, db.ForeignKey(Business.id), nullable=True)
+
+    text = db.Column(db.Text, nullable=False)
+
+    @classmethod
+    def create(cls, **kwargs):
+        """Return a new instance of Report that has been added to session."""
+        try:
+            r = cls(**kwargs)
+        except Exception:
+            return False
+
+        db.session.add(r)
+        return r
 
 
-class ProductEmployee(db.Model):
-    """Product Employee join table model"""
+class MissionBusiness(db.Model):
+    """Missions Businesses join table."""
 
-    __tablename__ = 'product_employee'
+    __tablename__ = 'missions_businesses'
 
-    product_id = db.Column(db.Integer, db.ForeignKey(
-        'products.id'), primary_key=True)
+    mission_id = db.Column(
+        db.Integer, db.ForeignKey(Mission.id), primary_key=True)
 
-    employee_id = db.Column(db.Integer, db.ForeignKey(
-        'employees.id'), primary_key=True)
+    business_id = db.Column(
+        db.String, db.ForeignKey(Business.id), primary_key=True)
 
-    role = db.Column(db.String(30))
+    @classmethod
+    def create(cls, **kwargs):
+        """
+        Return a new instance of MissionBusiness
+        that has been added to session.
+        """
+        try:
+            m_b = cls(**kwargs)
+        except Exception:
+            return False
+
+        db.session.add(m_b)
+        return m_b
+
+
+# @property
+    # def roles(self):
+    #     """Return active roles, names, emails for project."""
+    #     # With multiple querys
+    #     # return [(pe.role, pe.employees.name, pe.employees.email, self.name)
+    #     #         for pe in self.prod_employ]
+
+    #     # With single query.
+    #     return db.session.query(
+    #         ProductEmployee.role, Employee.name, Employee.email, Product.name
+    #     ).filter_by(product_id=self.id).join(Employee).join(Product).all()

@@ -1,5 +1,6 @@
 from models import (
-    Product, Employee, Category, ProductEmployee, db
+    db, User, Prefrences, Mission, UserMission,
+    Business, MissionBusiness, Report
 )
 from app import app  # noqa F401
 
@@ -8,18 +9,27 @@ db.drop_all()
 db.create_all()
 
 
-category = Category(code='shmo', name='Shoes mens outdoor',
-                    details='mens hiking and trail shoes')
-db.session.add(category)
+user1 = User.register('test@test.com', 'tester1', 'tester1')
+user2 = User.register('test2@test.com', 'tester2', 'tester2')
+user3 = User.register('test3@test.com', 'tester3', 'tester3')
 
-emp = Employee(name='Bruce')
-db.session.add(emp)
 db.session.commit()
 
-shoe = Product(name='best shoe', category_code='shmo', price=100.00)
-db.session.add(shoe)
+
+b1 = Business.create(name='Cuisine of Nepal', longitude=-122.42318,
+                     latitude=37.74097, id='iUockw0CUssKZLyoGJYEXA')
+
+m1 = Mission.create(editor=user1.id, name='Around the World in Eight Days',
+                    city='San Francisco', state='California', country='USA')
+
 db.session.commit()
 
-p_e = ProductEmployee(product_id=shoe.id, employee_id=emp.id, role='manager')
-db.session.add(p_e)
+
+m1.businesses.append(b1)
+
+user1.missions.append(m1)
+
+r1 = Report.create(user_id=user1.id, business_id='iUockw0CUssKZLyoGJYEXA',
+                   text='Super mouth happy fun time!')
+
 db.session.commit()
