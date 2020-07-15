@@ -34,8 +34,6 @@ class User(db.Model):
 
     is_admin = db.Column(db.Boolean, default=False, nullable=False)
 
-    prefrences = db.relationship('Prefrences')
-
     missions = db.relationship('Mission', secondary='users_missions',
                                backref='users')
 
@@ -50,6 +48,12 @@ class User(db.Model):
     def image_url(self):
         """Return photo_url if set else default image"""
         return self.avatar or DEFAULT_USER_IMAGE
+
+    @property
+    def preferences(self):
+        """Return prefrences object associated with this user."""
+
+        return Preferences.query.filter_by(user_id=self.id).first()
 
     @classmethod
     def register(cls, email, username, password):
@@ -95,19 +99,19 @@ class User(db.Model):
         return out
 
 
-class Prefrences(db.Model):
-    """User Prefrences Model"""
+class Preferences(db.Model):
+    """User Preferences Model"""
 
-    __tablename__ = 'prefrences'
+    __tablename__ = 'preferences'
 
     user_id = db.Column(db.Integer, db.ForeignKey(User.id), primary_key=True)
 
-    show_alcohol = db.Column(db.Integer, nullable=False, default=1)
+    show_alcohol = db.Column(db.Boolean, nullable=False, default=True)
 
     @classmethod
     def create(cls, **kwargs):
         """
-        Return a new instance of Prefrences
+        Return a new instance of Preferences
         that has been added to session.
         """
         try:
@@ -218,6 +222,15 @@ class UserMission(db.Model):
     goals_completed = db.Column(db.PickleType, nullable=True)
 
     @classmethod
+    def get_user_mission(cls, user_id, mission_id):
+        """Return UserMission with given user_id/mission id."""
+
+        u_m = cls.query.filter_by(
+            user_id=user_id, mission_id=mission_id).first()
+
+        return u_m
+
+    @classmethod
     def create(cls, **kwargs):
         """
         Return a new instance of UserMission
@@ -225,6 +238,7 @@ class UserMission(db.Model):
         """
         try:
             u_m = cls(**kwargs)
+
         except Exception:
             return False
 

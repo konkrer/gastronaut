@@ -1,5 +1,8 @@
 """Restaurant discovery, food exploration web app."""
 
+from sentry_sdk.integrations.flask import FlaskIntegration
+from sentry_sdk import (capture_message, capture_exception,
+                        init as sentry_init)
 from flask import (  # noqa F401
     Flask, request, flash, make_response, Response, render_template, session,
     redirect, jsonify, abort, url_for)
@@ -7,24 +10,29 @@ from sqlalchemy.exc import IntegrityError
 from werkzeug.utils import secure_filename
 from werkzeug.exceptions import Unauthorized
 import requests
+import logging
 import os
-from models import (db, connect_db, User, Mission, UserMission,
-                    Prefrences, Business, Report, MissionBusiness)
+from models import (db, connect_db, User, Mission, UserMission,  # noqa F401
+                    Preferences, Business, Report, MissionBusiness)  # noqa F401
 from forms import AddProductForm, AddUserForm, LoginForm
 from static.py_modules.yelp_helper import (yelp_categories, first_letters,
-                                           parse_query_params)
+                                           parse_query_params, YELP_URL)
 Product, Category = None, None  # remove me
+
+
+logging.basicConfig(filename='gastronaut.log', level=logging.DEBUG,
+                    format='%(levelname)s:%(asctime)s:%(message)s')
 
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
     'DATABASE_URL', 'postgresql:///gastronaut')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config["SECRET_KEY"] = os.environ.get('SECRET_KEY')
 
-API_KEY = os.environ.get('YELP_API_KEY')
 
-# if development server
+# Dev / Production setup differentiation:
+#
+# if development server enable debugging and load local keys.
 if not app.config["SECRET_KEY"]:
     from flask_debugtoolbar import DebugToolbarExtension
     from local_settings import API_KEY, SECRET_KEY
@@ -33,45 +41,36 @@ if not app.config["SECRET_KEY"]:
     app.config['SQLALCHEMY_ECHO'] = True
     app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
     debug = DebugToolbarExtension(app)
-# if production server
+#
+# if production server enable sentry and load environ variables.
 else:
-    import sentry_sdk
-    from sentry_sdk.integrations.flask import FlaskIntegration
-
-    sentry_sdk.init(
+    sentry_init(
         dsn="https://1faae11aaacf4e749bf6d9cc1ae5286a@o415488.ingest.sentry.io/5319947",  # NOQA E 501
         integrations=[FlaskIntegration()]
     )
-
+    app.config["SECRET_KEY"] = os.environ.get('SECRET_KEY')
+    API_KEY = os.environ.get('YELP_API_KEY')
+    debug = False
 
 connect_db(app)
 
-YELP_URL = 'https://api.yelp.com/v3'
+
+@app.route('/capture-test')
+def c_t():
+    capture_message('herro from flask!!l')
+    try:
+        raise ValueError
+    except ValueError as e:
+        capture_exception(e)
+
+    return 'testy mc tester nutz'
 
 
 @app.route("/")
 def index():
     """Home view."""
-    lat, lng = '', ''
-    # get IP address
-    ip_address_raw = request.environ.get('HTTP_X_FORWARDED_FOR',
-                                         request.remote_addr)
-    ip_address = ip_address_raw.split(',')[0].strip()
-    # IP geolocation
-    try:
-        res = requests.get(f'http://ipwhois.app/json/{ip_address}')
-        data = res.json()
-    except Exception as e:
-        # move to logging
-        print(e, "<<<<<<<<<<")
 
-    if data:
-        if data.get('message'):
-            # move to logging
-            print(data['message'])
-        # pass lng/lat data in hidden input
-        lat = data.get('latitude', '')
-        lng = data.get('longitude', '')
+    lat, lng = get_coords_from_IP_address(request)
 
     return render_template(
         'index.html',
@@ -189,22 +188,6 @@ def delete_user(username):
 #
 #
 #
-
-
-@app.route("/<int:id_>", methods=['GET', 'POST'])
-def index_id(id_):
-    """Home view."""
-
-    if request.method == "GET":
-        session['var'] = var = request.args.get(
-            'var')  # grab var from query string
-        info = some_function(var, id_)
-        return render_template("index.html", info=info)
-
-    if request.method == "POST":
-        form_val = request.form['expected_field']
-        some_function(form_val, id_)
-        return redirect(url_for('index'))
 
 
 @app.route("/product/add", methods=['GET', 'POST'])
@@ -363,20 +346,46 @@ def unauthorized(e):
 
 
 ############################
-""" Hypothetical Funtion """
+""" Helper Functions"""
 
 
-def some_function(*args, **kwargs):
-    return False
+def get_coords_from_IP_address(request):
+    """Call API and geolocate IP address."""
+
+    # get IP address
+    ip_address_raw = request.environ.get('HTTP_X_FORWARDED_FOR',
+                                         request.remote_addr)
+    # get first (leftmost) address for Heroku
+    ip_address = ip_address_raw.split(',')[0].strip()
+    # IP geolocation
+    try:
+        res = requests.get(f'http://ipwhois.app/json/{ip_address}')
+        data = res.json()
+    except Exception as e:
+        if debug:
+            logging.error(f'ipwhois API FAILURE: {e}')
+        else:
+            capture_exception(e)
+        return '', ''
+
+    lat = data.get('latitude', '')
+    lng = data.get('longitude', '')
+
+    if data.get('message'):
+        if debug:
+            logging.warning(data['message'])
+        else:
+            capture_message(data['message'])
+
+    return lat, lng
 
 
-# If dev environment.
+############################
+""" Dev environment alter Headers"""
+
 if not os.environ.get('SECRET_KEY'):
     ###########################################################################
     # Turn off all caching in Flask
-    #   (useful for dev; in production, this kind of stuff is typically
-    #   handled elsewhere)
-    #
     # https://stackoverflow.com/questions/34066804/disabling-caching-in-flask
 
     @app.after_request
