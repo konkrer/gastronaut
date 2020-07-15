@@ -33,7 +33,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # Dev / Production setup differentiation:
 #
 # if development server enable debugging and load local keys.
-if not app.config["SECRET_KEY"]:
+if not os.environ.get('SECRET_KEY'):
     from flask_debugtoolbar import DebugToolbarExtension
     from local_settings import API_KEY, SECRET_KEY
 
