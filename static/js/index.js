@@ -5,16 +5,23 @@ const $searchTerm = $('#search-term');
 const $mainForm = $('#main-form');
 const $categoryButtons = $('#cat-btns');
 
-const autoSearchDelay = 1500;
-const coordsPercision = 3;
+// Keyup timer for autosearch and keyup autosearch delay.
 let keyupTimer;
+const autoSearchDelay = 1500;
+
+// Cooridnate percision used to look for lng/lat changes
+// which would warant new Yelp API call for fresh data.
+const coordsPercision = 3;
 let latitude = null;
 let longitude = null;
 
+// Cards variables
 let firstCardsAdded = false;
 let resultsRemaining;
 let offset;
+let paginationListener;
 
+// Used to reset form when passed into setForm.
 const defaultFormState = [
   { name: 'location', value: '' },
   { name: 'term', value: '' },
@@ -185,7 +192,7 @@ async function searchApiCall(useOffset) {
   try {
     var data = await axios.get(`/v1/search?${queryData}`);
   } catch (error) {
-    alert(`Yelp API Error${error.message}`);
+    alert(`Yelp API Error ${error.message}`);
     return false;
   }
   if (data.data.error) {
@@ -365,6 +372,19 @@ async function searchYelp() {
   resultsRemaining = data.total - data.businesses.length;
   offset = 1;
   mapAndAddCardsForNewApiCall(data);
+}
+
+/*
+/* When cards scrolled almost to end add next cards.
+*/
+function addNextCardsListener() {
+  if (resultsRemaining === 0) return;
+  paginationListener = $('#scrl4').scroll(function (e) {
+    if ($(this).scrollLeft() + $(this).width() > e.target.scrollWidth * 0.96) {
+      addNextCards();
+      paginationListener.off();
+    }
+  });
 }
 
 /*
@@ -837,20 +857,6 @@ function updateFormFromStorage() {
   setFormTransactions(JSON.parse(localStorage.getItem('transactions')));
 }
 
-/*
-/* Check localStorage for coordinate data.
-/* Set script lng/lat. Return coords.
-*/
-function setCoordsFromStorage() {
-  const coords = localStorage.getItem('coords');
-  if (coords) {
-    const [lng, lat] = JSON.parse(coords);
-    latitude = +lat;
-    longitude = +lng;
-    return [lng, lat];
-  }
-}
-
 function hideHeroAndSearch() {
   $('.hero-animation').hide();
   mappyBoi.resize();
@@ -884,32 +890,47 @@ function lockOnScrollBottom(map = true) {
 }
 
 /*
-/* Check localStorage for data to bring form to last state
-/* set category active, and search.
+/* Set Lng/lat data from hidden inputs then remove hidden inputs.
 */
-function checkLocalStorage() {
+function setLngLatFromHiddenInputs() {
+  // Set lng/lat from hidden inputs then remove hidden inputs.
   latitude = +$('#main-form input[name=lat]').val();
   longitude = +$('#main-form input[name=lng]').val();
-  setCategoryFromStorage();
-  updateFormFromStorage();
-  if (!latitude) setCoordsFromStorage();
-  lockOnScrollBottom();
+  $('#main-form input[name=lat]').remove();
+  $('#main-form input[name=lng]').remove();
 }
-
-checkLocalStorage();
-mappyBoi = renderMiniMap();
 
 /*
-/* When cards scrolled almost to end add next cards.
+/* Check localStorage for coordinate data.
+/* Set script lng/lat. Return coords.
 */
-let paginationListener;
-
-function addNextCardsListener() {
-  if (resultsRemaining === 0) return;
-  paginationListener = $('#scrl4').scroll(function (e) {
-    if ($(this).scrollLeft() + $(this).width() > e.target.scrollWidth * 0.96) {
-      addNextCards();
-      paginationListener.off();
-    }
-  });
+function setCoordsFromStorage() {
+  const coords = localStorage.getItem('coords');
+  if (coords) {
+    const [lng, lat] = JSON.parse(coords);
+    longitude = lng;
+    latitude = lat;
+  }
 }
+
+/*
+/* Set Lng/lat data from hidden inputs then remove hidden inputs.
+*/
+function setLngLatInit() {
+  setLngLatFromHiddenInputs();
+  if (!latitude) setCoordsFromStorage();
+}
+
+/*
+/* Check localStorage for data to bring form to last known
+/* state set last category active, and search.
+*/
+function checkLocalStorage() {
+  setCategoryFromStorage();
+  updateFormFromStorage();
+}
+
+setLngLatInit();
+checkLocalStorage();
+lockOnScrollBottom();
+mappyBoi = renderMiniMap();

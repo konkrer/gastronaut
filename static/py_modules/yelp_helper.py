@@ -14,6 +14,7 @@ def parse_query_params(multi_dict):
         Args:
             multi_dict (multi_dict): request.args data
     """
+
     out, price, attributes = {}, '', ''
 
     for key, value in multi_dict.items():

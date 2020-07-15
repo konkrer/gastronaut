@@ -20,9 +20,6 @@ from static.py_modules.yelp_helper import (yelp_categories, first_letters,
 Product, Category = None, None  # remove me
 
 
-logging.basicConfig(filename='gastronaut.log', level=logging.DEBUG,
-                    format='%(levelname)s:%(asctime)s:%(message)s')
-
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
@@ -33,7 +30,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # Dev / Production setup differentiation:
 #
 # if development server enable debugging and load local keys.
-if not os.environ.get('SECRET_KEY'):
+if __name__ == '__main__':
     from flask_debugtoolbar import DebugToolbarExtension
     from local_settings import API_KEY, SECRET_KEY
 
@@ -41,6 +38,8 @@ if not os.environ.get('SECRET_KEY'):
     app.config['SQLALCHEMY_ECHO'] = True
     app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
     debug = DebugToolbarExtension(app)
+    logging.basicConfig(filename='gastronaut.log', level=logging.DEBUG,
+                        format='%(levelname)s:%(asctime)s:%(message)s')
 #
 # if production server enable sentry and load environ variables.
 else:
@@ -52,18 +51,8 @@ else:
     API_KEY = os.environ.get('YELP_API_KEY')
     debug = False
 
+
 connect_db(app)
-
-
-@app.route('/capture-test')
-def c_t():
-    capture_message('herro from flask!!l')
-    try:
-        raise ValueError
-    except ValueError as e:
-        capture_exception(e)
-
-    return 'testy mc tester nutz'
 
 
 @app.route("/")
@@ -82,13 +71,14 @@ def index():
 
 
 #
-#  8$$$$$$  $$$$$$$$  h$+   h$  +$$$$$$|
-# $$+   $$q $$    o$d h$+   h$  +$h   $$a
-# $$        $$$$$$$$  h$+   h$  +$h    $$
-# $$        $$$$$$    h$+   h$  +$h    $$
-# $$0   $$< $$   $$$  ;$$   $$  +$h   O$$
-#   $$$$$   $$    $$$  $$$$$$$  +$$$$$$/
-#
+#   $$    $$    $$$.   $$$$$$$$  $$$$$<
+#   $$    $$  $$$ $$$  $$$$$$$$  $$$$$$$$
+#   $$    $$  $$       $$+       $$    $$
+#   $$    $$   $$$$$   $$$$$$$Y  $$$$$$$O
+#   $$    $$      ^$$o $$+       $$ '$$
+#   $$    $$  $$    $$ $$+       $$   $$
+#    $$$$$$   d$$$$$$  $$$$$$$$  $$    $$
+
 # User CRUD, login, logout
 #
 
@@ -110,7 +100,6 @@ def signup():
 
         try:
             new_user = User.register(password, **relevant_data)
-            db.session.add(new_user)
             db.session.commit()
             session['user_id'] = new_user.id
             flash("New User Created!", "success")
@@ -249,12 +238,13 @@ def edit_product(id_):
     return render_template("edit_product.html", form=form)
 
 
-#       $$$    $$$$$$%  $x
-#      .$.$[   $$   $$  $x
-#      $$ $$   $$$$$$$  $x
-#     0$$$$$$  $$$$x    $x
-#     $$   %$~ $$       $x
-#    $$     $$ $$       $x
+#      $$     $$$$$$   $$
+#     $$$$    $$   $$  $$
+#     $$$$    $$   q$m $$
+#    $$  $$   $$$$$$$  $$
+#   $$$$$$$-  $$       $$
+#   $$    $$  $$       $$
+#  $$     i$$ $$       $$
 
 
 @app.route('/v1/search')
@@ -268,16 +258,19 @@ def search_yelp():
                            params=params,
                            headers=headers)
     except Exception as e:
-        # TODO: log errors
+        if debug:
+            logging.error(
+                'Use the following error to define Exception. app.py:search_yelp'  # NOQA E501
+            )
+            logging.error(repr(e))
+        else:
+            capture_message(
+                'Use the following error to define Exception. app.py:search_yelp'  # NOQA E501
+                )
+            capture_exception(e)
         return jsonify({'error': repr(e)})
 
-    if res.status_code == 200:
-        return res.json()
-
-    # TODO: log bad status code.
-    return jsonify({
-        'error': f'There seems to be a problem - {res.status_code}'
-    })
+    return res.json()
 
 
 @app.route('/api/products')
@@ -371,6 +364,7 @@ def get_coords_from_IP_address(request):
     lat = data.get('latitude', '')
     lng = data.get('longitude', '')
 
+    # if API limit message.
     if data.get('message'):
         if debug:
             logging.warning(data['message'])
