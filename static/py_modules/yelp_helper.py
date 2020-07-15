@@ -4,26 +4,30 @@ categories first letter list.'''
 from datetime import datetime, timezone
 
 
+YELP_URL = 'https://api.yelp.com/v3'
+
+
 def parse_query_params(multi_dict):
     """Function to convert request parameters into
         state ready to be passed to Yelp.
 
         Args:
             multi_dict (multi_dict): request.args data
-        """
+    """
     out, price, attributes = {}, '', ''
+
     for key, value in multi_dict.items():
-        # make price string
+        # make price string from any price parameters.
         if key.startswith('price'):
             price += f'{value},'
-        # make attributes string
+        # make attributes string from any attribute parameters.
         elif key in [
                 'hot_and_new', 'reservation', 'cashback', 'deals',
                 'gender_neutral_restrooms', 'open_to_all',
                 'wheelchair_accessible'
         ]:
             attributes += f'{key},'
-        # convert open at datetime to utc timestamp
+        # convert open at datetime to utc timestamp if present.
         elif key == 'open_at':
             date = datetime.fromisoformat(value)
             utc_timestamp = date.replace(tzinfo=timezone.utc).timestamp()
@@ -31,11 +35,13 @@ def parse_query_params(multi_dict):
         else:
             if value:
                 out[key] = value
-    # if price, attributes - remove trailing comma.
+
+    # if price, attribute strings - remove trailing comma and set key/ value.
     if price:
         out['price'] = price.strip(',')
     if attributes:
         out['attributes'] = attributes.strip(',')
+
     # if location given remove lng/lat for explict location use
     if out.get('location'):
         if out.get('latitude'):
