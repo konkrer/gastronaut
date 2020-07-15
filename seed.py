@@ -1,6 +1,5 @@
 from models import (
-    db, User, Preferences, Mission, UserMission,
-    Business, MissionBusiness, Report
+    db, User, Mission, Business, Report
 )
 from app import app  # noqa F401
 
@@ -29,8 +28,6 @@ m2 = Mission.create(editor=user1.id, name='Food Truck Grand Tour',
                     city='San Francisco', state='California', country='USA')
 m3 = Mission.create(editor=user1.id, name='I like cheese.',
                     city='San Francisco', state='California', country='USA')
-
-p1 = Preferences.create(user_id=user1.id)
 
 db.session.commit()
 
