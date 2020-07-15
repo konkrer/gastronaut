@@ -5,6 +5,9 @@ db = SQLAlchemy()
 bcrypt = Bcrypt()
 
 DEFAULT_USER_IMAGE = "static/images/default_users_icon.jpg"
+DEFAULT_PREFERENCES = {
+    'Show Alcohol': True
+}
 
 
 def connect_db(app):
@@ -17,12 +20,11 @@ class User(db.Model):
 
     __tablename__ = 'user_profiles'
 
-    id = db.Column(db.Integer, primary_key=True,
-                   autoincrement=True, unique=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
-    email = db.Column(db.String(60), primary_key=True, index=True)
+    email = db.Column(db.String(60), nullable=False, unique=True, index=True)
 
-    username = db.Column(db.String(50), primary_key=True)
+    username = db.Column(db.String(50), nullable=False, unique=True)
 
     password = db.Column(db.String, nullable=False)
 
@@ -33,6 +35,9 @@ class User(db.Model):
     state = db.Column(db.String, nullable=True)
 
     is_admin = db.Column(db.Boolean, default=False, nullable=False)
+
+    preferences = db.Column(db.PickleType, default=DEFAULT_PREFERENCES,
+                            nullable=False)
 
     missions = db.relationship('Mission', secondary='users_missions',
                                backref='users')
@@ -48,12 +53,6 @@ class User(db.Model):
     def image_url(self):
         """Return photo_url if set else default image"""
         return self.avatar or DEFAULT_USER_IMAGE
-
-    @property
-    def preferences(self):
-        """Return prefrences object associated with this user."""
-
-        return Preferences.query.filter_by(user_id=self.id).first()
 
     @classmethod
     def register(cls, email, username, password):
@@ -97,30 +96,6 @@ class User(db.Model):
         out = {k: v for k, v in self.__dict__.items() if k in self.set_get()}
         out['id'] = id
         return out
-
-
-class Preferences(db.Model):
-    """User Preferences Model"""
-
-    __tablename__ = 'preferences'
-
-    user_id = db.Column(db.Integer, db.ForeignKey(User.id), primary_key=True)
-
-    show_alcohol = db.Column(db.Boolean, nullable=False, default=True)
-
-    @classmethod
-    def create(cls, **kwargs):
-        """
-        Return a new instance of Preferences
-        that has been added to session.
-        """
-        try:
-            p = cls(**kwargs)
-        except Exception:
-            return False
-
-        db.session.add(p)
-        return p
 
 
 class Mission(db.Model):
@@ -174,12 +149,20 @@ class Mission(db.Model):
     @classmethod
     def get_by_city(cls, city):
         """Return misions by city"""
-        cls.query.filter(cls.city.like(f'%{city}%')).all()
+        cls.query.filter(cls.is_public is True,
+                         cls.city.like(f'%{city}%')).all()
 
     @classmethod
     def get_by_state(cls, state):
         """Return misions by state"""
-        cls.query.filter(cls.state.like(f'%{state}%')).all()
+        cls.query.filter(cls.is_public is True,
+                         cls.state.like(f'%{state}%')).all()
+
+    @classmethod
+    def get_by_recent(cls, state):
+        """Return misions by state"""
+        cls.query.filter(cls.is_public is True).order_by(
+            cls.date_shared.desc()).all()
 
     @classmethod
     def set_get(self):
@@ -219,7 +202,7 @@ class UserMission(db.Model):
 
     mission_completed = db.Column(db.Boolean, default=False)
 
-    goals_completed = db.Column(db.PickleType, nullable=True)
+    goals_completed = db.Column(db.PickleType, default=[])
 
     @classmethod
     def get_user_mission(cls, user_id, mission_id):

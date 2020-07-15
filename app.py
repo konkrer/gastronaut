@@ -13,7 +13,7 @@ import requests
 import logging
 import os
 from models import (db, connect_db, User, Mission, UserMission,  # noqa F401
-                    Preferences, Business, Report, MissionBusiness)  # noqa F401
+                    Business, Report, MissionBusiness)  # noqa F401
 from forms import AddProductForm, AddUserForm, LoginForm
 from static.py_modules.yelp_helper import (yelp_categories, first_letters,
                                            parse_query_params, YELP_URL)
@@ -30,7 +30,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # Dev / Production setup differentiation:
 #
 # if development server enable debugging and load local keys.
-if __name__ == '__main__':
+if not os.environ.get('SECRET_KEY'):
     from flask_debugtoolbar import DebugToolbarExtension
     from local_settings import API_KEY, SECRET_KEY
 
@@ -67,6 +67,15 @@ def index():
         first_letters=first_letters,
         lat=lat,
         lng=lng,
+    )
+
+
+@app.route("/navtest")
+def navtest():
+    """Home view."""
+
+    return render_template(
+        'base.html',
     )
 
 
