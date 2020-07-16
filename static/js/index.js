@@ -21,6 +21,10 @@ let resultsRemaining;
 let offset;
 let paginationListener;
 
+// Scroll position listener to detect scroll to bottom
+// of page to hide globe animation and lock control panel view.
+let $scrollListener;
+
 // Used to reset form when passed into setForm.
 const defaultFormState = [
   { name: 'location', value: '' },
@@ -534,13 +538,15 @@ function turnActiveOffCatBtns() {
 /*
 /* Navbar search listener.
 */
-$('.navbar form.navbarSearchForm').submit(navbarSearch);
+$('.navbar form.searchForm').submit(function (e) {
+  e.preventDefault();
+  navbarSearch();
+});
 
 /*
 /* Navbar search function.
 */
-function navbarSearch(e) {
-  if (e) e.preventDefault();
+function navbarSearch() {
   $('.spinner-zone').show();
   $('.navbar-collapse').removeClass('open');
   const term = $('.navbar form.searchForm input').val();
@@ -753,24 +759,6 @@ function showCardTrack() {
   }
 }
 
-/*
-/* Animations.
-*/
-
-/*
-/* Pulse Animations for location and search buttons
-*/
-$('.jsPulser').each(function (i) {
-  $(this).on('mouseover', function (e) {
-    $(this).children().addClass('pulse-5');
-  });
-});
-$('.jsPulser').each(function (i) {
-  $(this).on('mouseout', function (e) {
-    $(this).children().removeClass('pulse-5');
-  });
-});
-
 /* Make map icon grow when hovered.
 /* Add grow-1_3 class to map icon 
 /* with hover of containing div. 
@@ -819,14 +807,23 @@ function setFormTransactions(transactions) {
 }
 
 /*
-/* Set form checkboxes for yelp parameters.
+/* Convert the array of objects that jQuery returns from serializeArray
+/* to a single object with key value pairs for all data.
 */
-function setForm(data) {
+function convertDataArrayToObj(data) {
   // reduce data from array of objects to obj.
-  data = data.reduce((acc, curr) => {
+  return data.reduce((acc, curr) => {
     acc[curr.name] = curr.value;
     return acc;
   }, {});
+}
+
+/*
+/* Set form checkboxes for yelp parameters.
+*/
+function setForm(data) {
+  data = convertDataArrayToObj(data);
+
   // inputs to run through and check or uncheck
   const inputIds = [
     'open_now',
@@ -926,7 +923,8 @@ function hideHeroAndSearch() {
   // if there is given location request search
   if ($locationInput.val()) searchYelp();
   // if no given location but allowing location sharing detect location
-  else if (localStorage.getItem('geoAllowed') === 'true') detectLocation();
+  else if (!locationWatcher && localStorage.getItem('geoAllowed') === 'true')
+    detectLocation();
   // If coords use those to search.
   else if (longitude) searchYelp();
 }
@@ -936,17 +934,16 @@ function hideHeroAndSearch() {
 /* Otherwise when user scroll to bottom of page call scrollCategoriesToCurrent.
 /* Only call once.
 */
-let $scrollListener;
-function lockOnScrollBottom(map = true) {
+function lockOnScrollBottom(makeSearch = true) {
   $scrollListener = $(window).on('scroll', function () {
     // when bottom of screen is scrolled to.
     if (
       $(window).scrollTop() + $(window).height() >
       $(document).height() - 100
     ) {
-      if (map) hideHeroAndSearch();
-      else $('.hero-animation').hide();
       $scrollListener.off();
+      if (makeSearch) hideHeroAndSearch();
+      else $('.hero-animation').hide();
     }
   });
 }
@@ -993,16 +990,38 @@ function checkLocalStorage() {
 }
 
 /*
-/* If there is navbar search term on page load then
-/* execute navbarSearch function on the passed in term.
+/* Set locaton value if there is a data object
+/* and there is locaton attribute on that object.
+*/
+function setLocationValue() {
+  let data = localStorage.getItem('formData');
+  // Set location from storage if there was location previously given.
+  if (data) {
+    data = JSON.parse(data);
+    data = convertDataArrayToObj(data);
+    if (data.location) $locationInput.val(data.location);
+  }
+}
+
+/*
+/* If there is navbar search term value on page load then
+/* execute navbarSearch function on the passed in value.
 /* Otherwise check local storage for form data to load.
+/* Return true or false if a further Yelp search is needed.
 */
 function checkSearchInputOrCheckLocalStorage() {
-  if ($('.navbar form.searchForm input').val()) navbarSearch();
-  else checkLocalStorage();
+  if ($('.navbar form.searchForm input').val()) {
+    // Set location then search using navbarSearch function.
+    setLocationValue();
+    navbarSearch();
+    return false;
+    //
+  } else {
+    checkLocalStorage();
+    return true;
+  }
 }
 
 setLngLatInit();
-checkSearchInputOrCheckLocalStorage();
-lockOnScrollBottom();
-mappyBoi = renderMiniMap();
+const makeSearch = checkSearchInputOrCheckLocalStorage();
+lockOnScrollBottom(makeSearch);

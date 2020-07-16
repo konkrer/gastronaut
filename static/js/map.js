@@ -61,3 +61,5 @@ function isMobilePortrait() {
   if (window.innerWidth <= 450) return true;
   return false;
 }
+
+mappyBoi = renderMiniMap();
