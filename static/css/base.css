@@ -31,6 +31,14 @@ body {
   font-size: 4vh;
 }
 
+.ssp {
+  font-family: var(--font-main);
+}
+
+.museo {
+  font-family: 'MuseoModerno', cursive;
+}
+
 .txt-xl {
   font-size: x-large;
 }
@@ -45,10 +53,6 @@ body {
 
 .fw-200 {
   font-weight: 200;
-}
-
-.museo {
-  font-family: 'MuseoModerno', cursive;
 }
 
 .txt-whitesmoke {
@@ -141,7 +145,10 @@ body {
 .navbar {
   font-family: 'MuseoModerno', cursive;
   font-size: 0.8rem;
-  /* border-bottom: 0 solid black !important; */
+}
+
+.navbar-logout:hover {
+  color: white !important;
 }
 
 .brand-outline {

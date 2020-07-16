@@ -1,9 +1,10 @@
 'use strict';
 
-// enable service worker for PWA
+// Enable service worker for PWA.
+// Pulled from Google docs about service workers.
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function () {
-    navigator.serviceWorker.register('static/js/sw.js').then(
+    navigator.serviceWorker.register('/static/js/sw.js').then(
       function (registration) {
         // Registration was successful
         console.log(

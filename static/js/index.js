@@ -153,17 +153,16 @@ function checkParameterChange(lastData) {
     // if there is not a search term having coords warrants an API call
     if (!$searchTerm.val()) change = true;
     console.log('was blank now coords');
-    //
+    // if no location given and new ond old coords to compare:
   } else if (!$locationInput.val() && longitude && prevCoords) {
-    // if coords have changed
     const [prevLng, prevLat] = prevCoords;
+    // if coords have changed:
     if (
       longitude.toFixed(coordsPercision) !== prevLng.toFixed(coordsPercision) ||
       latitude.toFixed(coordsPercision) !== prevLat.toFixed(coordsPercision)
     ) {
       localStorage.setItem('coords', JSON.stringify([longitude, latitude]));
-      // if there is not a search term new coords warrant an API call
-      if (!$searchTerm.val()) change = true;
+      change = true;
       console.log('coords have changed');
     }
   }
@@ -483,13 +482,18 @@ function turnActiveOffCatBtns() {
 }
 
 /*
+/* Navbar search listener.
+*/
+$('.navbar form.navbarSearchForm').submit(navbarSearch);
+
+/*
 /* Navbar search function.
 */
-$('.navbar form').submit(function (e) {
-  e.preventDefault();
+function navbarSearch(e) {
+  if (e) e.preventDefault();
   $('.spinner-zone').show();
   $('.navbar-collapse').removeClass('open');
-  const term = $(this).children().val();
+  const term = $('.navbar form.searchForm input').val();
   $searchTerm.val(term);
   keywordDisplayLogic(term);
   if (term) {
@@ -501,7 +505,7 @@ $('.navbar form').submit(function (e) {
     location.href = '#All';
   }
   hideHeroAndSearch();
-});
+}
 
 /*
 /* Turn keyword input orange or not with keyword input
@@ -547,12 +551,15 @@ $('#detect-location').on('click', function (e) {
 });
 
 /*
-/* Clear search term button fuctionality.
+/* Clear All Filters button fuctionality.
 */
 $('#clear-filters').on('click', function (e) {
-  setForm(defaultFormState);
-  setFormTransactions([]);
-  searchYelp();
+  $('.spinner-zone').show();
+  keyupTimer = setTimeout(() => {
+    setForm(defaultFormState);
+    setFormTransactions([]);
+    searchYelp();
+  }, autoSearchDelay);
 });
 
 /*
@@ -864,7 +871,7 @@ function updateFormFromStorage() {
 function hideHeroAndSearch() {
   $('.hero-animation').hide();
   $('.alert').hide();
-  mappyBoi.resize();
+  // mappyBoi.resize(); <<<<< look for any problems then remove
   scrollCategoriesToCurrent();
   // if there is given location request search
   if ($locationInput.val()) searchYelp();
@@ -935,7 +942,17 @@ function checkLocalStorage() {
   updateFormFromStorage();
 }
 
+/*
+/* If there is navbar search term on page load then
+/* execute navbarSearch function on the passed in term.
+/* Otherwise check local storage for form data to load.
+*/
+function checkSearchInputOrCheckLocalStorage() {
+  if ($('.navbar form.searchForm input').val()) navbarSearch();
+  else checkLocalStorage();
+}
+
 setLngLatInit();
-checkLocalStorage();
+checkSearchInputOrCheckLocalStorage();
 lockOnScrollBottom();
 mappyBoi = renderMiniMap();
