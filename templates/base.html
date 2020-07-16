@@ -103,7 +103,7 @@
       >
         <ul class="navbar-nav mr-auto fw-200">
           <li class="nav-item active">
-            <a class="nav-link explore-nav" href="/#main-interface"
+            <a class="nav-link explore-nav" href="/"
               ><span class="sr-only">(current)</span>Explore</a
             >
           </li>
@@ -127,7 +127,7 @@
               >Settings</a
             >
             <div class="dropdown-menu" aria-labelledby="dropdown01">
-              <a class="dropdown-item" href="#">Profile</a>
+              <a class="dropdown-item" href="/user/profile">Profile</a>
               <a class="dropdown-item" href="#">Prefrences</a>
               <a class="dropdown-item" href="#"
                 >Gastronaut groups (Coming Soon!)</a
@@ -153,7 +153,9 @@
     </div>
     {% with mssgs = get_flashed_messages(with_categories=True) %} {% if mssgs %}
     {% for category, mssg in mssgs %}
-    <div class="alert alert-success text-center {{category}}">{{mssg}}</div>
+    <div class="alert alert-{{category}} text-center mb-0">
+      {{mssg}}
+    </div>
     {% endfor %} {% endif %} {% endwith %}
     <main>
       {% block main %} {% endblock %}

@@ -5,10 +5,10 @@ from sentry_sdk import (capture_message, capture_exception,
                         init as sentry_init)
 from flask import (  # noqa F401
     Flask, request, flash, make_response, Response, render_template, session,
-    redirect, jsonify, abort, url_for)
+    redirect, jsonify, abort, url_for, g)
 from sqlalchemy.exc import IntegrityError
 from werkzeug.utils import secure_filename
-from werkzeug.exceptions import Unauthorized
+# from werkzeug.exceptions import Unauthorized
 import requests
 import logging
 import os
@@ -59,6 +59,10 @@ connect_db(app)
 def index():
     """Home view."""
 
+    add_user_to_g()
+    my_missions = [(m.name, m.id)
+                   for m in g.user.my_missions] if g.user else []
+
     lat, lng = get_coords_from_IP_address(request)
 
     return render_template(
@@ -67,16 +71,15 @@ def index():
         first_letters=first_letters,
         lat=lat,
         lng=lng,
+        my_missions=my_missions
     )
 
 
 @app.route("/navtest")
 def navtest():
-    """Home view."""
+    """Navber search testing view."""
 
-    return render_template(
-        'base.html',
-    )
+    return render_template('base.html')
 
 
 #
@@ -95,38 +98,46 @@ def navtest():
 @app.route("/signup", methods=['GET', 'POST'])
 def signup():
     """Sign up view."""
-    if "user_id" in session:
-        return redirect(url_for('user_detail', username=session['user_id']))
+
+    add_user_to_g()
+    if g.user:
+        # TODO: check below OK URL after user detail update
+        return redirect(url_for('user_detail'))
 
     form = AddUserForm()
 
     if form.validate_on_submit():
         password = form.password.data
+        # Collect relevant form data items to a dictionary.
         relevant_data = {
             k: v
-            for k, v in form.data.items() if k in Product.set_get()
+            for k, v in form.data.items() if k in User.set_get()
         }
 
         try:
-            new_user = User.register(password, **relevant_data)
+            new_user = User.register(password=password, **relevant_data)
             db.session.commit()
+            new_user.add_bookmarks()
             session['user_id'] = new_user.id
             flash("New User Created!", "success")
             return redirect(url_for('index'))
 
         except Exception as e:
-            flash(f"Error: {e}")  # move to logging
+            flash("Error Creating User", 'danger')
+            errorLogging(e)
 
     if request.method == 'POST':
         flash("Please fix all form errors.", "warning")
-    return render_template('signup.html', form=form)
+    return render_template('user/signup.html', form=form)
 
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     """Sign up view."""
-    if "user_id" in session:
-        return redirect(f"users/{session['user_id']}")
+
+    add_user_to_g()
+    if g.user:
+        return redirect(url_for('user_detail'))
 
     form = LoginForm()
 
@@ -137,6 +148,7 @@ def login():
         user = User.authenticate(email, password)
         if user:
             session['user_id'] = user.id
+            flash(f"{user.name} logged in!", 'success')
             return redirect(url_for('index'))
 
         if user is None:
@@ -146,40 +158,39 @@ def login():
 
     if request.method == 'POST':
         flash("Please fix all form errors.", "warning")
-    return render_template('login.html', form=form)
+    return render_template('user/login.html', form=form)
 
 
 @app.route('/logout', methods=['POST'])
 def logout():
-    session.pop('user_id')
-    flash("Logged out.")
+    del session['user_id']
+    flash("Logged out.", 'success')
     return redirect(url_for('index'))
 
 
-@app.route("/users/<username>")
-def user_detail(username):
+@app.route("/user/profile")
+def user_detail():
     """User detail view."""
 
-    if 'user_id' not in session:
+    add_user_to_g()
+    if not g.user:
         return redirect(url_for('login'))
 
-    if not session['user_id'] == username:
-        raise Unauthorized
-
-    user = User.query.filter_by(username=username).first()
-    return render_template("detail_user.html", user=user)
+    return render_template("user/detail_user.html", user=g.user)
 
 
-@app.route("/users/<username>/delete", methods=['POST'])
-def delete_user(username):
+@app.route("/user/delete/<user_id>", methods=['POST'])
+def delete_user(user_id):
     """Delete User view"""
-    if 'user_id' not in session or not session['user_id'] == username:
-        raise Unauthorized
 
-    user = User.query.get(username)
-    db.session.delete(user)
+    add_user_to_g()
+    if not g.user or not g.user.id == int(user_id):
+        return redirect(url_for('index'))
+
+    db.session.delete(g.user)
     db.session.commit()
     del session['user_id']
+
     return redirect(url_for('index'))
 
 
@@ -267,16 +278,7 @@ def search_yelp():
                            params=params,
                            headers=headers)
     except Exception as e:
-        if debug:
-            logging.error(
-                'Use the following error to define Exception. app.py:search_yelp'  # NOQA E501
-            )
-            logging.error(repr(e))
-        else:
-            capture_message(
-                'Use the following error to define Exception. app.py:search_yelp'  # NOQA E501
-                )
-            capture_exception(e)
+        errorLogging(e)
         return jsonify({'error': repr(e)})
 
     return res.json()
@@ -351,6 +353,16 @@ def unauthorized(e):
 """ Helper Functions"""
 
 
+def add_user_to_g():
+    """If we're logged in, add curr user to Flask global."""
+
+    if 'user_id' in session:
+        g.user = User.query.get(session['user_id'])
+
+    else:
+        g.user = None
+
+
 def get_coords_from_IP_address(request):
     """Call API and geolocate IP address."""
 
@@ -364,10 +376,7 @@ def get_coords_from_IP_address(request):
         res = requests.get(f'http://ipwhois.app/json/{ip_address}')
         data = res.json()
     except Exception as e:
-        if debug:
-            logging.error(f'ipwhois API FAILURE: {e}')
-        else:
-            capture_exception(e)
+        errorLogging(e)
         return '', ''
 
     lat = data.get('latitude', '')
@@ -375,12 +384,25 @@ def get_coords_from_IP_address(request):
 
     # if API limit message.
     if data.get('message'):
-        if debug:
-            logging.warning(data['message'])
-        else:
-            capture_message(data['message'])
+        messageLogging(data['message'])
 
     return lat, lng
+
+
+def errorLogging(e):
+    """Log error when dev environment, sentry capture when production."""
+    if debug:
+        logging.error(repr(e))
+    else:
+        capture_exception(e)
+
+
+def messageLogging(message):
+    """Log message when dev environment, sentry capture when production."""
+    if debug:
+        logging.warning(message)
+    else:
+        capture_message(message)
 
 
 ############################

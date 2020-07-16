@@ -580,7 +580,7 @@
       </div>
       <div class="col bg-stars1 card-map-zone">
         <div
-          class="sidebar-toggle-btn txt-whitesmoke pl-1 border border-secondary border-left-0"
+          class="sidebar-toggle-btn pl-1 border border-secondary border-left-0"
         >
           <div class="arrow-wrapper black-outline-1">
             <i class="fas fa-angle-double-left" aria-hidden="true"></i>
@@ -643,6 +643,100 @@
             </div> -->
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="mission-choices modal fade"
+    id="mission-choices"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="missionsModalTitle"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        {% if my_missions %}
+        <div class="modal-header">
+          <h5 class="modal-title txt-orange" id="exampleModalLabel">
+            Add To Mission
+          </h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="#" id="mission-choices-form" class="">
+            <div class="form-group">
+              <label for="mission-select" class="">Mission</label>
+              <select
+                name="mission-select"
+                id="mission-select"
+                class="form-control form-control-lg"
+              >
+                {% for name, id in my_missions %}
+                <option value="{{id}}">{{name}}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              data-toggle="tooltip"
+              title="Add to Mission"
+            >
+              <i class="fas fa-plus-square mr-2"></i>
+              <i class="fas fa-rocket fa-lg txt-orange brand-outline"></i>
+            </button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-sm btn-secondary"
+            data-dismiss="modal"
+          >
+            Close
+          </button>
+          <a href="#" class="btn btn-sm btn-secondary">Create New Mission</a>
+        </div>
+        {% else %}
+        <div class="modal-header">
+          <h5 class="modal-title txt-orange" id="exampleModalLabel">
+            Add To Mission
+          </h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p class="txt-whitesmoke">
+            <em>You must sign up or login to add to mission!</em>
+          </p>
+          <a class="signup btn btn-lg btn-primary txt-whitesmoke" href="/signup"
+            >Sign Up</a
+          >
+          <span class="px-4">- OR -</span>
+          <a class="login btn btn-lg btn-primary txt-whitesmoke" href="/login"
+            >Log in</a
+          >
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Close
+          </button>
+        </div>
+        {% endif %}
       </div>
     </div>
   </div>

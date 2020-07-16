@@ -281,8 +281,7 @@ a.first-letter.active {
 }
 
 .btn-my-card {
-  background-color: var(--primary) !important;
-  padding: 7px 10px 5px 10px !important;
+  padding: 7px 10px 4px 10px !important;
 }
 
 .my-card li a {
@@ -681,10 +680,14 @@ a.first-letter.active {
   .sidebar-toggle-btn:hover {
     transform: scale(1.1);
   }
-  .my-card button:hover {
+  .my-card button:hover,
+  #mission-choices button:hover,
+  #mission-choices a:hover {
     background-color: var(--my-green) !important;
   }
-  .my-card button.mission-btn:hover {
+  .my-card button.mission-btn:hover,
+  #mission-choices button:hover,
+  #mission-choices a:hover {
     color: var(--my-info) !important;
   }
   .card-text-noHover:hover {
