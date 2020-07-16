@@ -26,21 +26,6 @@ class AddUserForm(FlaskForm):
         InputRequired(message="Password cannot be blank."),
         Length(min=6, max=60)])
 
-    password2 = PasswordField("Password", validators=[
-        InputRequired(message="Password 2 cannot be blank."),
-        Length(min=6, max=60)])
-
-    avatar_url = URLField("Avatar URL", validators=[
-        Length(min=0, max=255)])
-
-    avatar_id = HiddenField(id='avatar_id')
-
-    avavatar_set = SelectField('Auto Avatar Style',
-                               choices=[
-                                   ('set1', 'Robot'), ('set2', 'Monster'),
-                                   ('set3', 'Robot Head'), ('set4', 'Kitty'),
-                                   ('set5', 'Human')])
-
     def validate_username(form, field):
         """Make sure username not in use."""
         if User.query.filter_by(username=form.username.data).first():
@@ -54,22 +39,25 @@ class AddUserForm(FlaskForm):
                 "Email already associated with account!")
             raise ValidationError
 
-    def validate_password2(form, field):
-        """Make sure password and password2 match."""
-        if not form.password.data == form.password2.data:
-            form.password.errors.append("Both passwords must match.")
-            form.password2.errors.append("Both passwords must match.")
-            raise ValidationError
-
 
 class EditUserForm(FlaskForm):
+    """Edit User Form."""
+
+    email = EmailField("Email", validators=[
+                       InputRequired(message="Email cannot be blank."),
+                       Length(min=6, max=60),
+                       Email(check_deliverability=True,
+                             message="Invalid Email address")])
+
     username = StringField("Username", validators=[
         InputRequired(message="Username cannot be blank."),
         Length(min=6, max=50)])
 
-    password = PasswordField("Password", validators=[
-        InputRequired(message="Password cannot be blank."),
-        Length(min=6, max=60)])
+    avatar = URLField("Avatar URL", validators=[Length(min=0, max=255)])
+
+    city = StringField("City", validators=[Length(min=2, max=50)])
+
+    state = StringField("State", validators=[Length(min=2, max=50)])
 
 
 class LoginForm(FlaskForm):

@@ -67,6 +67,14 @@ body {
   color: var(--my-green) !important;
 }
 
+.txt-info {
+  color: var(--my-info) !important;
+}
+
+.txt-purp {
+  color: var(--my-purp) !important;
+}
+
 .bg-green {
   background-color: var(--my-green) !important;
 }
@@ -91,6 +99,26 @@ body {
   background-color: var(--primary) d2;
   padding: 10px 20px;
   border-radius: 5px;
+}
+
+.btn-primary {
+  background-color: var(--primary) !important;
+  border: none !important;
+}
+
+.btn-info {
+  background-color: var(--my-info) !important;
+  border: none !important;
+}
+
+.btn-primary-alt {
+  background-color: var(--primary-alt) !important;
+  border: none !important;
+}
+
+.btn-purp {
+  background-color: var(--my-purp) !important;
+  border: none !important;
 }
 
 .navbar-traverse {

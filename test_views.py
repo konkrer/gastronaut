@@ -1,4 +1,4 @@
-"""Test views and view related functions."""
+"""Test basic views and view related functions."""
 
 from unittest import TestCase
 from types import SimpleNamespace
@@ -30,12 +30,13 @@ class ViewTests(TestCase):
             self.assertIn("American (New)", html)
 
 
-class APITests(TestCase):
+class APIViewTests(TestCase):
 
     def setUp(self):
         self.client = app.test_client()
 
     def test_search_yelp(self):
+        """Test reaching the Yelp API for data."""
 
         resp = self.client.get('/v1/search?location=sf&category=restaurants')
         data = json.loads(resp.get_data())
@@ -44,12 +45,14 @@ class APITests(TestCase):
         self.assertIsInstance(data, dict)
 
     def test_get_coords_from_IP_address(self):
+        """Test reaching the IPWhois API for data."""
 
         fake_request = SimpleNamespace(
             environ={'HTTP_X_FORWARDED_FOR': '127.0.0.1'}, remote_addr=1
         )
 
         lat, lng = get_coords_from_IP_address(fake_request)
+
         # these are the default coords that are returned from
         # ipwhois for the localhost address.
         self.assertEqual(lat, '35.7090259')

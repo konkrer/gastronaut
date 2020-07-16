@@ -28,7 +28,7 @@ class User(db.Model):
 
     password = db.Column(db.String, nullable=False)
 
-    avatar = db.Column(db.String, nullable=True)
+    avatar_url = db.Column(db.String, nullable=True)
 
     city = db.Column(db.String, nullable=True)
 
@@ -52,7 +52,7 @@ class User(db.Model):
     @property
     def image_url(self):
         """Return photo_url if set else default image"""
-        return self.avatar or DEFAULT_USER_IMAGE
+        return self.avatar_url or DEFAULT_USER_IMAGE
 
     @classmethod
     def register(cls, email, username, password):
@@ -64,6 +64,13 @@ class User(db.Model):
         db.session.add(user)
 
         return user
+
+    def add_bookmarks(self):
+        """Add a default bookmarks mission for user."""
+
+        m = Mission.create(editor=self.id, name='Bookmarks')
+        self.missions.append(m)
+        db.session.commit()
 
     @classmethod
     def authenticate(cls, email, password):
@@ -86,11 +93,13 @@ class User(db.Model):
     @classmethod
     def set_get(self):
         """
-        Return list of attributes for serialization, obj creation and editing.
+        Return list of attributes for normal
+        serialization, obj creation and editing.
         """
-        return ['username', 'email']
+        return ['username', 'email', 'avatar_url', 'city', 'state']
 
     def serialize(self):
+        """Serialize model set_get properties data to a dictonary."""
         # update model from database so serialization works by calling self.id
         id = self.id
         out = {k: v for k, v in self.__dict__.items() if k in self.set_get()}
@@ -167,11 +176,13 @@ class Mission(db.Model):
     @classmethod
     def set_get(self):
         """
-        Return list of attributes for serialization, obj creation and editing.
+        Return list of attributes for normal
+        serialization, obj creation and editing.
         """
         return ['name', 'category_code', 'price']
 
     def serialize(self):
+        """Serialize model set_get properties data to a dictonary."""
         # update model from database so serialization works by calling self.id
         id = self.id
         out = {k: v for k, v in self.__dict__.items() if k in self.set_get()}

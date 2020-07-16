@@ -518,11 +518,13 @@ function keywordDisplayLogic(term) {
 }
 
 /*
-/* Explore buttons lock view to bottom.
+/* Navbar explore button toggles view lock to bottom
+/* and globe animation display.
 */
 $('.explore-nav').on('click', function (e) {
   e.preventDefault();
   $('.hero-animation').toggle();
+  $('.alert').hide();
   window.dispatchEvent(new Event('resize'));
   $('.navbar-collapse').removeClass('open');
   lockOnScrollBottom(false);
@@ -542,86 +544,6 @@ $('.explore').on('click', function (e) {
 $('#detect-location').on('click', function (e) {
   $(this).children().removeClass('pulse-5');
   detectLocation(e);
-});
-
-/*
-/* Show map button fuctionality. Open and close map.
-*/
-$('.showMap').each(function (index) {
-  $(this).on('click', toggleMap);
-});
-
-function toggleMap() {
-  if (mapOpen && $('.card-map-zone').hasClass('cards-collapse')) {
-    $('.card-map-zone').removeClass('cards-collapse');
-    $('.card-track').show();
-    $('.toggleCards')
-      .children()
-      .each(function (index) {
-        $(this).toggleClass('d-none');
-      });
-    if (!$('.card-map-zone').hasClass('cards-collapse')) {
-      setCardsScrollLeft();
-    }
-  }
-  $('.card-map-zone').toggleClass('map-collapse');
-  $('#map').toggle();
-  $('.mapBtns').toggle();
-  $('.map-toggle').toggleClass('toggle-on-map');
-  $('.map-track').toggleClass(['border-top', 'border-secondary']);
-  if (mapOpen) {
-    mapOpen = false;
-  } else {
-    mapOpen = true;
-    mappyBoi.resize();
-  }
-}
-
-/*
-/* Show/hide cards fuctionality. Big/small map.
-*/
-$('.toggleCards').on('click', toggleCards);
-
-function toggleCards() {
-  $('.card-map-zone').toggleClass('cards-collapse');
-  $('.card-track').toggle();
-  mappyBoi.resize();
-  // toggle up/down arrow
-  $('.toggleCards')
-    .children()
-    .each(function (index) {
-      $(this).toggleClass('d-none');
-    });
-  if (!$('.card-map-zone').hasClass('cards-collapse')) {
-    setCardsScrollLeft();
-  }
-}
-
-/*
-/* Show cards fuctionality for search Yelp.
-*/
-function showCardTrack() {
-  if ($('.card-map-zone').hasClass('cards-collapse')) {
-    $('.card-map-zone').removeClass('cards-collapse');
-    $('.card-track').show();
-    mappyBoi.resize();
-    $('.toggleCards')
-      .children()
-      .each(function (index) {
-        $(this).toggleClass('d-none');
-      });
-  }
-}
-
-/* Show restaurant marker and fit bounds map button is clicked.
- */
-$('.card-track-inner').on('click', '.cardMapButton', function (e) {
-  e.preventDefault();
-  const lng = $(this).data('lng');
-  const lat = $(this).data('lat');
-  const name = $(this).data('name');
-  if (!mapOpen) toggleMap();
-  fitBounds([longitude, latitude], [+lng, +lat], name);
 });
 
 /*
@@ -691,6 +613,88 @@ $('#radius-check').on('click', function () {
 $('#radius').on('change', function () {
   $('.radiusDisplay').text(metersToMiles($(this).val()));
 });
+
+/*
+/* Show restaurant marker and fit bounds when card map button is clicked.
+*/
+$('.card-track-inner').on('click', '.cardMapButton', function (e) {
+  e.preventDefault();
+  const lng = $(this).data('lng');
+  const lat = $(this).data('lat');
+  const name = $(this).data('name');
+  if (!mapOpen) toggleMap();
+  fitBounds([longitude, latitude], [+lng, +lat], name);
+});
+
+/*
+/* Show map button fuctionality. Open and close map.
+*/
+$('.showMap').each(function (index) {
+  $(this).on('click', toggleMap);
+});
+
+function toggleMap() {
+  if (mapOpen && $('.card-map-zone').hasClass('cards-collapse')) {
+    $('.card-map-zone').removeClass('cards-collapse');
+    $('.card-track').show();
+    $('.toggleCards')
+      .children()
+      .each(function (index) {
+        $(this).toggleClass('d-none');
+      });
+    if (!$('.card-map-zone').hasClass('cards-collapse')) {
+      setCardsScrollLeft();
+    }
+  }
+  $('.card-map-zone').toggleClass('map-collapse');
+  $('#map').toggle();
+  $('.mapBtns').toggle();
+  $('.map-toggle').toggleClass('toggle-on-map');
+  $('.map-track').toggleClass(['border-top', 'border-secondary']);
+  if (mapOpen) {
+    mapOpen = false;
+  } else {
+    mapOpen = true;
+    mappyBoi.resize();
+  }
+}
+
+/*
+/* Show/hide cards fuctionality. Big/small map.
+*/
+$('.toggleCards').on('click', toggleCards);
+
+function toggleCards() {
+  $('.card-map-zone').toggleClass('cards-collapse');
+  $('.card-track').toggle();
+  mappyBoi.resize();
+  // toggle up/down arrow
+  $('.toggleCards')
+    .children()
+    .each(function (index) {
+      $(this).toggleClass('d-none');
+    });
+  if (!$('.card-map-zone').hasClass('cards-collapse')) {
+    setCardsScrollLeft();
+  }
+}
+
+/*
+/* Show cards fuctionality for search Yelp. If cards are hidden
+/* they will be shown after search Yelp.
+*/
+function showCardTrack() {
+  if ($('.card-map-zone').hasClass('cards-collapse')) {
+    $('.card-map-zone').removeClass('cards-collapse');
+    $('.card-track').show();
+    mappyBoi.resize();
+    $('.toggleCards')
+      .children()
+      .each(function (index) {
+        $(this).toggleClass('d-none');
+      });
+  }
+}
 
 /*
 /* Animations.
@@ -859,6 +863,7 @@ function updateFormFromStorage() {
 
 function hideHeroAndSearch() {
   $('.hero-animation').hide();
+  $('.alert').hide();
   mappyBoi.resize();
   scrollCategoriesToCurrent();
   // if there is given location request search
