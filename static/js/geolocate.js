@@ -12,7 +12,7 @@ let locationWatcher;
 /* Detect location. 
 /* Set lat, lng. Set if user is sharing location.
 */
-function detectLocation(coords) {
+function detectLocation() {
   if (navigator.geolocation) {
     $('#detect-location').children().addClass('pulse');
     navigator.geolocation.clearWatch(locationWatcher);
@@ -72,6 +72,7 @@ function showError(error) {
   if (longitude) {
     userMarker = addUserMarker([longitude, latitude]);
   }
+  searchYelp();
 }
 
 function watchSuccess(position) {

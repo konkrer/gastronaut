@@ -174,3 +174,17 @@ window.addEventListener('resize', () => {
 });
 
 sidebarToggleListener();
+
+/*
+/* Pulse Animations for location and search buttons
+*/
+$('.jsPulser').each(function (i) {
+  $(this).on('mouseover', function (e) {
+    $(this).children().addClass('pulse-5');
+  });
+});
+$('.jsPulser').each(function (i) {
+  $(this).on('mouseout', function (e) {
+    $(this).children().removeClass('pulse-5');
+  });
+});
