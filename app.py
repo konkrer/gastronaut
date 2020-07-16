@@ -4,8 +4,8 @@ from sentry_sdk.integrations.flask import FlaskIntegration
 from sentry_sdk import (capture_message, capture_exception,
                         init as sentry_init)
 from flask import (  # noqa F401
-    Flask, request, flash, make_response, Response, render_template, session,
-    redirect, jsonify, abort, url_for, g)
+    Flask, request, flash, make_response, Response, session,
+    redirect, jsonify, abort, url_for, g, render_template as r_t)
 from sqlalchemy.exc import IntegrityError
 from werkzeug.utils import secure_filename
 # from werkzeug.exceptions import Unauthorized
@@ -14,12 +14,12 @@ import logging
 import os
 from models import (db, connect_db, User, Mission, UserMission,  # noqa F401
                     Business, Report, MissionBusiness)  # noqa F401
-from forms import AddProductForm, AddUserForm, LoginForm
+from forms import AddUserForm, LoginForm, EditUserForm
+from static.py_modules.decorators import add_user_to_g, login_required
 from static.py_modules.yelp_helper import (yelp_categories, first_letters,
                                            parse_query_params, YELP_URL)
-from static.py_modules.decorators import add_user_to_g, login_required
 
-Product, Category = None, None  # remove me
+Product, Category, AddProductForm = None, None, None  # remove me
 
 
 app = Flask(__name__)
@@ -401,6 +401,15 @@ def messageLogging(message):
         logging.warning(message)
     else:
         capture_message(message)
+
+
+def render_template(*ars, **kwargs):
+    """Wrap render_template and add debug flag to allow JS Sentry
+       initalizatin only when debug is False (Production Environment).
+    """
+
+    global debug
+    return r_t(*ars, debug=bool(debug), **kwargs)
 
 
 ############################

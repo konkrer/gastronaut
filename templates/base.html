@@ -45,12 +45,14 @@
       integrity="sha384-ibWewy8LWP0FdvEBD3iLjNmbFkkh/FKtOz8GR9C8ZBWjDTbjbdIDpa4nc/AasWns"
       crossorigin="anonymous"
     ></script>
+    {% if not debug %}
     <script>
       Sentry.init({
         dsn:
           'https://9d6aca2c56384459925ec4ecbf58afee@o415488.ingest.sentry.io/5306632',
       });
     </script>
+    {% endif %}
     <script
       src="https://kit.fontawesome.com/5c45c2d894.js"
       crossorigin="anonymous"

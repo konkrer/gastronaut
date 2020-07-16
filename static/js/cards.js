@@ -175,6 +175,14 @@ function addDummyCard() {
 }
 
 /*
+/* Report error of api call.
+*/
+function errorCard(data) {
+  alert(`${data.error.code}, ${data.error.description}`);
+  console.error(data);
+}
+
+/*
 /* Convert meters to miles to one decimal place.
 */
 function metersToMiles(num) {

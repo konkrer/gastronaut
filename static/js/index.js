@@ -78,17 +78,87 @@ function setTransactions(transactions) {
 }
 
 /*
-/* Report error of api call.
+/* Check if control panel form data has changed.
 */
-function errorCard(data) {
-  alert(`${data.error.code}, ${data.error.description}`);
-  console.error(data);
+function checkFormChanges(change, currFormState) {
+  const prevFormState = localStorage.getItem('formData');
+
+  // if form data changed warrants API call
+  if (JSON.stringify(currFormState) !== prevFormState) {
+    setFormDataArray(currFormState);
+    console.log('form data changed');
+    return true;
+  }
+  // Else if open now selected always make a new api call
+  else if ($('#open_now').prop('checked') === true) return true;
+
+  // TODO: Add 30sec or greater data age then make new api call.
+  // when open_now selected.
+
+  // TODO: Add 1 day age or greater data age then make new api call
+  // general search functionality.
+  return change;
+}
+
+/*
+/* Check if user coordinates have changed.
+*/
+function checkCoordsChange(change) {
+  const prevCoords = JSON.parse(localStorage.getItem('coords'));
+
+  // if there is lng/lat data but no previous stored coords data
+  if (longitude && !prevCoords) {
+    localStorage.setItem('coords', JSON.stringify([longitude, latitude]));
+    // if there is not a location given having coords warrants an API call
+    console.log('was blank now coords');
+    if (!$locationInput.val()) return true;
+    // if no location given and new ond old coords to compare:
+  } else if (!$locationInput.val() && longitude && prevCoords) {
+    const [prevLng, prevLat] = prevCoords;
+    // if coords have changed:
+    if (
+      longitude.toFixed(coordsPercision) !== prevLng.toFixed(coordsPercision) ||
+      latitude.toFixed(coordsPercision) !== prevLat.toFixed(coordsPercision)
+    ) {
+      localStorage.setItem('coords', JSON.stringify([longitude, latitude]));
+      console.log('coords have changed');
+      return true;
+    }
+  }
+  return change;
+}
+
+/*
+/* Check if the category has changed.
+*/
+function checkCategoryChange(change) {
+  const prevCategory = localStorage.getItem('category');
+
+  // category change warrants an API call
+  if (prevCategory !== category) {
+    localStorage.setItem('category', category);
+    console.log('category changed');
+    return true;
+  }
+  return change;
+}
+
+/*
+/* Check if ther is previous data stored in local storage.
+*/
+function checkLastData(lastData) {
+  // if there is no stored yelp data must make api call
+  if (!lastData || ['undefined', 'false'].includes(lastData)) {
+    return true;
+  }
+  return false;
 }
 
 /*
 /* If filters are on show filter indicator.
 */
-function filterIndicatorCheck(formArray) {
+function filterIndicatorCheck() {
+  const formArray = $mainForm.serializeArray();
   // no need to show filter indicator for these inputs
   const notFilters = ['location', 'sort_by', 'lng', 'lat'];
   let initLength = formArray.length;
@@ -121,62 +191,21 @@ function filterIndicatorCheck(formArray) {
 }
 
 /*
-/* Check for changes that warrant a new API call.
-/* Form, category, or significant GPS change.
+/* Check for changes that warrant a new Yelp API call.
+/* Form, category, significant GPS change, or no stored data warrant API call.
+/* Called functions update local storage if they detect changes.
 */
-function checkParameterChange(lastData) {
-  const currFormState = $mainForm.serializeArray();
-  const prevFormState = localStorage.getItem('formData');
-  const prevCoords = JSON.parse(localStorage.getItem('coords'));
-  const prevCategory = localStorage.getItem('category');
+function checkParameterChange(lastData, currFormState) {
   // set change to true if a new API call is waranted.
   let change = false;
 
-  // if form data changed warrants API call
-  if (JSON.stringify(currFormState) !== prevFormState) {
-    change = true;
-    setFormDataArray(currFormState);
-    console.log('form data changed');
-  }
-  // Else if open now selected always make a new api call
-  else if ($('#open_now').prop('checked') === true) change = true;
+  change = checkFormChanges(change, currFormState);
 
-  // TODO: Add 30sec or greater data age then make new api call.
-  // when open_now selected.
+  change = checkCoordsChange(change);
 
-  // TODO: Add 1 day age or greater data age then make new api call
-  // general search functionality.
+  change = checkCategoryChange(change);
 
-  // if there is lng/lat data but no previous stored coords data
-  if (longitude && !prevCoords) {
-    localStorage.setItem('coords', JSON.stringify([longitude, latitude]));
-    // if there is not a search term having coords warrants an API call
-    if (!$searchTerm.val()) change = true;
-    console.log('was blank now coords');
-    // if no location given and new ond old coords to compare:
-  } else if (!$locationInput.val() && longitude && prevCoords) {
-    const [prevLng, prevLat] = prevCoords;
-    // if coords have changed:
-    if (
-      longitude.toFixed(coordsPercision) !== prevLng.toFixed(coordsPercision) ||
-      latitude.toFixed(coordsPercision) !== prevLat.toFixed(coordsPercision)
-    ) {
-      localStorage.setItem('coords', JSON.stringify([longitude, latitude]));
-      change = true;
-      console.log('coords have changed');
-    }
-  }
-  // category change warrants an API call
-  if (prevCategory !== category) {
-    change = true;
-    localStorage.setItem('category', category);
-    console.log('category changed');
-  }
-  // if there is no stored yelp data must make api call
-  if (!lastData || ['undefined', 'false'].includes(lastData)) {
-    change = true;
-  }
-  filterIndicatorCheck(currFormState);
+  if (!change) change = checkLastData(lastData);
 
   return change;
 }
@@ -290,6 +319,8 @@ function mapAndAddCardsForNewApiCall(data) {
   if (paginationListener) paginationListener.off();
   $('.resultsCount').text(data.total);
   $('.arrow-wrapper').removeClass('pulse-outline-mobile');
+  resultsRemaining = data.total - data.businesses.length;
+  offset = 1;
 
   if (data.businesses.length == 0) {
     $('.card-track-inner').html(getNoResultsCard());
@@ -302,6 +333,7 @@ function mapAndAddCardsForNewApiCall(data) {
   const cards = getCards(data);
   currCard = 0;
 
+  // Scroll to first card and fade in.
   $('#scrl4').scrollLeft(0);
   $('.card-track-inner')
     .addClass('opaque')
@@ -309,6 +341,8 @@ function mapAndAddCardsForNewApiCall(data) {
     .html(cards ? cards : getNoResultsCard())
     .removeClass('opaque');
 
+  // If cards map first bussiness, watch scroll position for mapping,
+  // watch scroll position for adding more cards.
   if (cards) {
     mapFirstBusiness(data);
     if (!resultsRemaining && data.total !== 1) addDummyCard();
@@ -323,6 +357,15 @@ function mapAndAddCardsForNewApiCall(data) {
   }
 }
 
+/* 
+/* Post search DOM manipulation. 
+*/
+function postSearchDomManipulation(currFormState) {
+  $('.spinner-zone').hide();
+  showCardTrack();
+  filterIndicatorCheck(currFormState);
+}
+
 /*
 /* Search request handler. Needs location.
 /* If queryData is unchaged from last request 
@@ -333,20 +376,25 @@ async function searchYelp() {
 
   // Make sure there is a location to search.
   if (!latitude && $locationInput.val() === '') {
-    $('.spinner-zone').hide();
     alert('Enter a location or press detect location.');
     return;
   }
   // Get last search results from API call.
   const lastData = localStorage.getItem('currData');
+  // Get current form data array.
+  const currFormState = $mainForm.serializeArray();
 
   // if yelp parameters have changed call api endpoint
-  if (checkParameterChange(lastData)) {
+  if (checkParameterChange(lastData, currFormState)) {
     console.log('new search api call <<<<<<<<<<<<<<<<<<<******<<');
 
     var data = await searchApiCall();
-    $('.spinner-zone').hide();
-    if (data === false) return;
+
+    if (data === false) {
+      $('.spinner-zone').hide();
+      filterIndicatorCheck();
+      return;
+    }
 
     // Check if new data is different from last data.
     // If not, set data to null so card repaint is avoided
@@ -359,17 +407,15 @@ async function searchYelp() {
     else localStorage.setItem('currData', jsonData);
     console.log(data);
   }
-  $('.spinner-zone').hide();
+  postSearchDomManipulation(currFormState);
+
   if (transactionsNoChangeAndNoNewData(!!data)) return;
+
   justSearchedYelp = true;
-  // show card track if it is hidden.
-  showCardTrack();
 
   // If no new data use last data.
   var data = data ? data.data : JSON.parse(lastData);
 
-  resultsRemaining = data.total - data.businesses.length;
-  offset = 1;
   mapAndAddCardsForNewApiCall(data);
 }
 
@@ -380,13 +426,14 @@ function addNextCardsListener() {
   if (resultsRemaining === 0) return;
   paginationListener = $('#scrl4').scroll(function (e) {
     if ($(this).scrollLeft() + $(this).width() > e.target.scrollWidth * 0.96) {
-      addNextCards();
       paginationListener.off();
+      addNextCards();
     }
   });
 }
 
 /*
+/* Add more cards for "infinite" scroll.
 /* If more results remain, call API, make cards. 
 */
 async function addNextCards() {
@@ -401,13 +448,16 @@ async function addNextCards() {
   const data = await searchApiCall(true);
   offset++;
   if (data === false) return;
+
   resultsRemaining -= data.data.businesses.length;
   $('.card-track-inner').append(getCards(data.data));
   setCardScrollTrackerMapper();
-  setTimeout(() => {
-    addNextCardsListener();
-  }, 10000);
-  if (!resultsRemaining) addDummyCard();
+
+  if (resultsRemaining)
+    setTimeout(() => {
+      addNextCardsListener();
+    }, 10000);
+  else addDummyCard();
 }
 
 /*
