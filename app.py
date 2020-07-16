@@ -17,6 +17,8 @@ from models import (db, connect_db, User, Mission, UserMission,  # noqa F401
 from forms import AddProductForm, AddUserForm, LoginForm
 from static.py_modules.yelp_helper import (yelp_categories, first_letters,
                                            parse_query_params, YELP_URL)
+from static.py_modules.decorators import add_user_to_g, login_required
+
 Product, Category = None, None  # remove me
 
 
@@ -56,10 +58,12 @@ connect_db(app)
 
 
 @app.route("/")
+@add_user_to_g
 def index():
     """Home view."""
 
-    add_user_to_g()
+    search_term = request.args.get('q')
+
     my_missions = [(m.name, m.id)
                    for m in g.user.my_missions] if g.user else []
 
@@ -71,8 +75,18 @@ def index():
         first_letters=first_letters,
         lat=lat,
         lng=lng,
-        my_missions=my_missions
+        my_missions=my_missions,
+        search_term=search_term
     )
+
+
+@app.route("/mission-control")
+@add_user_to_g
+@login_required
+def mission_control():
+    """Missions control view."""
+
+    return render_template('base.html')
 
 
 @app.route("/navtest")
@@ -94,14 +108,12 @@ def navtest():
 # User CRUD, login, logout
 #
 
-
 @app.route("/signup", methods=['GET', 'POST'])
+@add_user_to_g
 def signup():
     """Sign up view."""
 
-    add_user_to_g()
     if g.user:
-        # TODO: check below OK URL after user detail update
         return redirect(url_for('user_detail'))
 
     form = AddUserForm()
@@ -132,10 +144,10 @@ def signup():
 
 
 @app.route("/login", methods=['GET', 'POST'])
+@add_user_to_g
 def login():
-    """Sign up view."""
+    """Login view."""
 
-    add_user_to_g()
     if g.user:
         return redirect(url_for('user_detail'))
 
@@ -146,15 +158,15 @@ def login():
         password = form.password.data
 
         user = User.authenticate(email, password)
-        if user:
-            session['user_id'] = user.id
-            flash(f"{user.name} logged in!", 'success')
-            return redirect(url_for('index'))
 
         if user is None:
-            form.email.errors.append("Email not found.", "warning")
-        if user is False:
-            form.password.errors.append("Password incorrect.", "warning")
+            form.email.errors.append("Email not found.")
+        elif user is False:
+            form.password.errors.append("Password incorrect.")
+        else:
+            session['user_id'] = user.id
+            flash(f"Welcome {user.username}!", 'success')
+            return redirect(url_for('index'))
 
     if request.method == 'POST':
         flash("Please fix all form errors.", "warning")
@@ -169,23 +181,19 @@ def logout():
 
 
 @app.route("/user/profile")
+@add_user_to_g
+@login_required
 def user_detail():
     """User detail view."""
 
-    add_user_to_g()
-    if not g.user:
-        return redirect(url_for('login'))
-
-    return render_template("user/detail_user.html", user=g.user)
+    return render_template("user/detail_user.html")
 
 
-@app.route("/user/delete/<user_id>", methods=['POST'])
-def delete_user(user_id):
+@app.route("/user/delete", methods=['POST'])
+@add_user_to_g
+@login_required
+def delete_user():
     """Delete User view"""
-
-    add_user_to_g()
-    if not g.user or not g.user.id == int(user_id):
-        return redirect(url_for('index'))
 
     db.session.delete(g.user)
     db.session.commit()
@@ -351,16 +359,6 @@ def unauthorized(e):
 
 ############################
 """ Helper Functions"""
-
-
-def add_user_to_g():
-    """If we're logged in, add curr user to Flask global."""
-
-    if 'user_id' in session:
-        g.user = User.query.get(session['user_id'])
-
-    else:
-        g.user = None
 
 
 def get_coords_from_IP_address(request):

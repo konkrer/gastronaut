@@ -108,7 +108,7 @@
             >
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Mission control</a>
+            <a class="nav-link" href="/mission-control">Mission control</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Missions</a>
@@ -135,12 +135,32 @@
             </div>
           </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0">
+        {% if g.user %}
+        <form action="/logout" method="post">
+          <button class="navbar-logout mr-4 btn p-0" type="submit">
+            Logout
+          </button>
+        </form>
+        {% endif %}
+        <form
+          class="form-inline my-2 my-lg-0 searchForm"
+          action="/"
+          method="GET"
+        >
           <input
             class="form-control mr-sm-2"
             type="text"
+            name="q"
             placeholder="Search"
             aria-label="Search"
+            {%
+            if
+            search_term
+            %}
+            value="{{search_term}}"
+            {%
+            endif
+            %}
           />
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
             Search
