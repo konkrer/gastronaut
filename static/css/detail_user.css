@@ -1,0 +1,128 @@
+/* ====================== General */
+
+.btn {
+  border-radius: 50px;
+}
+
+#search.form-control + .btn:active,
+#search.form-control + .btn:focus {
+  box-shadow: none;
+}
+
+button:active,
+button:focus,
+a:active,
+a:focus {
+  box-shadow: none;
+  border: 2px solid #007bff;
+}
+
+input:active,
+input:focus {
+  box-shadow: none;
+  border: 4px solid #007bff;
+}
+
+.avatar-col {
+  padding: 0px;
+}
+
+#warbler-hero {
+  height: 40vh;
+  opacity: 0.7;
+}
+
+#profile-avatar {
+  display: inline-block;
+  border-radius: 100%;
+  border: 5px solid #ccc;
+  margin-top: -120px;
+  /* margin-left: -55px; */
+  width: 280px;
+  height: 200px;
+  z-index: 1;
+  box-shadow: 0 1px 1px rgba(136, 153, 166, 0.15);
+  position: relative;
+}
+
+/* .full-width {
+  width: 100vw;
+  margin: 0 -50vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+} */
+
+.row.full-width {
+  background-color: var(--light);
+  margin-top: 0px;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.25);
+  height: 60px;
+  align-items: center;
+}
+
+/* .user-stats {
+  display: inline-block;
+} */
+
+.user-stats > .ml-5 {
+  display: flex;
+  align-items: center;
+}
+
+.user-stats > .ml-5 .btn {
+  min-width: 105px;
+  padding: 6px 16px;
+}
+
+.stat {
+  text-align: center;
+  height: 60px;
+  box-sizing: border-box;
+  padding: 14px 15px 7px;
+  line-height: 1;
+}
+
+.stat > .small {
+  color: #657786;
+  font-weight: bold;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  margin-bottom: 0;
+}
+
+.stat > .small + h4 {
+  font-size: 18px;
+  font-weight: bold;
+  padding-top: 3px;
+}
+
+#sidebar-username {
+  margin-top: 30px;
+  font-size: 21px;
+  font-weight: bold;
+  line-height: 28px;
+  word-wrap: break-word;
+}
+
+/* @media (max-width: 768px) {
+  .full-width .user-stats .stat {
+    display: none;
+  }
+} */
+
+.user-location {
+  position: relative;
+}
+
+.user-location .fa-map-marker {
+  position: absolute;
+  top: 6px;
+}
+
+.user-location .location {
+  margin-left: 27px;
+}

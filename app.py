@@ -64,9 +64,6 @@ def index():
 
     search_term = request.args.get('q')
 
-    my_missions = [(m.name, m.id)
-                   for m in g.user.my_missions] if g.user else []
-
     lat, lng = get_coords_from_IP_address(request)
 
     return render_template(
@@ -75,7 +72,6 @@ def index():
         first_letters=first_letters,
         lat=lat,
         lng=lng,
-        my_missions=my_missions,
         search_term=search_term
     )
 
@@ -129,7 +125,7 @@ def signup():
         try:
             new_user = User.register(password=password, **relevant_data)
             session['user_id'] = new_user.id
-            flash("New User Created!", "success")
+            flash(f"Welcome {new_user.username}!", "success")
             return redirect(url_for('index'))
 
         except Exception as e:
@@ -169,23 +165,57 @@ def login():
 
     if request.method == 'POST':
         flash("Please fix all form errors.", "warning")
+
     return render_template('user/login.html', form=form)
 
 
-@app.route('/logout', methods=['POST'])
-def logout():
-    del session['user_id']
-    flash("Logged out.", 'success')
-    return redirect(url_for('index'))
-
-
-@app.route("/user/profile")
+@app.route("/user/edit", methods=['GET', 'POST'])
 @add_user_to_g
 @login_required
-def user_detail():
+def user_edit():
     """User detail view."""
 
-    return render_template("user/detail_user.html")
+    form = EditUserForm(obj=g.user)
+
+    if form.validate_on_submit():
+
+        form.populate_obj(g.user)
+
+        try:
+            db.session.commit()
+            flash("Profile Updated!", "success")
+            return redirect(url_for('user_detail', user_id=g.user.id))
+
+        except Exception as e:
+            db.session.rollback()
+            flash("Error Updating User Profile", 'danger')
+            errorLogging(e)
+
+    if request.method == 'POST':
+        flash("Please fix all form errors.", "danger")
+
+    return render_template('user/edit_user.html', form=form)
+
+
+@app.route("/user/profile/<user_id>")
+@add_user_to_g
+@login_required
+def user_detail(user_id):
+    """User detail view."""
+
+    user = User.query.get_or_404(user_id)
+
+    return render_template("user/detail_user.html", user=user)
+
+
+@app.route('/logout', methods=['POST'])
+@add_user_to_g
+def logout():
+    """User logout view."""
+
+    del session['user_id']
+    flash(f"{g.user.username} logged out.", 'success')
+    return redirect(url_for('index'))
 
 
 @app.route("/user/delete", methods=['POST'])
@@ -197,6 +227,7 @@ def delete_user():
     db.session.delete(g.user)
     db.session.commit()
     del session['user_id']
+    flash('User Account Deleted', 'success')
 
     return redirect(url_for('index'))
 

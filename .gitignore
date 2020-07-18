@@ -6,3 +6,4 @@ old*
 .vscode/settings.json
 *.log
 development_local/
+seed.py

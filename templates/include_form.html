@@ -4,9 +4,9 @@
 <div class="form-group">
   {{ field.label }} {{ field(class_="form-control") }} {{field.description}} {%
   for error in field.errors %}
-  <small class="form-text text-danger">
+  <b class="form-text text-warning mt-0">
     {{ error }}
-  </small>
+  </b>
   {% endfor %}
 </div>
 
