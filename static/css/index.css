@@ -194,7 +194,6 @@ a.first-letter.active {
   top: 30vh;
   font-size: 4vh;
   z-index: 100;
-  background-color: rgba(0, 0, 0, 0.589);
   border-radius: 0px 10px 10px 0px;
 }
 
@@ -234,7 +233,7 @@ a.first-letter.active {
   cursor: -moz-grab;
   cursor: -webkit-grab;
   padding-top: 4px;
-  padding-bottom: 5px;
+  padding-bottom: 6px;
 }
 
 .card-track-inner {
@@ -318,6 +317,7 @@ a.first-letter.active {
   width: 40px;
   background-color: rgba(255, 255, 255, 0.904);
   border-radius: 5px;
+  margin-bottom: 15px;
 }
 
 .map-toggle {
@@ -394,6 +394,10 @@ a.first-letter.active {
   height: 53px;
   z-index: 10000;
   background-color: rgba(0, 0, 0, 0.76);
+}
+
+.tip-label {
+  width: 140px;
 }
 
 /* Breakpoints */

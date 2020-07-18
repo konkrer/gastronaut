@@ -188,3 +188,10 @@ $('.jsPulser').each(function (i) {
     $(this).children().removeClass('pulse-5');
   });
 });
+
+/*
+/* Open more tips modal when user clicks more tips button.
+*/
+$('.moreTips').click(() => {
+  $('#tips-2').modal();
+});

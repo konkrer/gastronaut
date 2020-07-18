@@ -3,4 +3,6 @@ categories.json
 local_settings.py
 old*
 .vscode/
+.vscode/settings.json
 *.log
+development_local/
