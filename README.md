@@ -20,7 +20,7 @@ _Why Gastronaut?_
 
 - Want to share your experience? Write a mission report and let the world know.
 
-- Start a Gastronaut Group and share a mission with friends or family to invite them to join you as you complete your mission. Maybe you're going to visit all the restaurants and they can meet you when you go. Or maybe you’ll just each visit or order food from the restaurants on the mission and have some gastronomical experiences to share.
+- Start a Gastronaut Group and share a mission with friends or family to invite them to join you as you complete your mission. Maybe you're going to visit all the restaurants and they can meet you when you go. Or maybe you’ll each visit or order food from the restaurants and have some gastronomical experiences to share.
   <br/>
   <br/>
 
@@ -28,11 +28,11 @@ _Why Gastronaut?_
 
 ## Stack
 
-JavaScript, Python/Flask, Flask-SQLAlchemy, Postgres, jQuery, API integration (internal and external), Mabox, HTML, CSS, Flask-Bcrypt, WTForms, Heroku, Jinja, Bootstrap.
+JavaScript, Python/Flask, Flask-SQLAlchemy, Postgres, jQuery, API integration (internal and external), Mabox, HTML, CSS, Flask-Bcrypt, WTForms, Heroku, Jinja, Bootstrap, Sentry, Modernizr, Unittest, Jasmine.
 
 ## APIs
 
 This app uses the Yelp API for business data [Yelp](https://www.yelp.com/fusion 'yelp.com/fusion')  
 and IPWHOIS API for IP geoloaction. [IPWHOIS](https://ipwhois.io/ 'ipwhois.io')
 
-\*_This app was created as a capstone project for Springboard Software Engineering online bootcamp. This is capstone one of two._
+\*_This app was created as a capstone project for Springboard Software Engineering fellowship. This is capstone one of two._

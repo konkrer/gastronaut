@@ -7,7 +7,8 @@ from datetime import datetime
 db = SQLAlchemy()
 bcrypt = Bcrypt()
 
-DEFAULT_USER_IMAGE = "static/images/default_users_icon.jpg"
+DEFAULT_USER_IMAGE = "/static/images/default_user_icon.jpg"
+DEFAULT_BANNER_IMAGE = "/static/images/stars2.jpg"
 DEFAULT_PREFERENCES = {
     'Show Alcohol': True
 }
@@ -33,9 +34,13 @@ class User(db.Model):
 
     avatar_url = db.Column(db.String, nullable=True)
 
+    banner_url = db.Column(db.String, nullable=True)
+
     city = db.Column(db.String, nullable=True)
 
     state = db.Column(db.String, nullable=True)
+
+    country = db.Column(db.String, nullable=True)
 
     is_admin = db.Column(db.Boolean, default=False, nullable=False)
 
@@ -88,9 +93,14 @@ class User(db.Model):
             return False
 
     @property
-    def image_url(self):
+    def get_avatar(self):
         """Return photo_url if set else default image"""
         return self.avatar_url or DEFAULT_USER_IMAGE
+
+    @property
+    def get_banner(self):
+        """Return photo_url if set else default image"""
+        return self.banner_url or DEFAULT_BANNER_IMAGE
 
     @classmethod
     def set_get(self):
@@ -217,7 +227,7 @@ class Mission(db.Model):
     def __repr__(self):
         """Mission representation."""
         m = self
-        return f"<Mission id={m.id} name={m.name} >"
+        return f"<Mission id={m.id} name={m.name} editor={m.editor} >"
 
 
 class UserMission(db.Model):
@@ -233,6 +243,10 @@ class UserMission(db.Model):
     mission_completed = db.Column(db.Boolean, default=False)
 
     goals_completed = db.Column(db.PickleType, default=[])
+
+    __mapper_args__ = {
+        'confirm_deleted_rows': False
+    }
 
     @classmethod
     def get_user_mission(cls, user_id, mission_id):

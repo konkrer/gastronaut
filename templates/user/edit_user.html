@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+<title>
+  {% block title %}Edit Profile{% endblock %}
+</title>
+
+<main>
+  {% block main %}
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col col-md-8 col-xl-6">
+        <div class="my-5 p-3 p-md-5 bg-secondary rounded">
+          <h4 class="museo txt-orange mb-3">Edit Profile</h4>
+          <form method="POST">
+            {{ form.hidden_tag() }} {% include 'include_form.html' with context
+            %}
+
+            <button type="submit" class="btn btn-primary mt-2">
+              Update Profile
+            </button>
+            <a class="btn btn-secondary mt-2" href="/user/profile/{{g.user.id}}"
+              >Cancel</a
+            >
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endblock %}
+</main>

@@ -802,7 +802,7 @@
   >
     <div class="modal-dialog" role="document">
       <div class="modal-content">
-        {% if my_missions %}
+        {% if g.user %}
         <div class="modal-header">
           <h5 class="modal-title txt-orange" id="missionsModalTitle">
             Add To Mission
@@ -825,8 +825,8 @@
                 id="mission-select"
                 class="form-control form-control-lg"
               >
-                {% for name, id in my_missions %}
-                <option value="{{id}}">{{name}}</option>
+                {% for m in g.user.my_missions %}
+                <option value="{{m.id}}">{{m.name}}</option>
                 {% endfor %}
               </select>
             </div>
@@ -855,7 +855,7 @@
         </div>
         {% else %}
         <div class="modal-header">
-          <h5 class="modal-title txt-orange" id="exampleModalLabel">
+          <h5 class="modal-title txt-orange" id="missionsModalTitle">
             Add To Mission
           </h5>
           <button

@@ -9,6 +9,7 @@ from wtforms.validators import (
     InputRequired, Length, Email,
     Optional, URL, NumberRange, ValidationError)
 from models import User
+from flask import g
 
 
 class AddUserForm(FlaskForm):
@@ -43,21 +44,34 @@ class AddUserForm(FlaskForm):
 class EditUserForm(FlaskForm):
     """Edit User Form."""
 
-    email = EmailField("Email", validators=[
-                       InputRequired(message="Email cannot be blank."),
-                       Length(min=6, max=60),
-                       Email(check_deliverability=True,
-                             message="Invalid Email address")])
-
     username = StringField("Username", validators=[
         InputRequired(message="Username cannot be blank."),
         Length(min=6, max=50)])
 
-    avatar = URLField("Avatar URL", validators=[Length(min=0, max=255)])
+    avatar_url = URLField("Avatar Image URL", validators=[
+        Length(min=6, max=255), Optional()])
 
-    city = StringField("City", validators=[Length(min=2, max=50)])
+    banner_url = URLField("Banner Image URL", validators=[
+        Length(min=6, max=255), Optional()])
 
-    state = StringField("State", validators=[Length(min=2, max=50)])
+    city = StringField("City", validators=[Length(min=2, max=50), Optional()])
+
+    state = StringField("State", validators=[
+                        Length(min=2, max=50), Optional()])
+
+    country = StringField("Country", validators=[
+                          Length(min=2, max=50), Optional()])
+
+    def validate_username(form, field):
+        """Make sure username is not in use
+           unless it's the currnt user's username.
+        """
+
+        user = User.query.filter_by(username=form.username.data).first()
+
+        if user and not user == g.user:
+            form.username.errors.append("Username already taken!")
+            raise ValidationError
 
 
 class LoginForm(FlaskForm):
