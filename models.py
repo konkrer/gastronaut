@@ -1,5 +1,8 @@
+"""Models for Gastronaut."""
+
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
+from datetime import datetime
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()
@@ -49,11 +52,6 @@ class User(db.Model):
 
     reports = db.relationship('Report', backref='user')
 
-    @property
-    def image_url(self):
-        """Return photo_url if set else default image"""
-        return self.avatar_url or DEFAULT_USER_IMAGE
-
     @classmethod
     def register(cls, email, username, password):
         """Create and return a new user instance with hashed password."""
@@ -62,6 +60,9 @@ class User(db.Model):
 
         user = cls(email=email, username=username, password=hashed_utf8)
         db.session.add(user)
+        db.session.commit()
+
+        user.add_bookmarks()
 
         return user
 
@@ -86,9 +87,10 @@ class User(db.Model):
         else:
             return False
 
-    def __repr__(self):
-        """User representation"""
-        return f"<user id={self.id} name={self.username} >"
+    @property
+    def image_url(self):
+        """Return photo_url if set else default image"""
+        return self.avatar_url or DEFAULT_USER_IMAGE
 
     @classmethod
     def set_get(self):
@@ -105,6 +107,10 @@ class User(db.Model):
         out = {k: v for k, v in self.__dict__.items() if k in self.set_get()}
         out['id'] = id
         return out
+
+    def __repr__(self):
+        """User representation"""
+        return f"<User id={self.id} username={self.username} >"
 
 
 class Mission(db.Model):
@@ -135,13 +141,13 @@ class Mission(db.Model):
     user_missions = db.relationship('UserMission', backref='mission',
                                     cascade='all, delete-orphan')
 
-    reports = db.relationship('Report', backref='mission')
-
     businesses = db.relationship('Business', secondary='missions_businesses',
                                  backref='missions')
 
     mission_businesses = db.relationship(
         'MissionBusiness', cascade='all, delete-orphan')
+
+    reports = db.relationship('Report', backref='mission')
 
     __table_args__ = (
         db.Index('order_date_shared_desc', date_shared.desc(),
@@ -151,26 +157,34 @@ class Mission(db.Model):
                  'name': 'text_pattern_ops'}),
     )
 
-    def __repr__(self):
-        m = self
-        return f"< mission id={m.id} name={m.name} >"
+    def share(self):
+        """Make mission public and add current datime."""
+
+        self.is_public = True
+        self.date_shared = datetime.now()
 
     @classmethod
     def get_by_city(cls, city):
         """Return misions by city"""
-        cls.query.filter(cls.is_public is True,
-                         cls.city.like(f'%{city}%')).all()
+        return cls.query.filter(cls.is_public == True,  # NOQA E712
+                                cls.city.like(f'%{city}%')).all()
 
     @classmethod
     def get_by_state(cls, state):
         """Return misions by state"""
-        cls.query.filter(cls.is_public is True,
-                         cls.state.like(f'%{state}%')).all()
+        return cls.query.filter(cls.is_public == True,  # NOQA E712
+                                cls.state.like(f'%{state}%')).all()
 
     @classmethod
-    def get_by_recent(cls, state):
-        """Return misions by state"""
-        cls.query.filter(cls.is_public is True).order_by(
+    def get_by_country(cls, country):
+        """Return misions by country"""
+        return cls.query.filter(cls.is_public == True,  # NOQA E712
+                                cls.country.like(f'%{country}%')).all()
+
+    @classmethod
+    def get_by_recent(cls):
+        """Return misions by most recent"""
+        return cls.query.filter(cls.is_public == True).order_by(  # NOQA E712
             cls.date_shared.desc()).all()
 
     @classmethod
@@ -179,7 +193,7 @@ class Mission(db.Model):
         Return list of attributes for normal
         serialization, obj creation and editing.
         """
-        return ['name', 'category_code', 'price']
+        return ['editor', 'name', 'city', 'state', 'country', 'likes']
 
     def serialize(self):
         """Serialize model set_get properties data to a dictonary."""
@@ -199,6 +213,11 @@ class Mission(db.Model):
 
         db.session.add(m)
         return m
+
+    def __repr__(self):
+        """Mission representation."""
+        m = self
+        return f"<Mission id={m.id} name={m.name} >"
 
 
 class UserMission(db.Model):
@@ -238,6 +257,11 @@ class UserMission(db.Model):
 
         db.session.add(u_m)
         return u_m
+
+    def __repr__(self):
+        """UserMission representation"""
+        u = self
+        return f"<UserMission user_id={u.user_id} mission_id={u.mission_id} >"  # NOQA E501
 
 
 class Business(db.Model):

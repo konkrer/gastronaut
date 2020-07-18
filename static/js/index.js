@@ -908,6 +908,7 @@ function updateFormFromStorage() {
   let data = localStorage.getItem('formData');
   if (!data) {
     setTransactions([]);
+    setTimeout(() => $('#tips').modal(), 10000);
     return;
   }
   setForm(JSON.parse(data));
@@ -1000,6 +1001,8 @@ function setLocationValue() {
     data = JSON.parse(data);
     data = convertDataArrayToObj(data);
     if (data.location) $locationInput.val(data.location);
+  } else {
+    setTimeout(() => $('#tips').modal(), 10000);
   }
 }
 

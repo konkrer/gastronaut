@@ -83,10 +83,7 @@
                     data-placement="top"
                     title="Detect Location"
                   >
-                    <i
-                      class="fas fa-street-view"
-                      id="detect-location-glyph"
-                    ></i>
+                    <i class="fas fa-street-view"></i>
                   </div>
                 </div>
                 <input
@@ -153,8 +150,8 @@
                     </label>
                   </div>
                 </div>
-                <div class="switch-wrapper pl-2">
-                  <div class="custom-control custom-switch openAt">
+                <div class="switch-wrapper pl-2 openAt">
+                  <div class="custom-control custom-switch">
                     <input
                       class="onChange custom-control-input"
                       type="checkbox"
@@ -166,8 +163,8 @@
                     </label>
                   </div>
                 </div>
-                <div class="switch-wrapper px-2 noHoverBg">
-                  <div class="input-group mb-2 mr-sm-2 openAt">
+                <div class="switch-wrapper px-2 noHoverBg openAt">
+                  <div class="input-group mb-2 mr-sm-2">
                     <input
                       type="datetime-local"
                       class="onChange form-control form-control-sm"
@@ -580,7 +577,7 @@
       </div>
       <div class="col bg-stars1 card-map-zone">
         <div
-          class="sidebar-toggle-btn pl-1 border border-secondary border-left-0"
+          class="sidebar-toggle-btn pl-1 border border-secondary border-left-0 bg-trans-b"
         >
           <div class="arrow-wrapper black-outline-1">
             <i class="fas fa-angle-double-left" aria-hidden="true"></i>
@@ -605,10 +602,10 @@
             <script src="../static/js/map.js"></script>
           </div>
           <div class="map-directions mapBtns">
-            <div class="drive flx-std mb-3">
+            <div class="drive flx-std">
               <i class="fas fa-car fa-2x"></i>
             </div>
-            <div class="walk flx-std mb-3">
+            <div class="walk flx-std">
               <i class="fas fa-walking fa-2x"></i>
             </div>
             <div class="bike flx-std">
@@ -646,8 +643,157 @@
       </div>
     </div>
   </div>
+  <!-- MODALS -->
   <div
-    class="mission-choices modal fade"
+    class="modal fade"
+    id="tips"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="newUserModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title txt-orange museo" id="newUserModalLabel">
+            Hey...
+          </h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p class="txt-lg mb-4">
+            <em><b>It looks like you're new here.</b></em>
+          </p>
+          <p>
+            You can use the detect location button to share your location. Or
+            you can just enter a location.
+          </p>
+          <div
+            class="flx-row-around width-100 bg-dark rounded mb-4"
+            style="height: 50px;"
+          >
+            <div class="bg-light rounded p-2">
+              <i class="fas fa-street-view"></i>
+            </div>
+            <div class="text-light tip-label">Detect Location</div>
+          </div>
+
+          <p>
+            You can also click the clear all filters button to clear any search
+            filters.
+          </p>
+          <div
+            class="flx-row-around width-100 bg-dark rounded mb-3"
+            style="height: 50px;"
+          >
+            <div class="bg-light rounded p-2">
+              <i class="fas fa-recycle"></i>
+            </div>
+            <div class="text-light tip-label">Clear All Filters</div>
+          </div>
+          <div
+            class="flx-row-around width-100 bg-dark rounded mb-2"
+            style="height: 50px;"
+          >
+            <div class="bg-light rounded p-2">
+              <i class="fas fa-filter txt-orange black-outline-1"></i>
+            </div>
+            <div class="text-light tip-label">Filters Active Indicator</div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Close
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary moreTips"
+            data-dismiss="modal"
+          >
+            More Tips
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="modal fade"
+    id="tips-2"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="newUserModalLabel2"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title txt-orange museo" id="newUserModalLabel2">
+            Tips
+          </h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div
+            class="flx-row-around width-100 bg-dark rounded mb-4"
+            style="height: 50px;"
+          >
+            <div class="bg-trans-b rounded p-2 border border-secondary">
+              <i class="fas fa-angle-double-left fa-lg"></i>
+            </div>
+            <div class="bg-trans-b rounded p-2 border border-secondary">
+              <i class="fas fa-angle-double-right fa-lg"></i>
+            </div>
+            <div class="text-light tip-label">Toggle Sidebar</div>
+          </div>
+          <div
+            class="flx-row-around width-100 bg-dark rounded mb-4"
+            style="height: 50px;"
+          >
+            <div class="bg-white txt-333 rounded p-2">
+              <i class="fas fa-map-marked-alt fa-lg"></i>
+            </div>
+            <div class="p-2 hidden">
+              <i class="fas fa-map-marked-alt fa-lg"></i>
+            </div>
+            <div class="text-light tip-label">Toggle Map</div>
+          </div>
+          <div
+            class="flx-row-around width-100 bg-dark rounded txt-333"
+            style="height: 50px;"
+          >
+            <div class="bg-white rounded p-2">
+              <i class="far fa-arrow-alt-circle-up fa-lg"></i>
+            </div>
+            <div class="bg-white rounded p-2">
+              <i class="far fa-arrow-alt-circle-down fa-lg"></i>
+            </div>
+            <div class="text-light tip-label">Toggle Cards</div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="modal fade"
     id="mission-choices"
     tabindex="-1"
     role="dialog"
@@ -658,7 +804,7 @@
       <div class="modal-content">
         {% if my_missions %}
         <div class="modal-header">
-          <h5 class="modal-title txt-orange" id="exampleModalLabel">
+          <h5 class="modal-title txt-orange" id="missionsModalTitle">
             Add To Mission
           </h5>
           <button
@@ -686,7 +832,7 @@
             </div>
             <button
               type="submit"
-              class="btn btn-primary"
+              class="btn btn-primary btn-lg"
               data-toggle="tooltip"
               title="Add to Mission"
             >
@@ -742,6 +888,7 @@
       </div>
     </div>
   </div>
+  <!-- END MODALS -->
   <script>
     // remove "Open At" option when no browser datetime input.
     if (!Modernizr.inputtypes['datetime-local']) {
@@ -763,7 +910,7 @@
       color: 0xbc7aa,
       color2: 0x8f8f8f,
       size: 1.0,
-      backgroundColor: 0x050836,
+      backgroundColor: 0x0b105a,
     });
   </script>
   {% endblock %}

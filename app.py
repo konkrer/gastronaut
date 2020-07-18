@@ -34,7 +34,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # if development server enable debugging and load local keys.
 if not os.environ.get('SECRET_KEY'):
     from flask_debugtoolbar import DebugToolbarExtension
-    from local_settings import API_KEY, SECRET_KEY
+    from development_local.local_settings import API_KEY, SECRET_KEY
 
     app.config["SECRET_KEY"] = SECRET_KEY
     app.config['SQLALCHEMY_ECHO'] = True
@@ -128,13 +128,12 @@ def signup():
 
         try:
             new_user = User.register(password=password, **relevant_data)
-            db.session.commit()
-            new_user.add_bookmarks()
             session['user_id'] = new_user.id
             flash("New User Created!", "success")
             return redirect(url_for('index'))
 
         except Exception as e:
+            db.session.rollback()
             flash("Error Creating User", 'danger')
             errorLogging(e)
 
