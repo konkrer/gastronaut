@@ -21,7 +21,7 @@ class AddUserForm(FlaskForm):
 
     username = StringField("Username", validators=[
         InputRequired(message="Username cannot be blank."),
-        Length(max=20)])
+        Length(min=2, max=30)])
 
     password = PasswordField("Password", validators=[
         InputRequired(message="Password cannot be blank."),
@@ -46,7 +46,7 @@ class EditUserForm(FlaskForm):
 
     username = StringField("Username", validators=[
         InputRequired(message="Username cannot be blank."),
-        Length(min=6, max=50)])
+        Length(min=2, max=30)])
 
     avatar_url = URLField("Avatar Image URL", validators=[
         Length(min=6, max=255), Optional()])
@@ -55,7 +55,7 @@ class EditUserForm(FlaskForm):
         Length(min=6, max=255), Optional()])
 
     byline = StringField("User Byline", validators=[
-                         Length(min=2, max=255), Optional()])
+                         Length(min=2, max=200), Optional()])
 
     bio = TextAreaField("User Bio", validators=[
         Length(min=2, max=5000), Optional()])

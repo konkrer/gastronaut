@@ -16,6 +16,7 @@ body {
   font-family: 'Source Sans Pro', sans-serif;
   min-height: 100vh;
   padding-top: 53px !important;
+  background-color: var(--primary-alt) !important;
   /* modal was changing padding-right and making hero text move */
   padding-right: 0px !important;
 }

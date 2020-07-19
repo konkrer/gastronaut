@@ -199,7 +199,6 @@ def user_edit():
 
 @app.route("/user/profile/<user_id>")
 @add_user_to_g
-@login_required
 def user_detail(user_id):
     """User detail view."""
 
