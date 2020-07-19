@@ -86,6 +86,10 @@ body {
   color: whitesmoke !important;
 }
 
+.txt-white-k {
+  color: rgb(207, 207, 207) !important;
+}
+
 .txt-black {
   color: black !important;
 }
@@ -200,6 +204,10 @@ body {
 .dark-green-outline {
   text-shadow: darkgreen 1px 1px 2px, darkgreen -1px -1px 2px,
     darkgreen 1px -1px 2px, darkgreen -1px 1px 2px;
+}
+
+.delete-user {
+  margin-top: 13px;
 }
 
 .hidden {

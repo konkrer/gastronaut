@@ -28,32 +28,38 @@ input:focus {
 }
 
 #warbler-hero {
-  height: 40vh;
-  opacity: 0.7;
+  height: 45vh;
+  background: url('/static/images/stars2.jpg');
+  overflow: hidden;
 }
 
 #profile-avatar {
+  margin-top: -25px;
   display: inline-block;
   border-radius: 100%;
   border: 5px solid #ccc;
-  margin-top: -120px;
   /* margin-left: -55px; */
-  width: 280px;
-  height: 200px;
+  width: 140px;
+  height: 100px;
   z-index: 1;
   box-shadow: 0 1px 1px rgba(136, 153, 166, 0.15);
   position: relative;
 }
 
-/* .full-width {
-  width: 100vw;
-  margin: 0 -50vw;
-  position: relative;
-  left: 50%;
-  right: 50%;
-} */
+.middle-gap {
+  position: absolute;
+  background-color: var(--light);
+  margin-top: 0px;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.25);
+  height: 60px;
+  width: 100%;
+  align-items: center;
+}
 
-.row.full-width {
+/* .row.middle-gap {
   background-color: var(--light);
   margin-top: 0px;
   margin-bottom: 1rem;
@@ -62,13 +68,16 @@ input:focus {
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.25);
   height: 60px;
   align-items: center;
-}
-
-/* .user-stats {
-  display: inline-block;
 } */
 
-.user-stats > .ml-5 {
+.user-stats {
+  background: #530b0b;
+  border-radius: 5px;
+  margin-top: 15px;
+  justify-content: center;
+}
+
+.user-stats > li.li-edit {
   display: flex;
   align-items: center;
 }
@@ -82,14 +91,13 @@ input:focus {
   text-align: center;
   height: 60px;
   box-sizing: border-box;
-  padding: 14px 15px 7px;
+  padding: 14px 7px 7px;
   line-height: 1;
 }
 
 .stat > .small {
-  color: #657786;
   font-weight: bold;
-  font-size: 12px;
+  font-size: 10px;
   letter-spacing: 0.02em;
   margin-bottom: 0;
 }
@@ -101,18 +109,12 @@ input:focus {
 }
 
 #sidebar-username {
-  margin-top: 30px;
-  font-size: 21px;
+  margin-top: 20px;
+  font-size: 1.3rem;
   font-weight: bold;
-  line-height: 28px;
+  /* line-height: 28px; */
   word-wrap: break-word;
 }
-
-/* @media (max-width: 768px) {
-  .full-width .user-stats .stat {
-    display: none;
-  }
-} */
 
 .user-location {
   position: relative;
@@ -125,4 +127,58 @@ input:focus {
 
 .user-location .location {
   margin-left: 27px;
+  font-size: small;
+}
+
+main div.container > div.row.justify-content-end {
+  margin-top: -98px;
+}
+
+@media screen and (min-width: 768px) {
+  #profile-avatar {
+    /* margin-top: -120px; */
+    width: 163px;
+    height: 116px;
+    margin-top: -33px;
+  }
+  main div.container > div.row.justify-content-end {
+    margin-top: 0px;
+  }
+  .user-stats {
+    background: transparent;
+    /* border-radius: 5px; */
+    margin-top: 0px;
+    justify-content: start;
+  }
+  .stat > .small {
+    font-size: 12px;
+  }
+}
+@media screen and (min-width: 992px) {
+  #profile-avatar {
+    /* margin-top: -120px; */
+    width: 240px;
+    height: 171px;
+    margin-top: -100px;
+  }
+  .user-stats {
+    margin-left: 20px;
+  }
+  .stat {
+    padding: 14px 15px 7px;
+  }
+  #sidebar-username {
+    font-size: 2rem;
+  }
+  .user-location .location {
+    margin-left: 27px;
+    font-size: medium;
+  }
+}
+@media screen and (min-width: 1200px) {
+  #profile-avatar {
+    /* margin-top: -120px; */
+    width: 280px;
+    height: 200px;
+  }
 }

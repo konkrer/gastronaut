@@ -21,8 +21,70 @@
             <a class="btn btn-secondary mt-2" href="/user/profile/{{g.user.id}}"
               >Cancel</a
             >
+            <button
+              class="btn btn-sm btn-danger delete-user float-right"
+              type="button"
+              data-toggle="modal"
+              data-target="#deleteUserModal"
+            >
+              Delete Profile
+            </button>
           </form>
         </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal -->
+  <div
+    class="modal fade"
+    id="deleteUserModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="deleteUserModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title txt-orange" id="deleteUserModalLabel">
+            Delete User Account
+          </h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form method="POST" action="/user/delete" class="form-inline">
+          <div class="modal-body">
+            <p class="txt-white-k">
+              Are you sure you want to delete your account?
+            </p>
+
+            <p>Type "Confirm" Below</p>
+            <input
+              class="form-control"
+              type="text"
+              name="confirm"
+              pattern="^[Cc][Oo][Nn][Ff][Ii][Rr][Mm]$"
+              required
+            />
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+
+            <button type="submit" class="btn btn-danger">Delete</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>

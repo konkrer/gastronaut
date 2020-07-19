@@ -21,7 +21,7 @@ class AddUserForm(FlaskForm):
 
     username = StringField("Username", validators=[
         InputRequired(message="Username cannot be blank."),
-        Length(max=50)])
+        Length(max=20)])
 
     password = PasswordField("Password", validators=[
         InputRequired(message="Password cannot be blank."),
@@ -54,13 +54,19 @@ class EditUserForm(FlaskForm):
     banner_url = URLField("Banner Image URL", validators=[
         Length(min=6, max=255), Optional()])
 
+    byline = StringField("User Byline", validators=[
+                         Length(min=2, max=255), Optional()])
+
+    bio = TextAreaField("User Bio", validators=[
+        Length(min=2, max=5000), Optional()])
+
     city = StringField("City", validators=[Length(min=2, max=50), Optional()])
 
     state = StringField("State", validators=[
                         Length(min=2, max=50), Optional()])
 
     country = StringField("Country", validators=[
-                          Length(min=2, max=50), Optional()])
+        Length(min=2, max=50), Optional()])
 
     def validate_username(form, field):
         """Make sure username is not in use
@@ -76,42 +82,42 @@ class EditUserForm(FlaskForm):
 
 class LoginForm(FlaskForm):
     email = EmailField("Email", validators=[
-                       InputRequired(message="Email cannot be blank."),
-                       Length(min=6, max=60),
-                       Email(check_deliverability=True,
-                             message="Invalid Email address")])
+        InputRequired(message="Email cannot be blank."),
+        Length(min=6, max=60),
+        Email(check_deliverability=True,
+              message="Invalid Email address")])
 
     password = PasswordField("Password", validators=[
-                             InputRequired(
-                                 message="Password cannot be blank."),
-                             Length(min=6, max=60)])
+        InputRequired(
+            message="Password cannot be blank."),
+        Length(min=6, max=60)])
 
 
 class AddProductForm(FlaskForm):
     """Form for adding new product"""
 
     name = StringField("Name", validators=[
-                       InputRequired(message="Name cannot be blank."),
-                       Length(min=2, max=50)])
+        InputRequired(message="Name cannot be blank."),
+        Length(min=2, max=50)])
 
     category_code = SelectField("Category", validators=[
-                                InputRequired(), Length(min=1, max=4)])
+        InputRequired(), Length(min=1, max=4)])
 
     price = DecimalField("Price", validators=[
-                         InputRequired(message="Price is required.")])
+        InputRequired(message="Price is required.")])
 
     email = EmailField("Email", validators=[Email(), Optional()])
 
     photo_url = URLField("Photo URL", validators=[URL(), Optional()])
 
     photo_file = FileField("Upload Photo", validators=[
-                           # FileRequired(),
-                           Optional(),
-                           # regexp(r'^[^/\\]\w+\.\w{3,5}$')
-                           ])
+        # FileRequired(),
+        Optional(),
+        # regexp(r'^[^/\\]\w+\.\w{3,5}$')
+    ])
 
     age = IntegerField("Age", validators=[
-                       NumberRange(min=0, max=30), Optional()])
+        NumberRange(min=0, max=30), Optional()])
     #    message="Age must be in between 0 and 30.")
 
     notes = TextAreaField("Notes")
