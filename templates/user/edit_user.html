@@ -15,14 +15,16 @@
             {{ form.hidden_tag() }} {% include 'include_form.html' with context
             %}
 
-            <button type="submit" class="btn btn-primary mt-2">
+            <button type="submit" class="btn btn-outline-primary mt-2">
               Update Profile
             </button>
-            <a class="btn btn-secondary mt-2" href="/user/profile/{{g.user.id}}"
+            <a
+              class="btn btn-outline-dark mt-2 ml-sm-2"
+              href="/user/profile/{{g.user.id}}"
               >Cancel</a
             >
             <button
-              class="btn btn-sm btn-danger delete-user float-right"
+              class="btn btn-sm btn-outline-warning delete-user float-right"
               type="button"
               data-toggle="modal"
               data-target="#deleteUserModal"
