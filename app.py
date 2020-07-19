@@ -40,7 +40,7 @@ if not os.environ.get('SECRET_KEY'):
     app.config['SQLALCHEMY_ECHO'] = True
     app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
     debug = DebugToolbarExtension(app)
-    logging.basicConfig(filename='gastronaut.log', level=logging.DEBUG,
+    logging.basicConfig(filename='gastronaut.log', level=logging.WARNING,
                         format='%(levelname)s:%(asctime)s:%(message)s')
 #
 # if production server enable sentry and load environ variables.
@@ -81,6 +81,7 @@ def index():
 @login_required
 def mission_control():
     """Missions control view."""
+    # TODO: CHECK for q param for loading particular shared mission.
 
     return render_template('base.html')
 
@@ -126,7 +127,8 @@ def signup():
             new_user = User.register(password=password, **relevant_data)
             session['user_id'] = new_user.id
             flash(f"Welcome {new_user.username}!", "success")
-            return redirect(url_for('index'))
+
+            return next_page_logic(request)
 
         except Exception as e:
             db.session.rollback()
@@ -135,7 +137,8 @@ def signup():
 
     if request.method == 'POST':
         flash("Please fix all form errors.", "warning")
-    return render_template('user/signup.html', form=form)
+    return render_template('user/signup.html', form=form,
+                           next_page=request.args.get('next', ''))
 
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -161,12 +164,14 @@ def login():
         else:
             session['user_id'] = user.id
             flash(f"Welcome {user.username}!", 'success')
-            return redirect(url_for('index'))
+
+            return next_page_logic(request)
 
     if request.method == 'POST':
         flash("Please fix all form errors.", "warning")
 
-    return render_template('user/login.html', form=form)
+    return render_template('user/login.html', form=form,
+                           next_page=request.args.get('next', ''))
 
 
 @app.route("/user/edit", methods=['GET', 'POST'])
@@ -202,9 +207,17 @@ def user_edit():
 def user_detail(user_id):
     """User detail view."""
 
+    # if user was logged out and clicked profile user_id
+    # will be 0. Lookup their ID and use that.
+    if user_id == '0':
+        user_id = g.user.id
+
     user = User.query.get_or_404(user_id)
 
-    return render_template("user/detail_user.html", user=user)
+    shared_missions = [m for m in user.my_missions if m.is_public]
+
+    return render_template("user/detail_user.html",
+                           user=user, missions=shared_missions)
 
 
 @app.route('/logout', methods=['POST'])
@@ -439,6 +452,18 @@ def render_template(*ars, **kwargs):
 
     global debug
     return r_t(*ars, debug=bool(debug), **kwargs)
+
+
+def next_page_logic(request):
+    """Next page login for signup and login."""
+
+    next_page = request.args.get('next') or 'index'
+
+    # Special case of clicking profile in navbar when not logged in.
+    if next_page == 'user_detail':
+        return redirect(url_for(f'{next_page}', user_id=0))
+
+    return redirect(url_for(f'{next_page}'))
 
 
 ############################

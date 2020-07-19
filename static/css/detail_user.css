@@ -3,7 +3,7 @@
 body {
   background: var(--primary-alt);
 }
-.btn {
+.btn:not(.navbar btn) {
   border-radius: 50px;
 }
 
@@ -142,7 +142,7 @@ main div.container > div.row.justify-content-end {
   margin-top: -98px;
 }
 
-section h5 {
+section > h5 {
   text-decoration: underline;
 }
 

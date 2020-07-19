@@ -51,13 +51,13 @@
           <li class="stat">
             <p class="small txt-white-k">Missions Created</p>
             <h4>
-              <a href="/mission-control">{{ user.my_missions | length }}</a>
+              <a href="#">{{ user.my_missions | length }}</a>
             </h4>
           </li>
           <li class="stat">
             <p class="small txt-white-k">Missions Total</p>
             <h4>
-              <a href="/mission-control">{{ user.missions | length }}</a>
+              <a href="#">{{ user.missions | length }}</a>
             </h4>
           </li>
           <li class="stat">
@@ -92,8 +92,9 @@
       </div>
       <div class="col-12 p-0">
         <section class="missions-section text-center mt-3 mt-md-5 txt-white-k">
+          {% if missions %}
           <h5 class="text-left ml-2">Missions</h5>
-          {% for mission in user.my_missions %} {% if mission.is_public %}
+          {% for mission in missions %}
           <div class="card d-inline-block m-2 text-left">
             <div class="card-body">
               <h5 class="card-title txt-orange">{{mission.name}}</h5>
@@ -111,11 +112,12 @@
               <a href="#" class="card-link">Add to Missions</a>
             </div>
           </div>
-          {% endif %} {% endfor %}
+          {% endfor %} {% endif %}
         </section>
       </div>
       <div class="col-12 p-0">
         <section class="missions-section text-center mt-3 mt-md-5 txt-white-k">
+          {% if user.reports %}
           <h5 class="text-left ml-2">Reports</h5>
           {% for report in user.reports %}
           <div class="card d-inline-block m-2 text-left">
@@ -131,7 +133,7 @@
               <a href="#" class="card-link">Open</a>
             </div>
           </div>
-          {% endfor %}
+          {% endfor %} {% endif %}
         </section>
       </div>
     </div>

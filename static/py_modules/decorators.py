@@ -1,4 +1,4 @@
-from flask import g, session, redirect, url_for
+from flask import g, session, redirect, url_for, request
 from functools import wraps
 from models import User
 
@@ -20,14 +20,16 @@ def add_user_to_g(func):
 
 
 def login_required(func):
-    """If user is not logged in redirect
-       as g.user else set g.user to None.
+    """If user is not logged in redirect to signup page
+       else return output of the called view function.
     """
     @wraps(func)
     def wrapper(*args, **kwargs):
         """Wrap view functions."""
         if not g.user:
-            return redirect(url_for('signup'))
+            next_page = request.endpoint
+
+            return redirect(url_for('signup', next=next_page))
 
         return func(*args, **kwargs)
     return wrapper
