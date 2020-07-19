@@ -28,7 +28,7 @@ class User(db.Model):
 
     email = db.Column(db.String(60), nullable=False, unique=True, index=True)
 
-    username = db.Column(db.String(50), nullable=False, unique=True)
+    username = db.Column(db.String(20), nullable=False, unique=True)
 
     password = db.Column(db.String, nullable=False)
 
@@ -36,11 +36,15 @@ class User(db.Model):
 
     banner_url = db.Column(db.String, nullable=True)
 
-    city = db.Column(db.String, nullable=True)
+    byline = db.Column(db.String, nullable=True, default='')
 
-    state = db.Column(db.String, nullable=True)
+    bio = db.Column(db.String, nullable=True, default='')
 
-    country = db.Column(db.String, nullable=True)
+    city = db.Column(db.String, nullable=False, default='')
+
+    state = db.Column(db.String, nullable=False, default='')
+
+    country = db.Column(db.String, nullable=False, default='')
 
     is_admin = db.Column(db.Boolean, default=False, nullable=False)
 
