@@ -9,87 +9,134 @@
 <main>
   {% block main %}
 
-  <div id="warbler-hero" class="flx-std">
-    <img src="{{user.get_banner}}" alt="user banner image" height="100%" />
+  <div
+    id="warbler-hero"
+    class=""
+    style="background: url({{user.get_banner}}); background-position: center; background-size: cover;"
+  >
+    <!-- <img src="{{user.get_banner}}" alt="user banner image" height="100%" /> -->
   </div>
   <div class="middle-gap"></div>
-  <div class="row">
-    <div class="container">
-      <div class="row justify-content-end mb-5">
-        <div class="col-12 col-md-3 avatar-col text-center">
-          <div
-            style="background: url('{{ user.get_avatar }}'); background-position: center;
-              background-size: cover;
-              background-repeat: no-repeat;"
-            id="profile-avatar"
-          ></div>
-          <div class="">
-            <h4
-              id="sidebar-username"
-              class="txt-orange brand-outline font-italic"
-            >
-              @{{ user.username }}
-            </h4>
-            <p class="txt-white-k">{{user.byline}}</p>
-            {% if user.city or user.state or user.country %}
-            <div class="user-location text-left d-inline-block">
-              <div
-                class="fa fa-map-marker fa-2x txt-green d-inline-block"
-              ></div>
-              <div class="location text-dark d-inline-block">
-                {{user.city}}, {{user.state}}
-              </div>
-              <br />
-              <div class="location text-dark">{{user.country}}</div>
+  <!-- <div class="row"> -->
+  <div class="container">
+    <div class="row justify-content-end mb-5">
+      <div class="col-12 col-sm-3 avatar-col text-center">
+        <div
+          style="background: url('{{ user.get_avatar }}'); background-position: center;
+              background-size: cover;"
+          id="profile-avatar"
+        ></div>
+        <div class="">
+          <h4
+            id="sidebar-username"
+            class="txt-orange brand-outline font-italic"
+          >
+            @{{ user.username }}
+          </h4>
+          <p class="txt-green byline pl-3 pl-sm-0">{{user.byline}}</p>
+          {% if user.city or user.state or user.country %}
+          <div class="user-location text-left d-inline-block">
+            <div class="fa fa-map-marker fa-2x txt-green d-inline-block"></div>
+            <div class="location text-dark d-inline-block">
+              {{user.city}}, {{user.state}}
             </div>
+            <br />
+            <div class="location text-dark">{{user.country}}</div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      <div class="col-12 col-sm-9 text-right">
+        <ul class="user-stats nav nav-pills">
+          <li class="stat">
+            <p class="small txt-white-k">Missions Created</p>
+            <h4>
+              <a href="/mission-control">{{ user.my_missions | length }}</a>
+            </h4>
+          </li>
+          <li class="stat">
+            <p class="small txt-white-k">Missions Total</p>
+            <h4>
+              <a href="/mission-control">{{ user.missions | length }}</a>
+            </h4>
+          </li>
+          <li class="stat">
+            <p class="small txt-white-k">Reports</p>
+            <h4>
+              <a href="#">{{ user.reports | length }}</a>
+            </h4>
+          </li>
+          <li class="stat">
+            <p class="small txt-white-k">Gastronaut Groups</p>
+            <h4>
+              <a href="#">0</a>
+            </h4>
+          </li>
+          <li class="li-edit ml-0 ml-md-3 ml-lg-5 mb-2 mb-md-0">
+            {% if g.user.id == user.id %}
+            <a
+              href="/user/edit"
+              class="btn btn-outline-primary mt-1 mt-sm-3 mt-md-0"
+              >Edit Profile</a
+            >
             {% endif %}
-          </div>
+          </li>
+        </ul>
+        <div class="col col-lg-9">
+          <section class="bio-section text-left mt-3 mt-md-5 txt-white-k">
+            {% if user.bio %} {% for p in user.bio.split('\n') %}
+            <p>{{p}}</p>
+            {% endfor %} {% endif %}
+          </section>
         </div>
-        <div class="col-12 col-md-9 text-right">
-          <ul class="user-stats nav nav-pills">
-            <li class="stat">
-              <p class="small txt-white-k">Missions Created</p>
-              <h4>
-                <a href="/mission-control">{{ user.my_missions | length }}</a>
-              </h4>
-            </li>
-            <li class="stat">
-              <p class="small txt-white-k">Missions Total</p>
-              <h4>
-                <a href="/mission-control">{{ user.missions | length }}</a>
-              </h4>
-            </li>
-            <li class="stat">
-              <p class="small txt-white-k">Reports</p>
-              <h4>
-                <a href="#">{{ user.reports | length }}</a>
-              </h4>
-            </li>
-            <li class="stat">
-              <p class="small txt-white-k">Gastronaut Groups</p>
-              <h4>
-                <a href="#">0</a>
-              </h4>
-            </li>
-            <li class="li-edit ml-0 ml-md-3 ml-lg-5 mb-2 mb-md-0">
-              {% if g.user.id == user.id %}
-              <a href="/user/edit" class="btn btn-outline-primary"
-                >Edit Profile</a
+      </div>
+      <div class="col-12 p-0">
+        <section class="missions-section text-center mt-3 mt-md-5 txt-white-k">
+          <h5 class="text-left ml-2">Missions</h5>
+          {% for mission in user.my_missions %} {% if mission.is_public %}
+          <div class="card d-inline-block m-2 text-left">
+            <div class="card-body">
+              <h5 class="card-title txt-orange">{{mission.name}}</h5>
+              <p class="card-text">{{mission.description}}</p>
+            </div>
+            <ul class="list-group list-group-flush">
+              {% for business in mission.businesses %}
+              <li class="list-group-item">{{business.name}}</li>
+              {% endfor %}
+            </ul>
+            <div class="card-body">
+              <a href="/mission-control?m={{mission.id}}" class="card-link"
+                >Open</a
               >
-              {% endif %}
-            </li>
-          </ul>
-          <div class="col col-lg-9">
-            <section class="bio-section text-left mt-5 txt-white-k">
-              {% if user.bio %} {% for p in user.bio.split('\n') %}
-              <p>{{p}}</p>
-              {% endfor %} {% endif %}
-            </section>
+              <a href="#" class="card-link">Add to Missions</a>
+            </div>
           </div>
-        </div>
+          {% endif %} {% endfor %}
+        </section>
+      </div>
+      <div class="col-12 p-0">
+        <section class="missions-section text-center mt-3 mt-md-5 txt-white-k">
+          <h5 class="text-left ml-2">Reports</h5>
+          {% for report in user.reports %}
+          <div class="card d-inline-block m-2 text-left">
+            <div class="card-body">
+              {% if report.business_id %}
+              <h5 class="card-title txt-orange">{{report.business.name}}</h5>
+              {% else %}
+              <h5 class="card-title txt-orange">{{report.mission.name}}</h5>
+              {% endif %}
+              <p class="card-text">{{report.text[:1000]}}</p>
+            </div>
+            <div class="card-body">
+              <a href="#" class="card-link">Open</a>
+            </div>
+          </div>
+          {% endfor %}
+        </section>
       </div>
     </div>
   </div>
+  <!-- </div> -->
   <!-- Modal -->
   <div
     class="modal fade"

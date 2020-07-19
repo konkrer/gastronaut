@@ -85,6 +85,32 @@ class UserViewsTestCase(TestCase):
         self.assertIn('tester1 logged out.', html)
         self.assertNotIn('<option ', html)
 
+    def test_user_profile_logged_in(self):
+
+        with self.client as c:
+            with c.session_transaction() as sess:
+                sess['user_id'] = self.user.id
+
+            resp = c.get(
+                f'/user/profile/{self.user.id}', follow_redirects=True)
+
+        html = resp.get_data(as_text=True)
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertIn(self.user.username, html)
+        self.assertIn('Edit Profile', html)
+
+    def test_user_profile_logged_out(self):
+
+        with self.client as c:
+            resp = c.get(
+                f'/user/profile/{self.user.id}', follow_redirects=True)
+
+        html = resp.get_data(as_text=True)
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertNotIn('Edit Profile', html)
+
     def test_delete_view(self):
 
         with self.client as c:

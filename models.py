@@ -28,7 +28,7 @@ class User(db.Model):
 
     email = db.Column(db.String(60), nullable=False, unique=True, index=True)
 
-    username = db.Column(db.String(20), nullable=False, unique=True)
+    username = db.Column(db.String(30), nullable=False, unique=True)
 
     password = db.Column(db.String, nullable=False)
 
@@ -36,7 +36,7 @@ class User(db.Model):
 
     banner_url = db.Column(db.String, nullable=True)
 
-    byline = db.Column(db.String, nullable=True, default='')
+    byline = db.Column(db.String(200), nullable=True, default='')
 
     bio = db.Column(db.String, nullable=True, default='')
 
@@ -139,6 +139,8 @@ class Mission(db.Model):
     editor = db.Column(db.Integer, db.ForeignKey(User.id))
 
     name = db.Column(db.String(50), nullable=False)
+
+    description = db.Column(db.String(100), nullable=True)
 
     is_public = db.Column(db.Boolean, default=False)
 
