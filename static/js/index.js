@@ -807,18 +807,6 @@ function setFormTransactions(transactions) {
 }
 
 /*
-/* Convert the array of objects that jQuery returns from serializeArray
-/* to a single object with key value pairs for all data.
-*/
-function convertDataArrayToObj(data) {
-  // reduce data from array of objects to obj.
-  return data.reduce((acc, curr) => {
-    acc[curr.name] = curr.value;
-    return acc;
-  }, {});
-}
-
-/*
 /* Set form checkboxes for yelp parameters.
 */
 function setForm(data) {

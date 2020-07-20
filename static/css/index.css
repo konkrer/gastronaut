@@ -685,12 +685,10 @@ a.first-letter.active {
     transform: scale(1.1);
   }
   .my-card button:hover,
-  #mission-choices button:hover,
   #mission-choices a:hover {
     background-color: var(--my-green) !important;
   }
   .my-card button.mission-btn:hover,
-  #mission-choices button:hover,
   #mission-choices a:hover {
     color: var(--my-info) !important;
   }

@@ -28,8 +28,24 @@ body {
   padding-right: 16px !important;
 }
 
+.navbar .preferences-btn {
+  color: white;
+  border: none;
+  background-color: transparent;
+}
+
 .navbar-logout:hover {
   color: white !important;
+}
+
+.feedback {
+  position: absolute;
+  left: 20px;
+}
+
+#preferences-form .help-text {
+  font-size: 10px;
+  font-style: italic;
 }
 
 .flx-std {
@@ -262,5 +278,15 @@ body::-webkit-scrollbar-thumb:hover {
   }
   .display-2-k {
     font-size: 3vh;
+  }
+}
+
+@media screen and (hover: hover) {
+  .modal button:hover {
+    background: var(--my-green) !important;
+    color: var(--my-info) !important;
+  }
+  .modal label:hover {
+    color: var(--blue) !important;
   }
 }

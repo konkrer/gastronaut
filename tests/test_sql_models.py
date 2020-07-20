@@ -45,16 +45,16 @@ class UserModelTestCase(TestCase):
         self.assertEqual(self.user, u)
 
     def test_image_url(self):
-        self.assertEqual(self.user.image_url, DEFAULT_USER_IMAGE)
+        self.assertEqual(self.user.get_avatar, DEFAULT_USER_IMAGE)
 
     def test_serialize(self):
-        user_serial = self.user.serialize()
+        user_serialized = self.user.serialize()
 
         expected_output = {
-            'email': 'test@test.com', 'state': None, 'avatar_url': None,
-            'username': 'tester1', 'city': None, 'id': self.user.id}
+            'email': 'test@test.com', 'state': '', 'avatar_url': None,
+            'username': 'tester1', 'city': '', 'id': self.user.id}
 
-        self.assertEqual(user_serial, expected_output)
+        self.assertEqual(user_serialized, expected_output)
 
     def test_repr(self):
         self.assertEqual(
@@ -131,7 +131,9 @@ class MissionModelTestCase(TestCase):
     def test_repr(self):
         m = self.mission
         self.assertEqual(
-            repr(self.mission), f"<Mission id={m.id} name={m.name} >")
+            repr(self.mission),
+            f"<Mission id={m.id} name={m.name} editor={m.editor} >"
+        )
 
 
 class ModelsRelationshipsTestCase(TestCase):

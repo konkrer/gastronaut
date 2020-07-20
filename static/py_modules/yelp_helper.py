@@ -52,7 +52,7 @@ def parse_query_params(multi_dict):
     return out
 
 
-yelp_categories = [
+YELP_CATEGORIES = [
     ('All', 'restaurants,bars,food'), ('All Restaurants', 'restaurants'),
     ('Acai Bowls', 'acaibowls'), ('Afghan', 'afghani'),
     ('African', 'african'), ('American (New)', 'newamerican'),
@@ -123,6 +123,19 @@ first_letters = [('A', 'All'), ('B', 'Bag'), ('C', 'Caf'), ('D', 'Del'),
                  ('M', 'Mal'), ('N', 'New'), ('P', 'Pak'), ('R', 'Rus'),
                  ('S', 'Sal'), ('T', 'Tai'), ('U', 'Ukr'), ('V', 'Veg'),
                  ('W', 'Waf')]
+
+
+def no_alcohol():
+    """Function to return Yelp categories without alcohol offerings."""
+
+    new_list = YELP_CATEGORIES.copy()
+
+    new_list[0] = ('All', 'restaurants,food')
+
+    bad_list = ['bars', 'breweries', 'cocktailbars', 'divebars', 'wineries']
+
+    return [r for r in new_list if r[1] not in bad_list]
+
 
 # from csv:
 # get yelp categories data in tuples as: (display name, category name)

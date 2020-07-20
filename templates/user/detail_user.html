@@ -51,13 +51,21 @@
           <li class="stat">
             <p class="small txt-white-k">Missions Created</p>
             <h4>
-              <a href="#">{{ user.my_missions | length }}</a>
+              {% if g.user == user %}
+              <a href="/mission-control">{{ user.my_missions | length }}</a>
+              {% else %}
+              <span class="text-primary">{{ user.my_missions | length }}</span>
+              {% endif %}
             </h4>
           </li>
           <li class="stat">
             <p class="small txt-white-k">Missions Total</p>
             <h4>
-              <a href="#">{{ user.missions | length }}</a>
+              {% if g.user == user %}
+              <a href="/mission-control">{{ user.missions | length }}</a>
+              {% else %}
+              <span class="text-primary">{{ user.missions | length }}</span>
+              {% endif %}
             </h4>
           </li>
           <li class="stat">

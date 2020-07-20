@@ -104,21 +104,23 @@
         id="navbarsExampleDefault"
       >
         <ul class="navbar-nav mr-auto fw-200">
-          <li class="nav-item active">
+          {% from '/macros/nav_link.html' import nav_link_active with context %}
+
+          <li class="nav-item {{ nav_link_active('index') }}">
             <a class="nav-link explore-nav" href="/"
               ><span class="sr-only">(current)</span>Explore</a
             >
           </li>
-          <li class="nav-item">
+          <li class="nav-item {{ nav_link_active('mission_control') }}">
             <a class="nav-link" href="/mission-control">Mission control</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item {{ nav_link_active('missions') }}">
             <a class="nav-link" href="#">Missions</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Mission reports</a>
+          <li class="nav-item {{ nav_link_active('mission_reports') }}">
+            <a class="nav-link" { href="#">Mission reports</a>
           </li>
-          <li class="nav-item dropdown">
+          <li class="nav-item {{ nav_link_active('user_detail') }} dropdown">
             <a
               class="nav-link dropdown-toggle"
               href="#"
@@ -138,7 +140,13 @@
                 >Profile</a
               >
               {% endif %}
-              <a class="dropdown-item" href="#">Prefrences</a>
+              <button
+                class="dropdown-item preferences-btn"
+                data-toggle="modal"
+                data-target="#preferencesModal"
+              >
+                Prefrences
+              </button>
               <a class="dropdown-item" href="#"
                 >Gastronaut groups (Coming Soon!)</a
               >
@@ -200,5 +208,114 @@
     <main>
       {% block main %} {% endblock %}
     </main>
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="preferencesModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="preferencesModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          {% if g.user %}
+          <div class="modal-header">
+            <h5 class="modal-title txt-orange" id="preferencesModalLabel">
+              Preferences
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            {% from '/macros/preferences_check.html' import preferences_check
+            with context %}
+
+            <form id="preferences-form" action="#">
+              <h5 class="txt-medium txt-white-k mb-4">
+                <strong>Gastronaut Search</strong>
+              </h5>
+              <div class="custom-control custom-switch">
+                <input
+                  type="checkbox"
+                  name="show_alcohol"
+                  id="show_alcohol"
+                  class="custom-control-input"
+                  {{
+                  preferences_check(g.user.preferences.show_alcohol)
+                  }}
+                />
+                <label
+                  for="show_alcohol"
+                  class="custom-control-label txt-white-k txt-medium"
+                  >Show Alcohol
+                  <small class="ml-2">(Bars, Breweries, etc.)</small></label
+                >
+                <small class="help-text"
+                  >Takes effect on next home page load.</small
+                >
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer" style="position: relative;">
+            <div class="feedback txt-green"></div>
+            <button
+              type="button"
+              class="btn btn-outline-secondary txt-white-k"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+          {% else %}
+          <div class="modal-header">
+            <h5 class="modal-title txt-orange" id="missionsModalTitle">
+              Preferences
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p class="txt-whitesmoke">
+              <em>You must sign up or login to change preferences!</em>
+            </p>
+            <a
+              class="signup btn btn-lg btn-outline-primary"
+              href="/signup?next={{request.endpoint}}"
+              >Sign Up</a
+            >
+            <span class="px-4">- OR -</span>
+            <a
+              class="login btn btn-lg btn-outline-primary"
+              href="/login?next={{request.endpoint}}"
+              >Log in</a
+            >
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-outline-secondary txt-white-k"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
   </body>
 </html>
