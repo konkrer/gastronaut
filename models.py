@@ -1,5 +1,5 @@
 """Models for Gastronaut."""
-
+from types import SimpleNamespace
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from datetime import datetime
@@ -9,9 +9,7 @@ bcrypt = Bcrypt()
 
 DEFAULT_USER_IMAGE = "/static/images/default_user_icon.jpg"
 DEFAULT_BANNER_IMAGE = "/static/images/stars2.jpg"
-DEFAULT_PREFERENCES = {
-    'Show Alcohol': True
-}
+DEFAULT_PREFERENCES = SimpleNamespace(show_alcohol=True)
 
 
 def connect_db(app):

@@ -561,7 +561,7 @@
             data-offset="10"
           >
             <div class="list-group" id="cat-btns">
-              {% for show, category in yelp_categories %}
+              {% for show, category in YELP_CATEGORIES %}
               <button
                 type="button"
                 class="list-group-item list-group-item-action cat-btn black-outline-1"
@@ -844,12 +844,14 @@
         <div class="modal-footer">
           <button
             type="button"
-            class="btn btn-sm btn-secondary"
+            class="btn btn-sm btn-outline-secondary txt-white-k"
             data-dismiss="modal"
           >
             Close
           </button>
-          <a href="/mission-control" class="btn btn-sm btn-secondary"
+          <a
+            href="/mission-control"
+            class="btn btn-sm btn-outline-secondary txt-white-k"
             >Create New Mission</a
           >
         </div>
@@ -871,16 +873,20 @@
           <p class="txt-whitesmoke">
             <em>You must sign up or login to add to a mission!</em>
           </p>
-          <a class="signup btn btn-lg btn-primary txt-whitesmoke" href="/signup"
+          <a class="signup btn btn-lg btn-outline-primary" href="/signup"
             >Sign Up</a
           >
           <span class="px-4">- OR -</span>
-          <a class="login btn btn-lg btn-primary txt-whitesmoke" href="/login"
+          <a class="login btn btn-lg btn-outline-primary" href="/login"
             >Log in</a
           >
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          <button
+            type="button"
+            class="btn btn-outline-secondary txt-white-k"
+            data-dismiss="modal"
+          >
             Close
           </button>
         </div>

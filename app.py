@@ -1,23 +1,28 @@
 """Restaurant discovery, food exploration web app."""
 
+import requests
+import logging
+from types import SimpleNamespace
+import os
+
 from sentry_sdk.integrations.flask import FlaskIntegration
 from sentry_sdk import (capture_message, capture_exception,
                         init as sentry_init)
+
 from flask import (  # noqa F401
     Flask, request, flash, make_response, Response, session,
     redirect, jsonify, abort, url_for, g, render_template as r_t)
 from sqlalchemy.exc import IntegrityError
 from werkzeug.utils import secure_filename
 # from werkzeug.exceptions import Unauthorized
-import requests
-import logging
-import os
+
 from models import (db, connect_db, User, Mission, UserMission,  # noqa F401
-                    Business, Report, MissionBusiness)  # noqa F401
+                    Business, Report, MissionBusiness, DEFAULT_PREFERENCES)  # noqa F401
 from forms import AddUserForm, LoginForm, EditUserForm
 from static.py_modules.decorators import add_user_to_g, login_required
-from static.py_modules.yelp_helper import (yelp_categories, first_letters,
-                                           parse_query_params, YELP_URL)
+from static.py_modules.yelp_helper import (
+    YELP_CATEGORIES, no_alcohol, first_letters, parse_query_params,
+    YELP_URL)
 
 Product, Category, AddProductForm = None, None, None  # remove me
 
@@ -68,7 +73,7 @@ def index():
 
     return render_template(
         'index.html',
-        yelp_categories=yelp_categories,
+        YELP_CATEGORIES=get_yelp_categories(),
         first_letters=first_letters,
         lat=lat,
         lng=lng,
@@ -133,7 +138,7 @@ def signup():
         except Exception as e:
             db.session.rollback()
             flash("Error Creating User", 'danger')
-            errorLogging(e)
+            error_logging(e)
 
     if request.method == 'POST':
         flash("Please fix all form errors.", "warning")
@@ -194,7 +199,7 @@ def user_edit():
         except Exception as e:
             db.session.rollback()
             flash("Error Updating User Profile", 'danger')
-            errorLogging(e)
+            error_logging(e)
 
     if request.method == 'POST':
         flash("Please fix all form errors.", "danger")
@@ -328,10 +333,37 @@ def search_yelp():
                            params=params,
                            headers=headers)
     except Exception as e:
-        errorLogging(e)
+        error_logging(e)
         return jsonify({'error': repr(e)})
 
     return res.json()
+
+
+@app.route('/v1/preferences', methods=['POST'])
+@add_user_to_g
+def set_prefrences():
+    """Endpoint to change user preferences."""
+
+    if not g.user:
+        return jsonify({'feedback': 'Error'})
+
+    data = request.json
+
+    preferences = dict()
+
+    # set each setting to true if data is present else False
+    for key in DEFAULT_PREFERENCES.__dict__:
+        preferences[key] = bool(data.get(key, False))
+
+    g.user.preferences = SimpleNamespace(**preferences)
+
+    try:
+        db.session.commit()
+    except Exception as e:
+        error_logging(e)
+        return jsonify({'feedback': 'Error!'})
+
+    return jsonify({'feedback': 'Updated'})
 
 
 @app.route('/api/products')
@@ -416,7 +448,7 @@ def get_coords_from_IP_address(request):
         res = requests.get(f'http://ipwhois.app/json/{ip_address}')
         data = res.json()
     except Exception as e:
-        errorLogging(e)
+        error_logging(e)
         return '', ''
 
     lat = data.get('latitude', '')
@@ -424,12 +456,22 @@ def get_coords_from_IP_address(request):
 
     # if API limit message.
     if data.get('message'):
-        messageLogging(data['message'])
+        message_logging(data['message'])
 
     return lat, lng
 
 
-def errorLogging(e):
+def get_yelp_categories():
+    """Return Yelp Categories.
+       If user prefers not to see alcohol choices show no-alcohol list.
+    """
+    if (not g.user) or (g.user and g.user.preferences.show_alcohol):
+        return YELP_CATEGORIES
+    else:
+        return no_alcohol()
+
+
+def error_logging(e):
     """Log error when dev environment, sentry capture when production."""
     if debug:
         logging.error(repr(e))
@@ -437,7 +479,7 @@ def errorLogging(e):
         capture_exception(e)
 
 
-def messageLogging(message):
+def message_logging(message):
     """Log message when dev environment, sentry capture when production."""
     if debug:
         logging.warning(message)
