@@ -8,7 +8,7 @@ db = SQLAlchemy()
 bcrypt = Bcrypt()
 
 DEFAULT_USER_IMAGE = "/static/images/default_user_icon.jpg"
-DEFAULT_BANNER_IMAGE = "/static/images/stars2.jpg"
+DEFAULT_BANNER_IMAGE = "/static/images/horizon___widescreen_wallpaper_by_hameed.jpg"  # NOQA E501
 DEFAULT_PREFERENCES = SimpleNamespace(show_alcohol=True)
 
 
@@ -295,6 +295,12 @@ class Business(db.Model):
 
     name = db.Column(db.String(), nullable=False)
 
+    city = db.Column(db.String(), nullable=False)
+
+    state = db.Column(db.String(), nullable=False)
+
+    country = db.Column(db.String(), nullable=False)
+
     reports = db.relationship('Report', backref='business')
 
     missions_businesses = db.relationship('MissionBusiness',
@@ -327,7 +333,17 @@ class Report(db.Model):
     business_id = db.Column(
         db.String, db.ForeignKey(Business.id), nullable=True)
 
+    submitted_on = db.Column(db.DateTime, default=datetime.utcnow())
+
     text = db.Column(db.Text, nullable=False)
+
+    likes = db.Column(db.Integer, nullable=False, default=1)
+
+    @classmethod
+    def get_by_recent(cls, offset):
+        """Return misions by most recent"""
+        return cls.query.order_by(
+            cls.submitted_on.desc()).offset(offset).limit(50).all()
 
     @classmethod
     def create(cls, **kwargs):

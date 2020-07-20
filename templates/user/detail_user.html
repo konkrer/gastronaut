@@ -1,23 +1,24 @@
 {% extends 'base.html' %}
 
+<title>
+  {% block title %}Gastronaut - User Profile{% endblock %}
+</title>
+
 <head>
   {% block head %}
+  <meta name="description" content="Gastronaut user profile." />
   <link rel="stylesheet" href="/static/css/detail_user.css" />
   {% endblock %}
 </head>
 
 <main>
   {% block main %}
-
   <div
-    id="warbler-hero"
+    id="main-hero"
     class=""
     style="background: url({{user.get_banner}}); background-position: center; background-size: cover;"
-  >
-    <!-- <img src="{{user.get_banner}}" alt="user banner image" height="100%" /> -->
-  </div>
+  ></div>
   <div class="middle-gap"></div>
-  <!-- <div class="row"> -->
   <div class="container">
     <div class="row justify-content-end mb-5">
       <div class="col-12 col-sm-3 avatar-col text-center">
@@ -134,51 +135,18 @@
               <h5 class="card-title txt-orange">{{report.business.name}}</h5>
               {% else %}
               <h5 class="card-title txt-orange">{{report.mission.name}}</h5>
-              {% endif %}
-              <p class="card-text">{{report.text[:1000]}}</p>
+              {% endif %} {% if report.text[500:] %} {% set text =
+              report.text[:500] + '...' %} {% else %} {% set text =
+              report.text[:500] %} {% endif %} {% for p in text.split('\n') %}
+              <p>{{p}}</p>
+              {%- endfor %}
             </div>
             <div class="card-body">
-              <a href="#" class="card-link">Open</a>
+              <a href="/reports/{{report.id}}" class="card-link">Open</a>
             </div>
           </div>
           {% endfor %} {% endif %}
         </section>
-      </div>
-    </div>
-  </div>
-  <!-- </div> -->
-  <!-- Modal -->
-  <div
-    class="modal fade"
-    id="bannerSettingsModal"
-    tabindex="-1"
-    role="dialog"
-    aria-labelledby="bannerSettingsModalLabel"
-    aria-hidden="true"
-  >
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title txt-orange" id="bannerSettingsModalLabel">
-            Adjust Banner Image
-          </h5>
-          <button
-            type="button"
-            class="close"
-            data-dismiss="modal"
-            aria-label="Close"
-          >
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          settings...
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">
-            Close
-          </button>
-        </div>
       </div>
     </div>
   </div>

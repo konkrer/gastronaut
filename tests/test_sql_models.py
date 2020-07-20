@@ -1,4 +1,4 @@
-"""Tests for Gastronaut models."""
+"""Tests for Gastronaut views that alter models."""
 
 from unittest import TestCase
 from app import app
