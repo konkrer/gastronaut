@@ -26,7 +26,7 @@ function makeReviewStars(rating) {
 }
 
 function makeTransactionsText(transactions) {
-  if (transactions.length === 0) return 'UNKNOWN INTERFACE';
+  if (transactions.length === 0) return '';
   return transactions.reduce((acc, str, i) => {
     str = str === 'restaurant_reservation' ? 'reservations' : str;
     if (i === 0) return `${str.toUpperCase()}`;
@@ -50,7 +50,10 @@ function makeCard(business) {
     is_closed,
     distance,
     location: {
-      display_address: [street, city],
+      city,
+      state,
+      country,
+      display_address: [street, city_disp],
     },
   } = business;
 
@@ -62,7 +65,8 @@ function makeCard(business) {
   return `
     <div
       class="my-card mr-card bg-dark txt-black d-inline-block"
-      data-id="${id}"
+      data-id="${id}" data-city="${city} data-state="${state}"
+      data-country="${country}"
     >
       <div
         style="
@@ -108,16 +112,20 @@ function makeCard(business) {
         <li class="list-group-item bg-transparent text-secondary card-text-noHover">
           ${stars}
         </li>
-        <li class="list-group-item bg-transparent card-text-noHover">${dollars}</li>
-        <li class="list-group-item bg-transparent card-text-noHover">
-          ${trans_text}
-        </li>
-        <li class="list-group-item bg-transparent">
-          <a href="tel:${phone}">${display_phone}</a>
-        </li>
+        <li class="list-group-item bg-transparent card-text-noHover">${dollars}</li>    
+        ${
+          trans_text
+            ? `<li class="list-group-item bg-transparent card-text-noHover">`
+            : ''
+        } 
+        ${trans_text}
+        ${trans_text ? '</li>' : ''}
+        ${phone ? `<li class="list-group-item bg-transparent">` : ''} 
+        <a href="tel:${phone}">${display_phone}</a>
+        ${phone ? '</li>' : ''}
         <li class="list-group-item bg-transparent card-text-noHover">
           <div>${street ? street : ''}</div>
-          <div>${city ? city : ''}</div>
+          <div>${city_disp ? city_disp : ''}</div>
         </li>
         <li class="list-group-item bg-transparent card-text-noHover">
           ${metersToMiles(distance)} mi

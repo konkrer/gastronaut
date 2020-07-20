@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+<title>
+  {% block title %}Gastronaut - Reports{% endblock %}
+</title>
+
+<head>
+  {% block head %}
+  <meta
+    name="description"
+    content="Read user reports on restaurants, bars, and more. Find out what other gastronauts really think."
+  />
+  <link rel="stylesheet" href="/static/css/reports.css" />
+  {% endblock %}
+</head>
+
+<main>
+  {% block main %}
+
+  <div id="main-hero" class="flx-std">
+    <h1 class="display-1-k museo orange-outline">Mission Reports</h1>
+  </div>
+
+  <div class="middle-gap py-3 px-5 p-sm-0">
+    <form action="#" class="form-inline filter-form flx-std">
+      <label for="sortby" class="sr-only">Sort By</label>
+      <select
+        class="custom-select mr-0 mr-sm-1 mr-md-3 mr-lg-4 mb-1 mb-sm-0"
+        id="sortby"
+      >
+        <option value="recent" selected>Most Recent</option>
+        <option value="oldest">Oldest</option>
+        <option>Most Likes</option>
+      </select>
+      <label for="location" class="sr-only">Location</label>
+      <input
+        type="text"
+        class="form-control mr-0 mr-sm-1 mr-md-3 mr-lg-4 mb-1 mb-sm-0"
+        placeholder="Location"
+      />
+      <label for="search-term" class="sr-only">Keywords</label>
+      <input
+        type="text"
+        class="form-control mb-1 mb-sm-0"
+        placeholder="Keywords"
+      />
+      <button class="btn btn-outline-success ml-sm-3 ml-lg-4 mt-2 mt-sm-0">
+        Search
+      </button>
+    </form>
+  </div>
+
+  <div class="container">
+    <div class="row mb-5">
+      <div class="col-12 p-0">
+        <section class="text-center mt-3 mt-md-5 txt-white-k">
+          {% for report in reports %}
+          <div class="card card-norm d-inline-block m-2 text-left">
+            <div class="card-header text-dark">
+              {% if report.business_id %}
+              <h5 class="card-title text-dark font-weight-bold">
+                {{report.business.name}}
+              </h5>
+              <h5 class="lead"><small>Business</small></h5>
+              {% else %}
+              <h5 class="card-title txt-info">{{report.mission.name}}</h5>
+              <h5 class="lead"><small>Mission</small></h5>
+              {% endif %}
+              <p class="card-text">
+                <a href="/user/profile/{{report.user.id}}">
+                  <em class="txt-orange"> by @{{report.user.username}}</em>
+                </a>
+              </p>
+            </div>
+            <div class="card-body">
+              {% if report.text[500:] %} {% set text = report.text[:500] + '...'
+              %} {% else %} {% set text = report.text[:500] %} {% endif %} {%
+              for p in text.split('\n') %}
+              <p>{{p}}</p>
+              {%- endfor %}
+            </div>
+            <div class="card-footer">
+              <a href="/reports/{{report.id}}" class="card-link">Read More</a>
+            </div>
+          </div>
+          {% endfor %}
+        </section>
+      </div>
+    </div>
+  </div>
+  {% endblock %}
+</main>

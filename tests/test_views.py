@@ -1,11 +1,9 @@
 """Test basic views and view related functions."""
 
 from unittest import TestCase
-from types import SimpleNamespace
 from werkzeug.datastructures import ImmutableMultiDict
 # from flask import session
-import json
-from app import app, get_coords_from_IP_address
+from app import app
 from static.py_modules.yelp_helper import parse_query_params
 
 # py -m unittest tests/test_views.py
@@ -17,6 +15,7 @@ app.config["DEBUG_TB_HOSTS"] = ["dont-show-debug-toolbar"]
 
 
 class ViewTests(TestCase):
+    """Test basic views function."""
 
     def setUp(self):
         self.client = app.test_client()
@@ -28,33 +27,6 @@ class ViewTests(TestCase):
 
             self.assertEqual(res.status_code, 200)
             self.assertIn("American (New)", html)
-
-
-class APIViewTests(TestCase):
-
-    def setUp(self):
-        self.client = app.test_client()
-
-    def test_search_yelp(self):
-        """Test reaching the Yelp API for data."""
-
-        resp = self.client.get('/v1/search?location=sf&category=restaurants')
-        data = json.loads(resp.get_data())
-
-        self.assertEqual(resp.status_code, 200)
-        self.assertIsInstance(data, dict)
-
-    def test_get_coords_from_IP_address(self):
-        """Test reaching the IPWhois API for data."""
-
-        fake_request = SimpleNamespace(
-            environ={'HTTP_X_FORWARDED_FOR': '127.0.0.1'}, remote_addr=1
-        )
-
-        lat, lng = get_coords_from_IP_address(fake_request)
-
-        float(lat)
-        float(lng)
 
 
 class FunctionTests(TestCase):
@@ -80,25 +52,3 @@ class FunctionTests(TestCase):
 
         self.assertEqual(parse_query_params(params),
                          converted_to_dict_for_yelp)
-
-    # def test_search_yelp(self):
-    #     with self.client:
-    #         with self.client.session_transaction() as change_session:
-    #             change_session['board'] = [1, 2, 3]
-
-    #         res = self.client.get("/word-check?word=book")
-    #         json_data = json.loads(res.get_data())
-
-    #         self.assertEqual(res.status_code, 200)
-    #         self.assertEqual(
-    #             json_data, {"result": {"message": "ok", "_class": "success"}}
-    #         )
-
-    # def test_end_score_fail(self):
-    #     with self.client:
-    #         # no get requests
-    #         res = self.client.get("/end-score")
-    #         self.assertEqual(res.status_code, 405)
-    #         # no json data
-    #         with self.assertRaises(TypeError):
-    #             self.client.post("/end-score")

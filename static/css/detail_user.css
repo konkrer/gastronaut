@@ -1,38 +1,15 @@
 /* ====================== General */
 
-body {
-  background: var(--primary-alt);
-}
 .btn:not(.navbar btn) {
   border-radius: 50px;
 }
-
-#search.form-control + .btn:active,
-#search.form-control + .btn:focus {
-  box-shadow: none;
-}
-
-/* button:active,
-button:focus,
-a:active,
-a:focus {
-  box-shadow: none;
-  border: 2px solid #007bff;
-}
-
-input:active,
-input:focus {
-  box-shadow: none;
-  border: 4px solid #007bff;
-} */
 
 .avatar-col {
   padding: 0px;
 }
 
-#warbler-hero {
+#main-hero {
   height: 45vh;
-  background: url('/static/images/stars2.jpg');
   overflow: hidden;
   opacity: 0.7;
 }
@@ -57,22 +34,12 @@ input:focus {
   margin-bottom: 1rem;
   border-bottom: 1px solid #ccc;
   border-top: 1px solid #ccc;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.25);
+  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.65),
+    inset 0px 1px 5px rgba(184, 182, 182, 0.5);
   height: 60px;
   width: 100%;
   align-items: center;
 }
-
-/* .row.middle-gap {
-  background-color: var(--light);
-  margin-top: 0px;
-  margin-bottom: 1rem;
-  border-bottom: 1px solid #ccc;
-  border-top: 1px solid #ccc;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.25);
-  height: 60px;
-  align-items: center;
-} */
 
 .user-stats {
   background: #530b0bdf;

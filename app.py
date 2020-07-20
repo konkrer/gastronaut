@@ -61,6 +61,15 @@ else:
 
 connect_db(app)
 
+#
+#    $$$   x$$$     $$~     $$$  $$U   $$
+#    $$$!  $$$$     $$$     $$$  $$$   $$
+#    $$$$  $ $$    $$ $$    $$$  $$$$  $$
+#    $L!$ $$ $$    $$ $$    $$$  $$ $$ $$
+#    $L $$$$ $$   $$$$$$$   $$$  $$  $$$$
+#    $L $$$  $$  $$~   a$$  $$$  $$   $$$
+#    $L  $$  $$  $$     $$  $$$  $$    $$
+
 
 @app.route("/")
 @add_user_to_g
@@ -81,6 +90,14 @@ def index():
     )
 
 
+@app.route("/navtest")
+def navtest():
+    """Navber search testing view."""
+    # TODO: FIX navbar search from disappearing
+    #      on text entry on mobile chrome/edge.
+    return render_template('base.html')
+
+
 @app.route("/mission-control")
 @add_user_to_g
 @login_required
@@ -91,21 +108,32 @@ def mission_control():
     return render_template('base.html')
 
 
-@app.route("/navtest")
-def navtest():
-    """Navber search testing view."""
+@app.route('/reports')
+def mission_reports():
+    """Mission reports view."""
 
-    return render_template('base.html')
+    reports = Report.get_by_recent(0)
+
+    return render_template('reports.html', reports=reports)
+
+
+@app.route('/reports/<report_id>')
+def mission_report_detail(report_id):
+    """Mission report detail view."""
+
+    report = Report.query.get(report_id)
+
+    return render_template('report.html', report=report)
 
 
 #
-#   $$    $$    $$$.   $$$$$$$$  $$$$$<
-#   $$    $$  $$$ $$$  $$$$$$$$  $$$$$$$$
-#   $$    $$  $$       $$+       $$    $$
-#   $$    $$   $$$$$   $$$$$$$Y  $$$$$$$O
-#   $$    $$      ^$$o $$+       $$ '$$
-#   $$    $$  $$    $$ $$+       $$   $$
-#    $$$$$$   d$$$$$$  $$$$$$$$  $$    $$
+#     $$    $$    $$$.    $$$$$$$$  $$$$$<
+#     $$    $$  $$$ $$$   $$^^^^^^  $$$$$$$$
+#     $$    $$  $$        $$+       $$    $$
+#     $$    $$   $$$$$    $$$$$$$Y  $$$$$$$O
+#     $$    $$      ^$$o  $$+       $$ '$$
+#     $$    $$  $$    $$  $$+       $$   $$
+#      $$$$$$   d$$$$$$   $$$$$$$$  $$    $$
 
 # User CRUD, login, logout
 #
@@ -116,7 +144,7 @@ def signup():
     """Sign up view."""
 
     if g.user:
-        return redirect(url_for('user_detail'))
+        return redirect(url_for('user_detail', user_id=g.user.id))
 
     form = AddUserForm()
 
@@ -152,7 +180,7 @@ def login():
     """Login view."""
 
     if g.user:
-        return redirect(url_for('user_detail'))
+        return redirect(url_for('user_detail', user_id=g.user.id))
 
     form = LoginForm()
 
@@ -313,13 +341,13 @@ def edit_product(id_):
     return render_template("edit_product.html", form=form)
 
 
-#      $$     $$$$$$   $$
-#     $$$$    $$   $$  $$
-#     $$$$    $$   q$m $$
-#    $$  $$   $$$$$$$  $$
-#   $$$$$$$-  $$       $$
-#   $$    $$  $$       $$
-#  $$     i$$ $$       $$
+#        $$      $$$$$$    $$
+#       $$$$     $$   $$   $$
+#       $$$$     $$   q$m  $$
+#      $$  $$    $$$$$$$   $$
+#     $$$$$$$-   $$        $$
+#     $$    $$   $$        $$
+#    $$     i$$  $$        $$
 
 
 @app.route('/v1/search')
