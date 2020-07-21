@@ -20,7 +20,7 @@
   ></div>
   <div class="middle-gap"></div>
   <div class="container">
-    <div class="row justify-content-end mb-5">
+    <div class="row justify-content-end">
       <div class="col-12 col-sm-3 avatar-col text-center">
         <div
           style="background: url('{{ user.get_avatar }}'); background-position: center;
@@ -101,7 +101,7 @@
       </div>
     </div>
     <div class="row mb-5">
-      <div class="col-12 col-sm-3 px-5 p-sm-0 mt-3">
+      <div class="col-12 col-sm-3 px-5 p-sm-0 mt-3 mb-4">
         <div
           class="nav flex-column nav-pills"
           id="pills-tab"
@@ -116,8 +116,14 @@
             role="tab"
             aria-controls="missions-tab"
             aria-selected="true"
-            >Missions</a
           >
+            <div class="no-wrap">
+              Missions {% if missions %}<i
+                class="far fa-check-square fa-xs ml-2"
+              ></i
+              >{% endif %}
+            </div>
+          </a>
           <a
             class="nav-link museo txt-lg"
             id="pills-reports-tab"
@@ -126,8 +132,14 @@
             role="tab"
             aria-controls="reports-tab"
             aria-selected="false"
-            >Mission Reports</a
-          >
+            >Mission
+            <div class="d-inline-block">
+              Reports {% if user.reports %}<i
+                class="far fa-check-square fa-xs ml-2"
+              ></i
+              >{% endif %}
+            </div>
+          </a>
         </div>
       </div>
 

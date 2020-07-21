@@ -243,8 +243,8 @@ body {
   opacity: 0;
 }
 
-.instant {
-  transition: all 0s;
+.no-wrap {
+  white-space: nowrap;
 }
 
 body::-webkit-scrollbar {

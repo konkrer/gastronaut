@@ -49,16 +49,20 @@ class EditUserForm(FlaskForm):
         Length(min=2, max=30)])
 
     avatar_url = URLField("Avatar Image URL", validators=[
-        Length(min=6, max=255), Optional()])
+        Length(min=6, max=255), Optional()],
+        description="Online image address")
 
     banner_url = URLField("Banner Image URL", validators=[
-        Length(min=6, max=255), Optional()])
+        Length(min=6, max=255), Optional()],
+        description="Online image address")
 
     byline = StringField("User Byline", validators=[
-                         Length(min=2, max=200), Optional()])
+        Length(min=2, max=200), Optional()],
+        description="A short snippet shown under your username")
 
     bio = TextAreaField("User Bio", validators=[
-        Length(min=2, max=5000), Optional()])
+        Length(min=2, max=500), Optional()],
+        description="500 character max")
 
     city = StringField("City", validators=[Length(min=2, max=50), Optional()])
 
