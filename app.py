@@ -112,9 +112,15 @@ def mission_control():
 def mission_reports():
     """Mission reports view."""
 
-    reports = Report.get_by_recent(0)
+    query_params = request.args.to_dict()
 
-    return render_template('reports.html', reports=reports)
+    if not query_params:
+        reports = Report.get_by_recent(0)
+    else:
+        reports = Report.search(query_params)
+
+    return render_template('reports.html', reports=reports,
+                           form_data=query_params)
 
 
 @app.route('/reports/<report_id>')

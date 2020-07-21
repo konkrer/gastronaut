@@ -77,6 +77,14 @@ body {
   font-family: 'MuseoModerno', cursive;
 }
 
+.txt-smlr {
+  font-size: smaller;
+}
+
+.txt-sm {
+  font-size: small;
+}
+
 .txt-medium {
   font-size: medium;
 }

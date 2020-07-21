@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% from 'macros/select_active_sort.html' import select_sort with context %}
 
 <title>
   {% block title %}Gastronaut - Reports{% endblock %}
@@ -20,45 +21,76 @@
   <div id="main-hero" class="flx-std">
     <h1 class="display-1-k museo orange-outline">Mission Reports</h1>
   </div>
-
-  <div class="middle-gap py-3 px-5 p-sm-0">
-    <form action="#" class="form-inline filter-form flx-std">
+  <div class="middle-gap py-3 px-5 py-sm-1 p-lg-0">
+    <form
+      action="/reports"
+      method="GET"
+      class="form-inline filter-form flx-std"
+    >
       <label for="sortby" class="sr-only">Sort By</label>
       <select
-        class="custom-select mr-0 mr-sm-1 mr-md-3 mr-lg-4 mb-1 mb-sm-0"
+        class="custom-select custom-select-sm mx-1 mr-sm-1 mr-md-3 mr-lg-4 mb-1 my-sm-1"
         id="sortby"
+        name="sort_by"
       >
-        <option value="recent" selected>Most Recent</option>
-        <option value="oldest">Oldest</option>
-        <option>Most Likes</option>
+        <option value="recent" {{ select_sort('recent') }}>Most Recent</option>
+        <option value="oldest" {{ select_sort('oldest') }}>Oldest</option>
+        <option value="likes" {{ select_sort('likes') }}>Most Likes</option>
       </select>
-      <label for="location" class="sr-only">Location</label>
+
+      <label for="city" class="sr-only">City</label>
       <input
         type="text"
-        class="form-control mr-0 mr-sm-1 mr-md-3 mr-lg-4 mb-1 mb-sm-0"
-        placeholder="Location"
+        class="form-control form-control-sm mx-1 mr-sm-1 mr-md-2 mb-1 my-sm-1"
+        placeholder="City"
+        name="city"
+        maxlength="55"
+        value="{{form_data.get('city', '')}}"
+      />
+      <label for="search-term" class="sr-only">State</label>
+      <input
+        type="text"
+        class="form-control form-control-sm mx-1 mr-sm-1 mr-md-2 mb-1 my-sm-1"
+        placeholder="State"
+        name="state"
+        pattern="^[A-Za-z]{2}$"
+        maxlength="2"
+        value="{{form_data.get('state', '')}}"
+      />
+      <label for="search-term" class="sr-only">Country</label>
+      <input
+        type="text"
+        class="form-control form-control-sm mx-1 mr-sm-1 mr-md-3 mr-lg-4 mb-1 my-sm-1"
+        placeholder="Country"
+        name="country"
+        maxlength="2"
+        value="{{form_data.get('country', '')}}"
       />
       <label for="search-term" class="sr-only">Keywords</label>
       <input
         type="text"
-        class="form-control mb-1 mb-sm-0"
+        class="form-control form-control-sm mx-1 mb-1 my-sm-1"
         placeholder="Keywords"
+        name="keywords"
+        value="{{form_data.get('keywords', '')}}"
       />
-      <button class="btn btn-outline-success ml-sm-3 ml-lg-4 mt-2 mt-sm-0">
+      <button
+        type="submit"
+        class="btn btn-sm btn-outline-success ml-sm-3 ml-lg-4 mt-2 mt-sm-0"
+      >
         Search
       </button>
     </form>
   </div>
-
   <div class="container">
     <div class="row mb-5">
-      <div class="col-12 p-0">
-        <section class="text-center mt-3 mt-md-5 txt-white-k">
+      <div class="col-12">
+        <section class="text-center mt-md-1 mt-lg-5 txt-white-k card-columns">
           {% for report in reports %}
           <div class="card card-norm d-inline-block m-2 text-left">
-            <div class="card-header text-dark">
+            <div class="card-header">
               {% if report.business_id %}
-              <h5 class="card-title text-dark font-weight-bold">
+              <h5 class="card-title font-weight-bold">
                 {{report.business.name}}
               </h5>
               <h5 class="lead"><small>Business</small></h5>
@@ -66,11 +98,14 @@
               <h5 class="card-title txt-info">{{report.mission.name}}</h5>
               <h5 class="lead"><small>Mission</small></h5>
               {% endif %}
-              <p class="card-text">
+              <div class="card-text">
                 <a href="/user/profile/{{report.user.id}}">
                   <em class="txt-orange"> by @{{report.user.username}}</em>
                 </a>
-              </p>
+                <div class="txt-smlr">
+                  {{report.submitted_on.strftime('%a %b %w, %Y')}}
+                </div>
+              </div>
             </div>
             <div class="card-body">
               {% if report.text[500:] %} {% set text = report.text[:500] + '...'
@@ -80,7 +115,15 @@
               {%- endfor %}
             </div>
             <div class="card-footer">
-              <a href="/reports/{{report.id}}" class="card-link">Read More</a>
+              <a href="#" class="card-link"
+                ><i class="far fa-thumbs-up fa-lg"></i
+              ></a>
+              <span class="px-3 text-dark">
+                {{report.likes}}
+              </span>
+              <a href="/reports/{{report.id}}" class="card-link float-right"
+                >Read More</a
+              >
             </div>
           </div>
           {% endfor %}

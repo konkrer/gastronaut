@@ -30,12 +30,17 @@
   min-height: 60px;
 }
 
+.filter-form input {
+  width: 45%;
+}
+
 section > h5 {
   text-decoration: underline;
 }
 
 .card-norm {
   width: 18rem;
+  display: inline-block;
 }
 
 .card-full-width {
@@ -44,7 +49,7 @@ section > h5 {
 }
 
 .card .card-title {
-  margin-bottom: 2px;
+  margin-bottom: 0px;
 }
 
 .card h5.lead {
@@ -52,8 +57,18 @@ section > h5 {
 }
 
 @media screen and (min-width: 576px) {
-  #profile-avatar {
-    margin-top: -33px;
+  .filter-form input,
+  .filter-form select {
+    width: unset;
+  }
+  input[type='text'] {
+    max-width: 10vw;
+  }
+  input[name='state'] {
+    max-width: 6em;
+  }
+  .card-columns {
+    column-count: 2;
   }
   .card-norm {
     width: 38vw;
@@ -63,9 +78,21 @@ section > h5 {
 }
 
 @media screen and (min-width: 768px) {
+  input[type='text'] {
+    max-width: 13vw;
+  }
+  .card-columns {
+    padding: 0 25px;
+  }
 }
 
 @media screen and (min-width: 992px) {
+  input[type='text'] {
+    max-width: unset;
+  }
+  .card-columns {
+    column-count: 3;
+  }
 }
 
 @media screen and (min-width: 1200px) {

@@ -117,6 +117,10 @@ section > h5 {
   width: 18rem;
 }
 
+.card .card-title {
+  margin-bottom: 0px;
+}
+
 @media screen and (min-width: 576px) {
   #profile-avatar {
     margin-top: -33px;
@@ -135,6 +139,9 @@ section > h5 {
   .byline {
     white-space: normal;
   }
+  .card-columns {
+    column-count: 2;
+  }
   .card {
     width: 38vw;
     min-width: 11rem;
@@ -150,6 +157,9 @@ section > h5 {
   }
   .stat > .small {
     font-size: 12px;
+  }
+  .card-columns {
+    padding: 0 25px;
   }
 }
 @media screen and (min-width: 992px) {
@@ -171,11 +181,21 @@ section > h5 {
     margin-left: 27px;
     font-size: medium;
   }
+  .card-columns {
+    column-count: 3;
+  }
 }
 @media screen and (min-width: 1200px) {
   #profile-avatar {
     margin-top: -120px;
     width: 280px;
     height: 200px;
+  }
+}
+
+@media screen and (hover: hover) {
+  button[title='Add to Missions']:hover {
+    background-color: var(--my-green) !important;
+    color: var(--my-purp);
   }
 }

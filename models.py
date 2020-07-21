@@ -1,8 +1,8 @@
 """Models for Gastronaut."""
+from datetime import datetime
+from flask_bcrypt import Bcrypt
 from types import SimpleNamespace
 from flask_sqlalchemy import SQLAlchemy
-from flask_bcrypt import Bcrypt
-from datetime import datetime
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()
@@ -38,11 +38,11 @@ class User(db.Model):
 
     bio = db.Column(db.String, nullable=True, default='')
 
-    city = db.Column(db.String, nullable=False, default='')
+    city = db.Column(db.String(50), nullable=False, default='')
 
-    state = db.Column(db.String, nullable=False, default='')
+    state = db.Column(db.String(50), nullable=False, default='')
 
-    country = db.Column(db.String, nullable=False, default='')
+    country = db.Column(db.String(50), nullable=False, default='')
 
     is_admin = db.Column(db.Boolean, default=False, nullable=False)
 
@@ -76,7 +76,7 @@ class User(db.Model):
     def add_bookmarks(self):
         """Add a default bookmarks mission for user."""
 
-        m = Mission.create(editor=self.id, name='Bookmarks')
+        m = Mission.create(editor=self.id, name='Bookmarks', country='XX')
         self.missions.append(m)
         db.session.commit()
 
@@ -144,11 +144,11 @@ class Mission(db.Model):
 
     date_shared = db.Column(db.DateTime, nullable=True)
 
-    city = db.Column(db.String(55), index=True, nullable=True)
+    city = db.Column(db.String(50), index=True, nullable=True)
 
-    state = db.Column(db.String(55), index=True, nullable=True)
+    state = db.Column(db.String(2), index=True, nullable=True)
 
-    country = db.Column(db.String(55), nullable=True)
+    country = db.Column(db.String(2), nullable=False)
 
     likes = db.Column(db.Integer, nullable=False, default=1)
 
@@ -295,11 +295,11 @@ class Business(db.Model):
 
     name = db.Column(db.String(), nullable=False)
 
-    city = db.Column(db.String(), nullable=False)
+    city = db.Column(db.String(50), nullable=False)
 
-    state = db.Column(db.String(), nullable=False)
+    state = db.Column(db.String(2), nullable=False)
 
-    country = db.Column(db.String(), nullable=False)
+    country = db.Column(db.String(2), nullable=False)
 
     reports = db.relationship('Report', backref='business')
 
@@ -341,9 +341,49 @@ class Report(db.Model):
 
     @classmethod
     def get_by_recent(cls, offset):
-        """Return misions by most recent"""
+        """Return misions by most recent."""
         return cls.query.order_by(
             cls.submitted_on.desc()).offset(offset).limit(50).all()
+
+    @classmethod
+    def search(cls, params):
+        """Return misions search criteria."""
+
+        order_by_dict = {
+            'recent': Report.submitted_on.desc(),
+            'oldest': Report.submitted_on.asc(),
+            'likes': Report.likes.desc(),
+        }
+
+        city = params['city']
+        state = params['state']
+        country = params['country']
+        sort = params['sort_by']
+        keyword = params['keywords']
+
+        reports = db.session.query(
+            Report).join(
+                Business).outerjoin(
+                    Mission).filter(db.and_(
+                        db.or_(
+                            db.and_(
+                                Business.city.ilike(f'%{city}%'),
+                                Business.state.ilike(f'%{state}%'),
+                                Business.country.ilike(f'%{country}%')
+                            ),
+                            db.and_(
+                                Mission.city.ilike(f'%{city}%'),
+                                Mission.state.ilike(f'%{state}%'),
+                                Mission.country.ilike(f'%{country}%')
+                            )
+                        ),
+                        Report.text.ilike(f'%{keyword}%')
+                    )).order_by(order_by_dict[sort]).all()
+
+        # import pdb
+        # pdb.set_trace()
+
+        return reports
 
     @classmethod
     def create(cls, **kwargs):
