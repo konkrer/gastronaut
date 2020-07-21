@@ -1,9 +1,5 @@
 /* ====================== General */
 
-.btn:not(.navbar btn) {
-  border-radius: 50px;
-}
-
 .avatar-col {
   padding: 0px;
 }
@@ -114,7 +110,8 @@ section > h5 {
 }
 
 .card {
-  width: 18rem;
+  /* width: 18rem; */
+  width: 80vw;
 }
 
 .card .card-title {
@@ -140,12 +137,10 @@ section > h5 {
     white-space: normal;
   }
   .card-columns {
-    column-count: 2;
+    column-count: 1;
   }
   .card {
     width: 38vw;
-    min-width: 11rem;
-    max-width: 18rem;
   }
 }
 
@@ -157,9 +152,6 @@ section > h5 {
   }
   .stat > .small {
     font-size: 12px;
-  }
-  .card-columns {
-    padding: 0 25px;
   }
 }
 @media screen and (min-width: 992px) {
@@ -182,7 +174,7 @@ section > h5 {
     font-size: medium;
   }
   .card-columns {
-    column-count: 3;
+    column-count: 2;
   }
 }
 @media screen and (min-width: 1200px) {
