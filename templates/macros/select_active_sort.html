@@ -1,0 +1,3 @@
+{% macro select_sort(sort) %} {% if form_data %} {% if form_data['sort_by'] ==
+sort %} selected {%endif %} {% else %} {% if sort == 'recent' %} selected {%
+endif %} {% endif %} {% endmacro %}

@@ -100,7 +100,7 @@ function makeCard(business) {
         </button>
         <span data-toggle="tooltip" title="Add to Mission">
         <button
-          class="btn btn-sm btn-primary-alt2 btn-my-card mission-btn font-weight-bold px-3 px-sm-2 px-md--3" 
+          class="btn btn-sm btn-primary-alt2 btn-my-card mission-btn font-weight-bold px-2" 
           data-toggle="modal" data-target="#mission-choices"
         >
         <i class="fas fa-plus-square mr-2"></i>

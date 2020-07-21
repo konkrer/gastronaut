@@ -72,13 +72,13 @@
           <li class="stat">
             <p class="small txt-white-k">Reports</p>
             <h4>
-              <a href="#">{{ user.reports | length }}</a>
+              <span class="text-primary">{{ user.reports | length }}</span>
             </h4>
           </li>
           <li class="stat">
             <p class="small txt-white-k">Gastronaut Groups</p>
             <h4>
-              <a href="#">0</a>
+              <span class="text-primary">0</span>
             </h4>
           </li>
           <li class="li-edit ml-0 ml-md-3 ml-lg-5 mb-2 mb-md-0">
@@ -99,50 +99,81 @@
           </section>
         </div>
       </div>
-      <div class="col-12 p-0">
-        <section class="missions-section text-center mt-3 mt-md-5 txt-white-k">
-          {% if missions %}
-          <h5 class="text-left ml-2">Missions</h5>
-          {% for mission in missions %}
+      <div class="col-12 mt-5">
+        <h5 class="text-left ml-2">Missions</h5>
+        <section
+          class="missions-section text-center mt-3 mt-md-5 txt-white-k card-columns"
+        >
+          {% if missions %} {% for mission in missions %}
           <div class="card d-inline-block m-2 text-left">
             <div class="card-body">
-              <h5 class="card-title txt-orange">{{mission.name}}</h5>
-              <p class="card-text">{{mission.description}}</p>
+              <h5 class="card-title font-weight-bold">{{mission.name}}</h5>
+              <br />
+              <p class="card-text txt-orange">
+                <em>{{mission.description}}</em>
+              </p>
             </div>
             <ul class="list-group list-group-flush">
               {% for business in mission.businesses %}
               <li class="list-group-item">{{business.name}}</li>
               {% endfor %}
             </ul>
-            <div class="card-body">
-              <a href="/mission-control?m={{mission.id}}" class="card-link"
-                >Open</a
-              >
-              <a href="#" class="card-link">Add to Missions</a>
+            <div class="card-footer">
+              <a href="#" class="card-link"
+                ><i class="far fa-thumbs-up fa-lg"></i
+              ></a>
+              <span class="px-3 text-dark">
+                {{mission.likes}}
+              </span>
+              <a href="#" class="float-right card-link ml-3">Add to Missions</a>
             </div>
           </div>
           {% endfor %} {% endif %}
         </section>
       </div>
-      <div class="col-12 p-0">
-        <section class="missions-section text-center mt-3 mt-md-5 txt-white-k">
-          {% if user.reports %}
-          <h5 class="text-left ml-2">Reports</h5>
-          {% for report in user.reports %}
-          <div class="card d-inline-block m-2 text-left">
-            <div class="card-body">
+      <div class="col-12 mt-5">
+        <h5 class="text-left ml-2">Reports</h5>
+        <section
+          class="missions-section text-center mt-3 mt-md-5 txt-white-k card-columns"
+        >
+          {% if user.reports %} {% for report in user.reports %}
+          <div class="card card-norm d-inline-block m-2 text-left">
+            <div class="card-header">
               {% if report.business_id %}
-              <h5 class="card-title txt-orange">{{report.business.name}}</h5>
+              <h5 class="card-title font-weight-bold">
+                {{report.business.name}}
+              </h5>
+              <h5 class="lead"><small>Business</small></h5>
               {% else %}
-              <h5 class="card-title txt-orange">{{report.mission.name}}</h5>
-              {% endif %} {% if report.text[500:] %} {% set text =
-              report.text[:500] + '...' %} {% else %} {% set text =
-              report.text[:500] %} {% endif %} {% for p in text.split('\n') %}
+              <h5 class="card-title txt-info">{{report.mission.name}}</h5>
+              <h5 class="lead"><small>Mission</small></h5>
+              {% endif %}
+              <div class="card-text">
+                <a href="/user/profile/{{report.user.id}}">
+                  <em class="txt-orange"> by @{{report.user.username}}</em>
+                </a>
+                <div class="txt-smlr">
+                  {{report.submitted_on.strftime('%a %b %w, %Y')}}
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              {% if report.text[500:] %} {% set text = report.text[:500] + '...'
+              %} {% else %} {% set text = report.text[:500] %} {% endif %} {%
+              for p in text.split('\n') %}
               <p>{{p}}</p>
               {%- endfor %}
             </div>
-            <div class="card-body">
-              <a href="/reports/{{report.id}}" class="card-link">Open</a>
+            <div class="card-footer">
+              <a href="#" class="card-link"
+                ><i class="far fa-thumbs-up fa-lg"></i
+              ></a>
+              <span class="px-3 text-dark">
+                {{report.likes}}
+              </span>
+              <a href="/reports/{{report.id}}" class="card-link float-right"
+                >Read More</a
+              >
             </div>
           </div>
           {% endfor %} {% endif %}
