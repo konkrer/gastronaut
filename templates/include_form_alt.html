@@ -2,7 +2,8 @@
 'hidden' %}
 
 <div class="form-group">
-  {{ field.label }} {{field(class_="form-control") }}
+  {{ field.label }} {% if field.flags.required %}*{% endif %}
+  {{field(class_="form-control", rows=8) }}
   <small>{{field.description}}</small> {% for error in field.errors %}
   <b class="form-text text-warning mt-0">
     {{ error }}

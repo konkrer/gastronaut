@@ -57,6 +57,12 @@ function convertDataArrayToObj(data) {
   }, {});
 }
 
+/*
+/* Close Alert function.
+*/
+$('.alert-close').click(() => {
+  $('.alert').hide();
+});
 // function navbarAnimation() {
 //   document
 //     .querySelector('.navbar-traverse')
