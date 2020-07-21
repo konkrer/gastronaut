@@ -112,13 +112,13 @@
             >
           </li>
           <li class="nav-item {{ nav_link_active('mission_control') }}">
-            <a class="nav-link" href="/mission-control">Mission control</a>
+            <a class="nav-link" href="/mission-control">Mission Control</a>
           </li>
           <li class="nav-item {{ nav_link_active('missions') }}">
             <a class="nav-link" href="#">Missions</a>
           </li>
           <li class="nav-item {{ nav_link_active('mission_reports') }}">
-            <a class="nav-link" { href="/reports">Mission reports</a>
+            <a class="nav-link" { href="/reports">Mission Reports</a>
           </li>
           <li class="nav-item {{ nav_link_active('user_detail') }} dropdown">
             <a
@@ -150,6 +150,7 @@
               <a class="dropdown-item" href="#"
                 >Gastronaut groups (Coming Soon!)</a
               >
+              {% if request.endpoint == 'index' %}
               <a
                 class="dropdown-item"
                 href="#tips"
@@ -158,6 +159,7 @@
               >
                 Tips</a
               >
+              {% endif %}
             </div>
           </li>
         </ul>
@@ -200,7 +202,7 @@
     {% with mssgs = get_flashed_messages(with_categories=True) %} {% if mssgs %}
     {% for category, mssg in mssgs %}
     <div
-      class="alert alert-{{category}} text-center mb-0 font-weight-bold txt-lg"
+      class="alert alert-sm alert-{{category}} text-center p-1 p-xl-2 mb-0 font-weight-bold"
     >
       {{mssg}}
     </div>

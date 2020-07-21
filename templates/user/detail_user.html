@@ -85,7 +85,7 @@
             {% if g.user.id == user.id %}
             <a
               href="/user/edit"
-              class="btn btn-outline-primary mt-1 mt-sm-3 mt-md-0"
+              class="btn btn-outline-primary mt-1 mt-sm-3 mt-md-0 rounded-pill"
               >Edit Profile</a
             >
             {% endif %}
@@ -99,86 +99,133 @@
           </section>
         </div>
       </div>
-      <div class="col-12 mt-5">
-        <h5 class="text-left ml-2">Missions</h5>
-        <section
-          class="missions-section text-center mt-3 mt-md-5 txt-white-k card-columns"
+    </div>
+    <div class="row mb-5">
+      <div class="col-12 col-sm-3 px-5 p-sm-0 mt-3">
+        <div
+          class="nav flex-column nav-pills"
+          id="pills-tab"
+          role="tablist"
+          aria-orientation="vertical"
         >
-          {% if missions %} {% for mission in missions %}
-          <div class="card d-inline-block m-2 text-left">
-            <div class="card-body">
-              <h5 class="card-title font-weight-bold">{{mission.name}}</h5>
-              <br />
-              <p class="card-text txt-orange">
-                <em>{{mission.description}}</em>
-              </p>
-            </div>
-            <ul class="list-group list-group-flush">
-              {% for business in mission.businesses %}
-              <li class="list-group-item">{{business.name}}</li>
-              {% endfor %}
-            </ul>
-            <div class="card-footer">
-              <a href="#" class="card-link"
-                ><i class="far fa-thumbs-up fa-lg"></i
-              ></a>
-              <span class="px-3 text-dark">
-                {{mission.likes}}
-              </span>
-              <a href="#" class="float-right card-link ml-3">Add to Missions</a>
-            </div>
-          </div>
-          {% endfor %} {% endif %}
-        </section>
+          <a
+            class="nav-link active museo txt-lg"
+            id="pills-missions-tab"
+            data-toggle="pill"
+            href="#missions-tab"
+            role="tab"
+            aria-controls="missions-tab"
+            aria-selected="true"
+            >Missions</a
+          >
+          <a
+            class="nav-link museo txt-lg"
+            id="pills-reports-tab"
+            data-toggle="pill"
+            href="#reports-tab"
+            role="tab"
+            aria-controls="reports-tab"
+            aria-selected="false"
+            >Mission Reports</a
+          >
+        </div>
       </div>
-      <div class="col-12 mt-5">
-        <h5 class="text-left ml-2">Reports</h5>
-        <section
-          class="missions-section text-center mt-3 mt-md-5 txt-white-k card-columns"
-        >
-          {% if user.reports %} {% for report in user.reports %}
-          <div class="card card-norm d-inline-block m-2 text-left">
-            <div class="card-header">
-              {% if report.business_id %}
-              <h5 class="card-title font-weight-bold">
-                {{report.business.name}}
-              </h5>
-              <h5 class="lead"><small>Business</small></h5>
-              {% else %}
-              <h5 class="card-title txt-info">{{report.mission.name}}</h5>
-              <h5 class="lead"><small>Mission</small></h5>
-              {% endif %}
-              <div class="card-text">
-                <a href="/user/profile/{{report.user.id}}">
-                  <em class="txt-orange"> by @{{report.user.username}}</em>
-                </a>
-                <div class="txt-smlr">
-                  {{report.submitted_on.strftime('%a %b %w, %Y')}}
+
+      <div class="col-12 col-sm-9">
+        <div class="tab-content" id="pills-tabContent">
+          <div
+            class="tab-pane fade show active"
+            id="missions-tab"
+            role="tabpanel"
+            aria-labelledby="missions-tab"
+          >
+            <section
+              class="missions-section text-center txt-white-k card-columns"
+            >
+              {% if missions %} {% for mission in missions %}
+              <div class="card d-inline-block m-2 text-left">
+                <div class="card-body">
+                  <h5 class="card-title font-weight-bold">{{mission.name}}</h5>
+                  <br />
+                  <p class="card-text txt-orange">
+                    <em>{{mission.description}}</em>
+                  </p>
+                </div>
+                <ul class="list-group list-group-flush">
+                  {% for business in mission.businesses %}
+                  <li class="list-group-item">{{business.name}}</li>
+                  {% endfor %}
+                </ul>
+                <div class="card-footer">
+                  <a href="#" class="card-link"
+                    ><i class="far fa-thumbs-up fa-lg"></i
+                  ></a>
+                  <span class="px-3 text-dark">
+                    {{mission.likes}}
+                  </span>
+                  <a href="#" class="float-right card-link ml-3"
+                    >Add to Missions</a
+                  >
                 </div>
               </div>
-            </div>
-            <div class="card-body">
-              {% if report.text[500:] %} {% set text = report.text[:500] + '...'
-              %} {% else %} {% set text = report.text[:500] %} {% endif %} {%
-              for p in text.split('\n') %}
-              <p>{{p}}</p>
-              {%- endfor %}
-            </div>
-            <div class="card-footer">
-              <a href="#" class="card-link"
-                ><i class="far fa-thumbs-up fa-lg"></i
-              ></a>
-              <span class="px-3 text-dark">
-                {{report.likes}}
-              </span>
-              <a href="/reports/{{report.id}}" class="card-link float-right"
-                >Read More</a
-              >
-            </div>
+              {% endfor %} {% endif %}
+            </section>
           </div>
-          {% endfor %} {% endif %}
-        </section>
+          <div
+            class="tab-pane fade"
+            id="reports-tab"
+            role="tabpanel"
+            aria-labelledby="reports-tab"
+          >
+            <section
+              class="missions-section text-center txt-white-k card-columns"
+            >
+              {% if user.reports %} {% for report in user.reports %}
+              <div class="card card-norm d-inline-block m-2 text-left">
+                <div class="card-header">
+                  {% if report.business_id %}
+                  <h5 class="card-title font-weight-bold">
+                    {{report.business.name}}
+                  </h5>
+                  <h5 class="lead"><small>Business</small></h5>
+                  {% else %}
+                  <h5 class="card-title txt-info">{{report.mission.name}}</h5>
+                  <h5 class="lead"><small>Mission</small></h5>
+                  {% endif %}
+                  <div class="card-text">
+                    <a href="/user/profile/{{report.user.id}}">
+                      <em class="txt-orange"> by @{{report.user.username}}</em>
+                    </a>
+                    <div class="txt-smlr">
+                      {{report.submitted_on.strftime('%a %b %w, %Y')}}
+                    </div>
+                  </div>
+                </div>
+                <div class="card-body">
+                  {% if report.text[500:] %} {% set text = report.text[:500] +
+                  '...' %} {% else %} {% set text = report.text[:500] %} {%
+                  endif %} {% for p in text.split('\n') %}
+                  <p>{{p}}</p>
+                  {%- endfor %}
+                </div>
+                <div class="card-footer">
+                  <a href="#" class="card-link"
+                    ><i class="far fa-thumbs-up fa-lg"></i
+                  ></a>
+                  <span class="px-3 text-dark">
+                    {{report.likes}}
+                  </span>
+                  <a href="/reports/{{report.id}}" class="card-link float-right"
+                    >Read More</a
+                  >
+                </div>
+              </div>
+              {% endfor %} {% endif %}
+            </section>
+          </div>
+        </div>
       </div>
+      <!-- </div> -->
     </div>
   </div>
   {% endblock %}

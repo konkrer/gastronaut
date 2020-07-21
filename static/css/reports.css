@@ -39,7 +39,7 @@ section > h5 {
 }
 
 .card-norm {
-  width: 18rem;
+  width: 80vw;
   display: inline-block;
 }
 
@@ -72,8 +72,6 @@ section > h5 {
   }
   .card-norm {
     width: 38vw;
-    min-width: 11rem;
-    max-width: 18rem;
   }
 }
 

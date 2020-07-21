@@ -36,7 +36,7 @@ class User(db.Model):
 
     byline = db.Column(db.String(200), nullable=True, default='')
 
-    bio = db.Column(db.String, nullable=True, default='')
+    bio = db.Column(db.String(500), nullable=True, default='')
 
     city = db.Column(db.String(50), nullable=False, default='')
 
