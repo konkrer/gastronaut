@@ -8,6 +8,7 @@
   {% block head %}
   <meta name="description" content="Gastronaut user profile." />
   <link rel="stylesheet" href="/static/css/detail_user.css" />
+  <link rel="stylesheet" href="/static/css/common1.css" />
   <script defer src="/static/js/likes.js"></script>
   {% endblock %}
 </head>
@@ -152,76 +153,7 @@
             role="tabpanel"
             aria-labelledby="missions-tab"
           >
-            <section
-              class="missions-section text-center txt-white-k card-columns"
-            >
-              {% for mission in missions %}
-              <div class="card d-inline-block m-2 text-left">
-                <div class="card-body">
-                  <h5 class="card-title font-weight-bold">{{mission.name}}</h5>
-                  <div class="card-text">
-                    <a href="/user/profile/{{mission.user.id}}">
-                      <em class="txt-orange"> by @{{mission.user.username}}</em>
-                    </a>
-                    <div class="txt-smlr">
-                      {{mission.date_shared.strftime('%a %b %w, %Y')}}
-                    </div>
-                  </div>
-                  <br />
-                  <p class="card-text text-success font-weight-bold">
-                    <em>{{mission.description}}</em>
-                  </p>
-                </div>
-                <ul class="list-group list-group-flush">
-                  {% for business in mission.businesses %}
-                  <li class="list-group-item">{{business.name}}</li>
-                  {% endfor %}
-                </ul>
-                <div class="card-footer">
-                  {% if not g.user %}
-                  <button
-                    type="button"
-                    class="like-button text-primary"
-                    data-toggle="modal"
-                    data-target="#signupModal"
-                  >
-                    <i class="far fa-thumbs-up fa-lg"></i>
-                  </button>
-                  {% elif mission.editor == g.user.id %}
-                  <i class="fas fa-thumbs-up fa-lg text-primary"></i>
-                  {% else %}
-                  <a
-                    href="#"
-                    class="card-link like-mission"
-                    data-mission_id="{{mission.id}}"
-                  >
-                    <span class="">
-                      {% if g.user.id in mission.likes %}
-                      <i class="fas fa-thumbs-up fa-lg"></i>
-                      <i
-                        class="far fa-thumbs-up fa-lg"
-                        style="display: none;"
-                      ></i>
-                      {% else %}
-                      <i class="far fa-thumbs-up fa-lg"></i>
-                      <i
-                        class="fas fa-thumbs-up fa-lg"
-                        style="display: none;"
-                      ></i>
-                      {% endif %}
-                    </span>
-                  </a>
-                  {% endif %}
-                  <span class="px-3 text-dark likes">
-                    {{mission.likes | length}}
-                  </span>
-                  <a href="#" class="float-right card-link ml-3"
-                    >Add to Missions</a
-                  >
-                </div>
-              </div>
-              {% endfor %}
-            </section>
+            {%include "include/include_mission_card.html" with context %}
           </div>
           <div
             class="tab-pane fade"
@@ -229,89 +161,13 @@
             role="tabpanel"
             aria-labelledby="reports-tab"
           >
-            <section
-              class="missions-section text-center txt-white-k card-columns"
-            >
-              {% if user.reports %} {% for report in user.reports %}
-              <div class="card card-norm d-inline-block m-2 text-left">
-                <div class="card-header">
-                  {% if report.business_id %}
-                  <h5 class="card-title font-weight-bold">
-                    {{report.business.name}}
-                  </h5>
-                  <h5 class="lead txt-green"><small>Business</small></h5>
-                  {% else %}
-                  <h5 class="card-title font-weight-bold">
-                    {{report.mission.name}}
-                  </h5>
-                  <h5 class="lead txt-green"><small>Mission</small></h5>
-                  {% endif %}
-                  <div class="card-text">
-                    <a href="/user/profile/{{report.user.id}}">
-                      <em class="txt-orange"> by @{{report.user.username}}</em>
-                    </a>
-                    <div class="txt-smlr">
-                      {{report.submitted_on.strftime('%a %b %w, %Y')}}
-                    </div>
-                  </div>
-                </div>
-                <div class="card-body">
-                  {% if report.text[500:] %} {% set text = report.text[:500] +
-                  '...' %} {% else %} {% set text = report.text[:500] %} {%
-                  endif %} {% for p in text.split('\n') %}
-                  <p>{{p}}</p>
-                  {%- endfor %}
-                </div>
-                <div class="card-footer">
-                  {% if not g.user %}
-                  <button
-                    type="button"
-                    class="like-button text-primary"
-                    data-toggle="modal"
-                    data-target="#signupModal"
-                  >
-                    <i class="far fa-thumbs-up fa-lg"></i>
-                  </button>
-                  {% elif report.user_id == g.user.id %}
-                  <i class="fas fa-thumbs-up fa-lg text-primary"></i>
-                  {% else %}
-                  <a
-                    href="#"
-                    class="card-link like-report"
-                    data-report_id="{{report.id}}"
-                  >
-                    <span class="">
-                      {% if g.user.id in report.likes %}
-                      <i class="fas fa-thumbs-up fa-lg"></i>
-                      <i
-                        class="far fa-thumbs-up fa-lg"
-                        style="display: none;"
-                      ></i>
-                      {% else %}
-                      <i class="far fa-thumbs-up fa-lg"></i>
-                      <i
-                        class="fas fa-thumbs-up fa-lg"
-                        style="display: none;"
-                      ></i>
-                      {% endif %}
-                    </span>
-                  </a>
-                  {% endif %}
-                  <span class="px-3 text-dark likes">
-                    {{ report.likes | length}}
-                  </span>
-                  <a href="/reports/{{report.id}}" class="card-link float-right"
-                    >Read More</a
-                  >
-                </div>
-              </div>
-              {% endfor %} {% endif %}
-            </section>
+            {% include "include/include_report_card.html" with context %}
           </div>
         </div>
       </div>
     </div>
   </div>
+  <div class="toasts-zone" aria-live="polite" aria-atomic="true"></div>
   {% include 'include/include_signup_login_modal.html' with context %} {%
   endblock %}
 </main>

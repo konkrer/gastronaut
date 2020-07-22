@@ -4,11 +4,11 @@
   padding: 0px;
 }
 
-#main-hero {
+/* #main-hero {
   height: 45vh;
   overflow: hidden;
   opacity: 0.7;
-}
+} */
 
 #profile-avatar {
   margin-top: -18px;
@@ -25,7 +25,8 @@
 
 .middle-gap {
   position: absolute;
-  background-color: var(--light);
+
+  /* background-color: var(--light);
   margin-top: 0px;
   margin-bottom: 1rem;
   border-bottom: 1px solid #ccc;
@@ -34,7 +35,7 @@
     inset 0px 1px 5px rgba(184, 182, 182, 0.5);
   height: 60px;
   width: 100%;
-  align-items: center;
+  align-items: center; */
 }
 
 .user-stats {
@@ -101,32 +102,35 @@
   font-size: small;
 }
 
+/* move avatar above middle gap small screen */
 main div.container > div.row.justify-content-end {
   margin-top: -98px;
 }
 
-section > h5 {
-  text-decoration: underline;
-}
-
-.card {
-  /* width: 18rem; */
+/* .card {
   width: 80vw;
-}
+} */
 
-.card .card-title {
+/* .card .card-title {
   margin-bottom: 0px;
-}
+} */
 
-.like-button {
+/* .like-button {
   background-color: transparent;
   border: none;
-}
+} */
 
-.card-link:focus,
+/* .card-link:focus,
 .card-footer button:focus {
   outline: none;
-}
+} */
+
+/* .toasts-zone {
+  position: fixed;
+  bottom: 0;
+  right: 10px;
+  min-height: 100px;
+} */
 
 @media screen and (min-width: 576px) {
   #profile-avatar {
@@ -149,9 +153,12 @@ section > h5 {
   .card-columns {
     column-count: 1;
   }
-  .card {
+  /* .card {
     width: 38vw;
   }
+  .toasts-zone {
+    right: 20px;
+  } */
 }
 
 @media screen and (min-width: 768px) {
@@ -163,7 +170,11 @@ section > h5 {
   .stat > .small {
     font-size: 12px;
   }
+  /* .toasts-zone {
+    right: 30px;
+  } */
 }
+
 @media screen and (min-width: 992px) {
   #profile-avatar {
     width: 240px;
@@ -186,18 +197,15 @@ section > h5 {
   .card-columns {
     column-count: 2;
   }
+  /* .toasts-zone {
+    right: 40px;
+  } */
 }
+
 @media screen and (min-width: 1200px) {
   #profile-avatar {
     margin-top: -120px;
     width: 280px;
     height: 200px;
-  }
-}
-
-@media screen and (hover: hover) {
-  button[title='Add to Missions']:hover {
-    background-color: var(--my-green) !important;
-    color: var(--my-purp);
   }
 }

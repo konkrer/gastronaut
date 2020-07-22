@@ -1,19 +1,15 @@
 /* ====================== General */
 
-.btn:not(.navbar btn) {
-  border-radius: 50px;
-}
-
 #main-hero {
-  height: 45vh;
+  /* height: 45vh; */
   background: url('/static/images/horizon___widescreen_wallpaper_by_hameed.jpg');
   background-position: center;
   background-size: cover;
-  overflow: hidden;
-  opacity: 0.7;
+  /* overflow: hidden;
+  opacity: 0.7; */
 }
 
-.middle-gap {
+/* .middle-gap {
   background-color: var(--light);
   margin-top: 0px;
   margin-bottom: 1rem;
@@ -24,7 +20,7 @@
   min-height: 60px;
   width: 100%;
   align-items: center;
-}
+} */
 
 .filter-form {
   min-height: 60px;
@@ -34,37 +30,45 @@
   width: 45%;
 }
 
-section > h5 {
-  text-decoration: underline;
+div.report .card {
+  width: 90%;
 }
 
-.card-norm {
+/* cards. not single report page card */
+/* .card:not(div.report card-norm) {
   width: 80vw;
   display: inline-block;
-}
+} */
 
-.card-full-width {
-  width: 100%;
-  max-width: 700px;
-}
+/* single report page card */
+/* div.report .card {
+  width: 90%;
+} */
 
-.card .card-title {
+/* .card .card-title {
   margin-bottom: 0px;
-}
+} */
 
-.card h5.lead {
+/* .card h5.lead {
   margin-bottom: 15px;
-}
+} */
 
-.like-button {
+/* .like-button {
   background-color: transparent;
   border: none;
-}
+} */
 
-.card-link:focus,
+/* .card-link:focus,
 .card-footer button:focus {
   outline: none;
-}
+} */
+
+/* .toasts-zone {
+  position: fixed;
+  bottom: 0;
+  right: 10px;
+  min-height: 100px; */
+/* } */
 
 @media screen and (min-width: 576px) {
   .filter-form input,
@@ -77,9 +81,13 @@ section > h5 {
   .card-columns {
     column-count: 2;
   }
-  .card-norm {
+  /* cards. not single report page card */
+  /* .card:not(div.report card-norm) {
     width: 38vw;
-  }
+  } */
+  /* .toasts-zone {
+    right: 20px;
+  } */
 }
 
 @media screen and (min-width: 768px) {
@@ -89,6 +97,9 @@ section > h5 {
   .card-columns {
     padding: 0 25px;
   }
+  /* .toasts-zone {
+    right: 30px;
+  } */
 }
 
 @media screen and (min-width: 992px) {
@@ -98,7 +109,14 @@ section > h5 {
   .card-columns {
     column-count: 3;
   }
+  /* .toasts-zone {
+    right: 40px;
+  } */
 }
 
 @media screen and (min-width: 1200px) {
+  /* single report page card */
+  div.report .card {
+    max-width: 45vw;
+  }
 }

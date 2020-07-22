@@ -1,0 +1,73 @@
+#main-hero {
+  height: 45vh;
+  overflow: hidden;
+  opacity: 0.7;
+}
+
+.middle-gap {
+  background-color: var(--light);
+  margin-top: 0px;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.65),
+    inset 0px 1px 5px rgba(184, 182, 182, 0.589);
+  min-height: 60px;
+  width: 100%;
+  align-items: center;
+}
+
+/* cards. not single report page card */
+.card:not(div.report card-norm) {
+  width: 80vw;
+  display: inline-block;
+}
+
+/* single report page card */
+
+.card .card-title {
+  margin-bottom: 0px;
+}
+
+.card h5.lead {
+  margin-bottom: 15px;
+}
+
+.card-link:focus,
+.card-footer button:focus {
+  outline: none;
+}
+
+.like-button {
+  background-color: transparent;
+  border: none;
+}
+
+.toasts-zone {
+  position: fixed;
+  bottom: 0;
+  right: 10px;
+  min-height: 100px;
+}
+
+@media screen and (min-width: 576px) {
+  /* cards. not single report page card */
+  .card:not(div.report card-norm) {
+    width: 38vw;
+  }
+  .toasts-zone {
+    right: 20px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .toasts-zone {
+    right: 30px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .toasts-zone {
+    right: 40px;
+  }
+}
