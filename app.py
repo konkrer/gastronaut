@@ -108,7 +108,24 @@ def mission_control():
     return render_template('base.html')
 
 
+@app.route('/missions')
+@add_user_to_g
+def missions():
+    """Missions view."""
+
+    query_params = request.args.to_dict()
+
+    if not query_params:
+        missions = Mission.get_by_recent(0)
+    else:
+        missions = Mission.search(query_params)
+
+    return render_template('missions.html', missions=missions,
+                           form_data=query_params)
+
+
 @app.route('/reports')
+@add_user_to_g
 def mission_reports():
     """Mission reports view."""
 
@@ -124,6 +141,7 @@ def mission_reports():
 
 
 @app.route('/reports/<report_id>')
+@add_user_to_g
 def mission_report_detail(report_id):
     """Mission report detail view."""
 
@@ -398,6 +416,66 @@ def set_prefrences():
         return jsonify({'feedback': 'Error!'})
 
     return jsonify({'feedback': 'Updated'})
+
+
+@app.route('/like/mission/<mission_id>', methods=['POST'])
+@add_user_to_g
+def like_mission(mission_id):
+    """Endpoint to like and un-like missions."""
+
+    if not g.user:
+        return jsonify({'error': 'No user session data.'})
+
+    mission = Mission.query.get_or_404(mission_id)
+
+    likes = mission.likes.copy()
+
+    if g.user.id in likes:
+        likes.remove(g.user.id)
+        success = 'removed'
+    else:
+        likes.add(g.user.id)
+        success = 'added'
+
+    mission.likes = likes
+
+    try:
+        db.session.commit()
+    except Exception as e:
+        error_logging(e)
+        return jsonify({'feedback': 'Error!'})
+
+    return jsonify({'success': success, 'likes': len(mission.likes)})
+
+
+@app.route('/like/report/<report_id>', methods=['POST'])
+@add_user_to_g
+def like_report(report_id):
+    """Endpoint to like and un-like reports."""
+
+    if not g.user:
+        return jsonify({'error': 'No user session data.'})
+
+    report = Report.query.get_or_404(report_id)
+
+    likes = report.likes.copy()
+
+    if g.user.id in likes:
+        likes.remove(g.user.id)
+        success = 'removed'
+    else:
+        likes.add(g.user.id)
+        success = 'added'
+
+    report.likes = likes
+
+    try:
+        db.session.commit()
+    except Exception as e:
+        error_logging(e)
+        return jsonify({'feedback': 'Error!'})
+
+    return jsonify({'success': success, 'likes': len(report.likes)})
 
 
 @app.route('/api/products')

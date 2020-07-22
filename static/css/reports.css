@@ -56,6 +56,16 @@ section > h5 {
   margin-bottom: 15px;
 }
 
+.like-button {
+  background-color: transparent;
+  border: none;
+}
+
+.card-link:focus,
+.card-footer button:focus {
+  outline: none;
+}
+
 @media screen and (min-width: 576px) {
   .filter-form input,
   .filter-form select {
@@ -63,9 +73,6 @@ section > h5 {
   }
   input[type='text'] {
     max-width: 10vw;
-  }
-  input[name='state'] {
-    max-width: 6em;
   }
   .card-columns {
     column-count: 2;

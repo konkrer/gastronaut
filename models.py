@@ -150,7 +150,7 @@ class Mission(db.Model):
 
     country = db.Column(db.String(2), nullable=False)
 
-    likes = db.Column(db.Integer, nullable=False, default=1)
+    likes = db.Column(db.PickleType, nullable=False, default={0})
 
     user_missions = db.relationship('UserMission', backref='mission',
                                     cascade='all, delete-orphan')
@@ -178,28 +178,48 @@ class Mission(db.Model):
         self.date_shared = datetime.now()
 
     @classmethod
-    def get_by_city(cls, city):
-        """Return misions by city"""
-        return cls.query.filter(cls.is_public == True,  # NOQA E712
-                                cls.city.like(f'%{city}%')).all()
-
-    @classmethod
-    def get_by_state(cls, state):
-        """Return misions by state"""
-        return cls.query.filter(cls.is_public == True,  # NOQA E712
-                                cls.state.like(f'%{state}%')).all()
-
-    @classmethod
-    def get_by_country(cls, country):
-        """Return misions by country"""
-        return cls.query.filter(cls.is_public == True,  # NOQA E712
-                                cls.country.like(f'%{country}%')).all()
-
-    @classmethod
-    def get_by_recent(cls):
+    def get_by_recent(cls, offset):
         """Return misions by most recent"""
         return cls.query.filter(cls.is_public == True).order_by(  # NOQA E712
-            cls.date_shared.desc()).all()
+            cls.date_shared.desc()).offset(offset).limit(50).all()
+
+    @classmethod
+    def search(cls, params):
+        """Return misions by search criteria."""
+
+        order_by_dict = {
+            'recent': Mission.date_shared.desc(),
+            'oldest': Mission.date_shared.asc(),
+            'likes': Mission.likes.desc(),
+        }
+
+        city = params['city']
+        state = params['state']
+        country = params['country']
+        sort = params['sort_by']
+        keyword = params['keywords']
+
+        return db.session.query(
+            Mission).join(
+                MissionBusiness).join(
+                    Business).filter(db.and_(
+                        db.or_(
+                            db.and_(
+                                Business.city.ilike(f'%{city}%'),
+                                Business.state.ilike(f'%{state}%'),
+                                Business.country.ilike(f'%{country}%')
+                            ),
+                            db.and_(
+                                Mission.city.ilike(f'%{city}%'),
+                                Mission.state.ilike(f'%{state}%'),
+                                Mission.country.ilike(f'%{country}%')
+                            )
+                        ),
+                        db.or_(
+                            Business.name.ilike(f'%{keyword}%'),
+                            Mission.name.ilike(f'%{keyword}%')
+                        )
+                    )).order_by(order_by_dict[sort]).all()
 
     @classmethod
     def set_get(self):
@@ -337,7 +357,7 @@ class Report(db.Model):
 
     text = db.Column(db.Text, nullable=False)
 
-    likes = db.Column(db.Integer, nullable=False, default=1)
+    likes = db.Column(db.PickleType, nullable=False, default={0})
 
     @classmethod
     def get_by_recent(cls, offset):
@@ -347,7 +367,7 @@ class Report(db.Model):
 
     @classmethod
     def search(cls, params):
-        """Return misions search criteria."""
+        """Return reports by search criteria."""
 
         order_by_dict = {
             'recent': Report.submitted_on.desc(),
@@ -361,7 +381,7 @@ class Report(db.Model):
         sort = params['sort_by']
         keyword = params['keywords']
 
-        reports = db.session.query(
+        return db.session.query(
             Report).join(
                 Business).outerjoin(
                     Mission).filter(db.and_(
@@ -377,13 +397,12 @@ class Report(db.Model):
                                 Mission.country.ilike(f'%{country}%')
                             )
                         ),
-                        Report.text.ilike(f'%{keyword}%')
+                        db.or_(
+                            Business.name.ilike(f'%{keyword}%'),
+                            Mission.name.ilike(f'%{keyword}%'),
+                            Report.text.ilike(f'%{keyword}%')
+                        )
                     )).order_by(order_by_dict[sort]).all()
-
-        # import pdb
-        # pdb.set_trace()
-
-        return reports
 
     @classmethod
     def create(cls, **kwargs):

@@ -1,6 +1,11 @@
 {
-  "spellright.language": ["en"],
-  "spellright.documentTypes": ["markdown", "latex"],
+  "spellright.language": [
+    "en"
+  ],
+  "spellright.documentTypes": [
+    "markdown",
+    "latex"
+  ],
   "python.linting.flake8Enabled": true,
   "python.linting.pylintEnabled": false,
   "python.pythonPath": "C:\\Users\\Rich\\.virtualenvs\\gastronaut-u5beqzgg\\Scripts\\python.exe",
