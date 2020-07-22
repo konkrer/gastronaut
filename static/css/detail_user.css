@@ -118,6 +118,16 @@ section > h5 {
   margin-bottom: 0px;
 }
 
+.like-button {
+  background-color: transparent;
+  border: none;
+}
+
+.card-link:focus,
+.card-footer button:focus {
+  outline: none;
+}
+
 @media screen and (min-width: 576px) {
   #profile-avatar {
     margin-top: -33px;

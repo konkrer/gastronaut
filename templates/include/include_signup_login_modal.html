@@ -1,0 +1,51 @@
+<div
+  class="modal fade"
+  id="signupModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="signupModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title txt-orange" id="signupModalLabel">
+          Signup / Login
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="txt-whitesmoke">
+          <em>You must sign up or login.</em>
+        </p>
+        <a
+          class="signup btn btn-lg btn-outline-primary"
+          href="/signup?next={{request.endpoint}}"
+          >Sign Up</a
+        >
+        <span class="px-4">- OR -</span>
+        <a
+          class="login btn btn-lg btn-outline-primary"
+          href="/login?next={{request.endpoint}}"
+          >Log in</a
+        >
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-outline-secondary txt-white-k"
+          data-dismiss="modal"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

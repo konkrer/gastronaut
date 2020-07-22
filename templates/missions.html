@@ -2,14 +2,14 @@
 select_sort with context %}
 
 <title>
-  {% block title %}Gastronaut - Reports{% endblock %}
+  {% block title %}Gastronaut - Missions{% endblock %}
 </title>
 
 <head>
   {% block head %}
   <meta
     name="description"
-    content="Read user reports on restaurants, bars, and more. Find out what other gastronauts really think."
+    content="Explore gastronomical missions. Users create and share themed missions of local flavor to experience. Check it out!"
   />
   <link rel="stylesheet" href="/static/css/reports.css" />
   <script defer src="/static/js/likes.js"></script>
@@ -18,13 +18,12 @@ select_sort with context %}
 
 <main>
   {% block main %}
-
   <div id="main-hero" class="flx-std">
-    <h1 class="display-1-k museo orange-outline">Mission Reports</h1>
+    <h1 class="display-1-k museo orange-outline">Explore Missions</h1>
   </div>
   <div class="middle-gap py-3 px-5 py-sm-1 p-lg-0">
     <form
-      action="/reports"
+      action="/missions"
       method="GET"
       class="form-inline filter-form flx-std"
     >
@@ -87,36 +86,28 @@ select_sort with context %}
     <div class="row mb-5">
       <div class="col-12">
         <section class="text-center mt-md-1 mt-lg-5 txt-white-k card-columns">
-          {% for report in reports %}
-          <div class="card card-norm d-inline-block m-2 text-left">
-            <div class="card-header">
-              {% if report.business_id %}
-              <h5 class="card-title font-weight-bold">
-                {{report.business.name}}
-              </h5>
-              <h5 class="lead txt-green"><small>Business</small></h5>
-              {% else %}
-              <h5 class="card-title font-weight-bold">
-                {{report.mission.name}}
-              </h5>
-              <h5 class="lead txt-green"><small>Mission</small></h5>
-              {% endif %}
+          {% for mission in missions %}
+          <div class="card d-inline-block m-2 text-left">
+            <div class="card-body">
+              <h5 class="card-title font-weight-bold">{{mission.name}}</h5>
               <div class="card-text">
-                <a href="/user/profile/{{report.user.id}}">
-                  <em class="txt-orange"> by @{{report.user.username}}</em>
+                <a href="/user/profile/{{mission.user.id}}">
+                  <em class="txt-orange"> by @{{mission.user.username}}</em>
                 </a>
                 <div class="txt-smlr">
-                  {{report.submitted_on.strftime('%a %b %w, %Y')}}
+                  {{mission.date_shared.strftime('%a %b %w, %Y')}}
                 </div>
               </div>
+              <br />
+              <p class="card-text text-success font-weight-bold">
+                <em>{{mission.description}}</em>
+              </p>
             </div>
-            <div class="card-body">
-              {% if report.text[500:] %} {% set text = report.text[:500] + '...'
-              %} {% else %} {% set text = report.text[:500] %} {% endif %} {%
-              for p in text.split('\n') %}
-              <p>{{p}}</p>
-              {%- endfor %}
-            </div>
+            <ul class="list-group list-group-flush">
+              {% for business in mission.businesses %}
+              <li class="list-group-item">{{business.name}}</li>
+              {% endfor %}
+            </ul>
             <div class="card-footer">
               {% if not g.user %}
               <button
@@ -127,16 +118,16 @@ select_sort with context %}
               >
                 <i class="far fa-thumbs-up fa-lg"></i>
               </button>
-              {% elif report.user_id == g.user.id %}
+              {% elif mission.editor == g.user.id %}
               <i class="fas fa-thumbs-up fa-lg text-primary"></i>
               {% else %}
               <a
                 href="#"
-                class="card-link like-report"
-                data-report_id="{{report.id}}"
+                class="card-link like-mission"
+                data-mission_id="{{mission.id}}"
               >
                 <span class="">
-                  {% if g.user.id in report.likes %}
+                  {% if g.user.id in mission.likes %}
                   <i class="fas fa-thumbs-up fa-lg"></i>
                   <i class="far fa-thumbs-up fa-lg" style="display: none;"></i>
                   {% else %}
@@ -147,11 +138,9 @@ select_sort with context %}
               </a>
               {% endif %}
               <span class="px-3 text-dark likes">
-                {{ report.likes | length}}
+                {{mission.likes | length}}
               </span>
-              <a href="/reports/{{report.id}}" class="card-link float-right"
-                >Read More</a
-              >
+              <a href="#" class="float-right card-link ml-3">Add to Missions</a>
             </div>
           </div>
           {% endfor %}
@@ -159,6 +148,6 @@ select_sort with context %}
       </div>
     </div>
   </div>
-  {% include 'include/include_signup_login_modal.html' with context %}
-  {% endblock %}
+  {% include 'include/include_signup_login_modal.html' with context %} {%
+  endblock %}
 </main>
