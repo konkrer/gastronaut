@@ -1,0 +1,65 @@
+<section class="text-center txt-white-k card-columns">
+  {% for mission in missions %}
+  <div class="card d-inline-block m-2 text-left">
+    <div class="card-body">
+      <h5 class="card-title font-weight-bold">{{mission.name}}</h5>
+      <div class="card-text">
+        <a href="/user/profile/{{mission.user.id}}">
+          <em class="txt-orange"> by @{{mission.user.username}}</em>
+        </a>
+        <div class="txt-smlr">
+          {{mission.date_shared.strftime('%a %b %w, %Y')}}
+        </div>
+      </div>
+      <br />
+      <p class="card-text text-success font-weight-bold">
+        <em>{{mission.description}}</em>
+      </p>
+    </div>
+    <ul class="list-group list-group-flush">
+      {% for business in mission.businesses %}
+      <li class="list-group-item">{{business.name}}</li>
+      {% endfor %}
+    </ul>
+    <div class="card-footer">
+      {% if not g.user %}
+      <button
+        type="button"
+        class="like-button text-primary"
+        data-toggle="modal"
+        data-target="#signupModal"
+      >
+        <i class="far fa-thumbs-up fa-lg"></i>
+      </button>
+      {% elif mission.editor == g.user.id %}
+      <i class="fas fa-thumbs-up fa-lg text-primary"></i>
+      {% else %}
+      <a
+        href="#"
+        class="card-link like-mission"
+        data-mission_id="{{mission.id}}"
+      >
+        <span class="">
+          {% if g.user.id in mission.likes %}
+          <i class="fas fa-thumbs-up fa-lg"></i>
+          <i class="far fa-thumbs-up fa-lg" style="display: none;"></i>
+          {% else %}
+          <i class="far fa-thumbs-up fa-lg"></i>
+          <i class="fas fa-thumbs-up fa-lg" style="display: none;"></i>
+          {% endif %}
+        </span>
+      </a>
+      {% endif %}
+      <span class="px-3 text-dark likes">
+        {{mission.likes | length}}
+      </span>
+      <a
+        href="/add/mission/{{mission.id}}"
+        class="add-mission float-right card-link ml-3"
+        data-mission_id="{{mission.id}}"
+        >Add to Missions</a
+      >
+    </div>
+  </div>
+  {% endfor %}
+</section>

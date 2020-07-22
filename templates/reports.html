@@ -12,6 +12,7 @@ select_sort with context %}
     content="Read user reports on restaurants, bars, and more. Find out what other gastronauts really think."
   />
   <link rel="stylesheet" href="/static/css/reports.css" />
+  <link rel="stylesheet" href="/static/css/common1.css">
   <script defer src="/static/js/likes.js"></script>
   {% endblock %}
 </head>
@@ -85,80 +86,11 @@ select_sort with context %}
   </div>
   <div class="container">
     <div class="row mb-5">
-      <div class="col-12">
-        <section class="text-center mt-md-1 mt-lg-5 txt-white-k card-columns">
-          {% for report in reports %}
-          <div class="card card-norm d-inline-block m-2 text-left">
-            <div class="card-header">
-              {% if report.business_id %}
-              <h5 class="card-title font-weight-bold">
-                {{report.business.name}}
-              </h5>
-              <h5 class="lead txt-green"><small>Business</small></h5>
-              {% else %}
-              <h5 class="card-title font-weight-bold">
-                {{report.mission.name}}
-              </h5>
-              <h5 class="lead txt-green"><small>Mission</small></h5>
-              {% endif %}
-              <div class="card-text">
-                <a href="/user/profile/{{report.user.id}}">
-                  <em class="txt-orange"> by @{{report.user.username}}</em>
-                </a>
-                <div class="txt-smlr">
-                  {{report.submitted_on.strftime('%a %b %w, %Y')}}
-                </div>
-              </div>
-            </div>
-            <div class="card-body">
-              {% if report.text[500:] %} {% set text = report.text[:500] + '...'
-              %} {% else %} {% set text = report.text[:500] %} {% endif %} {%
-              for p in text.split('\n') %}
-              <p>{{p}}</p>
-              {%- endfor %}
-            </div>
-            <div class="card-footer">
-              {% if not g.user %}
-              <button
-                type="button"
-                class="like-button text-primary"
-                data-toggle="modal"
-                data-target="#signupModal"
-              >
-                <i class="far fa-thumbs-up fa-lg"></i>
-              </button>
-              {% elif report.user_id == g.user.id %}
-              <i class="fas fa-thumbs-up fa-lg text-primary"></i>
-              {% else %}
-              <a
-                href="#"
-                class="card-link like-report"
-                data-report_id="{{report.id}}"
-              >
-                <span class="">
-                  {% if g.user.id in report.likes %}
-                  <i class="fas fa-thumbs-up fa-lg"></i>
-                  <i class="far fa-thumbs-up fa-lg" style="display: none;"></i>
-                  {% else %}
-                  <i class="far fa-thumbs-up fa-lg"></i>
-                  <i class="fas fa-thumbs-up fa-lg" style="display: none;"></i>
-                  {% endif %}
-                </span>
-              </a>
-              {% endif %}
-              <span class="px-3 text-dark likes">
-                {{ report.likes | length}}
-              </span>
-              <a href="/reports/{{report.id}}" class="card-link float-right"
-                >Read More</a
-              >
-            </div>
-          </div>
-          {% endfor %}
-        </section>
+      <div class="col-12 mt-md-1 mt-lg-5">
+        {% include "include/include_report_card.html" with context %}
       </div>
     </div>
   </div>
-  {% include 'include/include_signup_login_modal.html' with context %}
-  {% endblock %}
+  {% include 'include/include_signup_login_modal.html' with context %} {%
+  endblock %}
 </main>

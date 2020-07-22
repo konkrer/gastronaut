@@ -147,7 +147,7 @@ def mission_report_detail(report_id):
 
     report = Report.query.get(report_id)
 
-    return render_template('report.html', report=report)
+    return render_template('report.html', reports=[report])
 
 
 #
@@ -274,7 +274,8 @@ def user_detail(user_id):
     shared_missions = [m for m in user.my_missions if m.is_public]
 
     return render_template("user/detail_user.html",
-                           user=user, missions=shared_missions)
+                           user=user, missions=shared_missions,
+                           reports=user.reports)
 
 
 @app.route('/logout', methods=['POST'])
@@ -476,6 +477,30 @@ def like_report(report_id):
         return jsonify({'feedback': 'Error!'})
 
     return jsonify({'success': success, 'likes': len(report.likes)})
+
+
+@app.route('/add/mission/<mission_id>', methods=['POST'])
+@add_user_to_g
+def add_mission(mission_id):
+    """Add mission endpoint."""
+
+    if not g.user:
+        return jsonify({'error': 'No user session data.'})
+
+    mission = Mission.query.get_or_404(mission_id)
+
+    if mission in g.user.missions:
+        return jsonify({'success': 'Mission Already Added.'})
+
+    g.user.missions.append(mission)
+
+    try:
+        db.session.commit()
+    except Exception as e:
+        error_logging(e)
+        return jsonify({'error': 'Error!'})
+
+    return jsonify({'success': 'Mission Added!'})
 
 
 @app.route('/api/products')
