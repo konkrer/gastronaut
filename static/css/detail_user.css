@@ -4,12 +4,6 @@
   padding: 0px;
 }
 
-/* #main-hero {
-  height: 45vh;
-  overflow: hidden;
-  opacity: 0.7;
-} */
-
 #profile-avatar {
   margin-top: -18px;
   display: inline-block;
@@ -25,17 +19,6 @@
 
 .middle-gap {
   position: absolute;
-
-  /* background-color: var(--light);
-  margin-top: 0px;
-  margin-bottom: 1rem;
-  border-bottom: 1px solid #ccc;
-  border-top: 1px solid #ccc;
-  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.65),
-    inset 0px 1px 5px rgba(184, 182, 182, 0.5);
-  height: 60px;
-  width: 100%;
-  align-items: center; */
 }
 
 .user-stats {
@@ -107,31 +90,6 @@ main div.container > div.row.justify-content-end {
   margin-top: -98px;
 }
 
-/* .card {
-  width: 80vw;
-} */
-
-/* .card .card-title {
-  margin-bottom: 0px;
-} */
-
-/* .like-button {
-  background-color: transparent;
-  border: none;
-} */
-
-/* .card-link:focus,
-.card-footer button:focus {
-  outline: none;
-} */
-
-/* .toasts-zone {
-  position: fixed;
-  bottom: 0;
-  right: 10px;
-  min-height: 100px;
-} */
-
 @media screen and (min-width: 576px) {
   #profile-avatar {
     margin-top: -33px;
@@ -153,12 +111,6 @@ main div.container > div.row.justify-content-end {
   .card-columns {
     column-count: 1;
   }
-  /* .card {
-    width: 38vw;
-  }
-  .toasts-zone {
-    right: 20px;
-  } */
 }
 
 @media screen and (min-width: 768px) {
@@ -170,9 +122,6 @@ main div.container > div.row.justify-content-end {
   .stat > .small {
     font-size: 12px;
   }
-  /* .toasts-zone {
-    right: 30px;
-  } */
 }
 
 @media screen and (min-width: 992px) {
