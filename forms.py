@@ -15,7 +15,7 @@ from flask import g
 class AddUserForm(FlaskForm):
     email = EmailField("Email", validators=[
                        InputRequired(message="Email cannot be blank."),
-                       Length(min=6, max=60),
+                       Length(min=6, max=320),
                        Email(check_deliverability=True,
                              message="Invalid Email address")])
 

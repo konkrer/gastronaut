@@ -187,25 +187,13 @@ class ReportModelTestCase(TestCase):
         self.mission = Mission.create(
             editor=self.user.id, name="test mission", city="Albany",
             state="NY", country='US')
-        # self.mission.share()
-
-        # self.mission2 = Mission.create(
-        #     editor=self.user.id, name="test mission 2", city="Ithica",
-        #     state="NY", country='US')
-        # self.mission2.share()
 
         self.business = Business.create(
             name='Cuisine of Nepal', longitude=-122.42318,
             latitude=37.74097, id='iUockw0CUssKZLyoGJYEXA',
             city='San Francisco', state='CA', country='US')
 
-        # self.business2 = Business.create(
-        #     name='Little Nepal', longitude=-122.41361,
-        #     latitude=37.7391, id='Kx1WExNj5ogaFe0cyg9L6A',
-        #     city='San Francisco', state='CA', country='US')
-
         self.mission.businesses.append(self.business)
-        # self.mission2.businesses.append(self.business2)
 
         self.report = Report.create(
             user_id=self.user.id, business_id='iUockw0CUssKZLyoGJYEXA',

@@ -127,6 +127,10 @@ body {
   color: var(--my-green) !important;
 }
 
+.txt-green-alt {
+  color: #34c557 !important;
+}
+
 .txt-info {
   color: var(--my-info) !important;
 }
@@ -137,6 +141,10 @@ body {
 
 .txt-333 {
   color: #333;
+}
+
+.txt-yellow {
+  color: yellow;
 }
 
 .bg-green {
