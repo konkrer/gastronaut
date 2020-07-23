@@ -146,8 +146,10 @@ def mission_report_detail(report_id):
     """Mission report detail view."""
 
     report = Report.query.get(report_id)
+    user = report.user
 
-    return render_template('report.html', reports=[report])
+    return render_template('report.html', reports=[report],
+                           user=user)
 
 
 #
