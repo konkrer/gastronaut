@@ -3,8 +3,8 @@
 from types import SimpleNamespace
 from unittest import TestCase
 from app import app, get_coords_from_IP_address
-from models import (db, User, DEFAULT_USER_IMAGE, Mission, Business,
-                    Report, UserMission, MissionBusiness)
+from models import (db, User, Mission, Business,
+                    Report, UserMission)
 
 
 # Use test database and don't clutter tests with SQL
@@ -28,6 +28,12 @@ class APIViewTests(TestCase):
 
     def setUp(self):
         self.client = app.test_client()
+
+    def tearDown(self):
+        db.session.rollback()
+        UserMission.query.delete()
+        Mission.query.delete()
+        User.query.delete()
 
     def test_search_yelp(self):
         """Test reaching the Yelp API for data."""
@@ -65,3 +71,186 @@ class APIViewTests(TestCase):
         u1 = User.query.get(u1.id)
 
         self.assertFalse(u1.preferences.show_alcohol)
+
+
+class ReportApiTestCase(TestCase):
+
+    def setUp(self):
+
+        self.user = User.register(
+            email='test@test.com',
+            username='tester1', password='tester1')
+
+        self.user2 = User.register(
+            email='test2@test.com',
+            username='tester2', password='tester2')
+
+        self.business = Business.create(
+            name='Cuisine of Nepal', longitude=-122.42318, latitude=37.74097,
+            id='iUockw0CUssKZLyoGJYEXA', city='San Francisco',
+            state='CA', country='US')
+
+        self.report = Report.create(
+            user_id=self.user.id, business_id='iUockw0CUssKZLyoGJYEXA',
+            text='Best dern nipplease fud i eva had!')
+
+        db.session.commit()
+
+        self.client = app.test_client()
+
+    def tearDown(self):
+        db.session.rollback()
+        Report.query.delete()
+        Business.query.delete()
+        UserMission.query.delete()
+        Mission.query.delete()
+        User.query.delete()
+
+    def test_like_report(self):
+        """Test like report endpoint."""
+
+        with self.client as c:
+            with c.session_transaction() as sess:
+                sess['user_id'] = self.user2.id
+
+            db.session.add(self.report)
+            resp = c.post(f'/v1/like/report/{self.report.id}')
+
+        self.assertEqual(resp.json['success'], 'added')
+        report = Report.query.get(self.report.id)
+        self.assertEqual(report.likes, {0, self.user2.id})
+
+    def test_unlike_report(self):
+        """Test un-like report endpoint."""
+
+        self.report.likes = {0, self.user2.id}
+        db.session.commit()
+        report = Report.query.get(self.report.id)
+        # make sure like is there in report.likes.
+        self.assertEqual(report.likes, {0, self.user2.id})
+
+        with self.client as c:
+            with c.session_transaction() as sess:
+                sess['user_id'] = self.user2.id
+
+            resp = c.post(f'/v1/like/report/{self.report.id}')
+
+        self.assertEqual(resp.json['success'], 'removed')
+        report = Report.query.get(self.report.id)
+        self.assertEqual(report.likes, {0})
+
+
+class MissionApiTestCase(TestCase):
+
+    def setUp(self):
+
+        self.user = User.register(
+            email='test@test.com',
+            username='tester1', password='tester1')
+
+        self.user2 = User.register(
+            email='test2@test.com',
+            username='tester2', password='tester2')
+
+        self.mission = Mission.create(
+            editor=self.user.id, name='Food Truck Grand Tour',
+            city='San Francisco', state='CA', country='US',
+            description="The pletora of SF food trucks never ceases to amaze.")
+
+        db.session.commit()
+
+        self.client = app.test_client()
+
+    def tearDown(self):
+        db.session.rollback()
+        UserMission.query.delete()
+        Mission.query.delete()
+        User.query.delete()
+
+    def test_like_mission(self):
+        """Test like mission endpoint."""
+
+        with self.client as c:
+            with c.session_transaction() as sess:
+                sess['user_id'] = self.user2.id
+
+            db.session.add(self.mission)
+            resp = c.post(f'/v1/like/mission/{self.mission.id}')
+
+        self.assertEqual(resp.json['success'], 'added')
+        mission = Mission.query.get(self.mission.id)
+        self.assertEqual(mission.likes, {0, self.user2.id})
+
+    def test_unlike_mission(self):
+        """Test un-like mission endpoint."""
+
+        self.mission.likes = {0, self.user2.id}
+        db.session.commit()
+        mission = Mission.query.get(self.mission.id)
+        # make sure like is there in mission.likes.
+        self.assertEqual(mission.likes, {0, self.user2.id})
+
+        with self.client as c:
+            with c.session_transaction() as sess:
+                sess['user_id'] = self.user2.id
+
+            resp = c.post(f'/v1/like/mission/{self.mission.id}')
+
+        self.assertEqual(resp.json['success'], 'removed')
+        mission = Mission.query.get(self.mission.id)
+        self.assertEqual(mission.likes, {0})
+
+    def test_add_mission(self):
+        """Test adding user mission endpoint."""
+
+        self.assertNotIn(self.mission, self.user2.missions)
+
+        with self.client as c:
+            with c.session_transaction() as sess:
+                sess['user_id'] = self.user2.id
+
+            db.session.add(self.mission)
+
+            # test adding mission
+            resp = c.post(f'/v1/add/mission/{self.mission.id}')
+
+            self.assertEqual(resp.json['success'], 'Mission Added!')
+            user2 = User.query.get(self.user2.id)
+            self.assertIn(self.mission, user2.missions)
+
+            # test repeat adding does nothing
+            resp = c.post(f'/v1/add/mission/{self.mission.id}')
+
+            self.assertEqual(resp.json['success'], 'Mission Already Added.')
+            user2 = User.query.get(self.user2.id)
+            mission = Mission.query.get(self.mission.id)
+            self.assertIn(mission, user2.missions)
+            self.assertEqual(user2.missions.count(mission), 1)
+
+    def test_remove_mission(self):
+        """Test removing user mission endpoint."""
+
+        self.user2.missions.append(self.mission)
+        db.session.commit()
+
+        with self.client as c:
+            with c.session_transaction() as sess:
+                sess['user_id'] = self.user2.id
+
+            db.session.add(self.mission)
+
+            # test adding mission
+            resp = c.post(f'/v1/remove/mission/{self.mission.id}')
+
+            self.assertEqual(resp.json['success'], 'Mission Removed!')
+            user2 = User.query.get(self.user2.id)
+            self.assertNotIn(self.mission, user2.missions)
+
+            # test repeat removing does nothing
+            resp = c.post(f'/v1/remove/mission/{self.mission.id}')
+
+            self.assertEqual(resp.json['success'], 'Mission Already Removed.')
+            user2 = User.query.get(self.user2.id)
+            mission = Mission.query.get(self.mission.id)
+            self.assertNotIn(mission, user2.missions)
+            self.assertEqual(user2.missions.count(mission), 0)

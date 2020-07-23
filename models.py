@@ -197,12 +197,13 @@ class Mission(db.Model):
         state = params['state']
         country = params['country']
         sort = params['sort_by']
-        keyword = params['keywords']
+        keywords = params['keywords']
 
         return db.session.query(
             Mission).join(
                 MissionBusiness).join(
                     Business).filter(db.and_(
+                        Mission.is_public == True,  # NOQA E712
                         db.or_(
                             db.and_(
                                 Business.city.ilike(f'%{city}%'),
@@ -216,10 +217,26 @@ class Mission(db.Model):
                             )
                         ),
                         db.or_(
-                            Business.name.ilike(f'%{keyword}%'),
-                            Mission.name.ilike(f'%{keyword}%')
+                            *cls.make_keyword_statements(keywords)
                         )
                     )).order_by(order_by_dict[sort]).all()
+
+    @classmethod
+    def make_keyword_statements(cls, keywords):
+
+        # keywords is the whole statement plus each word
+        keywords = [keywords, *[w for w in keywords.strip().split(' ')]]
+
+        statements = [
+            [Mission.name.ilike(f'%{keyword}%'),
+             Mission.description.ilike(f'%{keyword}%'),
+             Business.name.ilike(f'%{keyword}%')]
+            for keyword in keywords]
+
+        out = []
+        [out.extend(s) for s in statements]
+
+        return out
 
     @classmethod
     def set_get(self):
@@ -361,7 +378,7 @@ class Report(db.Model):
 
     @classmethod
     def get_by_recent(cls, offset):
-        """Return misions by most recent."""
+        """Return reports by most recent."""
         return cls.query.order_by(
             cls.submitted_on.desc()).offset(offset).limit(50).all()
 
@@ -379,10 +396,10 @@ class Report(db.Model):
         state = params['state']
         country = params['country']
         sort = params['sort_by']
-        keyword = params['keywords']
+        keywords = params['keywords']
 
         return db.session.query(
-            Report).join(
+            Report).outerjoin(
                 Business).outerjoin(
                     Mission).filter(db.and_(
                         db.or_(
@@ -398,11 +415,26 @@ class Report(db.Model):
                             )
                         ),
                         db.or_(
-                            Business.name.ilike(f'%{keyword}%'),
-                            Mission.name.ilike(f'%{keyword}%'),
-                            Report.text.ilike(f'%{keyword}%')
+                            *cls.make_keyword_statements(keywords)
                         )
                     )).order_by(order_by_dict[sort]).all()
+
+    @classmethod
+    def make_keyword_statements(cls, keywords):
+
+        # keywords is the whole statement plus each word
+        keywords = [keywords, *[w for w in keywords.strip().split(' ')]]
+
+        statements = [
+            [Business.name.ilike(f'%{keyword}%'),
+             Mission.name.ilike(f'%{keyword}%'),
+             Report.text.ilike(f'%{keyword}%')]
+            for keyword in keywords]
+
+        out = []
+        [out.extend(s) for s in statements]
+
+        return out
 
     @classmethod
     def create(cls, **kwargs):

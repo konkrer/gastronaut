@@ -13,7 +13,7 @@ async function likeMission($el) {
   const mission_id = $el.data('mission_id');
 
   try {
-    var resp = await axios.post(`/like/mission/${mission_id}`);
+    var resp = await axios.post(`/v1/like/mission/${mission_id}`);
   } catch (error) {
     return;
   }
@@ -42,7 +42,7 @@ async function likeReport($el) {
   const report_id = $el.data('report_id');
 
   try {
-    var resp = await axios.post(`/like/report/${report_id}`);
+    var resp = await axios.post(`/v1/like/report/${report_id}`);
   } catch (error) {
     return;
   }
@@ -71,7 +71,7 @@ async function addMission($el) {
   const mission_id = $el.data('mission_id');
 
   try {
-    var resp = await axios.post(`/add/mission/${mission_id}`);
+    var resp = await axios.post(`/v1/add/mission/${mission_id}`);
   } catch (error) {
     return;
   }
