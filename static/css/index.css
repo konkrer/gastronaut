@@ -279,7 +279,7 @@ a.first-letter.active {
   margin-bottom: 6px;
 }
 
-.btn-my-card {
+.rocket-btn-my-card {
   padding: 7px 10px 4px 10px !important;
 }
 
@@ -421,6 +421,14 @@ a.first-letter.active {
   justify-content: space-between;
 }
 
+#business-detail-modal table {
+  color: #adafae;
+}
+
+#business-detail-modal td {
+  padding: 2px 5px;
+}
+
 /* Breakpoints */
 /* Breakpoints */
 /* Breakpoints */
@@ -430,6 +438,9 @@ a.first-letter.active {
 @media screen and (max-width: 350px) {
   h5 {
     font-size: 1.3rem !important;
+  }
+  #business-detail-modal table {
+    font-size: x-small !important;
   }
 }
 @media screen and (max-width: 420px) {
@@ -477,6 +488,9 @@ a.first-letter.active {
   }
   .map-directions div i {
     font-size: 1.5em;
+  }
+  #business-detail-modal table {
+    font-size: small;
   }
 }
 
