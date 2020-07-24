@@ -35,6 +35,75 @@ function makeTransactionsText(transactions) {
   }, '');
 }
 
+function makeHoursTable(open) {
+  const [mo, tu, we, th, fr, sa, su] = open;
+  return `
+    <table class="">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Mo</th>
+        <th>Tu</th>
+        <th>We</th>
+        <th>Th</th>
+        <th>Fr</th>
+        <th>Sa</th>
+        <th>Su</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><small>Open</small></td>
+        <td>
+          ${convertTime(mo ? mo.start : null)}
+        </td>
+        <td>
+          ${convertTime(tu ? tu.start : null)}
+        </td>
+        <td>
+          ${convertTime(we ? we.start : null)}
+        </td>
+        <td>
+          ${convertTime(th ? th.start : null)}
+        </td>
+        <td>
+          ${convertTime(fr ? fr.start : null)}
+        </td>
+        <td>
+          ${convertTime(sa ? sa.start : null)}
+        </td>
+        <td>
+          ${convertTime(su ? su.start : null)}
+        </td>
+      </tr>
+      <tr>
+        <td><small>Close</small></td>
+        <td>
+          ${convertTime(mo ? mo.end : null)}
+        </td>
+        <td>
+          ${convertTime(tu ? tu.end : null)}
+        </td>
+        <td>
+          ${convertTime(we ? we.end : null)}
+        </td>
+        <td>
+          ${convertTime(th ? th.end : null)}
+        </td>
+        <td>
+          ${convertTime(fr ? fr.end : null)}
+        </td>
+        <td>
+          ${convertTime(sa ? sa.end : null)}
+        </td>
+        <td>
+          ${convertTime(su ? su.end : null)}
+        </td>
+      </tr>
+    </tbody>
+  </table>`;
+}
+
 function makeCard(business) {
   // unpack data items for card display
   const {
@@ -156,7 +225,7 @@ function makeDetailModal(business) {
     url,
     photos,
     hours,
-    // special_hours,
+    reports,
     coordinates: { latitude, longitude },
     location: {
       city,
@@ -171,7 +240,7 @@ function makeDetailModal(business) {
   const trans_text = makeTransactionsText(transactions);
 
   return `
-    <div class="modal-dialog modal-dialog-centered modal-lg text-center" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg text-center museo" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <div></div>
@@ -180,7 +249,7 @@ function makeDetailModal(business) {
           </h5>
           <button
             type="button"
-            class="close"
+            class="close ssp"
             data-dismiss="modal"
             aria-label="Close"
           >
@@ -256,6 +325,11 @@ function makeDetailModal(business) {
               <div>${street ? street : ''}</div>
               <div>${city_disp ? city_disp : ''}</div>
             </li>
+            <li class="list-group-item bg-transparent card-text-noHover">
+              <div class="flx-std">
+                ${makeHoursTable(open)}
+              </div>
+            </li>
           </ul>
         </div>
         <div class="modal-footer">
@@ -265,9 +339,15 @@ function makeDetailModal(business) {
             </a>
           </div>
           <div>
+            ${
+              reports
+                ? `<a class="btn btn-sm btn-primary-alt2" href="/reports/business/${id}" target="blank">See Reports</a>`
+                : ''
+            }
+            
             <span data-toggle="tooltip" title="Add to Mission" class="">
               <button
-                class="btn btn-sm btn-primary-alt2 btn-my-card mission-btn font-weight-bold px-2"
+                class="btn btn-sm btn-primary-alt2 rocket-btn-my-card mission-btn font-weight-bold px-2"
                 data-toggle="modal"
                 data-target="#mission-choices"
                 data-dismiss="modal"
@@ -285,7 +365,7 @@ function makeDetailModal(business) {
             </span>
             <button
               type="button"
-              class="btn btn-sm btn-outline-secondary txt-white-k"
+              class="btn btn-sm btn-outline-secondary txt-white-k ssp"
               data-dismiss="modal"
             >
               Close
@@ -356,4 +436,19 @@ function errorCard(data) {
 */
 function metersToMiles(num) {
   return (num * 0.00062137).toFixed(1);
+}
+
+/*
+/* Convert 24hr format time to AM/PM style time.
+*/
+function convertTime(in_) {
+  if (in_ === null) return '-:-';
+
+  const am_pm = in_ / 1200 >= 1 ? 'PM' : 'AM';
+  let hour = Math.floor((in_ % 1200) / 100);
+  hour = hour == 0 ? 12 : hour;
+  let minutes = in_ % 100;
+  minutes = minutes == 0 ? '00' : minutes;
+
+  return `${hour}:${minutes} ${am_pm}`;
 }

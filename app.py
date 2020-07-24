@@ -152,6 +152,23 @@ def mission_report_detail(report_id):
                            user=user)
 
 
+@app.route('/reports/business/<business_id>')
+@add_user_to_g
+def business_reports_detail(business_id):
+    """Business reports detail view. All reports for a
+       particular business."""
+
+    business = Business.query.get(business_id)
+    reports = business.reports
+
+    query_params = {'keywords': business.name, 'city': business.city,
+                    'state': business.state, 'coutnry': business.country,
+                    'sort_by': 'recent'}
+
+    return render_template('reports.html', reports=reports,
+                           form_data=query_params)
+
+
 #
 #     $$    $$    $$$.    $$$$$$$$  $$$$$<
 #     $$    $$  $$$ $$$   $$^^^^^^  $$$$$$$$
@@ -396,7 +413,7 @@ def search_yelp():
 
 @app.route('/v1/business_detail/<business_id>')
 def business_detail_yelp(business_id):
-    """API endpoint to relay search to Yelp search."""
+    """API endpoint to relay business search to Yelp business search."""
 
     headers = {'Authorization': f'Bearer {API_KEY}'}
 
@@ -407,7 +424,13 @@ def business_detail_yelp(business_id):
         error_logging(e)
         return jsonify({'error': repr(e)})
 
-    return res.json()
+    data = res.json()
+
+    business = Business.query.get(business_id)
+
+    data['reports'] = bool(business.reports if business else False)
+
+    return data
 
 
 @app.route('/v1/preferences', methods=['POST'])

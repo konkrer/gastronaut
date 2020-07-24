@@ -920,7 +920,9 @@ function hideHeroAndSearch() {
   if ($locationInput.val()) searchYelp();
   // if no given location but allowing location sharing detect location
   else if (!locationWatcher && localStorage.getItem('geoAllowed') === 'true')
-    detectLocation();
+    setTimeout(() => {
+      detectLocation();
+    }, 600);
   // If coords use those to search.
   else if (longitude) searchYelp();
 }
@@ -1078,6 +1080,7 @@ $('.card-track-inner').on('dblclick', '.my-card', getShowBusinessDetails);
 /* Get business details from yelp and show details modal.
 */
 async function getShowBusinessDetails() {
+  $('.spinner-zone').show();
   let business_result_data;
 
   const detailBtn = $(this).hasClass('detailsBtn')
@@ -1094,13 +1097,14 @@ async function getShowBusinessDetails() {
     } catch (error) {
       // TODO: sentry log error
     }
-    if (resp.error) {
+    if (!resp || resp.error) {
       // TODO: sentry log error
       return;
     }
     business_result_data = resp.data;
     bussiness_results_cache[business_id] = business_result_data;
   }
+  $('.spinner-zone').hide();
   showDetailModal(business_result_data);
 }
 
@@ -1112,5 +1116,5 @@ function showDetailModal(data) {
   $('#business-detail-modal').modal().show();
   setTimeout(() => {
     $('.carousel').carousel();
-  }, 200);
+  }, 100);
 }
