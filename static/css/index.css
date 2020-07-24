@@ -395,9 +395,30 @@ a.first-letter.active {
   z-index: 10000;
   background-color: rgba(0, 0, 0, 0.76);
 }
-
+/* for tips modal */
 .tip-label {
   width: 140px;
+}
+
+#business-detail-modal {
+  z-index: 10000;
+}
+
+#business-detail-modal .modal-header .close {
+  margin: -1rem -1rem;
+  border-radius: 0.3rem;
+}
+
+.detail-modal-img-div {
+  height: 70vh;
+}
+
+.modal-backdrop.show {
+  opacity: 0.9;
+}
+
+#business-detail-modal .modal-footer {
+  justify-content: space-between;
 }
 
 /* Breakpoints */
@@ -693,7 +714,7 @@ a.first-letter.active {
     color: var(--my-info) !important;
   }
   .card-text-noHover:hover {
-    color: black;
+    color: unset;
   }
   .card-link:hover,
   .my-card li a:hover {

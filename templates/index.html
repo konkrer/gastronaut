@@ -630,14 +630,6 @@
               <i class="far fa-arrow-alt-circle-up fa-lg"></i>
               <i class="far fa-arrow-alt-circle-down fa-lg d-none"></i>
             </div>
-            <!-- <div
-              class="map-info"
-              data-toggle="tooltip"
-              data-placement="top"
-              title="Hold ctrl/cmnd to tilt and rotate map with mouse drag"
-            >
-              <i class="fas fa-info-circle white-outline"></i>
-            </div> -->
           </div>
         </div>
       </div>
@@ -793,6 +785,14 @@
     </div>
   </div>
   <div
+    class="modal fade p-0"
+    id="business-detail-modal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="businessDetailTitle"
+    aria-hidden="true"
+  ></div>
+  <div
     class="modal fade"
     id="mission-choices"
     tabindex="-1"
@@ -817,7 +817,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <form action="#" id="mission-choices-form" class="">
+          <form action="/v1/add/mission/..." id="mission-choices-form" class="">
             <div class="form-group">
               <label for="mission-select" class="">Mission</label>
               <select
@@ -842,6 +842,7 @@
           </form>
         </div>
         <div class="modal-footer">
+          <div class="float-left txt-green feedback"></div>
           <button
             type="button"
             class="btn btn-sm btn-outline-secondary txt-white-k"

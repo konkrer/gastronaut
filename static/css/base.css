@@ -147,6 +147,10 @@ body {
   color: yellow;
 }
 
+.txt-yelp-red {
+  color: #d32323;
+}
+
 .bg-green {
   background-color: var(--my-green) !important;
 }

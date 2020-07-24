@@ -3,7 +3,7 @@
 from types import SimpleNamespace
 from unittest import TestCase
 from app import app, get_coords_from_IP_address
-from models import (db, User, Mission, Business,
+from models import (db, User, Mission, Business, MissionBusiness,
                     Report, UserMission)
 
 
@@ -142,6 +142,13 @@ class ReportApiTestCase(TestCase):
 
 class MissionApiTestCase(TestCase):
 
+    @classmethod
+    def setUpClass(cls):
+        cls.business_data = {
+            'id': '3h939hd798dhjf97', 'name': 'Awesome Fud Place',
+            'city': 'San Francisco', 'state': 'ca', 'country': 'us',
+            'longitude': 122.39098, 'latitude': 38.73290}
+
     def setUp(self):
 
         self.user = User.register(
@@ -163,6 +170,8 @@ class MissionApiTestCase(TestCase):
 
     def tearDown(self):
         db.session.rollback()
+        MissionBusiness.query.delete()
+        Business.query.delete()
         UserMission.query.delete()
         Mission.query.delete()
         User.query.delete()
@@ -254,3 +263,61 @@ class MissionApiTestCase(TestCase):
             mission = Mission.query.get(self.mission.id)
             self.assertNotIn(mission, user2.missions)
             self.assertEqual(user2.missions.count(mission), 0)
+
+    def test_add_business_to_mission(self):
+        """Test adding business to mission endpoint."""
+
+        self.assertEqual(len(self.mission.businesses), 0)
+
+        with self.client as c:
+            with c.session_transaction() as sess:
+                sess['user_id'] = self.user2.id
+
+            db.session.add(self.mission)
+
+            resp = c.post(
+                f'/v1/add/business/mission/{self.mission.id}',
+                json=self.business_data)
+
+            self.assertEqual(resp.json['success'],
+                             'Business Added to Mission!')
+            business = Business.query.get('3h939hd798dhjf97')
+            self.assertIn(business, self.mission.businesses)
+            self.assertEqual(len(self.mission.businesses), 1)
+
+            # test repeat adding does nothing
+            resp = c.post(
+                f'/v1/add/business/mission/{self.mission.id}',
+                json=self.business_data)
+
+            self.assertEqual(resp.json['success'], 'Business Already Added.')
+            self.assertIn(business, self.mission.businesses)
+            self.assertEqual(len(self.mission.businesses), 1)
+
+    def test_remove_business_from_mission(self):
+        """Test removing business from mission endpoint."""
+
+        business = Business.create(**self.business_data)
+        self.mission.businesses.append(business)
+        db.session.commit()
+
+        with self.client as c:
+            with c.session_transaction() as sess:
+                sess['user_id'] = self.user2.id
+
+            db.session.add(self.mission)  # ????
+
+            # test removing mission
+            resp = c.post(f'/v1/remove/business/mission/{self.mission.id}',
+                          json=self.business_data)
+
+            self.assertEqual(resp.json['success'],
+                             'Business Removed from Mission!')
+            self.assertNotIn(business, self.mission.businesses)
+
+            # test repeat removing does nothing
+            resp = c.post(f'/v1/remove/business/mission/{self.mission.id}',
+                          json=self.business_data)
+
+            self.assertEqual(resp.json['success'], 'Business not in mission.')
+            self.assertNotIn(business, self.mission.businesses)
