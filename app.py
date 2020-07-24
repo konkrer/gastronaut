@@ -116,7 +116,7 @@ def missions():
     query_params = request.args.to_dict()
 
     if not query_params:
-        missions = Mission.get_by_recent(0)
+        missions = Mission.get_by_recent()
     else:
         missions = Mission.search(query_params)
 
@@ -132,7 +132,7 @@ def mission_reports():
     query_params = request.args.to_dict()
 
     if not query_params:
-        reports = Report.get_by_recent(0)
+        reports = Report.get_by_recent()
     else:
         reports = Report.search(query_params)
 
@@ -309,63 +309,63 @@ def delete_user():
 #
 
 
-@app.route("/product/add", methods=['GET', 'POST'])
-def add_product():
-    """Product add view."""
-    form = AddProductForm()
-    form.category_code.choices = db.session.query(Category.code,
-                                                  Category.name).all()
+# @app.route("/product/add", methods=['GET', 'POST'])
+# def add_product():
+#     """Product add view."""
+#     form = AddProductForm()
+#     form.category_code.choices = db.session.query(Category.code,
+#                                                   Category.name).all()
 
-    if form.validate_on_submit():
-        # name = form.name.data
-        # c_c = form.category_code.data
-        # price = form.price.data
-        # db.session.add(Product(name=name, category_code=c_c, price=price))
-        data = form.data
-        relevant_data = {
-            k: v
-            for k, v in data.items() if k in Product.set_get()
-        }
+#     if form.validate_on_submit():
+#         # name = form.name.data
+#         # c_c = form.category_code.data
+#         # price = form.price.data
+#         # db.session.add(Product(name=name, category_code=c_c, price=price))
+#         data = form.data
+#         relevant_data = {
+#             k: v
+#             for k, v in data.items() if k in Product.set_get()
+#         }
 
-        if form.photo_file.data:
-            f = form.photo_file.data
-            filename = secure_filename(f.filename)
-            path = os.path.join('static\\uploads', filename)
-            f.save(path)
+#         if form.photo_file.data:
+#             f = form.photo_file.data
+#             filename = secure_filename(f.filename)
+#             path = os.path.join('static\\uploads', filename)
+#             f.save(path)
 
-            relevant_data['photo_file'] = path
+#             relevant_data['photo_file'] = path
 
-        try:
-            db.session.add(Product(**relevant_data))
-            db.session.commit()
-            flash("Product added!")
-        except IntegrityError:
-            flash("Name already exists!")
-            return redirect(url_for('add_product'))
+#         try:
+#             db.session.add(Product(**relevant_data))
+#             db.session.commit()
+#             flash("Product added!")
+#         except IntegrityError:
+#             flash("Name already exists!")
+#             return redirect(url_for('add_product'))
 
-        return redirect(url_for('index'))
+#         return redirect(url_for('index'))
 
-    return render_template("add_product.html", form=form)
+#     return render_template("add_product.html", form=form)
 
 
-@app.route("/product/<int:id_>/edit", methods=['GET', 'POST'])
-def edit_product(id_):
-    """Product edit view."""
-    prod = Product.query.get_or_404(id_)
-    form = AddProductForm(obj=prod)
-    form.category_code.choices = db.session.query(Category.code, Category.name)
+# @app.route("/product/<int:id_>/edit", methods=['GET', 'POST'])
+# def edit_product(id_):
+#     """Product edit view."""
+#     prod = Product.query.get_or_404(id_)
+#     form = AddProductForm(obj=prod)
+#     form.category_code.choices = db.session.query(Category.code, Category.name)
 
-    if form.validate_on_submit():
-        # prod.name = form.name.data
-        # prod.category_code = form.category_code.data
-        # prod.price = form.price.data
+#     if form.validate_on_submit():
+#         # prod.name = form.name.data
+#         # prod.category_code = form.category_code.data
+#         # prod.price = form.price.data
 
-        form.populate_obj(prod)
+#         form.populate_obj(prod)
 
-        db.session.commit()
-        return redirect(url_for('index'))
+#         db.session.commit()
+#         return redirect(url_for('index'))
 
-    return render_template("edit_product.html", form=form)
+#     return render_template("edit_product.html", form=form)
 
 
 #        $$      $$$$$$    $$
@@ -380,12 +380,28 @@ def edit_product(id_):
 @app.route('/v1/search')
 def search_yelp():
     """API endpoint to relay search to Yelp search."""
+
     headers = {'Authorization': f'Bearer {API_KEY}'}
     params = parse_query_params(request.args)
 
     try:
         res = requests.get(f'{YELP_URL}/businesses/search',
-                           params=params,
+                           params=params, headers=headers)
+    except Exception as e:
+        error_logging(e)
+        return jsonify({'error': repr(e)})
+
+    return res.json()
+
+
+@app.route('/v1/business_detail/<business_id>')
+def business_detail_yelp(business_id):
+    """API endpoint to relay search to Yelp search."""
+
+    headers = {'Authorization': f'Bearer {API_KEY}'}
+
+    try:
+        res = requests.get(f'{YELP_URL}/businesses/{business_id}',
                            headers=headers)
     except Exception as e:
         error_logging(e)
@@ -529,54 +545,122 @@ def remove_mission(mission_id):
     return jsonify({'success': 'Mission Removed!'})
 
 
-@app.route('/api/products')
-def get_products_api():
-    """Api endpoint to see all products"""
-    prods = Product.query.all()
-    serialized = [prod.serialize() for prod in prods]
-    return jsonify(products=serialized)
+@app.route('/v1/add/business/mission/<mission_id>', methods=['POST'])
+@add_user_to_g
+def add_to_mission(mission_id):
+    """Add business to mission endpoint."""
 
+    if not g.user:
+        return jsonify({'error': 'No user session data.'})
 
-@app.route('/api/products', methods=['POST'])
-def add_product_api():
-    """Api endpoint to add new product"""
+    mission = Mission.query.get_or_404(mission_id)
+
     data = request.json
-    relevant_data = {k: v for k, v in data.items() if k in Product.set_get()}
-    prod = Product(**relevant_data)
-    db.session.add(prod)
-    db.session.commit()
 
-    res = jsonify(product=prod.serialize())
-    return (res, 201)
+    business = Business.query.get(data['id'])
+
+    if business:
+        if business in mission.businesses:
+            return jsonify({'success': 'Business Already Added.'})
+    else:
+        business = Business.create(
+            id=data['id'], name=data['name'], city=data['city'],
+            state=data['state'], country=data['country'],
+            longitude=float(data['longitude']),
+            latitude=float(data['latitude']))
+        try:
+            db.session.commit()
+        except Exception as e:
+            error_logging(e)
+            return jsonify({'error': 'Error!'})
+
+    mission.businesses.append(business)
+
+    try:
+        db.session.commit()
+    except Exception as e:
+        error_logging(e)
+        return jsonify({'error': 'Error!'})
+
+    return jsonify({'success': 'Business Added to Mission!'})
 
 
-@app.route('/api/products/<int:id_>')
-def detail_product_api(id_):
-    """Api endpoint for individual product"""
-    prod = Product.query.get_or_404(id_)
-    return jsonify(product=prod.serialize())
+@app.route('/v1/remove/business/mission/<mission_id>', methods=['POST'])
+@add_user_to_g
+def remove_from_mission(mission_id):
+    """Remove business from mission endpoint."""
 
+    if not g.user:
+        return jsonify({'error': 'No user session data.'})
 
-@app.route('/api/products/<int:id_>', methods=['PATCH'])
-def patch_product_api(id_):
-    """Api endpoint for patching product"""
+    mission = Mission.query.get_or_404(mission_id)
+
     data = request.json
-    relevant_data = {k: v for k, v in data.items() if k in Product.set_get()}
-    p = Product.query.filter_by(id=id_)
-    p.update(relevant_data)
-    db.session.commit()
 
-    return jsonify(product=p.one().serialize())
+    business = Business.query.get_or_404(data['id'])
+
+    if business not in mission.businesses:
+        return jsonify({'success': 'Business not in mission.'})
+
+    mission.businesses.remove(business)
+
+    try:
+        db.session.commit()
+    except Exception as e:
+        error_logging(e)
+        return jsonify({'error': 'Error!'})
+
+    return jsonify({'success': 'Business Removed from Mission!'})
 
 
-@app.route('/api/products/<int:id_>', methods=["DELETE"])
-def delete_product_api(id_):
-    """Api endpoint for individual product"""
-    prod = Product.query.get_or_404(id_)
-    db.session.delete(prod)
-    db.session.commit()
+# @app.route('/api/products')
+# def get_products_api():
+#     """Api endpoint to see all products"""
+#     prods = Product.query.all()
+#     serialized = [prod.serialize() for prod in prods]
+#     return jsonify(products=serialized)
 
-    return jsonify({"message": "Product Deleted", "deleted": prod.serialize()})
+
+# @app.route('/api/products', methods=['POST'])
+# def add_product_api():
+#     """Api endpoint to add new product"""
+#     data = request.json
+#     relevant_data = {k: v for k, v in data.items() if k in Product.set_get()}
+#     prod = Product(**relevant_data)
+#     db.session.add(prod)
+#     db.session.commit()
+
+#     res = jsonify(product=prod.serialize())
+#     return (res, 201)
+
+
+# @app.route('/api/products/<int:id_>')
+# def detail_product_api(id_):
+#     """Api endpoint for individual product"""
+#     prod = Product.query.get_or_404(id_)
+#     return jsonify(product=prod.serialize())
+
+
+# @app.route('/api/products/<int:id_>', methods=['PATCH'])
+# def patch_product_api(id_):
+#     """Api endpoint for patching product"""
+#     data = request.json
+#     relevant_data = {k: v for k, v in data.items() if k in Product.set_get()}
+#     p = Product.query.filter_by(id=id_)
+#     p.update(relevant_data)
+#     db.session.commit()
+
+#     return jsonify(product=p.one().serialize())
+
+
+# @app.route('/api/products/<int:id_>', methods=["DELETE"])
+# def delete_product_api(id_):
+#     """Api endpoint for individual product"""
+#     prod = Product.query.get_or_404(id_)
+#     db.session.delete(prod)
+#     db.session.commit()
+
+#     return jsonify({"message": "Product Deleted", "deleted": prod.serialize()})
 
 
 #

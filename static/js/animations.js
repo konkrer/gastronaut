@@ -31,9 +31,9 @@ function mapCurrCard() {
   const $focusCard = $('.my-card').eq(currCard);
   if ($focusCard.hasClass('dummy-card')) return;
   const $mapButton = $focusCard.find('.cardMapButton');
-  const lat = $mapButton.data('lat');
-  const lng = $mapButton.data('lng');
-  const name = $mapButton.data('name');
+  const lat = $mapButton.next().children().data('lat');
+  const lng = $mapButton.next().children().data('lng');
+  const name = $mapButton.next().children().data('name');
 
   if (isFinite(lat)) fitBounds([longitude, latitude], [+lng, +lat], name);
 }

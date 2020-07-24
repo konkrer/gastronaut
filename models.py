@@ -178,10 +178,10 @@ class Mission(db.Model):
         self.date_shared = datetime.now()
 
     @classmethod
-    def get_by_recent(cls, offset):
+    def get_by_recent(cls):
         """Return misions by most recent"""
         return cls.query.filter(cls.is_public == True).order_by(  # NOQA E712
-            cls.date_shared.desc()).offset(offset).limit(50).all()
+            cls.date_shared.desc()).limit(50).all()
 
     @classmethod
     def search(cls, params):
@@ -198,6 +198,7 @@ class Mission(db.Model):
         country = params['country']
         sort = params['sort_by']
         keywords = params['keywords']
+        offset = params.get('offset', 0)
 
         return db.session.query(
             Mission).join(
@@ -219,7 +220,8 @@ class Mission(db.Model):
                         db.or_(
                             *cls.make_keyword_statements(keywords)
                         )
-                    )).order_by(order_by_dict[sort]).all()
+                    )).order_by(
+                        order_by_dict[sort]).offset(offset).limit(50).all()
 
     @classmethod
     def make_keyword_statements(cls, keywords):
@@ -377,10 +379,10 @@ class Report(db.Model):
     likes = db.Column(db.PickleType, nullable=False, default={0})
 
     @classmethod
-    def get_by_recent(cls, offset):
+    def get_by_recent(cls):
         """Return reports by most recent."""
         return cls.query.order_by(
-            cls.submitted_on.desc()).offset(offset).limit(50).all()
+            cls.submitted_on.desc()).limit(50).all()
 
     @classmethod
     def search(cls, params):
@@ -397,6 +399,7 @@ class Report(db.Model):
         country = params['country']
         sort = params['sort_by']
         keywords = params['keywords']
+        offset = params.get('offset', 0)
 
         return db.session.query(
             Report).outerjoin(
@@ -417,7 +420,8 @@ class Report(db.Model):
                         db.or_(
                             *cls.make_keyword_statements(keywords)
                         )
-                    )).order_by(order_by_dict[sort]).all()
+                    )).order_by(
+                        order_by_dict[sort]).offset(offset).limit(50).all()
 
     @classmethod
     def make_keyword_statements(cls, keywords):

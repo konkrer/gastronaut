@@ -25,6 +25,13 @@ let paginationListener;
 // of page to hide globe animation and lock control panel view.
 let $scrollListener;
 
+// Current business data for adding business to mission. Gets
+// updated with each press of add to mission button.
+let business_data;
+// Cache all results of user clicking details buttons so repeated
+// clicks will find cached data.
+let bussiness_results_cache = {};
+
 // Used to reset form when passed into setForm.
 const defaultFormState = [
   { name: 'location', value: '' },
@@ -682,9 +689,9 @@ $('#radius').on('change', function () {
 */
 $('.card-track-inner').on('click', '.cardMapButton', function (e) {
   e.preventDefault();
-  const lng = $(this).data('lng');
-  const lat = $(this).data('lat');
-  const name = $(this).data('name');
+  const lng = $(this).next().children().data('lng');
+  const lat = $(this).next().children().data('lat');
+  const name = $(this).next().children().data('name');
   if (!mapOpen) toggleMap();
   fitBounds([longitude, latitude], [+lng, +lat], name);
 });
@@ -1016,3 +1023,94 @@ function checkSearchInputOrCheckLocalStorage() {
 setLngLatInit();
 const makeSearch = checkSearchInputOrCheckLocalStorage();
 lockOnScrollBottom(makeSearch);
+
+/*
+/* Add-to-mission button sets card business_data to variable.
+*/
+$('main').on('click', '.mission-btn', function (e) {
+  let data = {};
+
+  data.id = $(this).data('id');
+  data.name = $(this).data('name');
+  data.city = $(this).data('city');
+  data.state = $(this).data('state');
+  data.country = $(this).data('country');
+  data.longitude = $(this).data('lng');
+  data.latitude = $(this).data('lat');
+
+  business_data = data;
+});
+
+/*
+/* Add business to mission fuctionality.
+*/
+$('#mission-choices-form').submit(async function (e) {
+  e.preventDefault();
+
+  const mission_id = $('#mission-select').val();
+
+  try {
+    var resp = await axios.post(
+      `/v1/add/business/mission/${mission_id}`,
+      business_data
+    );
+  } catch (error) {
+    // TODO: sentry log error
+    '#mission-choices .feedback'.text('Error');
+    return;
+  }
+
+  if (resp.data.success) {
+    $('#mission-choices .feedback').text(resp.data.success);
+    setTimeout(() => {
+      $('#mission-choices .feedback').text('');
+    }, 2000);
+  }
+});
+
+/*
+/* Bussiness detail functionality
+*/
+$('.card-track-inner').on('click', '.detailsBtn', getShowBusinessDetails);
+$('.card-track-inner').on('dblclick', '.my-card', getShowBusinessDetails);
+
+/*
+/* Get business details from yelp and show details modal.
+*/
+async function getShowBusinessDetails() {
+  let business_result_data;
+
+  const detailBtn = $(this).hasClass('detailsBtn')
+    ? $(this)
+    : $(this).find('.detailsBtn');
+
+  const business_id = detailBtn.next().next().children().data('id');
+
+  if (bussiness_results_cache[business_id])
+    business_result_data = bussiness_results_cache[business_id];
+  else {
+    try {
+      var resp = await axios.get(`/v1/business_detail/${business_id}`);
+    } catch (error) {
+      // TODO: sentry log error
+    }
+    if (resp.error) {
+      // TODO: sentry log error
+      return;
+    }
+    business_result_data = resp.data;
+    bussiness_results_cache[business_id] = business_result_data;
+  }
+  showDetailModal(business_result_data);
+}
+
+/* 
+/*  Update detail modal with business data and show.
+*/
+function showDetailModal(data) {
+  $('#business-detail-modal').html(makeDetailModal(data));
+  $('#business-detail-modal').modal().show();
+  setTimeout(() => {
+    $('.carousel').carousel();
+  }, 200);
+}

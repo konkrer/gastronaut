@@ -112,7 +112,7 @@ class MissionModelTestCase(TestCase):
         mission3.share()
         db.session.commit()
 
-        recent = Mission.get_by_recent(0)
+        recent = Mission.get_by_recent()
 
         self.assertEqual(len(recent), 3)
         self.assertEqual(recent[0], mission3)
@@ -124,7 +124,7 @@ class MissionModelTestCase(TestCase):
             state="CA", country='US')
         db.session.commit()
 
-        recent = Mission.get_by_recent(0)
+        recent = Mission.get_by_recent()
 
         self.assertEqual(len(recent), 2)
 
@@ -227,7 +227,7 @@ class ReportModelTestCase(TestCase):
         report3.submitted_on = datetime.utcnow()
         db.session.commit()
 
-        recent = Report.get_by_recent(0)
+        recent = Report.get_by_recent()
 
         self.assertEqual(len(recent), 3)
         self.assertEqual(recent[0], report3)
