@@ -370,7 +370,7 @@ def delete_user():
 #     """Product edit view."""
 #     prod = Product.query.get_or_404(id_)
 #     form = AddProductForm(obj=prod)
-#     form.category_code.choices = db.session.query(Category.code, Category.name)
+# form.category_code.choices = db.session.query(Category.code, Category.name)
 
 #     if form.validate_on_submit():
 #         # prod.name = form.name.data
@@ -426,8 +426,9 @@ def business_detail_yelp(business_id):
 
     data = res.json()
 
+    # Make a reports boolean flag attribute on data and set
+    # true if there are reports about this businesss.
     business = Business.query.get(business_id)
-
     data['reports'] = bool(business.reports if business else False)
 
     return data
@@ -683,7 +684,7 @@ def remove_from_mission(mission_id):
 #     db.session.delete(prod)
 #     db.session.commit()
 
-#     return jsonify({"message": "Product Deleted", "deleted": prod.serialize()})
+# return jsonify({"message": "Product Deleted", "deleted": prod.serialize()})
 
 
 #

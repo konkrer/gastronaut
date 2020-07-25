@@ -1112,7 +1112,7 @@ async function getShowBusinessDetails() {
 /*  Update detail modal with business data and show.
 */
 function showDetailModal(data) {
-  $('#business-detail-modal').html(makeDetailModal(data));
+  $('#business-detail-modal').html(makeDetailModal(data, longitude, latitude));
   $('#business-detail-modal').modal().show();
   setTimeout(() => {
     $('.carousel').carousel();

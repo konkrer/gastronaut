@@ -31,19 +31,57 @@ class APIViewTests(TestCase):
 
     def tearDown(self):
         db.session.rollback()
+        Report.query.delete()
+        Business.query.delete()
         UserMission.query.delete()
         Mission.query.delete()
         User.query.delete()
 
     def test_search_yelp(self):
-        """Test reaching the Yelp API for data."""
+        """Test reaching the Yelp API for businesses search data."""
 
         resp = self.client.get('/v1/search?location=sf&category=restaurants')
         data = resp.get_json()
 
         self.assertEqual(resp.status_code, 200)
-        self.assertIsInstance(data, dict)
         self.assertIn('businesses', data)
+
+    def test_yelp_business_detail(self):
+        """Test reaching the Yelp API for business detail  data."""
+
+        resp = self.client.get('/v1/business_detail/Kx1WExNj5ogaFe0cyg9L6A')
+        data = resp.get_json()
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertIn('name', data)
+        self.assertEqual(data['name'], 'Little Nepal')
+
+    def test_reports_flag_yelp_business_detail(self):
+        """Test tht calling business detail on a business that has reports
+           written about it sets a reports flag to True on data dict.
+
+           # TODO: MOCK out actual yelp API call."""
+
+        u1 = User.register(email='test@test.com',
+                           username='tester1', password='tester1')
+        Business.create(
+            name='Cuisine of Nepal', longitude=-122.42318,
+            latitude=37.74097, id='iUockw0CUssKZLyoGJYEXA',
+            city='San Francisco', state='CA', country='US')
+
+        db.session.commit()
+
+        Report.create(user_id=u1.id, business_id='iUockw0CUssKZLyoGJYEXA',
+                      text='Good fud.')
+
+        db.session.commit()
+
+        resp = self.client.get('/v1/business_detail/iUockw0CUssKZLyoGJYEXA')
+        data = resp.get_json()
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertIn('reports', data)
+        self.assertEqual(data['reports'], True)
 
     def test_get_coords_from_IP_address(self):
         """Test reaching the IPWhois API for data."""
@@ -142,7 +180,7 @@ class ReportApiTestCase(TestCase):
 
 class MissionApiTestCase(TestCase):
 
-    @classmethod
+    @ classmethod
     def setUpClass(cls):
         cls.business_data = {
             'id': '3h939hd798dhjf97', 'name': 'Awesome Fud Place',
