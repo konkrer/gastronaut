@@ -28,7 +28,6 @@
     type="text/javascript"
     src="https://cdn.rawgit.com/asvd/dragscroll/master/dragscroll.js"
   ></script>
-  <!--defer?-->
   <link
     href="https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.css"
     rel="stylesheet"
@@ -597,9 +596,12 @@
           <div class="card-track-inner"></div>
         </div>
 
-        <div class="bg-black map-track border-top border-secondary">
-          <div id="map" class="">
+        <div class="map-track border-top border-secondary">
+          <div id="map" class="bg-map-red">
             <script src="../static/js/map.js"></script>
+            <script>
+              mappyBoi = renderMiniMap();
+            </script>
           </div>
           <div class="map-directions mapBtns">
             <div class="drive flx-std">
@@ -793,14 +795,6 @@
     </div>
   </div>
   <div
-    class="modal fade p-0"
-    id="business-detail-modal"
-    tabindex="-1"
-    role="dialog"
-    aria-labelledby="businessDetailTitle"
-    aria-hidden="true"
-  ></div>
-  <div
     class="modal fade"
     id="mission-choices"
     tabindex="-1"
@@ -825,7 +819,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <form action="/v1/add/mission/..." id="mission-choices-form" class="">
+          <form action="/v1/add_mission/..." id="mission-choices-form" class="">
             <div class="form-group">
               <label for="mission-select" class="">Mission</label>
               <select
@@ -903,6 +897,14 @@
       </div>
     </div>
   </div>
+  <div
+    class="modal fade p-0"
+    id="business-detail-modal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="businessDetailTitle"
+    aria-hidden="true"
+  ></div>
   <!-- END MODALS -->
   <script>
     // remove "Open At" option when no browser datetime input.

@@ -103,9 +103,10 @@ def navtest():
 @login_required
 def mission_control():
     """Missions control view."""
-    # TODO: CHECK for q param for loading particular shared mission.
 
-    return render_template('base.html')
+    missions = g.user.missions
+
+    return render_template('mission_control.html', missions=missions)
 
 
 @app.route('/missions')
@@ -461,115 +462,21 @@ def set_prefrences():
     return jsonify({'feedback': 'Updated'})
 
 
-@app.route('/v1/like/mission/<mission_id>', methods=['POST'])
-@add_user_to_g
-def like_mission(mission_id):
-    """Endpoint to like and un-like missions."""
-
-    if not g.user:
-        return jsonify({'error': 'No user session data.'})
+@app.route('/v1/mission/<mission_id>')
+def load_mission(mission_id):
+    """Endpoint to return a mission and all business on that mission."""
 
     mission = Mission.query.get_or_404(mission_id)
+    businesses = [m.serialize() for m in mission.businesses]
 
-    likes = mission.likes.copy()
+    out = {
+        'mission': mission.serialize(), 'businesses': businesses
+    }
 
-    if g.user.id in likes:
-        likes.remove(g.user.id)
-        success = 'removed'
-    else:
-        likes.add(g.user.id)
-        success = 'added'
-
-    mission.likes = likes
-
-    try:
-        db.session.commit()
-    except Exception as e:
-        error_logging(e)
-        return jsonify({'feedback': 'Error!'})
-
-    return jsonify({'success': success, 'likes': len(mission.likes)})
+    return jsonify(out)
 
 
-@app.route('/v1/like/report/<report_id>', methods=['POST'])
-@add_user_to_g
-def like_report(report_id):
-    """Endpoint to like and un-like reports."""
-
-    if not g.user:
-        return jsonify({'error': 'No user session data.'})
-
-    report = Report.query.get_or_404(report_id)
-
-    likes = report.likes.copy()
-
-    if g.user.id in likes:
-        likes.remove(g.user.id)
-        success = 'removed'
-    else:
-        likes.add(g.user.id)
-        success = 'added'
-
-    report.likes = likes
-
-    try:
-        db.session.commit()
-    except Exception as e:
-        error_logging(e)
-        return jsonify({'feedback': 'Error!'})
-
-    return jsonify({'success': success, 'likes': len(report.likes)})
-
-
-@app.route('/v1/add/mission/<mission_id>', methods=['POST'])
-@add_user_to_g
-def add_mission(mission_id):
-    """Add mission endpoint."""
-
-    if not g.user:
-        return jsonify({'error': 'No user session data.'})
-
-    mission = Mission.query.get_or_404(mission_id)
-
-    if mission in g.user.missions:
-        return jsonify({'success': 'Mission Already Added.'})
-
-    g.user.missions.append(mission)
-
-    try:
-        db.session.commit()
-    except Exception as e:
-        error_logging(e)
-        return jsonify({'error': 'Error!'})
-
-    return jsonify({'success': 'Mission Added!'})
-
-
-@app.route('/v1/remove/mission/<mission_id>', methods=['POST'])
-@add_user_to_g
-def remove_mission(mission_id):
-    """Add mission endpoint."""
-
-    if not g.user:
-        return jsonify({'error': 'No user session data.'})
-
-    mission = Mission.query.get_or_404(mission_id)
-
-    if mission not in g.user.missions:
-        return jsonify({'success': 'Mission Already Removed.'})
-
-    g.user.missions.remove(mission)
-
-    try:
-        db.session.commit()
-    except Exception as e:
-        error_logging(e)
-        return jsonify({'error': 'Error!'})
-
-    return jsonify({'success': 'Mission Removed!'})
-
-
-@app.route('/v1/add/business/mission/<mission_id>', methods=['POST'])
+@app.route('/v1/add_business/mission/<mission_id>', methods=['POST'])
 @add_user_to_g
 def add_to_mission(mission_id):
     """Add business to mission endpoint."""
@@ -609,7 +516,7 @@ def add_to_mission(mission_id):
     return jsonify({'success': 'Business Added to Mission!'})
 
 
-@app.route('/v1/remove/business/mission/<mission_id>', methods=['POST'])
+@app.route('/v1/remove_business/mission/<mission_id>', methods=['POST'])
 @add_user_to_g
 def remove_from_mission(mission_id):
     """Remove business from mission endpoint."""
@@ -636,6 +543,113 @@ def remove_from_mission(mission_id):
 
     return jsonify({'success': 'Business Removed from Mission!'})
 
+
+@app.route('/v1/mission/like<mission_id>', methods=['POST'])
+@add_user_to_g
+def like_mission(mission_id):
+    """Endpoint to like and un-like missions."""
+
+    if not g.user:
+        return jsonify({'error': 'No user session data.'})
+
+    mission = Mission.query.get_or_404(mission_id)
+
+    likes = mission.likes.copy()
+
+    if g.user.id in likes:
+        likes.remove(g.user.id)
+        success = 'removed'
+    else:
+        likes.add(g.user.id)
+        success = 'added'
+
+    mission.likes = likes
+
+    try:
+        db.session.commit()
+    except Exception as e:
+        error_logging(e)
+        return jsonify({'feedback': 'Error!'})
+
+    return jsonify({'success': success, 'likes': len(mission.likes)})
+
+
+@app.route('/v1/add_mission/<mission_id>', methods=['POST'])
+@add_user_to_g
+def add_mission(mission_id):
+    """Add mission to user's missions endpoint."""
+
+    if not g.user:
+        return jsonify({'error': 'No user session data.'})
+
+    mission = Mission.query.get_or_404(mission_id)
+
+    if mission in g.user.missions:
+        return jsonify({'success': 'Mission Already Added.'})
+
+    g.user.missions.append(mission)
+
+    try:
+        db.session.commit()
+    except Exception as e:
+        error_logging(e)
+        return jsonify({'error': 'Error!'})
+
+    return jsonify({'success': 'Mission Added!'})
+
+
+@app.route('/v1/remove_mission/<mission_id>', methods=['POST'])
+@add_user_to_g
+def remove_mission(mission_id):
+    """Remove mission from user's missions endpoint."""
+
+    if not g.user:
+        return jsonify({'error': 'No user session data.'})
+
+    mission = Mission.query.get_or_404(mission_id)
+
+    if mission not in g.user.missions:
+        return jsonify({'success': 'Mission Already Removed.'})
+
+    g.user.missions.remove(mission)
+
+    try:
+        db.session.commit()
+    except Exception as e:
+        error_logging(e)
+        return jsonify({'error': 'Error!'})
+
+    return jsonify({'success': 'Mission Removed!'})
+
+
+@app.route('/v1/report/like<report_id>', methods=['POST'])
+@add_user_to_g
+def like_report(report_id):
+    """Endpoint to like and un-like reports."""
+
+    if not g.user:
+        return jsonify({'error': 'No user session data.'})
+
+    report = Report.query.get_or_404(report_id)
+
+    likes = report.likes.copy()
+
+    if g.user.id in likes:
+        likes.remove(g.user.id)
+        success = 'removed'
+    else:
+        likes.add(g.user.id)
+        success = 'added'
+
+    report.likes = likes
+
+    try:
+        db.session.commit()
+    except Exception as e:
+        error_logging(e)
+        return jsonify({'feedback': 'Error!'})
+
+    return jsonify({'success': success, 'likes': len(report.likes)})
 
 # @app.route('/api/products')
 # def get_products_api():

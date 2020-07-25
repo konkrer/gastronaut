@@ -152,7 +152,7 @@ class ReportApiTestCase(TestCase):
                 sess['user_id'] = self.user2.id
 
             db.session.add(self.report)
-            resp = c.post(f'/v1/like/report/{self.report.id}')
+            resp = c.post(f'/v1/report/like{self.report.id}')
 
         self.assertEqual(resp.json['success'], 'added')
         report = Report.query.get(self.report.id)
@@ -171,7 +171,7 @@ class ReportApiTestCase(TestCase):
             with c.session_transaction() as sess:
                 sess['user_id'] = self.user2.id
 
-            resp = c.post(f'/v1/like/report/{self.report.id}')
+            resp = c.post(f'/v1/report/like{self.report.id}')
 
         self.assertEqual(resp.json['success'], 'removed')
         report = Report.query.get(self.report.id)
@@ -222,7 +222,7 @@ class MissionApiTestCase(TestCase):
                 sess['user_id'] = self.user2.id
 
             db.session.add(self.mission)
-            resp = c.post(f'/v1/like/mission/{self.mission.id}')
+            resp = c.post(f'/v1/mission/like{self.mission.id}')
 
         self.assertEqual(resp.json['success'], 'added')
         mission = Mission.query.get(self.mission.id)
@@ -241,7 +241,7 @@ class MissionApiTestCase(TestCase):
             with c.session_transaction() as sess:
                 sess['user_id'] = self.user2.id
 
-            resp = c.post(f'/v1/like/mission/{self.mission.id}')
+            resp = c.post(f'/v1/mission/like{self.mission.id}')
 
         self.assertEqual(resp.json['success'], 'removed')
         mission = Mission.query.get(self.mission.id)
@@ -259,14 +259,14 @@ class MissionApiTestCase(TestCase):
             db.session.add(self.mission)
 
             # test adding mission
-            resp = c.post(f'/v1/add/mission/{self.mission.id}')
+            resp = c.post(f'/v1/add_mission/{self.mission.id}')
 
             self.assertEqual(resp.json['success'], 'Mission Added!')
             user2 = User.query.get(self.user2.id)
             self.assertIn(self.mission, user2.missions)
 
             # test repeat adding does nothing
-            resp = c.post(f'/v1/add/mission/{self.mission.id}')
+            resp = c.post(f'/v1/add_mission/{self.mission.id}')
 
             self.assertEqual(resp.json['success'], 'Mission Already Added.')
             user2 = User.query.get(self.user2.id)
@@ -287,14 +287,14 @@ class MissionApiTestCase(TestCase):
             db.session.add(self.mission)
 
             # test adding mission
-            resp = c.post(f'/v1/remove/mission/{self.mission.id}')
+            resp = c.post(f'/v1/remove_mission/{self.mission.id}')
 
             self.assertEqual(resp.json['success'], 'Mission Removed!')
             user2 = User.query.get(self.user2.id)
             self.assertNotIn(self.mission, user2.missions)
 
             # test repeat removing does nothing
-            resp = c.post(f'/v1/remove/mission/{self.mission.id}')
+            resp = c.post(f'/v1/remove_mission/{self.mission.id}')
 
             self.assertEqual(resp.json['success'], 'Mission Already Removed.')
             user2 = User.query.get(self.user2.id)
@@ -314,7 +314,7 @@ class MissionApiTestCase(TestCase):
             db.session.add(self.mission)
 
             resp = c.post(
-                f'/v1/add/business/mission/{self.mission.id}',
+                f'/v1/add_business/mission/{self.mission.id}',
                 json=self.business_data)
 
             self.assertEqual(resp.json['success'],
@@ -325,7 +325,7 @@ class MissionApiTestCase(TestCase):
 
             # test repeat adding does nothing
             resp = c.post(
-                f'/v1/add/business/mission/{self.mission.id}',
+                f'/v1/add_business/mission/{self.mission.id}',
                 json=self.business_data)
 
             self.assertEqual(resp.json['success'], 'Business Already Added.')
@@ -346,7 +346,7 @@ class MissionApiTestCase(TestCase):
             db.session.add(self.mission)  # ????
 
             # test removing mission
-            resp = c.post(f'/v1/remove/business/mission/{self.mission.id}',
+            resp = c.post(f'/v1/remove_business/mission/{self.mission.id}',
                           json=self.business_data)
 
             self.assertEqual(resp.json['success'],
@@ -354,7 +354,7 @@ class MissionApiTestCase(TestCase):
             self.assertNotIn(business, self.mission.businesses)
 
             # test repeat removing does nothing
-            resp = c.post(f'/v1/remove/business/mission/{self.mission.id}',
+            resp = c.post(f'/v1/remove_business/mission/{self.mission.id}',
                           json=self.business_data)
 
             self.assertEqual(resp.json['success'], 'Business not in mission.')

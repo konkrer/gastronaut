@@ -320,7 +320,7 @@ function mapFirstBusiness(data) {
     businesses: [first, ...rest],
   } = data;
   const { longitude: lng, latitude: lat } = first.coordinates;
-  fitBounds([longitude, latitude], [lng, lat], first.name);
+  addRestMarkerAndFitBounds([longitude, latitude], [lng, lat], first.name);
 }
 
 /*
@@ -693,7 +693,7 @@ $('.card-track-inner').on('click', '.cardMapButton', function (e) {
   const lat = $(this).next().children().data('lat');
   const name = $(this).next().children().data('name');
   if (!mapOpen) toggleMap();
-  fitBounds([longitude, latitude], [+lng, +lat], name);
+  addRestMarkerAndFitBounds([longitude, latitude], [+lng, +lat], name);
 });
 
 /*
@@ -1053,7 +1053,7 @@ $('#mission-choices-form').submit(async function (e) {
 
   try {
     var resp = await axios.post(
-      `/v1/add/business/mission/${mission_id}`,
+      `/v1/add_business/mission/${mission_id}`,
       business_data
     );
   } catch (error) {

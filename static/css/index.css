@@ -417,7 +417,8 @@ a.first-letter.active {
 }
 
 .modal-backdrop.show {
-  opacity: 0.9;
+  opacity: 0.95;
+  background-color: var(--primary-alt);
 }
 
 #business-detail-modal table {
