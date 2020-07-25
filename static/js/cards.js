@@ -217,7 +217,7 @@ function makeCard(business) {
     `;
 }
 
-function makeDetailModal(business, longitude, latitude) {
+function makeDetailModal(business, longitude = '', latitude = '') {
   // unpack data items for card display
   const {
     name,
@@ -245,6 +245,7 @@ function makeDetailModal(business, longitude, latitude) {
   } = business;
 
   const { open, is_open_now } = hours[0];
+  const originStr = latitude ? `${latitude},${longitude}` : '';
 
   const trans_text = makeTransactionsText(transactions);
 
@@ -331,7 +332,7 @@ function makeDetailModal(business, longitude, latitude) {
               <a href="tel:${phone}">${display_phone}</a>
             ${phone ? '</li>' : ''}
             <li class="list-group-item bg-transparent">
-              <a href="https://www.google.com/maps/dir/?api=1&origin=${latitude},${longitude}&destination=${lat},${lng}&dir_action=navigate"
+              <a href="https://www.google.com/maps/dir/?api=1&origin=${originStr}&destination=${lat},${lng}&dir_action=navigate"
                 target="blank"
               >
                 <div>${street ? street : ''}</div>

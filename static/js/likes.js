@@ -1,5 +1,7 @@
 'use strict';
 
+const bussiness_results_cache = {};
+
 $('.like-mission').on('click', function (e) {
   e.preventDefault();
   likeMission($(this));
@@ -95,6 +97,50 @@ async function addMission($el) {
     );
   }
   $('.toast').toast('show');
+}
+
+/*
+/* Bussiness detail functionality
+*/
+$('.card').on('click', '.detailsBtn', getShowBusinessDetails);
+
+/*
+/* Get business details from yelp and show details modal.
+*/
+async function getShowBusinessDetails() {
+  $('.spinner-zone').show();
+  let business_result_data;
+
+  const business_id = $(this).data('id');
+
+  if (bussiness_results_cache[business_id])
+    business_result_data = bussiness_results_cache[business_id];
+  else {
+    try {
+      var resp = await axios.get(`/v1/business_detail/${business_id}`);
+    } catch (error) {
+      // TODO: sentry log error
+    }
+    if (!resp || resp.data.error) {
+      // TODO: sentry log error
+      return;
+    }
+    business_result_data = resp.data;
+    bussiness_results_cache[business_id] = business_result_data;
+  }
+  $('.spinner-zone').hide();
+  showDetailModal(business_result_data);
+}
+
+/* 
+/*  Update detail modal with business data and show.
+*/
+function showDetailModal(data) {
+  $('#business-detail-modal').html(makeDetailModal(data));
+  $('#business-detail-modal').modal().show();
+  setTimeout(() => {
+    $('.carousel').carousel();
+  }, 100);
 }
 
 // Turn on toasts.
