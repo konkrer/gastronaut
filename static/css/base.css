@@ -171,6 +171,10 @@ body {
   background-color: white;
 }
 
+.bg-map-red {
+  background-color: #693a3a;
+}
+
 .bg-disabled {
   background-color: #888888 !important;
 }

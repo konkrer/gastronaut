@@ -246,7 +246,7 @@ class Mission(db.Model):
         Return list of attributes for normal
         serialization, obj creation and editing.
         """
-        return ['editor', 'name', 'city', 'state', 'country', 'likes']
+        return ['name', 'description', 'is_public', 'city', 'state', 'country']
 
     def serialize(self):
         """Serialize model set_get properties data to a dictonary."""
@@ -254,6 +254,9 @@ class Mission(db.Model):
         id = self.id
         out = {k: v for k, v in self.__dict__.items() if k in self.set_get()}
         out['id'] = id
+        out['editor'] = self.editor
+        out['likes'] = len(self.likes)
+
         return out
 
     @classmethod
@@ -355,6 +358,23 @@ class Business(db.Model):
 
         db.session.add(b)
         return b
+
+    @classmethod
+    def set_get(self):
+        """
+        Return list of attributes for normal
+        serialization, obj creation and editing.
+        """
+        return ['longitude', 'latitude', 'name',
+                'city', 'state', 'country']
+
+    def serialize(self):
+        """Serialize model set_get properties data to a dictonary."""
+        # update model from database so serialization works by calling self.id
+        id = self.id
+        out = {k: v for k, v in self.__dict__.items() if k in self.set_get()}
+        out['id'] = id
+        return out
 
 
 class Report(db.Model):

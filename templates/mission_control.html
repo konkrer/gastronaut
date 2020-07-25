@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+<title>
+  {% block title %}Mission Control{% endblock %}
+</title>
+
+<div>
+  {% block head %}
+  <meta
+    name="description"
+    content="Missions control for Gastronaut missions."
+  />
+  <meta
+    name="google-site-verification"
+    content="YPEc32npJcPQVaehmJQNayHLdC8eXBWeOUzEuHGQyts"
+  />
+  <link rel="stylesheet" href="../static/css/index.css" />
+  <link rel="stylesheet" href="../static/css/mission_control.css" />
+  <!-- <script defer src="../static/js/geolocate.js"></script> -->
+  <!-- <script src="../static/js/modernizer.js"></script> -->
+  <script defer src="../static/js/cards.js"></script>
+  <script defer src="../static/js/animations.js"></script>
+  <!-- <script defer src="../static/js/index.js"></script> -->
+  <script defer src="../static/js/missionControl.js"></script>
+  <script src="https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.js"></script>
+  <!-- <script
+    defer
+    type="text/javascript"
+    src="https://cdn.rawgit.com/asvd/dragscroll/master/dragscroll.js"
+  ></script> -->
+  <link
+    href="https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.css"
+    rel="stylesheet"
+  />
+  {% endblock %}
+</div>
+
+<main>
+  {% block main %}
+  <div id="map" style="position: absolute;">
+    <script src="../static/js/map.js"></script>
+    <script>
+      mappyBoi = renderMiniMap([-85, 26.8], 2.5);
+    </script>
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-6">
+        <form action="">
+          <select name="mission-select" id="mission-select">
+            {% for mission in missions %}
+            <option value="{{mission.id}}">{{mission.name}}</option>
+            {% endfor %}
+          </select>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div
+    class="modal fade p-0"
+    id="business-detail-modal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="businessDetailTitle"
+    aria-hidden="true"
+  ></div>
+  {% endblock %}
+</main>

@@ -35,7 +35,8 @@ function mapCurrCard() {
   const lng = $mapButton.next().children().data('lng');
   const name = $mapButton.next().children().data('name');
 
-  if (isFinite(lat)) fitBounds([longitude, latitude], [+lng, +lat], name);
+  if (isFinite(lat))
+    addRestMarkerAndFitBounds([longitude, latitude], [+lng, +lat], name);
 }
 
 function sidebarToggleListener() {
