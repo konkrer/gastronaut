@@ -172,7 +172,7 @@ function makeCard(business) {
         </button>
         <span data-toggle="tooltip" title="Add to Mission">
           <button
-            class="btn btn-sm btn-primary-alt2 btn-my-card mission-btn font-weight-bold px-2" 
+            class="btn btn-sm btn-primary-alt2 btn-my-card mission-btn font-weight-bold" 
             data-toggle="modal"
             data-target="#mission-choices"
             data-city="${city}"
@@ -354,13 +354,13 @@ function makeDetailModal(business, longitude, latitude) {
           <div>
             ${
               reports
-                ? `<a class="btn btn-sm btn-primary-alt2" href="/reports/business/${id}" target="blank">See Reports</a>`
+                ? `<a class="" href="/reports/business/${id}" target="blank"><button class="btn btn-primary-alt2 text-white-k see-reports-btn">See Reports</button></a>`
                 : ''
             }
             
             <span data-toggle="tooltip" title="Add to Mission" class="">
               <button
-                class="btn btn-sm btn-primary-alt2 rocket-btn-my-card mission-btn font-weight-bold px-2"
+                class="btn btn-primary-alt2 mission-btn font-weight-bold"
                 data-toggle="modal"
                 data-target="#mission-choices"
                 data-dismiss="modal"
@@ -378,7 +378,7 @@ function makeDetailModal(business, longitude, latitude) {
             </span>
             <button
               type="button"
-              class="btn btn-sm btn-outline-secondary txt-white-k ssp"
+              class="btn btn-outline-secondary txt-white-k ssp detail-close-btn"
               data-dismiss="modal"
             >
               Close
