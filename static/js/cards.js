@@ -18,11 +18,20 @@ function makePriceDollars(price) {
 }
 
 function makeReviewStars(rating) {
-  //TODO: ADD half star icon.
   let stars = '';
   for (let idx = 0; idx < rating; idx++) {
     stars = `${stars}${'<i class="far fa-star fa-lg yellow-outline mr-2"></i>'}`;
   }
+  return stars;
+}
+
+function makeReviewStarsWithHalves(rating) {
+  let stars = '';
+  for (let idx = 0; idx < parseInt(rating); idx++) {
+    stars = `${stars}${'<i class="far fa-star fa-lg yellow-outline mr-2"></i>'}`;
+  }
+  if (rating % 1)
+    stars = `${stars}${'<i class="far fa-star-half fa-lg yellow-outline mr-2"></i>'}`;
   return stars;
 }
 
@@ -208,7 +217,7 @@ function makeCard(business) {
     `;
 }
 
-function makeDetailModal(business) {
+function makeDetailModal(business, longitude, latitude) {
   // unpack data items for card display
   const {
     name,
@@ -226,7 +235,7 @@ function makeDetailModal(business) {
     photos,
     hours,
     reports,
-    coordinates: { latitude, longitude },
+    coordinates: { latitude: lat, longitude: lng },
     location: {
       city,
       state,
@@ -304,7 +313,7 @@ function makeDetailModal(business) {
             <li
               class="list-group-item bg-transparent text-secondary card-text-noHover"
             >
-              ${makeReviewStars(
+              ${makeReviewStarsWithHalves(
                 rating
               )} <span style="position: absolute;" class="ml-1">(${review_count})</span>
             </li>
@@ -321,9 +330,13 @@ function makeDetailModal(business) {
             ${phone ? '<li class="list-group-item bg-transparent">' : ''}
               <a href="tel:${phone}">${display_phone}</a>
             ${phone ? '</li>' : ''}
-            <li class="list-group-item bg-transparent card-text-noHover">
-              <div>${street ? street : ''}</div>
-              <div>${city_disp ? city_disp : ''}</div>
+            <li class="list-group-item bg-transparent">
+              <a href="https://www.google.com/maps/dir/?api=1&origin=${latitude},${longitude}&destination=${lat},${lng}&dir_action=navigate"
+                target="blank"
+              >
+                <div>${street ? street : ''}</div>
+                <div>${city_disp ? city_disp : ''}</div>
+              </a>
             </li>
             <li class="list-group-item bg-transparent card-text-noHover">
               <div class="flx-std">
@@ -355,8 +368,8 @@ function makeDetailModal(business) {
                 data-state="${state}"
                 data-country="${country}"
                 data-name="${name}"
-                data-lng="${longitude}"
-                data-lat="${latitude}"
+                data-lng="${lng}"
+                data-lat="${lat}"
                 data-id="${id}"
               >
                 <i class="fas fa-plus-square mr-2"></i>
