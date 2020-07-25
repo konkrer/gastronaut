@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 
 <title>
-  {% block title %}Report{% endblock %}
+  {% block title %}Mission{% endblock %}
 </title>
 
 <head>
   {% block head %}
   <meta
     name="description"
-    content="Read user report on restaurants, bars, and more. Find out what other gastronauts really think."
+    content="Explore a gastronomical mission. Users create and share themed missions of local flavor to experience. Check it out!"
   />
   <link rel="stylesheet" href="/static/css/reports.css" />
   <link rel="stylesheet" href="/static/css/common1.css" />
@@ -30,24 +30,23 @@
     </div>
   </div>
   <div id="main-hero" class="flx-std">
-    <h1 class="display-1-k museo orange-outline">Mission Report</h1>
+    <h1 class="display-1-k museo orange-outline">Explore Mission</h1>
   </div>
-
-  <div class="middle-gap py-3 px-5 p-sm-0 flx-std">
+  <div class="middle-gap py-3 px-5 py-sm-1 p-lg-0 flx-std">
     <a href="/user/profile/{{user.id}}">
       <h4 class="txt-orange brand-outline mr-5">
         <em>@{{user.username}}</em>
       </h4>
     </a>
   </div>
-
   <div class="container">
     <div class="row mb-5">
-      <div class="col-12 p-0 mt-1 mt-lg-5 report">
-        {% include 'include/include_report_cards.html' with context %}
+      <div class="col-12 mt-md-1 mt-lg-5">
+        {%include "include/include_mission_cards.html" with context %}
       </div>
     </div>
   </div>
+  <div class="toasts-zone" aria-live="polite" aria-atomic="true"></div>
   {% include 'include/include_signup_login_modal.html' with context %}
   <div
     class="modal fade p-0"

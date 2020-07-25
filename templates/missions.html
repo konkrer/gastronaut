@@ -2,7 +2,7 @@
 select_sort with context %}
 
 <title>
-  {% block title %}Gastronaut - Missions{% endblock %}
+  {% block title %}Missions{% endblock %}
 </title>
 
 <head>
@@ -13,12 +13,18 @@ select_sort with context %}
   />
   <link rel="stylesheet" href="/static/css/reports.css" />
   <link rel="stylesheet" href="/static/css/common1.css">
+  <script defer src="/static/js/cards.js"></script>
   <script defer src="/static/js/likes.js"></script>
   {% endblock %}
 </head>
 
 <main>
   {% block main %}
+  <div class="spinner-zone flx-std rounded-bottom" style="display: none;">
+    <div class="spinner-border txt-green" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
   <div id="main-hero" class="flx-std">
     <h1 class="display-1-k museo orange-outline">Explore Missions</h1>
   </div>
@@ -86,11 +92,19 @@ select_sort with context %}
   <div class="container">
     <div class="row mb-5">
       <div class="col-12 mt-md-1 mt-lg-5">
-        {%include "include/include_mission_card.html" with context %}
+        {%include "include/include_mission_cards.html" with context %}
       </div>
     </div>
   </div>
   <div class="toasts-zone" aria-live="polite" aria-atomic="true"></div>
-  {% include 'include/include_signup_login_modal.html' with context %} {%
+  {% include 'include/include_signup_login_modal.html' with context %} 
+  <div
+    class="modal fade p-0"
+    id="business-detail-modal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="businessDetailTitle"
+    aria-hidden="true"
+  ></div>{%
   endblock %}
 </main>

@@ -4,14 +4,19 @@
   {% for report in reports %}
   <div class="card d-inline-block m-2 text-left">
     <div class="card-header">
-      {% if report.business_id %}
-      <h5 class="card-title font-weight-bold">
-        {{report.business.name}}
+      {% if report.business_id %}{% set b = report.business %}
+      <h5
+        class="card-title font-weight-bold detailsBtn hover-primary"
+        data-id="{{b.id}}"
+      >
+        {{b.name}}
       </h5>
       <h5 class="lead txt-green"><small>Business</small></h5>
-      {% else %}
+      {% else %} {% set m = report.mission %}
       <h5 class="card-title font-weight-bold">
-        {{report.mission.name}}
+        <a class="txt-white-k hover-primary" href="/missions/{{m.id}}">
+          {{m.name}}
+        </a>
       </h5>
       <h5 class="lead text-info"><small>Mission</small></h5>
       {% endif %}

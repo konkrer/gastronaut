@@ -125,6 +125,18 @@ def missions():
                            form_data=query_params)
 
 
+@app.route('/missions/<mission_id>')
+@add_user_to_g
+def mission_detail(mission_id):
+    """Mission detail view."""
+
+    mission = Mission.query.get_or_404(mission_id)
+    user = mission.user
+
+    return render_template('mission.html', missions=[mission],
+                           user=user)
+
+
 @app.route('/reports')
 @add_user_to_g
 def mission_reports():

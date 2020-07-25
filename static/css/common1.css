@@ -1,3 +1,13 @@
+.spinner-zone {
+  position: fixed;
+  top: 0;
+  width: 50px;
+  left: calc(50vw - 25px);
+  height: 53px;
+  z-index: 10000;
+  background-color: rgba(0, 0, 0, 0.76);
+}
+
 #main-hero {
   height: 45vh;
   overflow: hidden;
@@ -43,6 +53,43 @@
   border: none;
 }
 
+#business-detail-modal {
+  z-index: 10000;
+}
+
+#business-detail-modal .modal-header .close {
+  margin: -1rem -1rem;
+}
+
+.modal-header .close {
+  border-radius: 0.3rem;
+}
+
+.detail-modal-img-div {
+  height: 70vh;
+}
+
+.modal-backdrop.show {
+  opacity: 0.95;
+  background-color: var(--primary-alt);
+}
+
+#business-detail-modal table {
+  color: #adafae;
+}
+
+#business-detail-modal td {
+  padding: 2px 5px;
+}
+
+#business-detail-modal .modal-footer {
+  justify-content: space-between;
+}
+
+.detail-close-btn {
+  line-height: 1.3;
+}
+
 .toasts-zone {
   position: fixed;
   bottom: 0;
@@ -69,5 +116,11 @@
 @media screen and (min-width: 992px) {
   .toasts-zone {
     right: 40px;
+  }
+}
+
+@media screen and (hover: hover) {
+  .hover-primary:hover {
+    color: #2a9fd6 !important;
   }
 }
