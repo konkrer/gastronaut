@@ -7,8 +7,9 @@ class MissionControl {
   constructor() {
     this.mission_cache = {};
     this.restMarkers = [];
-    this.checkLocalStorage();
     this.likeListener = null;
+    this.checkLocalStorage();
+    this.updateListener();
 
     $('#mission-select').change(this.loadMissionEventRelay.bind(this));
   }
@@ -79,7 +80,7 @@ class MissionControl {
       ${editor ? 'Edit Details ' : 'Details '} 
       <i class="fas fa-caret-down fa-xs text-dark ml-2"></i>
     </a>
-    <form id="mission-form" class="collapse bg-trans-b3 p-2">
+    <form id="mission-form" class="collapse bg-dark p-4">
       <input type="hidden" value="${id}" name="id" >
       ${this.makeName(editor, name)}          
       ${this.makeDescription(editor, description)}
@@ -87,6 +88,7 @@ class MissionControl {
       ${this.makeCity(editor, city)}
       ${this.makeState(editor, state)}
       ${this.makeCountry(editor, country)}
+      ${this.makeButton(editor)}
     </form>
     `;
     $('#mission-panel').html(html);
@@ -95,11 +97,13 @@ class MissionControl {
   makeName(editor, name) {
     if (editor)
       return `<div class="form-group">
-                <input type="text" value="${name}" 
-                maxlength="50" name="name" id="name" placeholder="Name"
-                class="form-control form-control-sm">
+                <input type="text" value="${name}" minlength="2"
+                maxlength="50" name="name" id="name" placeholder="Name *"
+                class="form-control form-control-sm" required>
               </div>`;
-    return `<p>${name ? name : ''}</p>`;
+    return `<p class="txt-lg txt-purp font-weight-bold underline">${
+      name ? name : ''
+    }</p>`;
   }
 
   makeDescription(editor, description) {
@@ -118,10 +122,10 @@ class MissionControl {
     if (editor)
       return `
       <div class="custom-control custom-switch mb-2">
-        <input type="checkbox" class="custom-control-input" id="share-mission" ${
-          is_public ? 'checked="true"' : ''
-        }>
-        <label for="share-mission" class="custom-control-label">Share Mission</label>
+        <input type="checkbox" class="custom-control-input" id="share-mission" name="is_public"
+        ${is_public ? 'checked="true"' : ''}>
+        <label for="share-mission" class="custom-control-label txt-black">
+        Share Mission</label>
       </div>`;
     return '';
   }
@@ -134,29 +138,42 @@ class MissionControl {
           maxlength="50" name="city" id="city" placeholder="City"
           class="form-control form-control-sm">
       </div>`;
-    return `<p>${city ? city : ''}</p>`;
+    return city ? `<span>${city}, </span>` : '';
   }
 
   makeState(editor, state) {
     if (editor)
       return `
         <div class="form-group">
-          <input type="text" value="${state ? state : ''}" 
+          <input type="text" value="${state ? state : ''}" minlength="2"
           maxlength="2" name="state" id="state" placeholder="State"
           class="form-control form-control-sm">
       </div>`;
-    return `<p>${state ? state : ''}</p>`;
+    return state ? `<span>${state} </span>` : '';
   }
 
   makeCountry(editor, country) {
     if (editor)
       return `
         <div class="form-group">
-          <input type="text" value="${country ? country : ''}" 
-          maxlength="2" name="country" id="country" placeholder="Country"
-          class="form-control form-control-sm">
+          <input type="text" value="${country ? country : ''}"  minlength="2"
+          maxlength="2" name="country" id="country" placeholder="Country *"
+          class="form-control form-control-sm" required>
       </div>`;
-    return `<p>${country ? country : ''}</p>`;
+    return country ? `<span class="ml-1">${country}</span>` : '';
+  }
+
+  makeButton(editor) {
+    if (editor)
+      return `
+      <div class="mt-4 btn-div">
+        <span class="feedback ml-5 font-weight-bold"></span>
+        <button type="button" class="btn btn-sm btn-outline-danger float-right ml-2 border-0"
+        data-toggle="modal" data-target="#deleteMissionModal">Delete</button>
+        <button type="submit" class="btn btn-sm btn-primary float-right"
+        >Update</button>
+      </div>`;
+    return '';
   }
 
   showLikes(data) {
@@ -180,6 +197,56 @@ class MissionControl {
     if (businesses.length == 0) return;
     clearMapArray(this.restMarkers);
     this.restMarkers = mapArrayAndFitBounds(businesses);
+  }
+
+  // Listen for mission-form being submitted.
+  // Call mission update endpoint.
+  // Provide feedback and update mission-select <option> text.
+  updateListener() {
+    $('.info-col').on(
+      'submit',
+      '#mission-form',
+      async function (e) {
+        e.preventDefault();
+
+        const formData = $('#mission-form').serializeArray();
+        const f_d = convertDataArrayToObj(formData);
+
+        // Don't pass default textarea content 'Add a Description' to backend.
+        f_d.description =
+          f_d.description == 'Add a Description' ? '' : f_d.description;
+
+        try {
+          var resp = await axios.post(`/mission`, f_d);
+        } catch (error) {
+          // TODO: sentry log error
+          $('#mission-form .feedback').html(
+            '<span class="text-danger">Error</span>'
+          );
+          return;
+        }
+        if (!resp || resp.data.error) {
+          // TODO: sentry log error
+          $('#mission-form .feedback').html(
+            '<span class="text-danger">Error</span>'
+          );
+          return;
+        }
+        if (resp.data.success) {
+          $('#mission-form .feedback').html(
+            '<span class="text-success bg-light p-2 rounded">Updated!</span>'
+          );
+          this.mission_cache[f_d.id].mission = resp.data.obj;
+          // update mission-select text.
+          $('#mission-select-form #mission-select option').each(function (idx) {
+            // if <option> is for edited mission update name text.
+            if ($(this).val() === f_d.id) $(this).text(f_d.name);
+          });
+        }
+
+        setTimeout(() => $('#mission-form .feedback').html(''), 4000);
+      }.bind(this)
+    );
   }
 }
 

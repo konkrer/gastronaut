@@ -175,7 +175,8 @@ class Mission(db.Model):
         """Make mission public and add current datime."""
 
         self.is_public = True
-        self.date_shared = datetime.now()
+        if not self.date_shared:
+            self.date_shared = datetime.now()
 
     @classmethod
     def get_by_recent(cls):
@@ -269,6 +270,14 @@ class Mission(db.Model):
 
         db.session.add(m)
         return m
+
+    def update(self, **kwargs):
+        """Update own properties based on given keyword property inputs."""
+
+        kwargs = {k: v for k, v in kwargs.items() if k in self.set_get()}
+
+        for key, val in kwargs.items():
+            self.__setattr__(key, val)
 
     def __repr__(self):
         """Mission representation."""

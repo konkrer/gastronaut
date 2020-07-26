@@ -479,6 +479,9 @@ def set_prefrences():
 def load_mission(mission_id):
     """Endpoint to return a mission and all business on that mission."""
 
+    if not g.user:
+        return
+
     mission = Mission.query.get_or_404(mission_id)
 
     businesses = [b.serialize() for b in mission.businesses]
@@ -495,6 +498,32 @@ def load_mission(mission_id):
         mission_dict['editor'] = False
 
     return jsonify({'mission': mission_dict, 'businesses': businesses})
+
+
+@app.route('/mission', methods=['POST'])
+@add_user_to_g
+def update_mission():
+    """Endpoint to update a mission."""
+
+    data = request.json
+    mission = Mission.query.get_or_404(data['id'])
+
+    if not g.user.id == mission.editor:
+        return
+
+    if data.get('is_public'):
+        mission.share()
+        del data['is_public']
+
+    mission.update(**data)
+
+    try:
+        db.session.commit()
+    except Exception as e:
+        error_logging(e)
+        return jsonify({'error': repr(e)})
+
+    return jsonify({'success': 'updated', 'obj': mission.serialize()})
 
 
 @app.route('/v1/add_business/mission/<mission_id>', methods=['POST'])

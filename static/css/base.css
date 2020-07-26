@@ -184,7 +184,7 @@ body {
 }
 
 .bg-trans-b0 {
-  background-color: rgba(0, 0, 0, 0.407);
+  background-color: rgba(0, 0, 0, 0.51);
 }
 
 .bg-trans-b {
@@ -269,6 +269,10 @@ body {
 
 .opaque {
   opacity: 0;
+}
+
+.underline {
+  text-decoration: underline;
 }
 
 .no-wrap {
