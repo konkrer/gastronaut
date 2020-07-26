@@ -117,6 +117,8 @@ class ApiFuncts {
         var resp = await axios.get(`/v1/business_detail/${business_id}`);
       } catch (error) {
         // TODO: sentry log error
+        $('.spinner-zone').hide();
+        return;
       }
       if (!resp || resp.data.error) {
         // TODO: sentry log error

@@ -47,8 +47,8 @@
   </div>
   <div class="container-fluid ssp" id="main-interface">
     <div class="row">
-      <div class="col-12 col-sm-6 col-xl-3 mb-5">
-        <div class="bg-trans-b0 rounded px-2 py-1 mt-2 txt-white-k mb-1">
+      <div class="col-12 col-sm-6 col-md-5 col-lg-4 col-xl-3 mb-5 info-col">
+        <div class="bg-trans-b rounded px-2 py-1 mt-2 txt-white-k mb-1">
           <p for="mission-select" class="mb-1">
             <a
               class="txt-orange"
@@ -91,9 +91,63 @@
           </form>
         </div>
         <div
-          class="bg-trans-b0 rounded px-2 py-1 txt-white-k"
+          class="bg-trans-b rounded px-2 py-1 txt-white-k"
           id="mission-panel"
         ></div>
+      </div>
+    </div>
+  </div>
+  <!-- Modals! -->
+  <div
+    class="modal fade"
+    id="deleteMissionModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="deleteMissionModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title txt-orange" id="deleteMissionModalLabel">
+            Delete Mission
+          </h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form class="form-inline">
+          <div class="modal-body">
+            <p class="txt-white-k">
+              Are you sure you want to delete this mission?
+            </p>
+
+            <p>Type "ok" Below</p>
+            <input
+              class="form-control"
+              type="text"
+              name="confirm"
+              pattern="^[Oo]\.?[Kk]\.?$"
+              required
+            />
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+
+            <button type="submit" class="btn btn-danger">Delete</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>

@@ -6,7 +6,20 @@ main {
 #mission-panel form textarea {
   background: transparent;
   color: whitesmoke;
-  border: none;
+  /* border: none; */
+}
+
+#mission-form {
+  border-radius: 55px;
+}
+
+#mission-form input,
+#mission-form textarea {
+  color: black !important;
+}
+
+#mission-form .btn-div {
+  height: 28px;
 }
 
 @media screen and (hover: hover) {
