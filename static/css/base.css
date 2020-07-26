@@ -183,8 +183,20 @@ body {
   background-color: #03109bd0;
 }
 
+.bg-trans-b0 {
+  background-color: rgba(0, 0, 0, 0.407);
+}
+
 .bg-trans-b {
   background-color: rgba(0, 0, 0, 0.589);
+}
+
+.bg-trans-b2 {
+  background-color: rgba(0, 0, 0, 0.717);
+}
+
+.bg-trans-b3 {
+  background-color: rgba(0, 0, 0, 0.944);
 }
 
 .btn-primary {

@@ -475,17 +475,26 @@ def set_prefrences():
 
 
 @app.route('/v1/mission/<mission_id>')
+@add_user_to_g
 def load_mission(mission_id):
     """Endpoint to return a mission and all business on that mission."""
 
     mission = Mission.query.get_or_404(mission_id)
-    businesses = [m.serialize() for m in mission.businesses]
 
-    out = {
-        'mission': mission.serialize(), 'businesses': businesses
-    }
+    businesses = [b.serialize() for b in mission.businesses]
+    mission_dict = mission.serialize()
 
-    return jsonify(out)
+    # Set flags on missin dict for JavaScript use.
+    # If user liked this mission set user_liked flag.
+    if g.user.id == mission.editor or g.user.id in mission.likes:
+        mission_dict['user_liked'] = True
+    # If this mission is a creation of this user set editor to True.
+    if g.user.id == mission.editor:
+        mission_dict['editor'] = True
+    else:
+        mission_dict['editor'] = False
+
+    return jsonify({'mission': mission_dict, 'businesses': businesses})
 
 
 @app.route('/v1/add_business/mission/<mission_id>', methods=['POST'])
@@ -504,7 +513,7 @@ def add_to_mission(mission_id):
 
     if business:
         if business in mission.businesses:
-            return jsonify({'success': 'Business Already Added.'})
+            return jsonify({'success': 'Already Added.'})
     else:
         business = Business.create(
             id=data['id'], name=data['name'], city=data['city'],
@@ -525,7 +534,7 @@ def add_to_mission(mission_id):
         error_logging(e)
         return jsonify({'error': 'Error!'})
 
-    return jsonify({'success': 'Business Added to Mission!'})
+    return jsonify({'success': 'Added!'})
 
 
 @app.route('/v1/remove_business/mission/<mission_id>', methods=['POST'])

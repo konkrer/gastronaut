@@ -97,8 +97,8 @@ class ApiFuncts {
           </div>
         </div>`
       );
+      $('.toast').toast('show');
     }
-    $('.toast').toast('show');
   }
 
   /*
@@ -142,4 +142,4 @@ class ApiFuncts {
   }
 }
 
-ApiFuncts = new ApiFuncts();
+const ApiFunctsObj = new ApiFuncts();

@@ -33,16 +33,19 @@ main {
   overflow: hidden;
 }
 
+/*  Turned off look for overflow issues index.html
 #main-interface {
   height: var(--vh-minus-navbar);
   overflow: hidden;
-}
+} */
+
 .main-form-div {
   padding-left: 0;
   padding-right: 0;
   background-color: var(--my-secondary);
 }
 
+#main-interface,
 .main-form-div,
 .card-map-zone,
 #scrl2,
@@ -437,6 +440,10 @@ a.first-letter.active {
   line-height: 1.3;
 }
 
+a:hover {
+  text-decoration: none;
+}
+
 /* Breakpoints */
 /* Breakpoints */
 /* Breakpoints */
@@ -569,7 +576,7 @@ a.first-letter.active {
   }
   #main-interface {
     height: 100vh;
-    overflow: hidden;
+    /* overflow: hidden; <<<<<<<<<<<<<<<<<<<<< look for overflow issues. */
   }
   .card-map-zone {
     grid-template-rows: auto 50vh;

@@ -45,16 +45,55 @@
       mappyBoi = renderMiniMap([-85, 26.8], 2.5);
     </script>
   </div>
-  <div class="container">
+  <div class="container-fluid ssp" id="main-interface">
     <div class="row">
-      <div class="col-6">
-        <form action="">
-          <select name="mission-select" id="mission-select">
-            {% for mission in missions %}
-            <option value="{{mission.id}}">{{mission.name}}</option>
-            {% endfor %}
-          </select>
-        </form>
+      <div class="col-12 col-sm-6 col-xl-3 mb-5">
+        <div class="bg-trans-b0 rounded px-2 py-1 mt-2 txt-white-k mb-1">
+          <p for="mission-select" class="mb-1">
+            <a
+              class="txt-orange"
+              data-toggle="collapse"
+              href="#mission-select-form"
+              role="button"
+              aria-expanded="true"
+              aria-controls="mission-select-form"
+            >
+              Mission Select
+              <i class="fas fa-caret-down fa-xs text-dark ml-2"></i>
+            </a>
+            <span class="text-dark txt-smlr ml-3" id="likes-zone"></span>
+            <span class="text-dark"></span>
+          </p>
+
+          <form
+            name="mission-select-form"
+            id="mission-select-form"
+            class="collapse show"
+          >
+            <div class="form-group mb-1">
+              <select
+                name="mission-select"
+                id="mission-select"
+                class="custom-select custom-select-sm museo"
+              >
+                {% for mission in missions %}
+                <option value="{{mission.id}}">{{mission.name}}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <button
+              class="form-control btn btn-sm btn-outline-primary ssp txt-whitesmoke"
+            >
+              <i class="fas fa-rocket fa-lg txt-orange brand-outline mr-1"></i>
+              <b>Create New Mission</b>
+              <i class="fas fa-rocket fa-lg txt-orange brand-outline ml-1"></i>
+            </button>
+          </form>
+        </div>
+        <div
+          class="bg-trans-b0 rounded px-2 py-1 txt-white-k"
+          id="mission-panel"
+        ></div>
       </div>
     </div>
   </div>

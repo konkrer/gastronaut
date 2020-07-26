@@ -1,3 +1,25 @@
 main {
   height: var(--vh-minus-navbar);
 }
+
+#mission-panel form input,
+#mission-panel form textarea {
+  background: transparent;
+  color: whitesmoke;
+  border: none;
+}
+
+@media screen and (hover: hover) {
+  main button:hover {
+    background-color: var(--my-green) !important;
+    color: var(--my-purp) !important;
+  }
+}
+
+/* landscape on phones */
+@media screen and (orientation: landscape) and (max-width: 880px) and (max-height: 450px) {
+  main {
+    height: 100vh;
+    /* overflow: hidden; <<<<<<<<<<<<<<<<<<<<< look for overflow issues. */
+  }
+}
