@@ -55,12 +55,23 @@
       <span class="px-3 text-dark likes">
         {{mission.likes | length}}
       </span>
+      {% if not g.user %}
+      <button
+        type="button"
+        class="like-button text-primary float-right"
+        data-toggle="modal"
+        data-target="#signupModal"
+      >
+        Add to Missions
+      </button>
+      {% else %}
       <a
         href="/v1/add_mission/{{mission.id}}"
         class="add-mission float-right card-link ml-3"
         data-mission_id="{{mission.id}}"
         >Add to Missions</a
       >
+      {% endif %}
     </div>
   </div>
   {% endfor %}
