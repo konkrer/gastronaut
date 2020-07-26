@@ -163,9 +163,10 @@ class MissionModelTestCase(TestCase):
         mission_serial = self.mission.serialize()
 
         expected_output = {
-            'likes': {0}, 'state': 'NY', 'city': 'Albany',
+            'likes': 1, 'state': 'NY', 'city': 'Albany',
             'editor': self.user.id, 'country': 'US',
-            'name': 'test mission', 'id': self.mission.id}
+            'name': 'test mission', 'id': self.mission.id,
+            'description': None, 'is_public': True}
 
         self.assertEqual(mission_serial, expected_output)
 
