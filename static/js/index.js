@@ -30,7 +30,7 @@ let $scrollListener;
 let business_data;
 // Cache all results of user clicking details buttons so repeated
 // clicks will find cached data.
-let bussiness_results_cache = {};
+let business_results_cache = {};
 
 // Used to reset form when passed into setForm.
 const defaultFormState = [
@@ -1089,8 +1089,8 @@ async function getShowBusinessDetails() {
 
   const business_id = detailBtn.next().next().children().data('id');
 
-  if (bussiness_results_cache[business_id])
-    business_result_data = bussiness_results_cache[business_id];
+  if (business_results_cache[business_id])
+    business_result_data = business_results_cache[business_id];
   else {
     try {
       var resp = await axios.get(`/v1/business_detail/${business_id}`);
@@ -1102,7 +1102,7 @@ async function getShowBusinessDetails() {
       return;
     }
     business_result_data = resp.data;
-    bussiness_results_cache[business_id] = business_result_data;
+    business_results_cache[business_id] = business_result_data;
   }
   $('.spinner-zone').hide();
   showDetailModal(business_result_data);
