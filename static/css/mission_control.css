@@ -2,6 +2,11 @@ main {
   height: var(--vh-minus-navbar);
 }
 
+.sidebar-toggle-btn {
+  left: -5px;
+  top: 45vh !important;
+}
+
 #mission-panel form input,
 #mission-panel form textarea {
   background: transparent;
@@ -9,17 +14,31 @@ main {
   /* border: none; */
 }
 
-#mission-form {
+#mission-form,
+#create-form {
   border-radius: 55px;
 }
 
 #mission-form input,
-#mission-form textarea {
+#mission-form textarea,
+#create-form input,
+#create-form textarea {
   color: black !important;
 }
 
-#mission-form .btn-div {
+#mission-form .btn-div,
+#create-form .btn-div {
   height: 28px;
+}
+
+#create-mission-btn {
+  font-size: 10px !important;
+  padding: 2px 8px;
+  margin-top: 1px;
+}
+
+#create-mission-btn:focus {
+  background-color: unset;
 }
 
 @media screen and (hover: hover) {

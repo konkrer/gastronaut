@@ -526,6 +526,26 @@ def load_mission(mission_id):
 
 @app.route('/mission', methods=['POST'])
 @add_user_to_g
+def create_mission():
+    """Endpoint to create a mission."""
+
+    if not g.user:
+        return Unauthorized()
+
+    try:
+        mission = Mission.create(editor=g.user.id, **request.json)
+        db.session.commit()
+        g.user.missions.append(mission)
+        db.session.commit()
+    except Exception as e:
+        error_logging(e)
+        return jsonify({'error': repr(e)})
+
+    return jsonify({'success': 'created', 'mission': mission.serialize()})
+
+
+@app.route('/mission', methods=['PUT'])
+@add_user_to_g
 def update_mission():
     """Endpoint to update a mission."""
 
@@ -547,7 +567,7 @@ def update_mission():
         error_logging(e)
         return jsonify({'error': repr(e)})
 
-    return jsonify({'success': 'updated', 'obj': mission.serialize()})
+    return jsonify({'success': 'updated', 'mission': mission.serialize()})
 
 
 @app.route('/mission/<mission_id>', methods=['DELETE'])
