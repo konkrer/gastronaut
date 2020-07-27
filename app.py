@@ -14,7 +14,7 @@ from flask import (  # noqa F401
     redirect, jsonify, abort, url_for, g, render_template as r_t)
 from sqlalchemy.exc import IntegrityError
 from werkzeug.utils import secure_filename
-# from werkzeug.exceptions import Unauthorized
+from werkzeug.exceptions import Unauthorized
 
 from models import (db, connect_db, User, Mission, UserMission,  # noqa F401
                     Business, Report, MissionBusiness, DEFAULT_PREFERENCES)  # noqa F401
@@ -131,7 +131,11 @@ def mission_detail(mission_id):
     """Mission detail view."""
 
     mission = Mission.query.get_or_404(mission_id)
-    user = mission.user
+
+    if not mission.date_shared:
+        return Unauthorized()
+
+    user = mission.author
 
     return render_template('mission.html', missions=[mission],
                            user=user)
@@ -326,6 +330,24 @@ def logout():
 def delete_user():
     """Delete User view"""
 
+    missions = g.user.missions
+    to_delete = [m for m in missions if not m.date_shared]
+    to_sort = [m for m in missions if m.date_shared]
+    to_keep = []
+
+    # if no one is linked to mission ok to delete.
+    [to_delete.append(m) if len(m.user_missions) ==
+     1 else to_keep.append(m) for m in to_sort]
+
+    g.user.user_missions = []
+    db.session.commit()
+
+    [db.session.delete(d) for d in to_delete]
+    db.session.commit()
+
+    [k.__setattr__('is_public', False) for k in to_keep]
+    db.session.commit()
+
     db.session.delete(g.user)
     db.session.commit()
     del session['user_id']
@@ -453,7 +475,7 @@ def set_prefrences():
     """Endpoint to change user preferences."""
 
     if not g.user:
-        return jsonify({'feedback': 'Error'})
+        return Unauthorized()
 
     data = request.json
 
@@ -480,7 +502,7 @@ def load_mission(mission_id):
     """Endpoint to return a mission and all business on that mission."""
 
     if not g.user:
-        return
+        return Unauthorized()
 
     mission = Mission.query.get_or_404(mission_id)
 
@@ -496,6 +518,8 @@ def load_mission(mission_id):
         mission_dict['editor'] = True
     else:
         mission_dict['editor'] = False
+        mission_dict['username'] = mission.author.username
+        mission_dict['author_id'] = mission.author.id
 
     return jsonify({'mission': mission_dict, 'businesses': businesses})
 
@@ -509,7 +533,7 @@ def update_mission():
     mission = Mission.query.get_or_404(data['id'])
 
     if not g.user.id == mission.editor:
-        return
+        return Unauthorized()
 
     if data.get('is_public'):
         mission.share()
@@ -526,13 +550,43 @@ def update_mission():
     return jsonify({'success': 'updated', 'obj': mission.serialize()})
 
 
+@app.route('/mission/<mission_id>', methods=['DELETE'])
+@add_user_to_g
+def delete_mission(mission_id):
+    """Endpoint to delete a mission."""
+
+    if not g.user:
+        return Unauthorized()
+
+    mission = Mission.query.get_or_404(mission_id)
+    g.user.missions.remove(mission)
+
+    db.session.commit()
+
+    # if mission was shared and is in use or a report was written don't delete.
+    if (mission.date_shared and mission.user_missions) or mission.reports:
+        mission.is_public = False
+        mission.editor = 2
+        db.session.commit()
+        return jsonify({'success': 'mission deleted'})
+
+    try:
+        db.session.delete(mission)
+        db.session.commit()
+    except Exception as e:
+        error_logging(e)
+        return jsonify({'error': repr(e)})
+
+    return jsonify({'success': 'mission deleted'})
+
+
 @app.route('/v1/add_business/mission/<mission_id>', methods=['POST'])
 @add_user_to_g
 def add_to_mission(mission_id):
     """Add business to mission endpoint."""
 
     if not g.user:
-        return jsonify({'error': 'No user session data.'})
+        return Unauthorized()
 
     mission = Mission.query.get_or_404(mission_id)
 
@@ -572,7 +626,7 @@ def remove_from_mission(mission_id):
     """Remove business from mission endpoint."""
 
     if not g.user:
-        return jsonify({'error': 'No user session data.'})
+        return Unauthorized()
 
     mission = Mission.query.get_or_404(mission_id)
 
@@ -600,7 +654,7 @@ def like_mission(mission_id):
     """Endpoint to like and un-like missions."""
 
     if not g.user:
-        return jsonify({'error': 'No user session data.'})
+        return Unauthorized()
 
     mission = Mission.query.get_or_404(mission_id)
 
@@ -630,7 +684,7 @@ def add_mission(mission_id):
     """Add mission to user's missions endpoint."""
 
     if not g.user:
-        return jsonify({'error': 'No user session data.'})
+        return Unauthorized()
 
     mission = Mission.query.get_or_404(mission_id)
 
@@ -654,7 +708,7 @@ def remove_mission(mission_id):
     """Remove mission from user's missions endpoint."""
 
     if not g.user:
-        return jsonify({'error': 'No user session data.'})
+        return Unauthorized()
 
     mission = Mission.query.get_or_404(mission_id)
 
@@ -678,7 +732,7 @@ def like_report(report_id):
     """Endpoint to like and un-like reports."""
 
     if not g.user:
-        return jsonify({'error': 'No user session data.'})
+        return Unauthorized()
 
     report = Report.query.get_or_404(report_id)
 

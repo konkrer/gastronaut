@@ -5,7 +5,7 @@
       <h5 class="card-title font-weight-bold">{{mission.name}}</h5>
       <div class="card-text">
         <a href="/user/profile/{{mission.user.id}}">
-          <em class="txt-orange"> by @{{mission.user.username}}</em>
+          <em class="txt-orange"> by @{{mission.author.username}}</em>
         </a>
         <div class="txt-smlr">
           {{mission.date_shared.strftime('%a %b %w, %Y')}}

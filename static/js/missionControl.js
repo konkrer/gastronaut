@@ -10,42 +10,43 @@ class MissionControl {
     this.likeListener = null;
     this.checkLocalStorage();
     this.updateListener();
+    this.deleteListener();
 
     $('#mission-select').change(this.loadMissionEventRelay.bind(this));
   }
 
   /*
-    /* Load previous mission user had loaded. 
-    */
+  /* Load previous mission user had loaded. 
+  */
   checkLocalStorage() {
-    // get list of mission ids of user's missions from html
-    const missions = $('#mission-select')
+    // get list of user's missions ids from html <option> values.
+    const currMissions = $('#mission-select')
       .children()
       .map(function () {
         return $(this).val();
       })
       .get();
 
-    let lastMission = localStorage.getItem('currMission');
-    // if last mission not in current missions and user has missions
-    // select the first mission as current mission.
-    if (!missions.includes(lastMission) && missions.length > 0) {
-      lastMission = missions[0];
-      localStorage.setItem('currMission', lastMission);
-    } else if (missions.length == 0) return;
-    else {
-      // Select current mission option in mission-select input.
-      const currOption = missions.indexOf(lastMission);
+    let lastMissionId = localStorage.getItem('currMissionId');
+
+    if (currMissions.includes(lastMissionId)) {
+      // Select <option> that matches lastMissionId in mission-select input.
+      const currOption = currMissions.indexOf(lastMissionId);
       $('#mission-select').children().eq(currOption).prop('selected', true);
+      //
+    } else if (currMissions.length == 0) return;
+    else {
+      lastMissionId = currMissions[0];
+      localStorage.setItem('currMissionId', lastMissionId);
     }
     // Delay to allow map to hopefully fully load.
     setTimeout(() => {
-      this.loadMission(lastMission);
+      this.loadMission(lastMissionId);
     }, 2500);
   }
 
   loadMissionEventRelay(e) {
-    localStorage.setItem('currMission', e.target.value);
+    localStorage.setItem('currMissionId', e.target.value);
     this.loadMission(e.target.value);
   }
 
@@ -68,6 +69,8 @@ class MissionControl {
       id,
       editor,
       name,
+      username,
+      author_id,
       description,
       is_public,
       city,
@@ -82,7 +85,7 @@ class MissionControl {
     </a>
     <form id="mission-form" class="collapse bg-dark p-4">
       <input type="hidden" value="${id}" name="id" >
-      ${this.makeName(editor, name)}          
+      ${this.makeName(editor, name, username, author_id)}          
       ${this.makeDescription(editor, description)}
       ${this.makePublic(editor, is_public)}
       ${this.makeCity(editor, city)}
@@ -94,16 +97,20 @@ class MissionControl {
     $('#mission-panel').html(html);
   }
 
-  makeName(editor, name) {
+  makeName(editor, name, username, author_id) {
     if (editor)
       return `<div class="form-group">
                 <input type="text" value="${name}" minlength="2"
                 maxlength="50" name="name" id="name" placeholder="Name *"
                 class="form-control form-control-sm" required>
               </div>`;
-    return `<p class="txt-lg txt-purp font-weight-bold underline">${
-      name ? name : ''
-    }</p>`;
+    return `
+      <div class="txt-xl text-light font-weight-bold underline">${name}</div>
+      <p class="text-light font-italic">
+        <a href="/user/profile/${author_id}" class="txt-medium text-light orange-outline font-weight-bold">
+          by @${username}
+        </a>
+      </p>`;
   }
 
   makeDescription(editor, description) {
@@ -115,7 +122,9 @@ class MissionControl {
           description ? description : 'Add a Description'
         }</textarea>
       </div>`;
-    return `<p>${description ? description : ''}</p>`;
+    return `<p class="txt-black txt-medium">${
+      description ? description : ''
+    }</p>`;
   }
 
   makePublic(editor, is_public) {
@@ -138,7 +147,7 @@ class MissionControl {
           maxlength="50" name="city" id="city" placeholder="City"
           class="form-control form-control-sm">
       </div>`;
-    return city ? `<span>${city}, </span>` : '';
+    return city ? `<span class="txt-black">${city}, </span>` : '';
   }
 
   makeState(editor, state) {
@@ -149,18 +158,18 @@ class MissionControl {
           maxlength="2" name="state" id="state" placeholder="State"
           class="form-control form-control-sm">
       </div>`;
-    return state ? `<span>${state} </span>` : '';
+    return state ? `<span class="txt-black">${state} </span>` : '';
   }
 
   makeCountry(editor, country) {
     if (editor)
       return `
         <div class="form-group">
-          <input type="text" value="${country ? country : ''}"  minlength="2"
+          <input type="text" value="${country}"  minlength="2"
           maxlength="2" name="country" id="country" placeholder="Country *"
           class="form-control form-control-sm" required>
       </div>`;
-    return country ? `<span class="ml-1">${country}</span>` : '';
+    return `<span class="ml-1 txt-black">${country}</span>`;
   }
 
   makeButton(editor) {
@@ -194,8 +203,8 @@ class MissionControl {
   }
 
   mapBusinesses(businesses) {
-    if (businesses.length == 0) return;
     clearMapArray(this.restMarkers);
+    if (businesses.length == 0) return;
     this.restMarkers = mapArrayAndFitBounds(businesses);
   }
 
@@ -245,6 +254,44 @@ class MissionControl {
         }
 
         setTimeout(() => $('#mission-form .feedback').html(''), 4000);
+      }.bind(this)
+    );
+  }
+
+  // Listen for mission-form delete button being clicked.
+  // Call mission delete endpoint.
+  // Update mission-select <option> text.
+  deleteListener() {
+    $('#deleteMissionModal').on(
+      'submit',
+      'form',
+      async function (e) {
+        e.preventDefault();
+
+        const mission_id = $('#mission-form input[name="id"]').val();
+
+        try {
+          var resp = await axios.delete(`/mission/${mission_id}`);
+        } catch (error) {
+          // TODO: sentry log error
+          return;
+        }
+        if (!resp || resp.data.error) {
+          // TODO: sentry log error
+          return;
+        }
+        if (resp.data.success) {
+          $('#mission-select')
+            .children()
+            .each(function (idx) {
+              if ($(this).val() === mission_id) $(this).remove();
+            });
+          $('#deleteMissionModal').modal('hide');
+          $('#mission-panel').html('');
+          clearMapArray(this.restMarkers);
+          this.restMarkers = [];
+          this.checkLocalStorage();
+        }
       }.bind(this)
     );
   }

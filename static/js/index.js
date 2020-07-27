@@ -1050,7 +1050,12 @@ $('#mission-choices-form').submit(async function (e) {
   e.preventDefault();
 
   const mission_id = $('#mission-select').val();
-
+  if (!mission_id) {
+    $('#mission-choices .feedback').html(
+      `Create New Mission <i class="fas fa-hand-point-right fa-lg ml-1"></i>`
+    );
+    return;
+  }
   try {
     var resp = await axios.post(
       `/v1/add_business/mission/${mission_id}`,

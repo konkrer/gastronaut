@@ -27,6 +27,9 @@ main {
     background-color: var(--my-green) !important;
     color: var(--my-purp) !important;
   }
+  #mission-form a:hover {
+    color: var(--my-green) !important;
+  }
 }
 
 /* landscape on phones */
