@@ -8,11 +8,16 @@ class MissionControl {
     this.mission_cache = {};
     this.restMarkers = [];
     this.likeListener = null;
+    this.sidebarOpen = true;
+    this.$infoCol = $('#info-col');
     this.checkLocalStorage();
     this.loadMissionListener();
     this.createMissionListener();
     this.updateListener();
     this.deleteListener();
+    this.sidebarListener();
+    this.businessDetailListener();
+    this.businessMapListener();
   }
 
   /*
@@ -66,7 +71,7 @@ class MissionControl {
     this.fillForm(missionData.mission);
     this.showLikes(missionData.mission);
     this.mapBusinesses(missionData.businesses);
-    this.listBusinesses(missionData.businesses);
+    this.listBusinesses(missionData);
   }
 
   fillForm(missionData) {
@@ -170,11 +175,15 @@ class MissionControl {
     if (editor)
       return `
         <div class="form-group">
-          <input type="text" value="${country}"  minlength="2"
+          <input type="text" value="${
+            country !== 'XX' ? country : ''
+          }"  minlength="2"
           maxlength="2" name="country" id="country" placeholder="Country *"
           class="form-control form-control-sm" required>
       </div>`;
-    return `<span class="ml-1 txt-black">${country}</span>`;
+    return `<span class="ml-1 txt-black">${
+      country !== 'XX' ? country : ''
+    }</span>`;
   }
 
   makeButton(editor) {
@@ -199,7 +208,7 @@ class MissionControl {
     // if user is not editor allow liking/unliking.
     if (!data.editor) {
       $('#likes-zone').data('mission_id', data.id);
-
+      if (this.likeListener) this.likeListener.off();
       this.likeListener = $('#likes-zone').on(
         'click',
         ApiFunctsObj.likeMission
@@ -213,28 +222,45 @@ class MissionControl {
     this.restMarkers = mapArrayAndFitBounds(businesses);
   }
 
-  listBusinesses(businesses) {
-    const html = businesses.reduce((acc, el) => {
+  listBusinesses(missionData) {
+    let html = missionData.businesses.reduce((acc, el, idx) => {
       return `${acc}
-      <li class="list-group-item px-1">
-        ${el.name}
-        <span class="float-right">
-          <i class="fas fa-clipboard-list brand-outline txt-orange detailsBtn mx-1"></i>
-          <i class="fas fa-map-marked-alt brand-outline txt-orange mapButton mx-1"></i>
-          <i class="fas fa-flag brand-outline txt-orange flagBtn mx-1"></i>
-          <i class="fas fa-pen-alt brand-outline txt-orange writeReportBtn mx-1"></i>
-          <i class="fas fa-trash-alt brand-outline txt-orange removeBusinessBtn mx-1"></i>
-        </span>
-      </li>`;
+        <li class="list-group-item px-2 px-lg-3 px-xl-4">
+          ${el.name}
+          <span class="float-right" data-id="${el.id}">
+            <span class="detailsBtn mx-1" data-toggle="tooltip" title="Show Details" data-id="${
+              el.id
+            }">
+              <i class="fas fa-clipboard-list brand-outline txt-orange"></i>
+            </span>
+            <span class="mapBtn mx-1" data-toggle="tooltip" title="Show on Map" data-lng="${
+              el.longitude
+            }" data-lat="${el.latitude}" data-idx="${idx}">
+              <i class="fas fa-map-marked-alt brand-outline txt-orange"></i>
+            </span>
+            <i class="fas fa-flag brand-outline txt-orange flagBtn mx-1" data-toggle="tooltip" title="Plant a Flag"></i>
+            <i class="fas fa-pen-alt brand-outline txt-orange writeReportBtn mx-1" data-toggle="tooltip" title="Write Report"></i>
+            ${
+              missionData.editor
+                ? `<i class="fas fa-trash-alt brand-outline txt-orange removeBusinessBtn mx-1" data-toggle="tooltip" title="Remove from mission"></i>`
+                : ''
+            }
+          </span>
+        </li>`;
     }, '');
-
+    // if no businesses html is empty string - show default text.
+    html = html
+      ? html
+      : `<li class="list-group-item px-2 px-lg-3 px-xl-4">
+         <a href="/">Explore</a> and add some goals!</li>`;
+    // insert into DOM.
     $('#businesses-list').html(html);
   }
 
   // Create new mission button listener
   createMissionListener() {
     $('#create-mission-btn').on('click', this.showCreateForm);
-    $('.info-col').on('submit', '#create-form', this.createMission.bind(this));
+    $('#info-col').on('submit', '#create-form', this.createMission.bind(this));
   }
 
   showCreateForm(e) {
@@ -328,7 +354,7 @@ class MissionControl {
   // Call mission update endpoint.
   // Provide feedback and update mission-select <option> text.
   updateListener() {
-    $('.info-col').on(
+    $('#info-col').on(
       'submit',
       '#mission-form',
       async function (e) {
@@ -359,7 +385,8 @@ class MissionControl {
         }
         if (resp.data.success) {
           $('#mission-form .feedback').html(
-            '<span class="text-success bg-light p-2 rounded">Updated!</span>'
+            `<span class="text-success bg-light p-2 rounded">Updated!</span>
+            ${this.makeNote(resp.data.note)}`
           );
           this.mission_cache[f_d.id].mission = resp.data.mission;
           // update mission-select text.
@@ -372,6 +399,12 @@ class MissionControl {
         setTimeout(() => $('#mission-form .feedback').html(''), 4000);
       }.bind(this)
     );
+  }
+
+  makeNote(note) {
+    if (note)
+      return `<span class="text-warning bg-light p-2 rounded">${note}</span>`;
+    return '';
   }
 
   // Listen for mission-form delete button being clicked.
@@ -410,6 +443,55 @@ class MissionControl {
         }
       }.bind(this)
     );
+  }
+
+  sidebarListener() {
+    $('.sidebar-toggle-btn').click(
+      function () {
+        // Toggle sidebar.
+        // Note: Sidebar does not start with sidebarExpand class to avoid animation on load.
+        if (this.sidebarOpen === true) {
+          this.$infoCol
+            .addClass('sidebarCollapse')
+            .removeClass('sidebarExpand');
+        } else {
+          this.$infoCol.toggleClass(['sidebarExpand', 'sidebarCollapse']);
+        }
+        this.sidebarOpen = !this.sidebarOpen;
+        // Flip left/right arrows.
+        $('.arrow-wrapper')
+          .children()
+          .each(function () {
+            $(this).toggleClass('d-none');
+          });
+      }.bind(this)
+    );
+  }
+
+  businessDetailListener() {
+    const this_ = this;
+    $('#info-col').on('click', '.detailsBtn', this_.callGetDetails);
+  }
+
+  callGetDetails(e) {
+    ApiFunctsObj.getShowBusinessDetails(e);
+  }
+
+  businessMapListener() {
+    const this_ = this;
+    $('#info-col').on('click', '.mapBtn', function () {
+      const lng = $(this).data('lng');
+      const lat = $(this).data('lat');
+      const idx = $(this).data('idx');
+
+      mappyBoi.flyTo({
+        center: [lng, lat],
+        essential: true, // this animation is considered essential with respect to prefers-reduced-motion
+      });
+
+      const marker = this_.restMarkers[idx];
+      if (!marker.getPopup().isOpen()) marker.togglePopup();
+    });
   }
 }
 

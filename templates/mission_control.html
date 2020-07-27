@@ -19,7 +19,7 @@
   <!-- <script defer src="../static/js/geolocate.js"></script> -->
   <!-- <script src="../static/js/modernizer.js"></script> -->
   <script defer src="../static/js/cards.js"></script>
-  <script defer src="../static/js/animations.js"></script>
+  <!-- <script defer src="../static/js/animations.js"></script> -->
   <script defer src="../static/js/api_functs.js"></script>
   <!-- <script defer src="../static/js/index.js"></script> -->
 
@@ -45,8 +45,13 @@
       mappyBoi = renderMiniMap([-85, 26.8], 2.5);
     </script>
   </div>
+  <div class="spinner-zone flx-std rounded-bottom" style="display: none;">
+    <div class="spinner-border txt-green" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
   <div
-    class="sidebar-toggle-btn pl-1 border border-secondary border-left-0 bg-trans-b"
+    class="sidebar-toggle-btn pl-1 border border-primary border-left-0 bg-trans-b"
   >
     <div class="arrow-wrapper black-outline-1">
       <i class="fas fa-angle-double-left"></i>
@@ -55,7 +60,10 @@
   </div>
   <div class="container-fluid ssp" id="main-interface">
     <div class="row">
-      <div class="col-11 col-sm-6 col-md-5 col-lg-4 col-xl-3 mb-5 info-col">
+      <div
+        class="col-11 col-sm-6 col-md-5 col-lg-4 col-xl-3 mb-5"
+        id="info-col"
+      >
         <div class="bg-trans-b2 rounded px-2 py-1 mt-2 txt-white-k mb-1">
           <p for="mission-select" class="mb-1">
             <a
@@ -130,7 +138,7 @@
           </a>
           <ul
             id="businesses-list"
-            class="collapse list-group bg-dark txt-light"
+            class="collapse show list-group bg-dark txt-light"
           ></ul>
         </div>
       </div>

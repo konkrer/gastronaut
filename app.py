@@ -549,6 +549,8 @@ def create_mission():
 def update_mission():
     """Endpoint to update a mission."""
 
+    note = {}
+
     data = request.json
     mission = Mission.query.get_or_404(data['id'])
 
@@ -556,8 +558,14 @@ def update_mission():
         return Unauthorized()
 
     if data.get('is_public'):
-        mission.share()
+        if len(mission.businesses):
+            mission.share()
+        else:
+            note['note'] = 'You cannot share a mission without goals.'
+
         del data['is_public']
+    else:
+        data['is_public'] = False
 
     mission.update(**data)
 
@@ -567,7 +575,11 @@ def update_mission():
         error_logging(e)
         return jsonify({'error': repr(e)})
 
-    return jsonify({'success': 'updated', 'mission': mission.serialize()})
+    return jsonify({
+        'success': 'updated',
+        'mission': mission.serialize(),
+        **note
+    })
 
 
 @app.route('/mission/<mission_id>', methods=['DELETE'])
@@ -658,6 +670,9 @@ def remove_from_mission(mission_id):
         return jsonify({'success': 'Business not in mission.'})
 
     mission.businesses.remove(business)
+    # don't allow sharing when mission has no businesses.
+    if len(mission.business) == 0:
+        mission.is_public = False
 
     try:
         db.session.commit()
