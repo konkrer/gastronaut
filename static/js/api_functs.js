@@ -35,7 +35,7 @@ class ApiFuncts {
       $(this)
         .children()
         .children()
-        .each(function (idx) {
+        .each(function () {
           $(this).toggle();
         });
       $(this).next().text(resp.data.likes);
@@ -108,7 +108,7 @@ class ApiFuncts {
     $('.spinner-zone').show();
     let business_result_data;
 
-    const business_id = e.target.dataset.id;
+    const business_id = e.currentTarget.dataset.id;
 
     if (this.business_results_cache[business_id])
       business_result_data = this.business_results_cache[business_id];
