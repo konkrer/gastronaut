@@ -57,7 +57,8 @@ class User(db.Model):
     # missions user owns and can edit
     my_missions = db.relationship('Mission', backref='user')
 
-    reports = db.relationship('Report', backref='user')
+    reports = db.relationship('Report', backref='user',
+                              cascade='all, delete-orphan')
 
     @classmethod
     def register(cls, email, username, password):
@@ -126,7 +127,25 @@ class User(db.Model):
 
 
 class Mission(db.Model):
-    """Mission model"""
+    """Mission Model
+
+    Args:
+        editor:             Owner/editor - FK. Gets changed to moderator
+        db(Integer)         account 2 when user deletes mission but mission
+                            was shared and is in use by other users.
+
+        author:             Creator - non explicit FK. Gets changed to
+        db(Integer)         moderator account 2 when user deletes account
+                            if mission was shared and is in use by other users
+
+        date_shared:        Date of original sharing. Remains even if user
+        db(Datetime)        un-shares mission. Used to check for missions
+                            in use by other users even if is_public is False.
+                            Prevents deleting missions in use by others.
+
+        is_public:          Set to true if user shares mission. Used to check
+        db(Boolean)         for public missions on Explore Missions page.
+    """
 
     __tablename__ = 'missions'
 
@@ -135,6 +154,8 @@ class Mission(db.Model):
                    autoincrement=True)
 
     editor = db.Column(db.Integer, db.ForeignKey(User.id))
+
+    author_ = db.Column(db.Integer)
 
     name = db.Column(db.String(50), nullable=False)
 
@@ -152,8 +173,7 @@ class Mission(db.Model):
 
     likes = db.Column(db.PickleType, nullable=False, default={0})
 
-    user_missions = db.relationship('UserMission', backref='mission',
-                                    cascade='all, delete-orphan')
+    user_missions = db.relationship('UserMission', backref='mission')
 
     businesses = db.relationship('Business', secondary='missions_businesses',
                                  backref='missions')
@@ -161,7 +181,8 @@ class Mission(db.Model):
     mission_businesses = db.relationship(
         'MissionBusiness', cascade='all, delete-orphan')
 
-    reports = db.relationship('Report', backref='mission')
+    reports = db.relationship(
+        'Report', backref='mission')
 
     __table_args__ = (
         db.Index('order_date_shared_desc', date_shared.desc(),
@@ -268,6 +289,7 @@ class Mission(db.Model):
         except Exception:
             return False
 
+        m.author_ = kwargs['editor']
         db.session.add(m)
         return m
 
@@ -283,6 +305,17 @@ class Mission(db.Model):
         """Mission representation."""
         m = self
         return f"<Mission id={m.id} name={m.name} editor={m.editor} >"
+
+    @property
+    def author(self):
+        """Return author user object or set and return moderator."""
+
+        author = User.query.get(self.author_)
+        if author:
+            return author
+        # if author has deleted account set author_ to moderator account #2.
+        self.author_ = 2
+        return User.query.get(2)
 
 
 class UserMission(db.Model):
