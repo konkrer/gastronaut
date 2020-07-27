@@ -156,14 +156,14 @@ function makeCard(business) {
         <p class="card-text">
           ${makeCategoriesText(categories)} ${is_closed ? '- Closed' : ''}
         </p>
-        <button class="btn btn-sm btn-primary-alt2 btn-my-card font-weight-bold mr-2 mr-sm-1 
+        <button class="btn btn-sm btn-primary-alt2 btn-my-card mr-2 mr-sm-1 
         mr-md-2 px-3 px-sm-2 px-md--3 brand-outline txt-orange detailsBtn"
         data-toggle="tooltip"
         title="Details"
         ><i class="fas fa-clipboard-list fa-lg"></i>
         </button>
         <button
-          class="btn btn-sm btn-primary-alt2 btn-my-card font-weight-bold cardMapButton brand-outline
+          class="btn btn-sm btn-primary-alt2 btn-my-card cardMapButton brand-outline
           txt-orange mr-2 mr-sm-1 mr-md-2 px-3 px-sm-2 px-md--3"
           data-toggle="tooltip"
           title="Show on Map"
@@ -172,7 +172,7 @@ function makeCard(business) {
         </button>
         <span data-toggle="tooltip" title="Add to Mission">
           <button
-            class="btn btn-sm btn-primary-alt2 btn-my-card mission-btn font-weight-bold" 
+            class="btn btn-sm btn-primary-alt2 btn-my-card mission-btn" 
             data-toggle="modal"
             data-target="#mission-choices"
             data-city="${city}"

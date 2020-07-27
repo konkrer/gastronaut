@@ -9,10 +9,10 @@ class MissionControl {
     this.restMarkers = [];
     this.likeListener = null;
     this.checkLocalStorage();
+    this.loadMissionListener();
+    this.createMissionListener();
     this.updateListener();
     this.deleteListener();
-
-    $('#mission-select').change(this.loadMissionEventRelay.bind(this));
   }
 
   /*
@@ -45,9 +45,13 @@ class MissionControl {
     }, 2500);
   }
 
-  loadMissionEventRelay(e) {
-    localStorage.setItem('currMissionId', e.target.value);
-    this.loadMission(e.target.value);
+  loadMissionListener() {
+    $('#mission-select').change(
+      function (e) {
+        localStorage.setItem('currMissionId', e.target.value);
+        this.loadMission(e.target.value);
+      }.bind(this)
+    );
   }
 
   async loadMission(mission_id) {
@@ -62,6 +66,7 @@ class MissionControl {
     this.fillForm(missionData.mission);
     this.showLikes(missionData.mission);
     this.mapBusinesses(missionData.businesses);
+    this.listBusinesses(missionData.businesses);
   }
 
   fillForm(missionData) {
@@ -187,8 +192,8 @@ class MissionControl {
 
   showLikes(data) {
     const icon = data.user_liked
-      ? '<i class="fas fa-thumbs-up mr-1"></i><i class="far fa-thumbs-up mr-1" style="display: none;"></i>'
-      : '<i class="far fa-thumbs-up mr-1"></i><i class="fas fa-thumbs-up mr-1" style="display: none;"></i>';
+      ? '<i class="fas fa-thumbs-up fa-lg mr-1"></i><i class="far fa-thumbs-up fa-lg mr-1" style="display: none;"></i>'
+      : '<i class="far fa-thumbs-up fa-lg mr-1"></i><i class="fas fa-thumbs-up fa-lg mr-1" style="display: none;"></i>';
     $('#likes-zone').html(`<span>${icon}</span>`);
     $('#likes-zone').next().text(data.likes);
     // if user is not editor allow liking/unliking.
@@ -206,6 +211,117 @@ class MissionControl {
     clearMapArray(this.restMarkers);
     if (businesses.length == 0) return;
     this.restMarkers = mapArrayAndFitBounds(businesses);
+  }
+
+  listBusinesses(businesses) {
+    const html = businesses.reduce((acc, el) => {
+      return `${acc}
+      <li class="list-group-item px-1">
+        ${el.name}
+        <span class="float-right">
+          <i class="fas fa-clipboard-list brand-outline txt-orange detailsBtn mx-1"></i>
+          <i class="fas fa-map-marked-alt brand-outline txt-orange mapButton mx-1"></i>
+          <i class="fas fa-flag brand-outline txt-orange flagBtn mx-1"></i>
+          <i class="fas fa-pen-alt brand-outline txt-orange writeReportBtn mx-1"></i>
+          <i class="fas fa-trash-alt brand-outline txt-orange removeBusinessBtn mx-1"></i>
+        </span>
+      </li>`;
+    }, '');
+
+    $('#businesses-list').html(html);
+  }
+
+  // Create new mission button listener
+  createMissionListener() {
+    $('#create-mission-btn').on('click', this.showCreateForm);
+    $('.info-col').on('submit', '#create-form', this.createMission.bind(this));
+  }
+
+  showCreateForm(e) {
+    e.preventDefault();
+    const html = `
+    <a class="txt-orange" data-toggle="collapse" href="#create-form" 
+      role="button" aria-expanded="false" aria-controls="mission-form">
+      Create Mission 
+      <i class="fas fa-caret-down fa-xs text-dark ml-2"></i>
+    </a>
+    <form id="create-form" class="collapse show bg-dark p-4">
+      <div class="form-group">
+        <input type="text" value="" minlength="2"
+        maxlength="50" name="name" id="name" placeholder="Name *"
+        class="form-control form-control-sm" required>
+      </div>          
+      <div class="form-group">
+        <textarea name="description" id="description" rows="2"
+        class="form-control form-control-sm" maxlength="100"
+        >Add a Description</textarea>
+      </div>
+      <div class="form-group">
+          <input type="text" value="" 
+          maxlength="50" name="city" id="city" placeholder="City"
+          class="form-control form-control-sm">
+      </div>
+      <div class="form-group">
+          <input type="text" value="" minlength="2"
+          maxlength="2" name="state" id="state" placeholder="State"
+          class="form-control form-control-sm">
+      </div>
+      <div class="form-group">
+          <input type="text" value=""  minlength="2"
+          maxlength="2" name="country" id="country" placeholder="Country *"
+          class="form-control form-control-sm" required>
+      </div>
+      <div class="mt-4 btn-div">
+        <span class="feedback ml-5 font-weight-bold"></span>
+        <button type="submit" class="btn btn-sm btn-primary float-right"
+        >Create Mission</button>
+      </div>
+    </form>
+    `;
+    $('#mission-panel').html(html);
+  }
+
+  // Call create mission API endpoint.
+  // Update DOM with new <option> for new mission.
+  // Load new mission.
+  async createMission(e) {
+    e.preventDefault();
+
+    const formData = $('#create-form').serializeArray();
+    const f_d = convertDataArrayToObj(formData);
+
+    // Don't pass default textarea content 'Add a Description' to backend.
+    f_d.description =
+      f_d.description == 'Add a Description' ? '' : f_d.description;
+
+    try {
+      var resp = await axios.post(`/mission`, f_d);
+    } catch (error) {
+      // TODO: sentry log error
+      $('#mission-form .feedback').html(
+        '<span class="text-danger">Error</span>'
+      );
+      return;
+    }
+    if (!resp || resp.data.error) {
+      // TODO: sentry log error
+      $('#mission-form .feedback').html(
+        `<span class="text-danger">${resp.data.error}</span>`
+      );
+      return;
+    }
+    if (resp.data.success) {
+      $('#mission-panel').html('');
+      const mission = resp.data.mission;
+      // update mission-select with new <option>.
+      $('#mission-select').append(
+        $(`<option value="${mission.id}">${mission.name}</option>`)
+      );
+      localStorage.setItem('currMissionId', mission.id);
+      clearMapArray(this.restMarkers);
+      this.restMarkers = [];
+      this.checkLocalStorage();
+    }
   }
 
   // Listen for mission-form being submitted.
@@ -226,7 +342,7 @@ class MissionControl {
           f_d.description == 'Add a Description' ? '' : f_d.description;
 
         try {
-          var resp = await axios.post(`/mission`, f_d);
+          var resp = await axios.put(`/mission`, f_d);
         } catch (error) {
           // TODO: sentry log error
           $('#mission-form .feedback').html(
@@ -245,9 +361,9 @@ class MissionControl {
           $('#mission-form .feedback').html(
             '<span class="text-success bg-light p-2 rounded">Updated!</span>'
           );
-          this.mission_cache[f_d.id].mission = resp.data.obj;
+          this.mission_cache[f_d.id].mission = resp.data.mission;
           // update mission-select text.
-          $('#mission-select-form #mission-select option').each(function (idx) {
+          $('#mission-select-form #mission-select option').each(function () {
             // if <option> is for edited mission update name text.
             if ($(this).val() === f_d.id) $(this).text(f_d.name);
           });
