@@ -15,12 +15,12 @@ class MissionControl {
     this.updateListener();
     this.deleteMissionListener();
     this.removeMissionListener();
-    this.sidebarListener();
     this.businessDetailListener();
     this.businessMapListener();
     this.businessDblclickListener();
     this.goalCompletedListener();
     this.removeBusinessListener();
+    this.sidebarListener();
     setTimeout(() => {
       this.checkLocalStorage();
     }, 2500);
@@ -71,6 +71,7 @@ class MissionControl {
       this.mission_cache[mission_id] = resp.data;
       missionData = resp.data;
     }
+    // debugger;
     this.fillForm(missionData.mission);
     this.showLikes(missionData.mission);
     this.mapBusinesses(missionData.businesses);
@@ -212,6 +213,7 @@ class MissionControl {
     $('#likes-zone').next().text(data.likes);
     // if user is not editor allow liking/unliking.
     if (!data.editor) {
+      // if not editor add data-mission_id to liks-zone with user id.
       $('#likes-zone').data('mission_id', data.id);
       if (this.likeListener) this.likeListener.off();
       this.likeListener = $('#likes-zone').on(
@@ -349,6 +351,7 @@ class MissionControl {
       );
       return;
     }
+    $('.toasts-zone').html('');
     if (resp.data.success) {
       $('#mission-panel').html('');
       const mission = resp.data.mission;
@@ -360,6 +363,7 @@ class MissionControl {
       clearMapArray(this.restMarkers);
       this.restMarkers = [];
       this.checkLocalStorage();
+      ApiFunctsObj.showToast(resp.data.success);
     }
   }
 
@@ -408,7 +412,7 @@ class MissionControl {
             if ($(this).val() === f_d.id) $(this).text(f_d.name);
           });
         }
-
+        // remove feedback text.
         setTimeout(() => $('#mission-form .feedback').html(''), 4000);
       }.bind(this)
     );
@@ -442,6 +446,7 @@ class MissionControl {
           // TODO: sentry log error
           return;
         }
+        $('.toasts-zone').html('');
         if (resp.data.success) {
           $('#mission-select')
             .children()
@@ -454,6 +459,7 @@ class MissionControl {
           clearMapArray(this.restMarkers);
           this.restMarkers = [];
           this.checkLocalStorage();
+          ApiFunctsObj.showToast(resp.data.success);
         }
       }.bind(this)
     );
@@ -480,6 +486,7 @@ class MissionControl {
           // TODO: sentry log error
           return;
         }
+        $('.toasts-zone').html('');
         if (resp.data.success) {
           $('#mission-select')
             .children()
@@ -492,30 +499,8 @@ class MissionControl {
           clearMapArray(this.restMarkers);
           this.restMarkers = [];
           this.checkLocalStorage();
+          ApiFunctsObj.showToast(resp.data.success);
         }
-      }.bind(this)
-    );
-  }
-
-  sidebarListener() {
-    $('.sidebar-toggle-btn').click(
-      function () {
-        // Toggle sidebar.
-        // Note: Sidebar does not start with sidebarExpand class to avoid animation on load.
-        if (this.sidebarOpen === true) {
-          this.$infoCol
-            .addClass('sidebarCollapse')
-            .removeClass('sidebarExpand');
-        } else {
-          this.$infoCol.toggleClass(['sidebarExpand', 'sidebarCollapse']);
-        }
-        this.sidebarOpen = !this.sidebarOpen;
-        // Flip left/right arrows.
-        $('.arrow-wrapper')
-          .children()
-          .each(function () {
-            $(this).toggleClass('d-none');
-          });
       }.bind(this)
     );
   }
@@ -525,6 +510,7 @@ class MissionControl {
     $('#info-col').on('click', '.detailsBtn', this_.callGetDetails);
   }
 
+  // was causing problems when called directly above ^.
   callGetDetails(e) {
     ApiFunctsObj.getShowBusinessDetails(e);
   }
@@ -579,6 +565,7 @@ class MissionControl {
         // TODO: sentry log error
         return;
       }
+      $('.toasts-zone').html('');
 
       const {
         data: { success },
@@ -588,18 +575,25 @@ class MissionControl {
         let newMarker, completed;
         const idx = $(this).parent().data('idx');
         const name = $(this).data('name');
+        // get marker for this business
         const marker = M_C.restMarkers[idx];
         const { lng, lat } = marker._lngLat;
         marker.remove();
-        if (success === 'added') {
+        if (success === 'Goal Completed!') {
+          // add flag marker
           newMarker = addFlagMarker([lng, lat], `<b><em>${name}</em></b>`);
           completed = true;
         } else {
+          // add regular marker
           newMarker = addMarker([lng, lat], `<b><em>${name}</em></b>`);
           completed = false;
         }
+        // put new marker in restMarkers array in spot of old marker
         this_.restMarkers.splice(idx, 1, newMarker);
+        // update mission cache that this business was/wasn't completed
         this_.mission_cache[mission_id].businesses[idx].completed = completed;
+
+        ApiFunctsObj.showToast(success);
       }
     });
   }
@@ -624,13 +618,39 @@ class MissionControl {
         return;
       }
 
+      $('.toasts-zone').html('');
+
       if (resp.data.success) {
         const idx = $(this).parent().data('idx');
         // remove business from cache and reload mission.
         this_.mission_cache[mission_id].businesses.splice(idx, 1);
         this_.loadMission(mission_id);
+        ApiFunctsObj.showToast(resp.data.success);
       }
     });
+  }
+
+  sidebarListener() {
+    $('.sidebar-toggle-btn').click(
+      function () {
+        // Toggle sidebar.
+        // Note: Sidebar does not start with sidebarExpand class to avoid animation on load.
+        if (this.sidebarOpen === true) {
+          this.$infoCol
+            .addClass('sidebarCollapse')
+            .removeClass('sidebarExpand');
+        } else {
+          this.$infoCol.toggleClass(['sidebarExpand', 'sidebarCollapse']);
+        }
+        this.sidebarOpen = !this.sidebarOpen;
+        // Flip left/right arrows.
+        $('.arrow-wrapper')
+          .children()
+          .each(function () {
+            $(this).toggleClass('d-none');
+          });
+      }.bind(this)
+    );
   }
 }
 
