@@ -1058,7 +1058,7 @@ $('#mission-choices-form').submit(async function (e) {
   }
   try {
     var resp = await axios.post(
-      `/v1/add_business/mission/${mission_id}`,
+      `v1/mission/add_business/${mission_id}`,
       business_data
     );
   } catch (error) {

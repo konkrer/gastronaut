@@ -328,8 +328,6 @@ class UserMission(db.Model):
     mission_id = db.Column(
         db.Integer, db.ForeignKey(Mission.id), primary_key=True)
 
-    mission_completed = db.Column(db.Boolean, default=False)
-
     goals_completed = db.Column(db.PickleType, default=[])
 
     __mapper_args__ = {
