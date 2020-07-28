@@ -523,7 +523,7 @@ def load_mission(mission_id):
     if g.user.id == mission.editor:
         mission_dict['editor'] = True
     else:
-        # mission_dict['editor'] = False
+        mission_dict['editor'] = False
         mission_dict['username'] = mission.author.username
         mission_dict['author_id'] = mission.author.id
 
@@ -547,7 +547,8 @@ def create_mission():
         error_logging(e)
         return jsonify({'error': repr(e)})
 
-    return jsonify({'success': 'created', 'mission': mission.serialize()})
+    return jsonify({'success': 'Mission Created!',
+                    'mission': mission.serialize()})
 
 
 @app.route('/v1/mission', methods=['PUT'])
@@ -606,7 +607,7 @@ def delete_mission(mission_id):
         mission.is_public = False
         mission.editor = 2
         db.session.commit()
-        return jsonify({'success': 'mission deleted'})
+        return jsonify({'success': 'Mission Deleted!'})
 
     try:
         db.session.delete(mission)
@@ -615,7 +616,7 @@ def delete_mission(mission_id):
         error_logging(e)
         return jsonify({'error': repr(e)})
 
-    return jsonify({'success': 'mission deleted'})
+    return jsonify({'success': 'Mission Deleted!'})
 
 
 @app.route('/v1/mission/add_business/<mission_id>', methods=['POST'])
@@ -780,10 +781,10 @@ def goal_completed(mission_id):
 
     if data['business_id'] in goals_completed:
         goals_completed.remove(data['business_id'])
-        out = {'success': 'removed'}
+        out = {'success': 'Goal Open!'}
     else:
         goals_completed.append(data['business_id'])
-        out = {'success': 'added'}
+        out = {'success': 'Goal Completed!'}
 
     user_mission.goals_completed = goals_completed
 

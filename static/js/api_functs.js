@@ -7,7 +7,7 @@ class ApiFuncts {
 
     $('.like-mission').on('click', this.likeMission);
     $('.like-report').on('click', this.likeReport);
-    $('.add-mission').on('click', this.addMission);
+    this.addMissionListener();
     $('.card').on(
       'click',
       '.detailsBtn',
@@ -73,35 +73,41 @@ class ApiFuncts {
   //
   // Add mission to user missions functionality.
   //
-  async addMission(e) {
-    e.preventDefault();
-    const mission_id = $(this).data('mission_id');
+  addMissionListener() {
+    const this_ = this;
+    $('.add-mission').on('click', async function (e) {
+      e.preventDefault();
+      const mission_id = $(this).data('mission_id');
+      try {
+        var resp = await axios.post(`/v1/add_mission/${mission_id}`);
+      } catch (error) {
+        return;
+      }
 
-    try {
-      var resp = await axios.post(`/v1/add_mission/${mission_id}`);
-    } catch (error) {
-      return;
-    }
+      $('.toasts-zone').html('');
 
-    $('.toasts-zone').html('');
+      if (resp.data.success) {
+        this_.showToast(resp.data.success);
+      }
+    });
+  }
 
-    if (resp.data.success) {
-      $('.toasts-zone').prepend(
-        `<div class="toast bg-dark text-light" role="alert" aria-live="assertive" aria-atomic="true"
-        data-delay="4000" >
-          <div class="toast-header bg-dark text-light">
-            <strong class="mr-auto">Updated!</strong>
-            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="toast-body">
-          ${resp.data.success}
-          </div>
-        </div>`
-      );
-      $('.toast').toast('show');
-    }
+  showToast(message) {
+    $('.toasts-zone').prepend(
+      `<div class="toast bg-dark text-light" role="alert" aria-live="assertive" aria-atomic="true"
+      data-delay="5000" >
+        <div class="toast-header bg-dark text-light">
+          <strong class="mr-auto">Updated!</strong>
+          <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="toast-body">
+        ${message}
+        </div>
+      </div>`
+    );
+    $('.toast').toast('show');
   }
 
   /*
@@ -185,7 +191,7 @@ class ApiFuncts {
       }
       try {
         var resp = await axios.post(
-          `v1/mission/add_business/${mission_id}`,
+          `/v1/mission/add_business/${mission_id}`,
           this_.mission_btn_business_data
         );
       } catch (error) {
