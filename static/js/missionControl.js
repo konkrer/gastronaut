@@ -585,17 +585,21 @@ class MissionControl {
       } = resp;
 
       if (success) {
+        let newMarker, completed;
         const idx = $(this).parent().data('idx');
         const name = $(this).data('name');
         const marker = M_C.restMarkers[idx];
         const { lng, lat } = marker._lngLat;
         marker.remove();
         if (success === 'added') {
-          var newMarker = addFlagMarker([lng, lat], `<b><em>${name}</em></b>`);
+          newMarker = addFlagMarker([lng, lat], `<b><em>${name}</em></b>`);
+          completed = true;
         } else {
-          var newMarker = addMarker([lng, lat], `<b><em>${name}</em></b>`);
+          newMarker = addMarker([lng, lat], `<b><em>${name}</em></b>`);
+          completed = false;
         }
         this_.restMarkers.splice(idx, 1, newMarker);
+        this_.mission_cache[mission_id].businesses[idx].completed = completed;
       }
     });
   }
