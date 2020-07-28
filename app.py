@@ -929,6 +929,9 @@ def next_page_logic(request):
     if next_page == 'user_detail':
         return redirect(url_for(f'{next_page}', user_id=0))
 
+    if next_page == 'mission_detail':
+        next_page = 'missions'
+
     return redirect(url_for(f'{next_page}'))
 
 
