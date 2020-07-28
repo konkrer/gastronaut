@@ -18,6 +18,7 @@ class MissionControl {
     this.sidebarListener();
     this.businessDetailListener();
     this.businessMapListener();
+    this.businessDblclickListener();
   }
 
   /*
@@ -228,20 +229,20 @@ class MissionControl {
         <li class="list-group-item px-2 px-lg-3 px-xl-4">
           ${el.name}
           <span class="float-right" data-id="${el.id}">
-            <span class="detailsBtn mx-1" data-toggle="tooltip" title="Show Details" data-id="${
+            <span class="detailsBtn mx-1 mx-xl-2" data-toggle="tooltip" title="Show Details" data-id="${
               el.id
             }">
               <i class="fas fa-clipboard-list brand-outline txt-orange"></i>
             </span>
-            <span class="mapBtn mx-1" data-toggle="tooltip" title="Show on Map" data-lng="${
+            <span class="mapBtn mx-1 mx-xl-2" data-toggle="tooltip" title="Show on Map" data-lng="${
               el.longitude
             }" data-lat="${el.latitude}" data-idx="${idx}">
               <i class="fas fa-map-marked-alt brand-outline txt-orange"></i>
             </span>
-            <i class="fas fa-flag brand-outline txt-orange flagBtn mx-1" data-toggle="tooltip" title="Plant a Flag"></i>
-            <i class="fas fa-pen-alt brand-outline txt-orange writeReportBtn mx-1" data-toggle="tooltip" title="Write Report"></i>
+            <i class="fas fa-flag brand-outline txt-orange flagBtn mx-1 mx-xl-2" data-toggle="tooltip" title="Plant a Flag"></i>
+            <i class="fas fa-pen-alt brand-outline txt-orange writeReportBtn mx-1 mx-xl-2" data-toggle="tooltip" title="Write Report"></i>
             ${
-              missionData.editor
+              missionData.mission.editor
                 ? `<i class="fas fa-trash-alt brand-outline txt-orange removeBusinessBtn mx-1" data-toggle="tooltip" title="Remove from mission"></i>`
                 : ''
             }
@@ -480,17 +481,31 @@ class MissionControl {
   businessMapListener() {
     const this_ = this;
     $('#info-col').on('click', '.mapBtn', function () {
-      const lng = $(this).data('lng');
-      const lat = $(this).data('lat');
-      const idx = $(this).data('idx');
+      this_.businessMapper($(this));
+    });
+  }
 
-      mappyBoi.flyTo({
-        center: [lng, lat],
-        essential: true, // this animation is considered essential with respect to prefers-reduced-motion
-      });
+  businessMapper($el) {
+    const lng = $el.data('lng');
+    const lat = $el.data('lat');
+    const idx = $el.data('idx');
 
-      const marker = this_.restMarkers[idx];
-      if (!marker.getPopup().isOpen()) marker.togglePopup();
+    mappyBoi.flyTo({
+      center: [lng, lat],
+      essential: true, // this animation is considered essential with respect to prefers-reduced-motion
+      zoom: 17,
+    });
+
+    const marker = this.restMarkers[idx];
+    if (!marker.getPopup().isOpen()) marker.togglePopup();
+  }
+
+  businessDblclickListener() {
+    const this_ = this;
+    $('#info-col').on('dblclick', '.list-group-item', function () {
+      const fake_e = { currentTarget: $(this).find('.detailsBtn').get()[0] };
+      this_.callGetDetails(fake_e);
+      this_.businessMapper($(this).find('.mapBtn'));
     });
   }
 }

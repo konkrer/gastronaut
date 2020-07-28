@@ -41,6 +41,15 @@ main {
   background-color: unset;
 }
 
+.flag-marker {
+  background-image: url('/static/images/flag_blue_straight.png');
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 50px;
+  width: 50px;
+}
+
 @media screen and (hover: hover) {
   main button:hover {
     background-color: var(--my-green) !important;

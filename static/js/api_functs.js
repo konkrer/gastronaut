@@ -3,6 +3,7 @@
 class ApiFuncts {
   constructor() {
     this.business_results_cache = {};
+    this.mission_btn_business_data = null;
 
     $('.like-mission').on('click', this.likeMission);
     $('.like-report').on('click', this.likeReport);
@@ -12,6 +13,8 @@ class ApiFuncts {
       '.detailsBtn',
       this.getShowBusinessDetails.bind(this)
     );
+    this.addBusinessToMisionListener();
+    this.missionBtnDataCacheListener();
     // Turn on toasts.
     $('.toast').toast();
   }
@@ -132,15 +135,72 @@ class ApiFuncts {
     this.showDetailModal(business_result_data);
   }
 
-  /* 
+  //*
   /*  Update detail modal with business data and show.
-  */
-  showDetailModal(data) {
-    $('#business-detail-modal').html(makeDetailModal(data));
+   */
+  showDetailModal(data, longitude, latitude) {
+    $('#business-detail-modal').html(
+      makeDetailModal(data, longitude, latitude)
+    );
     $('#business-detail-modal').modal().show();
     setTimeout(() => {
       $('.carousel').carousel();
     }, 100);
+  }
+
+  /*
+  /* Add-to-mission button sets card business_data to variable.
+  */
+  missionBtnDataCacheListener() {
+    const this_ = this;
+    $('main').on('click', '.mission-btn', function (e) {
+      let data = {};
+
+      data.id = $(this).data('id');
+      data.name = $(this).data('name');
+      data.city = $(this).data('city');
+      data.state = $(this).data('state');
+      data.country = $(this).data('country');
+      data.longitude = $(this).data('lng');
+      data.latitude = $(this).data('lat');
+
+      this_.mission_btn_business_data = data;
+    });
+  }
+
+  /*
+  /* Add business to mission fuctionality.
+  */
+  addBusinessToMisionListener() {
+    const this_ = this;
+    $('#mission-choices-form').submit(async function (e) {
+      e.preventDefault();
+
+      const mission_id = $('#mission-choices-form #mission-select').val();
+      if (!mission_id) {
+        $('#mission-choices .feedback').html(
+          `Create New Mission <i class="fas fa-hand-point-right fa-lg ml-1"></i>`
+        );
+        return;
+      }
+      try {
+        var resp = await axios.post(
+          `/v1/add_business/mission/${mission_id}`,
+          this_.mission_btn_business_data
+        );
+      } catch (error) {
+        // TODO: sentry log error
+        $('#mission-choices .feedback').text('Error');
+        return;
+      }
+
+      if (resp.data.success) {
+        $('#mission-choices .feedback').text(resp.data.success);
+        setTimeout(() => {
+          $('#mission-choices .feedback').text('');
+        }, 2000);
+      }
+    });
   }
 }
 

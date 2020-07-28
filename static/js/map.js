@@ -48,6 +48,21 @@ function addMarker(coords, html) {
   return restMarker;
 }
 
+// Add a flag map marker and open popup.
+function addFlagMarker(coords, html) {
+  const options = {
+    element: $('<div class="marker flag-marker">').get()[0],
+    anchor: 'bottom-left',
+    offset: [-10, 0],
+  };
+  restMarker = new mapboxgl.Marker(options)
+    .setLngLat(coords)
+    .setPopup(new mapboxgl.Popup({ offset: [-2, -49] }).setHTML(html))
+    .addTo(mappyBoi);
+  restMarker.togglePopup();
+  return restMarker;
+}
+
 function addRestMarkerAndFitBounds(userCoords, restCoords, name) {
   const html = `<b><em>${name}</em></b>`;
   if (restMarker) restMarker.remove();
@@ -83,7 +98,7 @@ function fitBoundsList(array) {
 function mapArray(array) {
   return array.reduce((acc, el) => {
     acc.push(
-      addMarker([el.longitude, el.latitude], `<b><em>${el.name}</em></b>`)
+      addFlagMarker([el.longitude, el.latitude], `<b><em>${el.name}</em></b>`)
     );
     return acc;
   }, []);

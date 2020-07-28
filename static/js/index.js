@@ -1049,7 +1049,7 @@ $('main').on('click', '.mission-btn', function (e) {
 $('#mission-choices-form').submit(async function (e) {
   e.preventDefault();
 
-  const mission_id = $('#mission-select').val();
+  const mission_id = $('#mission-choices-form #mission-select').val();
   if (!mission_id) {
     $('#mission-choices .feedback').html(
       `Create New Mission <i class="fas fa-hand-point-right fa-lg ml-1"></i>`
@@ -1063,7 +1063,7 @@ $('#mission-choices-form').submit(async function (e) {
     );
   } catch (error) {
     // TODO: sentry log error
-    '#mission-choices .feedback'.text('Error');
+    $('#mission-choices .feedback').text('Error');
     return;
   }
 
