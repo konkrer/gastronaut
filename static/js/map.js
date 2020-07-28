@@ -19,7 +19,7 @@ function renderMiniMap(mapCenter = [-85, 26.8], zoom = 1.3) {
     'pk.eyJ1Ijoia29ua3JlciIsImEiOiJja2NiNnI3bjgyMjVnMnJvNmJ6dTF0enlmIn0.AH_5N70IYIX4_tslm49Kmw';
   var map = new mapboxgl.Map({
     container: 'map',
-    style: 'mapbox://styles/konkrer/ckbslmn3x00y31hp7vh351zxb', // <<<<< remove /draft in production
+    style: 'mapbox://styles/konkrer/ckbslmn3x00y31hp7vh351zxb/draft', // <<<<< remove /draft in production
     center: mapCenter,
     pitch: 34,
     zoom,
@@ -52,12 +52,12 @@ function addMarker(coords, html) {
 function addFlagMarker(coords, html) {
   const options = {
     element: $('<div class="marker flag-marker">').get()[0],
-    anchor: 'bottom-left',
-    offset: [-10, 0],
+    anchor: 'center',
+    offset: [16, -21],
   };
   restMarker = new mapboxgl.Marker(options)
     .setLngLat(coords)
-    .setPopup(new mapboxgl.Popup({ offset: [-2, -49] }).setHTML(html))
+    .setPopup(new mapboxgl.Popup({ offset: [0, -45] }).setHTML(html))
     .addTo(mappyBoi);
   restMarker.togglePopup();
   return restMarker;
@@ -81,25 +81,38 @@ function mapArrayAndFitBounds(array) {
   return mapArray(array);
 }
 
-// Determine least and most lng/lat combo and fit bounds
+// Determine least and most lng/lat combo and fit bounds.
+// If only one coordinate set in list fly to location.
 function fitBoundsList(array) {
-  const least = [Infinity, Infinity];
-  const most = [-Infinity, -Infinity];
-  array.forEach(el => {
-    least[0] = Math.min(el.longitude, least[0]);
-    least[1] = Math.min(el.latitude, least[1]);
-    most[0] = Math.max(el.longitude, most[0]);
-    most[1] = Math.max(el.latitude, most[1]);
-  });
-  fitBounds(least, most);
+  if (array.length > 1) {
+    const least = [Infinity, Infinity];
+    const most = [-Infinity, -Infinity];
+    array.forEach(el => {
+      least[0] = Math.min(el.longitude, least[0]);
+      least[1] = Math.min(el.latitude, least[1]);
+      most[0] = Math.max(el.longitude, most[0]);
+      most[1] = Math.max(el.latitude, most[1]);
+    });
+    fitBounds(least, most);
+  } else
+    mappyBoi.flyTo({
+      center: [array[0].longitude, array[0].latitude],
+      essential: true,
+      zoom: 17,
+    });
 }
 
 // map a list of businesses for mission-control.
 function mapArray(array) {
   return array.reduce((acc, el) => {
-    acc.push(
-      addFlagMarker([el.longitude, el.latitude], `<b><em>${el.name}</em></b>`)
-    );
+    if (el.completed)
+      acc.push(
+        addFlagMarker([el.longitude, el.latitude], `<b><em>${el.name}</em></b>`)
+      );
+    else
+      acc.push(
+        addMarker([el.longitude, el.latitude], `<b><em>${el.name}</em></b>`)
+      );
     return acc;
   }, []);
 }

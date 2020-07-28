@@ -42,7 +42,7 @@ main {
 }
 
 .flag-marker {
-  background-image: url('/static/images/flag_blue_straight.png');
+  background-image: url('/static/images/flag_green_straight.png');
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;

@@ -10,15 +10,20 @@ class MissionControl {
     this.likeListener = null;
     this.sidebarOpen = true;
     this.$infoCol = $('#info-col');
-    this.checkLocalStorage();
     this.loadMissionListener();
     this.createMissionListener();
     this.updateListener();
-    this.deleteListener();
+    this.deleteMissionListener();
+    this.removeMissionListener();
     this.sidebarListener();
     this.businessDetailListener();
     this.businessMapListener();
     this.businessDblclickListener();
+    this.goalCompletedListener();
+    this.removeBusinessListener();
+    setTimeout(() => {
+      this.checkLocalStorage();
+    }, 2500);
   }
 
   /*
@@ -45,10 +50,7 @@ class MissionControl {
       lastMissionId = currMissions[0];
       localStorage.setItem('currMissionId', lastMissionId);
     }
-    // Delay to allow map to hopefully fully load.
-    setTimeout(() => {
-      this.loadMission(lastMissionId);
-    }, 2500);
+    this.loadMission(lastMissionId);
   }
 
   loadMissionListener() {
@@ -197,7 +199,9 @@ class MissionControl {
         <button type="submit" class="btn btn-sm btn-primary float-right"
         >Update</button>
       </div>`;
-    return '';
+    return `
+      <button type="button" class="btn btn-sm btn-outline-danger float-right border-0"
+      data-toggle="modal" data-target="#removeMissionModal">Remove</button>`;
   }
 
   showLikes(data) {
@@ -228,22 +232,30 @@ class MissionControl {
       return `${acc}
         <li class="list-group-item px-2 px-lg-3 px-xl-4">
           ${el.name}
-          <span class="float-right" data-id="${el.id}">
-            <span class="detailsBtn mx-1 mx-xl-2" data-toggle="tooltip" title="Show Details" data-id="${
+          <span class="float-right" data-id="${el.id}" data-idx="${idx}">
+            <span class="detailsBtn mr-2" data-toggle="tooltip" title="Show Details" data-id="${
               el.id
             }">
               <i class="fas fa-clipboard-list brand-outline txt-orange"></i>
             </span>
-            <span class="mapBtn mx-1 mx-xl-2" data-toggle="tooltip" title="Show on Map" data-lng="${
+            <span class="mapBtn mr-2" data-toggle="tooltip" title="Show on Map" data-lng="${
               el.longitude
-            }" data-lat="${el.latitude}" data-idx="${idx}">
+            }" data-lat="${el.latitude}">
               <i class="fas fa-map-marked-alt brand-outline txt-orange"></i>
             </span>
-            <i class="fas fa-flag brand-outline txt-orange flagBtn mx-1 mx-xl-2" data-toggle="tooltip" title="Plant a Flag"></i>
-            <i class="fas fa-pen-alt brand-outline txt-orange writeReportBtn mx-1 mx-xl-2" data-toggle="tooltip" title="Write Report"></i>
+            <span class="flagBtn mr-2" data-toggle="tooltip" title="Plant a Flag" data-name="${
+              el.name
+            }">
+              <i class="fas fa-flag brand-outline txt-orange"></i>
+            </span>
+            <span class="writeReportBtn" data-toggle="tooltip" title="Write Report">
+              <i class="fas fa-pen-alt brand-outline txt-orange"></i>
+            </span>
             ${
               missionData.mission.editor
-                ? `<i class="fas fa-trash-alt brand-outline txt-orange removeBusinessBtn mx-1" data-toggle="tooltip" title="Remove from mission"></i>`
+                ? `<span class = "removeBusinessBtn ml-2" data-toggle="tooltip" title="Remove from mission">
+                    <i class="fas fa-trash-alt brand-outline txt-orange"></i>
+                   </span>`
                 : ''
             }
           </span>
@@ -322,7 +334,7 @@ class MissionControl {
       f_d.description == 'Add a Description' ? '' : f_d.description;
 
     try {
-      var resp = await axios.post(`/mission`, f_d);
+      var resp = await axios.post(`/v1/mission`, f_d);
     } catch (error) {
       // TODO: sentry log error
       $('#mission-form .feedback').html(
@@ -369,7 +381,7 @@ class MissionControl {
           f_d.description == 'Add a Description' ? '' : f_d.description;
 
         try {
-          var resp = await axios.put(`/mission`, f_d);
+          var resp = await axios.put(`/v1/mission`, f_d);
         } catch (error) {
           // TODO: sentry log error
           $('#mission-form .feedback').html(
@@ -411,7 +423,7 @@ class MissionControl {
   // Listen for mission-form delete button being clicked.
   // Call mission delete endpoint.
   // Update mission-select <option> text.
-  deleteListener() {
+  deleteMissionListener() {
     $('#deleteMissionModal').on(
       'submit',
       'form',
@@ -421,7 +433,7 @@ class MissionControl {
         const mission_id = $('#mission-form input[name="id"]').val();
 
         try {
-          var resp = await axios.delete(`/mission/${mission_id}`);
+          var resp = await axios.delete(`/v1/mission/${mission_id}`);
         } catch (error) {
           // TODO: sentry log error
           return;
@@ -433,11 +445,50 @@ class MissionControl {
         if (resp.data.success) {
           $('#mission-select')
             .children()
-            .each(function (idx) {
+            .each(function () {
               if ($(this).val() === mission_id) $(this).remove();
             });
-          $('#deleteMissionModal').modal('hide');
           $('#mission-panel').html('');
+          $('#businesses-list').html('');
+          $('#deleteMissionModal').modal('hide');
+          clearMapArray(this.restMarkers);
+          this.restMarkers = [];
+          this.checkLocalStorage();
+        }
+      }.bind(this)
+    );
+  }
+  // Listen for remove mission button being clicked.
+  // Call mission remove endpoint.
+  // Update mission-select <option> text.
+  removeMissionListener() {
+    $('#removeMissionModal').on(
+      'submit',
+      'form',
+      async function (e) {
+        e.preventDefault();
+
+        const mission_id = $('#mission-form input[name="id"]').val();
+
+        try {
+          var resp = await axios.post(`/v1/remove_mission/${mission_id}`);
+        } catch (error) {
+          // TODO: sentry log error
+          return;
+        }
+        if (!resp || resp.data.error) {
+          // TODO: sentry log error
+          return;
+        }
+        if (resp.data.success) {
+          $('#mission-select')
+            .children()
+            .each(function () {
+              if ($(this).val() === mission_id) $(this).remove();
+            });
+          $('#mission-panel').html('');
+          $('#businesses-list').html('');
+          $('#removeMissionModal').modal('hide');
           clearMapArray(this.restMarkers);
           this.restMarkers = [];
           this.checkLocalStorage();
@@ -488,7 +539,7 @@ class MissionControl {
   businessMapper($el) {
     const lng = $el.data('lng');
     const lat = $el.data('lat');
-    const idx = $el.data('idx');
+    const idx = $el.parent().data('idx');
 
     mappyBoi.flyTo({
       center: [lng, lat],
@@ -506,6 +557,75 @@ class MissionControl {
       const fake_e = { currentTarget: $(this).find('.detailsBtn').get()[0] };
       this_.callGetDetails(fake_e);
       this_.businessMapper($(this).find('.mapBtn'));
+    });
+  }
+
+  goalCompletedListener() {
+    const this_ = this;
+    $('#info-col').on('click', '.flagBtn', async function () {
+      const data = { business_id: $(this).parent().data('id') };
+      const mission_id = localStorage.getItem('currMissionId');
+
+      try {
+        var resp = await axios.post(
+          `/v1/mission/goal_completed/${mission_id}`,
+          data
+        );
+      } catch (error) {
+        // TODO: sentry log error
+        return;
+      }
+      if (!resp || resp.data.error) {
+        // TODO: sentry log error
+        return;
+      }
+
+      const {
+        data: { success },
+      } = resp;
+
+      if (success) {
+        const idx = $(this).parent().data('idx');
+        const name = $(this).data('name');
+        const marker = M_C.restMarkers[idx];
+        const { lng, lat } = marker._lngLat;
+        marker.remove();
+        if (success === 'added') {
+          var newMarker = addFlagMarker([lng, lat], `<b><em>${name}</em></b>`);
+        } else {
+          var newMarker = addMarker([lng, lat], `<b><em>${name}</em></b>`);
+        }
+        this_.restMarkers.splice(idx, 1, newMarker);
+      }
+    });
+  }
+
+  removeBusinessListener() {
+    const this_ = this;
+    $('#info-col').on('click', '.removeBusinessBtn', async function () {
+      const data = { business_id: $(this).parent().data('id') };
+      const mission_id = localStorage.getItem('currMissionId');
+
+      try {
+        var resp = await axios.post(
+          `/v1/mission/remove_business/${mission_id}`,
+          data
+        );
+      } catch (error) {
+        // TODO: sentry log error
+        return;
+      }
+      if (!resp || resp.data.error) {
+        // TODO: sentry log error
+        return;
+      }
+
+      if (resp.data.success) {
+        const idx = $(this).parent().data('idx');
+        // remove business from cache and reload mission.
+        this_.mission_cache[mission_id].businesses.splice(idx, 1);
+        this_.loadMission(mission_id);
+      }
     });
   }
 }

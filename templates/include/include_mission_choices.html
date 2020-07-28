@@ -56,11 +56,12 @@
         >
           Close
         </button>
+        {% if request.endpoint != 'mission_control' %}
         <a
           href="/mission-control"
           class="btn btn-sm btn-outline-secondary txt-white-k"
           >Create New Mission</a
-        >
+        >{% endif %}
       </div>
       {% else %}
       <div class="modal-header">

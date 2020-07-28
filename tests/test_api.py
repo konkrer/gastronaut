@@ -314,7 +314,7 @@ class MissionApiTestCase(TestCase):
             db.session.add(self.mission)
 
             resp = c.post(
-                f'/v1/add_business/mission/{self.mission.id}',
+                f'v1/mission/add_business/{self.mission.id}',
                 json=self.business_data)
 
             self.assertEqual(resp.json['success'],
@@ -325,7 +325,7 @@ class MissionApiTestCase(TestCase):
 
             # test repeat adding does nothing
             resp = c.post(
-                f'/v1/add_business/mission/{self.mission.id}',
+                f'v1/mission/add_business/{self.mission.id}',
                 json=self.business_data)
 
             self.assertEqual(resp.json['success'], 'Business Already Added.')

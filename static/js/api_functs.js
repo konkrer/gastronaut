@@ -185,7 +185,7 @@ class ApiFuncts {
       }
       try {
         var resp = await axios.post(
-          `/v1/add_business/mission/${mission_id}`,
+          `v1/mission/add_business/${mission_id}`,
           this_.mission_btn_business_data
         );
       } catch (error) {

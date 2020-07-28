@@ -506,10 +506,16 @@ def load_mission(mission_id):
 
     mission = Mission.query.get_or_404(mission_id)
 
-    businesses = [b.serialize() for b in mission.businesses]
-    mission_dict = mission.serialize()
+    user_mission = UserMission.query.filter_by(
+        user_id=g.user.id, mission_id=mission.id).one()
 
-    # Set flags on missin dict for JavaScript use.
+    businesses = [b.serialize() for b in mission.businesses]
+
+    for b in businesses:
+        if b['id'] in user_mission.goals_completed:
+            b['completed'] = True
+
+    mission_dict = mission.serialize()
     # If user liked this mission set user_liked flag.
     if g.user.id == mission.editor or g.user.id in mission.likes:
         mission_dict['user_liked'] = True
@@ -517,14 +523,14 @@ def load_mission(mission_id):
     if g.user.id == mission.editor:
         mission_dict['editor'] = True
     else:
-        mission_dict['editor'] = False
+        # mission_dict['editor'] = False
         mission_dict['username'] = mission.author.username
         mission_dict['author_id'] = mission.author.id
 
     return jsonify({'mission': mission_dict, 'businesses': businesses})
 
 
-@app.route('/mission', methods=['POST'])
+@app.route('/v1/mission', methods=['POST'])
 @add_user_to_g
 def create_mission():
     """Endpoint to create a mission."""
@@ -544,7 +550,7 @@ def create_mission():
     return jsonify({'success': 'created', 'mission': mission.serialize()})
 
 
-@app.route('/mission', methods=['PUT'])
+@app.route('/v1/mission', methods=['PUT'])
 @add_user_to_g
 def update_mission():
     """Endpoint to update a mission."""
@@ -582,7 +588,7 @@ def update_mission():
     })
 
 
-@app.route('/mission/<mission_id>', methods=['DELETE'])
+@app.route('/v1/mission/<mission_id>', methods=['DELETE'])
 @add_user_to_g
 def delete_mission(mission_id):
     """Endpoint to delete a mission."""
@@ -612,7 +618,7 @@ def delete_mission(mission_id):
     return jsonify({'success': 'mission deleted'})
 
 
-@app.route('/v1/add_business/mission/<mission_id>', methods=['POST'])
+@app.route('/v1/mission/add_business/<mission_id>', methods=['POST'])
 @add_user_to_g
 def add_to_mission(mission_id):
     """Add business to mission endpoint."""
@@ -630,16 +636,12 @@ def add_to_mission(mission_id):
         if business in mission.businesses:
             return jsonify({'success': 'Already Added.'})
     else:
+        # Index page adds new businesses to DB.
         business = Business.create(
             id=data['id'], name=data['name'], city=data['city'],
             state=data['state'], country=data['country'],
             longitude=float(data['longitude']),
             latitude=float(data['latitude']))
-        try:
-            db.session.commit()
-        except Exception as e:
-            error_logging(e)
-            return jsonify({'error': 'Error!'})
 
     mission.businesses.append(business)
 
@@ -652,26 +654,26 @@ def add_to_mission(mission_id):
     return jsonify({'success': 'Added!'})
 
 
-@app.route('/v1/remove_business/mission/<mission_id>', methods=['POST'])
+@app.route('/v1/mission/remove_business/<mission_id>', methods=['POST'])
 @add_user_to_g
 def remove_from_mission(mission_id):
-    """Remove business from mission endpoint."""
-
-    if not g.user:
-        return Unauthorized()
+    """Endpoint to remove business from mission ."""
 
     mission = Mission.query.get_or_404(mission_id)
 
+    if not g.user and g.user.id == mission.editor:
+        return Unauthorized()
+
     data = request.json
 
-    business = Business.query.get_or_404(data['id'])
+    business = Business.query.get_or_404(data['business_id'])
 
     if business not in mission.businesses:
         return jsonify({'success': 'Business not in mission.'})
 
     mission.businesses.remove(business)
     # don't allow sharing when mission has no businesses.
-    if len(mission.business) == 0:
+    if len(mission.businesses) == 0:
         mission.is_public = False
 
     try:
@@ -716,7 +718,7 @@ def like_mission(mission_id):
 @app.route('/v1/add_mission/<mission_id>', methods=['POST'])
 @add_user_to_g
 def add_mission(mission_id):
-    """Add mission to user's missions endpoint."""
+    """Endpoint to add mission to user's missions."""
 
     if not g.user:
         return Unauthorized()
@@ -740,7 +742,7 @@ def add_mission(mission_id):
 @app.route('/v1/remove_mission/<mission_id>', methods=['POST'])
 @add_user_to_g
 def remove_mission(mission_id):
-    """Remove mission from user's missions endpoint."""
+    """Endpoint to remove mission from user's missions."""
 
     if not g.user:
         return Unauthorized()
@@ -759,6 +761,39 @@ def remove_mission(mission_id):
         return jsonify({'error': 'Error!'})
 
     return jsonify({'success': 'Mission Removed!'})
+
+
+@app.route('/v1/mission/goal_completed/<mission_id>', methods=['POST'])
+@add_user_to_g
+def goal_completed(mission_id):
+    """Endpoint to add/remove business from goals_completed."""
+
+    if not g.user:
+        return Unauthorized()
+
+    user_mission = UserMission.query.filter_by(
+        user_id=g.user.id, mission_id=mission_id).one()
+
+    goals_completed = user_mission.goals_completed.copy()
+
+    data = request.json
+
+    if data['business_id'] in goals_completed:
+        goals_completed.remove(data['business_id'])
+        out = {'success': 'removed'}
+    else:
+        goals_completed.append(data['business_id'])
+        out = {'success': 'added'}
+
+    user_mission.goals_completed = goals_completed
+
+    try:
+        db.session.commit()
+    except Exception as e:
+        error_logging(e)
+        return jsonify({'error': 'Error!'})
+
+    return jsonify(out)
 
 
 @app.route('/v1/report/like<report_id>', methods=['POST'])
