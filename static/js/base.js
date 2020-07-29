@@ -2,6 +2,7 @@
 
 let preferencesTimer;
 let feedbackClearTimer;
+let navRocketTimer;
 
 /*
 /* Set Preferences listener
@@ -17,7 +18,7 @@ $('#preferences-form').on('change', 'input', () => {
 async function updatePreferences() {
   const data = convertDataArrayToObj($('#preferences-form').serializeArray());
   const resp = await axios.post('/v1/preferences', data);
-  // debugger;
+
   $('#preferencesModal .feedback').text(resp.data.feedback);
   clearTimeout(feedbackClearTimer);
   feedbackClearTimer = setTimeout(() => {
@@ -58,26 +59,8 @@ function convertDataArrayToObj(data) {
 }
 
 /*
-/* Close Alert function.
+/* Close Alert (flash) function.
 */
 $('.alert-close').click(() => {
-  $('.alert').hide();
+  $('.alert').remove();
 });
-// function navbarAnimation() {
-//   document
-//     .querySelector('.navbar-traverse')
-//     .animate([{ right: '-56px' }, { right: '100vw' }], 20000);
-// }
-
-// function navbarAnimationTiming() {
-//   setTimeout(() => {
-//     navbarAnimation();
-//     setInterval(() => {
-//       navbarAnimation();
-//     }, 300000);
-//   }, 60000);
-// }
-
-// $(function () {
-//   // navbarAnimationTiming();
-// });

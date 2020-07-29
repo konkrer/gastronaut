@@ -205,6 +205,8 @@ class ApiFuncts {
         setTimeout(() => {
           $('#mission-choices .feedback').text('');
         }, 2000);
+
+        if (M_C) M_C.addBusinessToMission(mission_id);
       }
     });
   }

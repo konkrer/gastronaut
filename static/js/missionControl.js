@@ -667,6 +667,13 @@ class MissionControl {
       }.bind(this)
     );
   }
+
+  addBusinessToMission(mission_id) {
+    // when user adds a business to another mission delete mission cache
+    // for the altered mission and force API call for new data. Added business
+    // is present in businesses list when user checks.
+    delete this.mission_cache[mission_id];
+  }
 }
 
 const M_C = new MissionControl();
