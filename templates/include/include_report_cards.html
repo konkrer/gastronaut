@@ -31,7 +31,9 @@
     </div>
     <div class="card-body">
       {{report_text(report)}} {% if report.image_url %}
-      <img src="{{report.image_url}}" alt="User Image" class="report-img" />
+      <div class="flx-std">
+        <img src="{{report.image_url}}" alt="User Image" class="img-fluid" />
+      </div>
       {% endif %}
     </div>
 
