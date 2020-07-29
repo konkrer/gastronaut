@@ -28,11 +28,11 @@ class User(db.Model):
 
     username = db.Column(db.String(30), nullable=False, unique=True)
 
-    password = db.Column(db.String, nullable=False)
+    password = db.Column(db.String(60), nullable=False)
 
-    avatar_url = db.Column(db.String, nullable=True)
+    avatar_url = db.Column(db.String(320), nullable=True)
 
-    banner_url = db.Column(db.String, nullable=True)
+    banner_url = db.Column(db.String(320), nullable=True)
 
     byline = db.Column(db.String(200), nullable=True, default='')
 

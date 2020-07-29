@@ -2,17 +2,14 @@
 
 import requests
 import logging
-from types import SimpleNamespace
 import os
-
+from types import SimpleNamespace
 from sentry_sdk.integrations.flask import FlaskIntegration
 from sentry_sdk import (capture_message, capture_exception,
                         init as sentry_init)
-
-from flask import (  # noqa F401
-    Flask, request, flash, make_response, Response, session,
-    redirect, jsonify, abort, url_for, g, render_template as r_t)
-# from sqlalchemy.exc import IntegrityError
+from flask import (
+    Flask, request, flash, session,
+    redirect, jsonify, url_for, g, render_template as r_t)
 from werkzeug.utils import secure_filename
 from werkzeug.exceptions import Unauthorized, BadRequest
 
@@ -24,8 +21,6 @@ from static.py_modules.decorators import add_user_to_g, login_required
 from static.py_modules.yelp_helper import (
     YELP_CATEGORIES, no_alcohol, first_letters, parse_query_params,
     YELP_URL)
-
-# Product, Category, AddProductForm = None, None, None  # remove me
 
 
 app = Flask(__name__)
