@@ -1,10 +1,9 @@
-categories.json
 local_settings.py
 development_local/
 seed.py
 static/uploads
-*.log
 
 __pycache__/
 .vscode/
-old*
+old.*
+*.log
