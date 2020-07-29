@@ -497,9 +497,6 @@ def edit_report(report_id):
 def delete_report(report_id):
     """Delete report view."""
 
-    import pdb
-    pdb.set_trace()
-
     report = Report.query.get_or_404(report_id)
 
     if not report.user_id == g.user.id:
