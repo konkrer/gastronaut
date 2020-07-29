@@ -45,6 +45,8 @@ function makeTransactionsText(transactions) {
 }
 
 function makeHoursTable(open) {
+  if (!open) return '';
+
   const [mo, tu, we, th, fr, sa, su] = open;
   return `
     <table class="">
@@ -244,7 +246,7 @@ function makeDetailModal(business, longitude = '', latitude = '') {
     },
   } = business;
 
-  const { open, is_open_now } = hours[0];
+  if (hours) const { open, is_open_now } = hours[0];
   const originStr = latitude ? `${latitude},${longitude}` : '';
 
   const trans_text = makeTransactionsText(transactions);

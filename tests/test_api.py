@@ -318,7 +318,7 @@ class MissionApiTestCase(TestCase):
                 json=self.business_data)
 
             self.assertEqual(resp.json['success'],
-                             'Business Added to Mission!')
+                             'Added!')
             business = Business.query.get('3h939hd798dhjf97')
             self.assertIn(business, self.mission.businesses)
             self.assertEqual(len(self.mission.businesses), 1)
@@ -328,7 +328,7 @@ class MissionApiTestCase(TestCase):
                 f'v1/mission/add_business/{self.mission.id}',
                 json=self.business_data)
 
-            self.assertEqual(resp.json['success'], 'Business Already Added.')
+            self.assertEqual(resp.json['success'], 'Already Added.')
             self.assertIn(business, self.mission.businesses)
             self.assertEqual(len(self.mission.businesses), 1)
 
@@ -344,18 +344,22 @@ class MissionApiTestCase(TestCase):
                 sess['user_id'] = self.user2.id
 
             db.session.add(self.mission)  # ????
+            # import pdb
+            # pdb.set_trace()
+
+            data = {'business_id': self.business_data['id']}
 
             # test removing mission
-            resp = c.post(f'/v1/remove_business/mission/{self.mission.id}',
-                          json=self.business_data)
+            resp = c.post(f'/v1/mission/remove_business/{self.mission.id}',
+                          json=data)
 
             self.assertEqual(resp.json['success'],
                              'Business Removed from Mission!')
             self.assertNotIn(business, self.mission.businesses)
 
             # test repeat removing does nothing
-            resp = c.post(f'/v1/remove_business/mission/{self.mission.id}',
-                          json=self.business_data)
+            resp = c.post(f'/v1/mission/remove_business/{self.mission.id}',
+                          json=data)
 
             self.assertEqual(resp.json['success'], 'Business not in mission.')
             self.assertNotIn(business, self.mission.businesses)
