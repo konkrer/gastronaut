@@ -58,6 +58,9 @@ main {
   #mission-form a:hover {
     color: var(--my-green) !important;
   }
+  .iconBtn:hover {
+    color: var(--primary) !important;
+  }
 }
 
 /* landscape on phones */

@@ -641,6 +641,9 @@ a:hover {
     padding-left: 15px !important;
     padding-right: 15px !important;
   }
+  .ml-xxl-more {
+    margin-left: 25px !important;
+  }
 }
 
 @media screen and (min-width: 1768px) {
@@ -658,6 +661,9 @@ a:hover {
   }
   .sidebar-toggle-btn {
     font-size: 3.5vh;
+  }
+  .ml-xxl-more {
+    margin-left: 75px !important;
   }
 }
 

@@ -30,8 +30,11 @@
       </div>
     </div>
     <div class="card-body">
-      {{report_text(report)}}
+      {{report_text(report)}} {% if report.image_url %}
+      <img src="{{report.image_url}}" alt="User Image" class="img-fluid" />
+      {% endif %}
     </div>
+
     <div class="card-footer">
       {% if not g.user %}
       <button
@@ -56,12 +59,17 @@
           {% endif %}
         </span>
       </a>
-      {% endif %}
       <span class="px-3 text-dark likes">
         {{ report.likes | length}}
       </span>
-      {% if not request.endpoint == 'mission_report_detail' %}
-      <a href="/reports/{{report.id}}" class="card-link float-right"
+      {% endif %} {% if report.user_id == g.user.id %}
+      <a
+        href="/report/{{report.id}}/edit"
+        class="btn btn-sm btn-outline-primary float-right px-3 ml-4 ml-sm-1 ml-md-4"
+        >Edit Report</a
+      >
+      {% endif %} {% if not request.endpoint == 'report_detail' %}
+      <a href="/report/{{report.id}}" class="card-link float-right"
         >Read More</a
       >
       {% endif %}

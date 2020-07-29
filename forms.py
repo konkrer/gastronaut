@@ -1,13 +1,12 @@
 from flask_wtf import FlaskForm
 from wtforms import (
-    StringField, SelectField, TextAreaField,
+    StringField, TextAreaField,
     PasswordField, HiddenField)
-from wtforms.fields.html5 import (
-    DecimalField, IntegerField, URLField, EmailField)
+from wtforms.fields.html5 import URLField, EmailField
 from flask_wtf.file import FileField
 from wtforms.validators import (
     InputRequired, Length, Email,
-    Optional, URL, NumberRange, ValidationError)
+    Optional, URL, ValidationError)
 from models import User
 from flask import g
 
@@ -97,43 +96,24 @@ class LoginForm(FlaskForm):
         Length(min=6, max=60)])
 
 
-class AddProductForm(FlaskForm):
-    """Form for adding new product"""
+class AddReportForm(FlaskForm):
+    """Form for adding new report."""
 
-    name = StringField("Name", validators=[
-        InputRequired(message="Name cannot be blank."),
-        Length(min=2, max=50)])
+    text = TextAreaField("Report", validators=[
+        InputRequired(message="Report cannot be blank."),
+        Length(min=2)])
 
-    category_code = SelectField("Category", validators=[
-        InputRequired(), Length(min=1, max=4)])
+    photo_url = URLField(
+        "Photo URL", validators=[URL(), Optional()],
+        description="""
+            Either enter a photo URL or
+            choose an image file to include an image.""")
 
-    price = DecimalField("Price", validators=[
-        InputRequired(message="Price is required.")])
-
-    email = EmailField("Email", validators=[Email(), Optional()])
-
-    photo_url = URLField("Photo URL", validators=[URL(), Optional()])
-
-    photo_file = FileField("Upload Photo", validators=[
-        # FileRequired(),
-        Optional(),
-        # regexp(r'^[^/\\]\w+\.\w{3,5}$')
-    ])
-
-    age = IntegerField("Age", validators=[
-        NumberRange(min=0, max=30), Optional()])
-    #    message="Age must be in between 0 and 30.")
-
-    notes = TextAreaField("Notes")
-
-    # def validate_photo_file(form, field):
-    #     """Allow URL or file info for photo not both"""
-    #     if form.photo_url.data and form.photo_file.data:
-    #         form.photo_url.errors.append(
-    #             "Enter either photo URL or file to upload, not both.")
-    #         form.photo_file.errors.append(
-    #             "Enter either photo URL or file to upload, not both.")
-    #         raise ValidationError()
+    photo_file = FileField(
+        "Upload Photo", validators=[Optional()],
+        description="""
+            Either enter a photo URL or
+            choose an image file to include an image.""")
 
     def validate(self):
         if not super().validate():
@@ -144,3 +124,33 @@ class AddProductForm(FlaskForm):
             self.photo_file.errors.append(msg)
             return False
         return True
+
+
+class EditReportForm(FlaskForm):
+    """Form for editing a report."""
+
+    text = TextAreaField("Report", validators=[
+        InputRequired(message="Report cannot be blank."),
+        Length(min=2)])
+
+    photo_url = URLField(
+        "Photo URL", validators=[URL(), Optional()],
+        description="""
+            Either enter a photo URL or
+            choose an image file to include an image.""")
+
+    photo_file = FileField(
+        "Upload Photo", validators=[Optional()],
+        description="""
+            Either enter a photo URL or
+            choose an image file to include an image.""")
+
+    # def validate(self):
+    #     if not super().validate():
+    #         return False
+    #     if self.photo_url.data and self.photo_file.data:
+    #         msg = 'Please specify Photo URL or upload a photo, not both'
+    #         self.photo_url.errors.append(msg)
+    #         self.photo_file.errors.append(msg)
+    #         return False
+    #     return True

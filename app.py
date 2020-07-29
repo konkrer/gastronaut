@@ -12,19 +12,20 @@ from sentry_sdk import (capture_message, capture_exception,
 from flask import (  # noqa F401
     Flask, request, flash, make_response, Response, session,
     redirect, jsonify, abort, url_for, g, render_template as r_t)
-from sqlalchemy.exc import IntegrityError
+# from sqlalchemy.exc import IntegrityError
 from werkzeug.utils import secure_filename
-from werkzeug.exceptions import Unauthorized
+from werkzeug.exceptions import Unauthorized, BadRequest
 
 from models import (db, connect_db, User, Mission, UserMission,  # noqa F401
                     Business, Report, MissionBusiness, DEFAULT_PREFERENCES)  # noqa F401
-from forms import AddUserForm, LoginForm, EditUserForm
+from forms import (
+    AddUserForm, LoginForm, EditUserForm, AddReportForm, EditReportForm)
 from static.py_modules.decorators import add_user_to_g, login_required
 from static.py_modules.yelp_helper import (
     YELP_CATEGORIES, no_alcohol, first_letters, parse_query_params,
     YELP_URL)
 
-Product, Category, AddProductForm = None, None, None  # remove me
+# Product, Category, AddProductForm = None, None, None  # remove me
 
 
 app = Flask(__name__)
@@ -157,23 +158,11 @@ def mission_reports():
                            form_data=query_params)
 
 
-@app.route('/reports/<report_id>')
-@add_user_to_g
-def mission_report_detail(report_id):
-    """Mission report detail view."""
-
-    report = Report.query.get(report_id)
-    user = report.user
-
-    return render_template('report.html', reports=[report],
-                           user=user)
-
-
 @app.route('/reports/business/<business_id>')
 @add_user_to_g
 def business_reports_detail(business_id):
-    """Business reports detail view. All reports for a
-       particular business."""
+    """Business reports detail view. All reports for a particular
+       business. Accessed through detail modal 'See Reports' Button"""
 
     business = Business.query.get(business_id)
     reports = business.reports
@@ -185,6 +174,20 @@ def business_reports_detail(business_id):
     return render_template('reports.html', reports=reports,
                            form_data=query_params)
 
+#
+# 404, 401
+#
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template("404.html"), 404
+
+
+@app.errorhandler(401)
+def unauthorized(e):
+    return render_template("401.html"), 401
+
 
 #
 #     $$    $$    $$$.    $$$$$$$$  $$$$$<
@@ -194,9 +197,9 @@ def business_reports_detail(business_id):
 #     $$    $$      ^$$o  $$+       $$ '$$
 #     $$    $$  $$    $$  $$+       $$   $$
 #      $$$$$$   d$$$$$$   $$$$$$$$  $$    $$
+############################
+"""User CRUD, login, logout"""
 
-# User CRUD, login, logout
-#
 
 @app.route("/signup", methods=['GET', 'POST'])
 @add_user_to_g
@@ -356,68 +359,164 @@ def delete_user():
     return redirect(url_for('index'))
 
 
-#
-#
-#
+#  $$$$$$$$   $$$$$$$   $$$$$$$     $$$$$$'   x$$$$$$$   $$$$$$$$
+#  $$    $$   $$        $$    $$   $$    $$:  x$Y   \$$     $$
+#  $$   C$$   $$$$$$$   $$    $$  $$      $$  x$Y   $$      $$
+#  $$$$$$     $$$$$$$   $$$$$$$   $$      $$  x$$$$$?       $$
+#  $$  `$$    $$        $$        z$$    h$$  x$Y  $$j      $$
+#  $$   .$$   $$$$$$$$  $$         $$$n+$$$   x$Y   $$?     $$
+#  $$    .$$  $$$$$$$$  $$           d$$$     x$Y    $$ '   $$
+############################
+""" Report CRUD"""
 
 
-# @app.route("/product/add", methods=['GET', 'POST'])
-# def add_product():
-#     """Product add view."""
-#     form = AddProductForm()
-#     form.category_code.choices = db.session.query(Category.code,
-#                                                   Category.name).all()
+@app.route('/report/<report_id>')
+@add_user_to_g
+def report_detail(report_id):
+    """Mission Report detail view."""
 
-#     if form.validate_on_submit():
-#         # name = form.name.data
-#         # c_c = form.category_code.data
-#         # price = form.price.data
-#         # db.session.add(Product(name=name, category_code=c_c, price=price))
-#         data = form.data
-#         relevant_data = {
-#             k: v
-#             for k, v in data.items() if k in Product.set_get()
-#         }
+    report = Report.query.get_or_404(report_id)
+    user = report.user
 
-#         if form.photo_file.data:
-#             f = form.photo_file.data
-#             filename = secure_filename(f.filename)
-#             path = os.path.join('static\\uploads', filename)
-#             f.save(path)
-
-#             relevant_data['photo_file'] = path
-
-#         try:
-#             db.session.add(Product(**relevant_data))
-#             db.session.commit()
-#             flash("Product added!")
-#         except IntegrityError:
-#             flash("Name already exists!")
-#             return redirect(url_for('add_product'))
-
-#         return redirect(url_for('index'))
-
-#     return render_template("add_product.html", form=form)
+    return render_template('report.html', reports=[report],
+                           user=user)
 
 
-# @app.route("/product/<int:id_>/edit", methods=['GET', 'POST'])
-# def edit_product(id_):
-#     """Product edit view."""
-#     prod = Product.query.get_or_404(id_)
-#     form = AddProductForm(obj=prod)
-# form.category_code.choices = db.session.query(Category.code, Category.name)
+@app.route("/report", methods=['GET', 'POST'])
+@add_user_to_g
+@login_required
+def add_report():
+    """Write Report View."""
 
-#     if form.validate_on_submit():
-#         # prod.name = form.name.data
-#         # prod.category_code = form.category_code.data
-#         # prod.price = form.price.data
+    mission_id = request.args.get('mission_id')
+    business_id = request.args.get('business_id')
 
-#         form.populate_obj(prod)
+    if mission_id and business_id:
+        return BadRequest
 
-#         db.session.commit()
-#         return redirect(url_for('index'))
+    form = AddReportForm()
 
-#     return render_template("edit_product.html", form=form)
+    if form.validate_on_submit():
+
+        data = form.data
+        relevant_data = {
+            k: v
+            for k, v in data.items() if k in Report.set_get()
+        }
+
+        if form.photo_file.data:
+            f = form.photo_file.data
+            filename = secure_filename(f.filename)
+            path = os.path.join('static\\uploads', filename)
+            f.save(path)
+
+            relevant_data['photo_file'] = f'\\{path}'
+
+        report = Report.create(user_id=g.user.id, mission_id=mission_id,
+                               business_id=business_id, **relevant_data)
+
+        try:
+            db.session.commit()
+            flash("Report added!", 'success')
+            return redirect(url_for('report_detail', report_id=report.id))
+
+        except Exception as e:
+            db.session.rollback()
+            flash("Error Creating Report!", 'danger')
+            error_logging(e)
+
+    existing_report = check_for_existing_report(mission_id, business_id)
+    if existing_report:
+        return redirect(url_for('edit_report', report_id=existing_report.id))
+
+    if mission_id:
+        obj = Mission.query.get_or_404(mission_id)
+        kind = 'Mission'
+    else:
+        obj = Business.query.get_or_404(business_id)
+        kind = 'Business'
+
+    if request.method == 'POST':
+        flash("Please fix all form errors.", "danger")
+
+    return render_template("add_report.html", form=form, obj=obj, kind=kind)
+
+
+@app.route("/report/<report_id>/edit", methods=['GET', 'POST'])
+@add_user_to_g
+@login_required
+def edit_report(report_id):
+    """Report edit view."""
+
+    report = Report.query.get_or_404(report_id)
+    form = EditReportForm(obj=report)
+
+    if form.validate_on_submit():
+
+        if form.photo_url.data:
+            form.photo_file.data = ''
+        else:
+            if form.photo_file.data and not isinstance(
+                form.photo_file.data, str
+            ):
+                f = form.photo_file.data
+                filename = secure_filename(f.filename)
+                path = os.path.join('static\\uploads', filename)
+                f.save(path)
+                form.photo_file.data = f'\\{path}'
+
+        form.populate_obj(report)
+
+        try:
+            db.session.commit()
+            flash("Report Edited!", 'success')
+            return redirect(url_for('report_detail', report_id=report.id))
+
+        except Exception as e:
+            db.session.rollback()
+            flash("Error Editing Report!", 'danger')
+            error_logging(e)
+
+    if report.mission_id:
+        obj = Mission.query.get_or_404(report.mission_id)
+        kind = 'Mission'
+    else:
+        obj = Business.query.get_or_404(report.business_id)
+        kind = 'Business'
+
+    if request.method == 'POST':
+        flash("Please fix all form errors.", "danger")
+
+    return render_template("edit_report.html", form=form,
+                           obj=obj, kind=kind, report_id=report.id)
+
+
+@app.route('/report/<report_id>/delete', methods=['POST'])
+@add_user_to_g
+@login_required
+def delete_report(report_id):
+    """Delete report view."""
+
+    import pdb
+    pdb.set_trace()
+
+    report = Report.query.get_or_404(report_id)
+
+    if not report.user_id == g.user.id:
+        return Unauthorized()
+
+    db.session.delete(report)
+
+    try:
+        db.session.commit()
+        flash("Report Deleted!", 'success')
+
+    except Exception as e:
+        db.session.rollback()
+        flash("Error Editing Report!", 'danger')
+        error_logging(e)
+
+    return redirect(url_for('user_detail', user_id=g.user.id))
 
 
 #        $$      $$$$$$    $$
@@ -427,6 +526,8 @@ def delete_user():
 #     $$$$$$$-   $$        $$
 #     $$    $$   $$        $$
 #    $$     i$$  $$        $$
+############################
+""" API Endpoints"""
 
 
 @app.route('/v1/search')
@@ -826,71 +927,13 @@ def like_report(report_id):
 
     return jsonify({'success': success, 'likes': len(report.likes)})
 
-# @app.route('/api/products')
-# def get_products_api():
-#     """Api endpoint to see all products"""
-#     prods = Product.query.all()
-#     serialized = [prod.serialize() for prod in prods]
-#     return jsonify(products=serialized)
 
-
-# @app.route('/api/products', methods=['POST'])
-# def add_product_api():
-#     """Api endpoint to add new product"""
-#     data = request.json
-#     relevant_data = {k: v for k, v in data.items() if k in Product.set_get()}
-#     prod = Product(**relevant_data)
-#     db.session.add(prod)
-#     db.session.commit()
-
-#     res = jsonify(product=prod.serialize())
-#     return (res, 201)
-
-
-# @app.route('/api/products/<int:id_>')
-# def detail_product_api(id_):
-#     """Api endpoint for individual product"""
-#     prod = Product.query.get_or_404(id_)
-#     return jsonify(product=prod.serialize())
-
-
-# @app.route('/api/products/<int:id_>', methods=['PATCH'])
-# def patch_product_api(id_):
-#     """Api endpoint for patching product"""
-#     data = request.json
-#     relevant_data = {k: v for k, v in data.items() if k in Product.set_get()}
-#     p = Product.query.filter_by(id=id_)
-#     p.update(relevant_data)
-#     db.session.commit()
-
-#     return jsonify(product=p.one().serialize())
-
-
-# @app.route('/api/products/<int:id_>', methods=["DELETE"])
-# def delete_product_api(id_):
-#     """Api endpoint for individual product"""
-#     prod = Product.query.get_or_404(id_)
-#     db.session.delete(prod)
-#     db.session.commit()
-
-# return jsonify({"message": "Product Deleted", "deleted": prod.serialize()})
-
-
-#
-# 404, 401
-#
-
-
-@app.errorhandler(404)
-def page_not_found(e):
-    return render_template("404.html"), 404
-
-
-@app.errorhandler(401)
-def unauthorized(e):
-    return render_template("401.html"), 401
-
-
+#  $$    $$   $$$$$$$$  x$Y       $$$$$$$   $$$$$$$$  $$$$$$$$
+#  $$    $$   $$        x$Y       $$   $$0  $$        $$l   U$h
+#  $$$$$$$$   $$$$$$$   x$Y       $$   $$   $$$$$$$   $$$$$$$$
+#  $$    $$   $$        x$Y       $$$$$$    $$        $$$$$$
+#  $$    $$   $$        x$Y       $$        $$        $$l  $$$
+#  $$    $$   $$$$$$$$  x$$$$$$+  $$        $$$$$$$$  $$l   $$$
 ############################
 """ Helper Functions"""
 
@@ -969,6 +1012,22 @@ def next_page_logic(request):
         next_page = 'missions'
 
     return redirect(url_for(f'{next_page}'))
+
+
+def check_for_existing_report(mission_id, business_id):
+    """Check for an existing report with matching mission_id
+       or business_id."""
+
+    existing_report = None
+
+    if mission_id:
+        existing_report = Report.query.filter_by(
+            user_id=g.user.id, mission_id=mission_id).first()
+    else:
+        existing_report = Report.query.filter_by(
+            user_id=g.user.id, business_id=business_id).first()
+
+    return existing_report
 
 
 ############################

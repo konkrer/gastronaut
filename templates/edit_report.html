@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+<title>
+  {% block title %}Edit Report{% endblock %}
+</title>
+
+<head>
+  {% block head %}
+  <meta name="description" content="Edit a report page." />
+  <link rel="stylesheet" href="/static/css/common1.css" />
+  {% endblock %}
+</head>
+
+<main>
+  {% block main %}
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col col-md-8 col-xl-6">
+        <div class="my-5 p-3 p-md-5 bg-light rounded">
+          <h4 class="museo txt-orange mb-3">Edit Report</h4>
+          <h5 class="txt-white-k font-italic mb-0">{{obj.name}}</h5>
+          <div
+            class="mb-3 {% if kind=='Mission' %}text-info{%else%}txt-green{%endif%}"
+          >
+            {{kind}}
+          </div>
+          <form
+            id="report-edit-form"
+            method="POST"
+            enctype="multipart/form-data"
+          >
+            {% include 'include/include_form_w_textarea.html' with context %}
+            <div class="text-right">
+              <a
+                class="btn btn-secondary mt-4 border-0"
+                href="/user/profile/{{g.user.id}}"
+              >
+                Cancel
+              </a>
+              <button type="submit" class="btn btn-primary mt-4">
+                Submit
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-danger mt-4 border-0"
+                data-toggle="modal"
+                data-target="#deletReportModal"
+              >
+                Delete
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="modal fade"
+    id="deletReportModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="deletReportModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title txt-orange" id="deletReportModalLabel">
+            Delete Report
+          </h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form
+          class="form-inline"
+          action="/report/{{report_id}}/delete"
+          method="POST"
+        >
+          <div class="modal-body">
+            <p class="txt-white-k">
+              Are you sure you want to delete this report?
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+
+            <button type="submit" class="btn btn-danger">Delete</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  {% endblock %}
+</main>
