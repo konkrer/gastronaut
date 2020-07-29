@@ -48,6 +48,10 @@
   outline: none;
 }
 
+.report-img {
+  width: 100%;
+}
+
 .like-button {
   background-color: transparent;
   border: none;
