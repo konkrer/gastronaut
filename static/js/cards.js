@@ -246,7 +246,8 @@ function makeDetailModal(business, longitude = '', latitude = '') {
     },
   } = business;
 
-  if (hours) const { open, is_open_now } = hours[0];
+  if (hours) var { open, is_open_now } = hours[0];
+
   const originStr = latitude ? `${latitude},${longitude}` : '';
 
   const trans_text = makeTransactionsText(transactions);
