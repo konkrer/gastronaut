@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+<title>
+  {% block title %}Add Report{% endblock %}
+</title>
+
+<head>
+  {% block head %}
+  <meta name="description" content="Add a report page." />
+  {% endblock %}
+</head>
+
+<main>
+  {% block main %}
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col col-md-8 col-xl-6">
+        <div class="my-5 p-3 p-md-5 bg-light rounded">
+          <h4 class="museo txt-orange mb-3">Write Report</h4>
+          <h5 class="txt-white-k font-italic mb-0">{{obj.name}}</h5>
+          <div
+            class="mb-3 {% if kind=='Mission' %}text-info{%else%}txt-green{%endif%}"
+          >
+            {{kind}}
+          </div>
+          <form
+            id="report-add-form"
+            method="POST"
+            enctype="multipart/form-data"
+          >
+            {% include 'include/include_form_w_textarea.html' with context %}
+            <div class="text-right">
+              <a
+                class="btn btn-secondary mt-4 border-0"
+                href="/user/profile/{{g.user.id}}"
+              >
+                Cancel
+              </a>
+              <button type="submit" class="btn btn-primary mt-4">
+                Submit
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endblock %}
+</main>

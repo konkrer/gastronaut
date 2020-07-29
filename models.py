@@ -432,11 +432,22 @@ class Report(db.Model):
     business_id = db.Column(
         db.String, db.ForeignKey(Business.id), nullable=True)
 
-    submitted_on = db.Column(db.DateTime, default=datetime.utcnow())
+    submitted_on = db.Column(
+        db.DateTime, default=datetime.utcnow(), nullable=True)
 
     text = db.Column(db.Text, nullable=False)
 
+    photo_url = db.Column(db.String, nullable=True)
+
+    photo_file = db.Column(db.String(255), nullable=True)
+
     likes = db.Column(db.PickleType, nullable=False, default={0})
+
+    @property
+    def image_url(self):
+        """Return URL for image if there is one."""
+
+        return self.photo_url or self.photo_file
 
     @classmethod
     def get_by_recent(cls):
@@ -510,6 +521,24 @@ class Report(db.Model):
 
         db.session.add(r)
         return r
+
+    @classmethod
+    def set_get(self):
+        """
+        Return list of attributes for normal
+        serialization, obj creation and editing.
+        """
+        return ['user_id', 'mission_id', 'business_id', 'text',
+                'photo_url', 'photo_url']
+
+    def serialize(self):
+        """Serialize model set_get properties data to a dictonary."""
+        # update model from database so serialization works by calling self.id
+        id = self.id
+        out = {k: v for k, v in self.__dict__.items() if k in self.set_get()}
+        out['id'] = id
+        out['likes'] = len(self.likes)
+        return out
 
 
 class MissionBusiness(db.Model):

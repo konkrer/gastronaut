@@ -45,8 +45,10 @@ class MissionControl {
       const currOption = currMissions.indexOf(lastMissionId);
       $('#mission-select').children().eq(currOption).prop('selected', true);
       //
-    } else if (currMissions.length == 0) return;
-    else {
+    } else if (currMissions.length == 0) {
+      $('#write-mission-report').prop('href', '#');
+      return;
+    } else {
       lastMissionId = currMissions[0];
       localStorage.setItem('currMissionId', lastMissionId);
     }
@@ -71,11 +73,12 @@ class MissionControl {
       this.mission_cache[mission_id] = resp.data;
       missionData = resp.data;
     }
-    // debugger;
     this.fillForm(missionData.mission);
     this.showLikes(missionData.mission);
     this.mapBusinesses(missionData.businesses);
     this.listBusinesses(missionData);
+    // make mission report <a> element point to /report with current mission id.
+    $('#write-mission-report').prop('href', `/report?mission_id=${mission_id}`);
   }
 
   fillForm(missionData) {
@@ -238,25 +241,27 @@ class MissionControl {
             <span class="detailsBtn mr-2" data-toggle="tooltip" title="Show Details" data-id="${
               el.id
             }">
-              <i class="fas fa-clipboard-list brand-outline txt-orange"></i>
+              <i class="fas fa-clipboard-list brand-outline txt-orange iconBtn"></i>
             </span>
             <span class="mapBtn mr-2" data-toggle="tooltip" title="Show on Map" data-lng="${
               el.longitude
             }" data-lat="${el.latitude}">
-              <i class="fas fa-map-marked-alt brand-outline txt-orange"></i>
+              <i class="fas fa-map-marked-alt brand-outline txt-orange iconBtn"></i>
             </span>
             <span class="flagBtn mr-2" data-toggle="tooltip" title="Plant a Flag" data-name="${
               el.name
             }">
-              <i class="fas fa-flag brand-outline txt-orange"></i>
+              <i class="fas fa-flag brand-outline txt-orange iconBtn"></i>
             </span>
-            <span class="writeReportBtn" data-toggle="tooltip" title="Write Report">
-              <i class="fas fa-pen-alt brand-outline txt-orange"></i>
+            <span data-toggle="tooltip" title="Write Report">
+              <a href="/report?business_id=${el.id}" target="blank">
+                <i class="fas fa-pen-alt brand-outline txt-orange iconBtn"></i>
+              </a>
             </span>
             ${
               missionData.mission.editor
                 ? `<span class = "removeBusinessBtn ml-2" data-toggle="tooltip" title="Remove from mission">
-                    <i class="fas fa-trash-alt brand-outline txt-orange"></i>
+                    <i class="fas fa-trash-alt brand-outline txt-orange iconBtn"></i>
                    </span>`
                 : ''
             }
@@ -597,6 +602,16 @@ class MissionControl {
       }
     });
   }
+
+  // writeReportListener() {
+  //   const this_ = this;
+  //   $('#info-col').on('click', '.writeReportBtn', function () {
+  //     const business_id = $(this).parent().data('id');
+  //     if (!business_id)
+  //       const mission_id = localStorage.getItem('currMissionId');
+
+  //   });
+  // }
 
   removeBusinessListener() {
     const this_ = this;

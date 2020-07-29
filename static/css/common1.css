@@ -28,7 +28,7 @@
 }
 
 /* cards. not single report page card */
-.card:not(div.report card-norm) {
+.card {
   width: 80vw;
   display: inline-block;
 }
