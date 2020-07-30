@@ -31,10 +31,7 @@
           >
             {% include 'include/include_form_w_textarea.html' with context %}
             <div class="text-right">
-              <a
-                class="btn btn-secondary mt-4 border-0"
-                href="/user/profile/{{g.user.id}}"
-              >
+              <a class="btn btn-secondary mt-4 border-0" href="{{next_}}">
                 Cancel
               </a>
               <button type="submit" class="btn btn-primary mt-4">
