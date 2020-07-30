@@ -35,7 +35,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # if development server enable debugging and load local keys.
 if not os.environ.get('SECRET_KEY'):
     from flask_debugtoolbar import DebugToolbarExtension
-    from development_local.local_settings import API_KEY, SECRET_KEY
+    from development_local.local_settings import (
+        API_KEY, SECRET_KEY, SENDGRID_API_KEY)
 
     app.config["SECRET_KEY"] = SECRET_KEY
     app.config['SQLALCHEMY_ECHO'] = True
@@ -52,6 +53,7 @@ else:
     )
     app.config["SECRET_KEY"] = os.environ.get('SECRET_KEY')
     API_KEY = os.environ.get('YELP_API_KEY')
+    SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
     debug = False
 
 
@@ -84,6 +86,29 @@ def index():
         lng=lng,
         search_term=search_term
     )
+
+
+@app.route('/navbar-search')
+def navbar_search():
+    """View to route navbar searches. If normal term search on index page.
+       If @username check for user and route to user detail if found.
+       If username not found return to page user searched from."""
+
+    search_term = request.args.get('q')
+
+    if search_term and search_term.startswith('@'):
+        search_user = User.query.filter_by(username=search_term[1:]).first()
+        if not search_user:
+            search_user = User.query.filter(
+                User.username.ilike(f'%{search_term[1:]}%')).first()
+        if search_user:
+            return redirect(url_for('user_detail', user_id=search_user.id))
+
+        flash(f'Gastronaut {search_term} not found', 'warning')
+
+        return next_page_logic(request)
+
+    return redirect(url_for('index', q=search_term))
 
 
 @app.route("/navtest")
@@ -1021,7 +1046,7 @@ def next_page_url(request):
     # Special case for user clicking profile in navbar when not logged in.
     # user_id=0 makes user_detail view load user from g.user data.
     if next_page == 'user_detail' and not next_view_args:
-        return redirect(url_for('user_detail', user_id=0))
+        return url_for('user_detail', user_id=0)
 
     if next_view_args:
         # get key-value pairs

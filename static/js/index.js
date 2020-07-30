@@ -560,6 +560,12 @@ function navbarSearch() {
   $searchTerm.val(term);
   keywordDisplayLogic(term);
   if (term) {
+    // check for @ symbol and redirect index with q query term
+    // to check for user.
+    if (term[0] === '@') {
+      window.location.href = `/?q=${term}`;
+      return;
+    }
     category = 'restaurants,bars,food';
     $('.cat-display').text('All');
     turnActiveOffCatBtns();
