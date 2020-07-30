@@ -48,7 +48,9 @@
         <i class="far fa-thumbs-up fa-lg"></i>
       </button>
       {% elif report.user_id == g.user.id %}
-      <i class="fas fa-thumbs-up fa-lg text-primary"></i>
+      <span>
+        <i class="fas fa-thumbs-up fa-lg text-primary"></i>
+      </span>
       {% else %}
       <a href="#" class="card-link like-report" data-report_id="{{report.id}}">
         <span class="">
@@ -61,10 +63,11 @@
           {% endif %}
         </span>
       </a>
+      {% endif %}
       <span class="px-3 text-dark likes">
         {{ report.likes | length}}
       </span>
-      {% endif %} {% if report.user_id == g.user.id %}
+      {% if report.user_id == g.user.id %}
       <a
         href="/report/{{report.id}}/edit?next={{request.endpoint}}&next_view_args={{view_args}}"
         class="btn btn-sm btn-outline-primary float-right px-3 ml-4 ml-sm-1 ml-md-4"
