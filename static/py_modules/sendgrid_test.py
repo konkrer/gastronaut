@@ -10,7 +10,7 @@ message = Mail(
     html_content='<strong>and easy to do anywhere, even with Python</strong>')
 try:
     sg = SendGridAPIClient(
-        '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')
+        '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')
     response = sg.send(message)
     print(response.status_code)
     print(response.body)
