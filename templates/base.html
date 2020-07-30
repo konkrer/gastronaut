@@ -172,7 +172,7 @@
         {% endif %}
         <form
           class="form-inline my-2 my-lg-0 searchForm"
-          action="/"
+          action="/navbar-search"
           method="GET"
         >
           <input
@@ -190,6 +190,8 @@
             endif
             %}
           />
+          <input type="hidden" name="next" value="{{request.endpoint}}" />
+          <input type="hidden" name="next_view_args" value="{{view_args}}" />
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
             Search
           </button>

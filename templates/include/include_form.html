@@ -2,9 +2,20 @@
 'hidden' %}
 
 <div class="form-group">
-  {{ field.label }} {{field(class_="form-control") }}
+  {{ field.label }} {% if field.flags.required %}*{% endif %} {% if field.type
+  == "TextAreaField" %} {% if field.name == 'bio' %}
+  {{field(class_="form-control", rows=8, maxlength=500) }} {% else %}
+  {{field(class_="form-control", rows=8) }} {% endif %} {% elif field.type ==
+  'FileField' %}
+  <div class="mb-1 txt-smlr">
+    Current File: {% if field.object_data %}
+    <span class="text-info">{{field.object_data.split('\\')[-1]}}</span>
+    {% endif %}
+  </div>
+  {{field(class_="form-control") }} {% else %} {{field(class_="form-control") }}
+  {% endif %}
   <small>{{field.description}}</small> {% for error in field.errors %}
-  <b class="form-text text-warning mt-0">
+  <b class="form-text text-danger mt-0">
     {{ error }}
   </b>
   {% endfor %}

@@ -1,5 +1,5 @@
 <section class="text-center txt-white-k card-columns">
-  {% for mission in missions %}
+  {% if missions %} {% for mission in missions %}
   <div class="card d-inline-block m-2 text-left">
     <div class="card-body">
       <h5 class="card-title font-weight-bold">{{mission.name}}</h5>
@@ -77,5 +77,88 @@
       {% endif %}
     </div>
   </div>
-  {% endfor %}
+  {% endfor %} {% else %}
+  <div class="card d-inline-block m-2 text-left">
+    <div class="card-body">
+      <h5 class="card-title font-weight-bold">
+        Missions you create and share will appear here
+      </h5>
+      <div class="card-text">
+        <em class="txt-orange"> by @gastronaut</em>
+        <div class="txt-smlr">
+          Wed Jul 3, 2020
+        </div>
+        <div class="txt-smlr">
+          San Francisco CA
+        </div>
+      </div>
+      <br />
+      <p class="card-text txt-green-alt font-weight-bold">
+        <em>Your mission description will go here.</em>
+      </p>
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">
+        I'm a mission goal
+      </li>
+      <li class="list-group-item">
+        Another goal
+      </li>
+      <li class="list-group-item">
+        Goals are restaurants or bars on your gastronomical mission
+      </li>
+    </ul>
+    <div class="card-footer">
+      <span class="text-primary">
+        <i class="fas fa-thumbs-up fa-lg"></i>
+      </span>
+      <span class="px-3 text-dark likes">
+        257
+      </span>
+      <span class="text-primary float-right">
+        Add to Missions
+      </span>
+    </div>
+  </div>
+  <div class="card d-inline-block m-2 text-left">
+    <div class="card-body">
+      <h5 class="card-title font-weight-bold">I'm another shared mission!</h5>
+      <div class="card-text">
+        <em class="txt-orange"> by @gastronaut</em>
+        <div class="txt-smlr">
+          Wed Jul 3, 2020
+        </div>
+        <div class="txt-smlr">
+          San Francisco CA
+        </div>
+      </div>
+      <br />
+      <p class="card-text txt-green-alt font-weight-bold">
+        <em>Your mission description will go here.</em>
+      </p>
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">
+        I'm a mission goal
+      </li>
+      <li class="list-group-item">
+        Another goal
+      </li>
+      <li class="list-group-item">
+        Goals are restaurants or bars on your gastronomical mission
+      </li>
+    </ul>
+    <div class="card-footer">
+      <span>
+        <i class="fas fa-thumbs-up fa-lg text-primary"></i>
+      </span>
+      <span class="px-3 text-dark likes">
+        6437
+      </span>
+      <span class="text-primary float-right">
+        Add to Missions
+      </span>
+    </div>
+  </div>
+  {% endif %}
 </section>

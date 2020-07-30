@@ -43,17 +43,20 @@
           >
             @{{ user.username }}
           </h4>
-          <p class="txt-green byline pl-3 pl-sm-0">{{user.byline}}</p>
-          {% if user.city or user.state or user.country %}
+          <p class="txt-green byline pl-3 pl-sm-0">
+            {{user.byline or 'A short snippet about you'}}
+          </p>
+
           <div class="user-location text-left d-inline-block">
             <div class="fa fa-map-marker fa-2x txt-green d-inline-block"></div>
             <div class="location text-dark d-inline-block">
-              {{user.city}}, {{user.state}}
+              {{user.city or 'Someplace'}}, {{user.state or 'Somewhere'}}
             </div>
             <br />
-            <div class="location text-dark">{{user.country}}</div>
+            <div class="location text-dark">
+              {{user.country or 'Some Country'}}
+            </div>
           </div>
-          {% endif %}
         </div>
       </div>
       <div class="col-12 col-sm-9 text-right">
@@ -104,7 +107,10 @@
           <section class="bio-section text-left mt-3 mt-md-5 txt-white-k">
             {% if user.bio %} {% for p in user.bio.split('\n') %}
             <p>{{p}}</p>
-            {% endfor %} {% endif %}
+            {% endfor %} {% else %}
+            <p>Your user bio goes here.</p>
+            <p>500 characters maximum.</p>
+            {% endif %}
           </section>
         </div>
       </div>

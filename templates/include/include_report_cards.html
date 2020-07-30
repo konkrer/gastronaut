@@ -1,7 +1,7 @@
 {% from '/macros/report_text.html' import report_text with context %}
 
 <section class="text-center txt-white-k card-columns">
-  {% for report in reports %}
+  {% if reports %} {% for report in reports %}
   <div class="card d-inline-block m-2 text-left">
     <div class="card-header">
       {% if report.business_id %}{% set b = report.business %}
@@ -70,7 +70,7 @@
       {% if report.user_id == g.user.id %}
       <a
         href="/report/{{report.id}}/edit?next={{request.endpoint}}&next_view_args={{view_args}}"
-        class="btn btn-sm btn-outline-primary float-right px-3 ml-4 ml-sm-1 ml-md-4"
+        class="btn btn-sm btn-outline-primary float-right px-3 ml-4 ml-sm-1 ml-md-4 mb-2"
         >Edit Report</a
       >
       {% endif %} {% if not request.endpoint == 'report_detail' %}
@@ -80,5 +80,68 @@
       {% endif %}
     </div>
   </div>
-  {% endfor %}
+  {% endfor %} {% else %}
+
+  <div class="card d-inline-block m-2 text-left">
+    <div class="card-header">
+      <h5 class="card-title font-weight-bold">
+        <span class="txt-white-k hover-primary">
+          Reports about businesses will look like this
+        </span>
+      </h5>
+      <h5 class="lead txt-green"><small>Business</small></h5>
+      <div class="card-text">
+        <em class="txt-orange"> by @gastronaut</em>
+        <div class="txt-smlr">
+          Wed Jul 3, 2020
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      Have an opinion? Your report text will appear here.
+    </div>
+    <div class="card-footer">
+      <span>
+        <i class="fas fa-thumbs-up fa-lg text-primary"></i>
+      </span>
+      <span class="px-3 text-dark likes">
+        58
+      </span>
+      <span class="card-link float-right text-primary">
+        Read More
+      </span>
+    </div>
+  </div>
+  <div class="card d-inline-block m-2 text-left">
+    <div class="card-header">
+      <h5 class="card-title font-weight-bold">
+        <span class="txt-white-k hover-primary">
+          Reports about missions will look like this
+        </span>
+      </h5>
+      <h5 class="lead text-info"><small>Mission</small></h5>
+      <div class="card-text">
+        <em class="txt-orange"> by @gastronaut</em>
+        <div class="txt-smlr">
+          Wed Jul 3, 2020
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      Have an opinion? Your report text will appear here.
+    </div>
+    <div class="card-footer">
+      <span>
+        <i class="fas fa-thumbs-up fa-lg text-primary"></i>
+      </span>
+      <span class="px-3 text-dark likes">
+        58
+      </span>
+      <span class="card-link float-right text-primary">
+        Read More
+      </span>
+    </div>
+  </div>
+
+  {% endif %}
 </section>

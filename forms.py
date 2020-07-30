@@ -10,7 +10,7 @@ from models import User
 from flask import g
 
 
-class AddUserForm(FlaskForm):
+class UserBaseForm(FlaskForm):
     email = EmailField("Email", validators=[
                        InputRequired(message="Email cannot be blank."),
                        Length(min=6, max=320),
@@ -20,6 +20,9 @@ class AddUserForm(FlaskForm):
     username = StringField("Username", validators=[
         InputRequired(message="Username cannot be blank."),
         Length(min=2, max=30)])
+
+
+class AddUserForm(UserBaseForm):
 
     password = PasswordField("Password", validators=[
         InputRequired(message="Password cannot be blank."),
@@ -39,12 +42,8 @@ class AddUserForm(FlaskForm):
             raise ValidationError
 
 
-class EditUserForm(FlaskForm):
+class EditUserForm(UserBaseForm):
     """Edit User Form."""
-
-    username = StringField("Username", validators=[
-        InputRequired(message="Username cannot be blank."),
-        Length(min=2, max=30)])
 
     avatar_url = URLField("Avatar Image URL", validators=[
         Length(min=6, max=255), Optional()],
@@ -70,6 +69,17 @@ class EditUserForm(FlaskForm):
     country = StringField("Country", validators=[
         Length(min=2, max=50), Optional()])
 
+    def validate_email(form, field):
+        """Make sure email is not in use
+           unless it's the currnt user's email.
+        """
+
+        user = User.query.filter_by(email=form.email.data).first()
+
+        if user and not user == g.user:
+            form.username.errors.append(
+                "Email already associated with account!")
+
     def validate_username(form, field):
         """Make sure username is not in use
            unless it's the currnt user's username.
@@ -79,7 +89,6 @@ class EditUserForm(FlaskForm):
 
         if user and not user == g.user:
             form.username.errors.append("Username already taken!")
-            raise ValidationError
 
 
 class LoginForm(FlaskForm):
@@ -95,7 +104,7 @@ class LoginForm(FlaskForm):
         Length(min=6, max=60)])
 
 
-class AddReportForm(FlaskForm):
+class ReportBaseForm(FlaskForm):
     """Form for adding new report."""
 
     text = TextAreaField("Report", validators=[
@@ -114,6 +123,10 @@ class AddReportForm(FlaskForm):
             Either enter a photo URL or
             choose an image file to include an image.""")
 
+
+class AddReportForm(ReportBaseForm):
+    """Form for adding new report."""
+
     def validate(self):
         if not super().validate():
             return False
@@ -125,24 +138,8 @@ class AddReportForm(FlaskForm):
         return True
 
 
-class EditReportForm(FlaskForm):
+class EditReportForm(ReportBaseForm):
     """Form for editing a report."""
-
-    text = TextAreaField("Report", validators=[
-        InputRequired(message="Report cannot be blank."),
-        Length(min=2)])
-
-    photo_url = URLField(
-        "Photo URL", validators=[URL(), Optional()],
-        description="""
-            Either enter a photo URL or
-            choose an image file to include an image.""")
-
-    photo_file = FileField(
-        "Upload Photo", validators=[Optional()],
-        description="""
-            Either enter a photo URL or
-            choose an image file to include an image.""")
 
     # def validate(self):
     #     if not super().validate():
