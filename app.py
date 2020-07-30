@@ -156,8 +156,9 @@ def mission_reports():
 @app.route('/reports/business/<business_id>')
 @add_user_to_g
 def business_reports_detail(business_id):
-    """Business reports detail view. All reports for a particular
-       business. Accessed through detail modal 'See Reports' Button"""
+    """Business reports detail view.
+       All reports for a particular business.
+       Accessed through business detail modal 'See Reports' Button"""
 
     business = Business.query.get(business_id)
     reports = business.reports
@@ -368,7 +369,7 @@ def delete_user():
 @app.route('/report/<report_id>')
 @add_user_to_g
 def report_detail(report_id):
-    """Mission Report detail view."""
+    """Report detail view."""
 
     report = Report.query.get_or_404(report_id)
     user = report.user
@@ -422,7 +423,8 @@ def add_report():
 
     existing_report = check_for_existing_report(mission_id, business_id)
     if existing_report:
-        return redirect(url_for('edit_report', report_id=existing_report.id))
+        URL = url_for('edit_report', report_id=existing_report.id)
+        return redirect(f"{URL}?next={next_param(request)}")
 
     if mission_id:
         obj = Mission.query.get_or_404(mission_id)
@@ -434,7 +436,8 @@ def add_report():
     if request.method == 'POST':
         flash("Please fix all form errors.", "danger")
 
-    return render_template("add_report.html", form=form, obj=obj, kind=kind)
+    return render_template("add_report.html", form=form, obj=obj,
+                           kind=kind, next_=next_page_url(request))
 
 
 @app.route("/report/<report_id>/edit", methods=['GET', 'POST'])
@@ -482,8 +485,10 @@ def edit_report(report_id):
     if request.method == 'POST':
         flash("Please fix all form errors.", "danger")
 
-    return render_template("edit_report.html", form=form,
-                           obj=obj, kind=kind, report_id=report.id)
+    return render_template(
+        "edit_report.html", form=form, obj=obj, kind=kind,
+        next_=next_page_url(request),
+        report_id=report.id)
 
 
 @app.route('/report/<report_id>/delete', methods=['POST'])
@@ -985,25 +990,44 @@ def message_logging(message):
 def render_template(*ars, **kwargs):
     """Wrap render_template and add debug flag to allow JS Sentry
        initalizatin only when debug is False (Production Environment).
+
+       Add view args string for next functionality.
     """
+    view_args = ''
+    for k, v in request.view_args.items():
+        view_args = f'{view_args}{k}-{v}--'
 
     global debug
-    return r_t(*ars, debug=bool(debug), **kwargs)
+    return r_t(*ars, debug=bool(debug), view_args=view_args, **kwargs)
 
 
 def next_page_logic(request):
-    """Next page login for signup and login."""
+    """Next page redirect."""
+    return redirect(next_page_url(request))
 
-    next_page = request.args.get('next') or 'index'
+
+def next_page_url(request):
+    """Next page URL logic."""
+
+    next_page = next_param(request)
+    next_view_args = request.args.get('next_view_args')
 
     # Special case of clicking profile in navbar when not logged in.
     if next_page == 'user_detail':
-        return redirect(url_for(f'{next_page}', user_id=0))
+        return redirect(url_for('user_detail', user_id=0))
 
-    if next_page == 'mission_detail':
-        next_page = 'missions'
+    if next_view_args:
+        next_view_args = [x for x in next_view_args.split('--') if x]
+        next_view_args = {k: v for k, v in [
+            k_v.split('-') for k_v in next_view_args]}
+        return url_for(next_page, **next_view_args)
 
-    return redirect(url_for(f'{next_page}'))
+    return url_for(next_page)
+
+
+def next_param(request):
+    """Return next value or default"""
+    return request.args.get('next', 'index')
 
 
 def check_for_existing_report(mission_id, business_id):

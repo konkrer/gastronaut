@@ -16,6 +16,4 @@ function navRocketStart() {
   }, 60000);
 }
 
-// all pages without map animations (i.e. one that import cards.js)
-// get rocket animation.
 navRocketStart();

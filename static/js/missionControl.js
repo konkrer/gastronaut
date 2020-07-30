@@ -78,7 +78,10 @@ class MissionControl {
     this.mapBusinesses(missionData.businesses);
     this.listBusinesses(missionData);
     // make mission report <a> element point to /report with current mission id.
-    $('#write-mission-report').prop('href', `/report?mission_id=${mission_id}`);
+    $('#write-mission-report').prop(
+      'href',
+      `/report?mission_id=${mission_id}&next=mission_control`
+    );
   }
 
   fillForm(missionData) {
@@ -254,7 +257,7 @@ class MissionControl {
               <i class="fas fa-flag brand-outline txt-orange iconBtn"></i>
             </span>
             <span data-toggle="tooltip" title="Write Report">
-              <a href="/report?business_id=${el.id}" target="blank">
+              <a href="/report?business_id=${el.id}&next=mission_control">
                 <i class="fas fa-pen-alt brand-outline txt-orange iconBtn"></i>
               </a>
             </span>
