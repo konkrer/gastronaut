@@ -999,8 +999,9 @@ def render_template(*args, **kwargs):
     # next functionality to get back to any particular page that
     # requires view arguments.
     view_args = ''
-    for k, v in request.view_args.items():
-        view_args = f'{view_args}{k}-{v}--'
+    if request.view_args:
+        for k, v in request.view_args.items():
+            view_args = f'{view_args}{k}-{v}--'
 
     global debug
     return r_t(*args, debug=bool(debug), view_args=view_args, **kwargs)
