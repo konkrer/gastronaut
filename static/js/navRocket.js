@@ -1,5 +1,7 @@
 'use strict';
 
+let navRocketTimer;
+
 // Navbar rocket animation.
 function navbarRocketAnimation() {
   document

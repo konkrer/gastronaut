@@ -2,7 +2,6 @@
 
 let preferencesTimer;
 let feedbackClearTimer;
-let navRocketTimer;
 
 /*
 /* Set Preferences listener

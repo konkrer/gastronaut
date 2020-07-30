@@ -423,8 +423,9 @@ def add_report():
 
     existing_report = check_for_existing_report(mission_id, business_id)
     if existing_report:
+        # redirect to edit_report view for this report and relay next data.
         URL = url_for('edit_report', report_id=existing_report.id)
-        return redirect(f"{URL}?next={next_param(request)}")
+        return redirect(f"{URL}?next={request.args.get('next')}")
 
     if mission_id:
         obj = Mission.query.get_or_404(mission_id)
@@ -987,47 +988,50 @@ def message_logging(message):
         capture_message(message)
 
 
-def render_template(*ars, **kwargs):
+def render_template(*args, **kwargs):
     """Wrap render_template and add debug flag to allow JS Sentry
        initalizatin only when debug is False (Production Environment).
 
        Add view args string for next functionality.
     """
+    # Convert the request view_args to a string that can be used in
+    # jinja templates for conveying view_args in a URL. Used for
+    # next functionality to get back to any particular page that
+    # requires view arguments.
     view_args = ''
     for k, v in request.view_args.items():
         view_args = f'{view_args}{k}-{v}--'
 
     global debug
-    return r_t(*ars, debug=bool(debug), view_args=view_args, **kwargs)
+    return r_t(*args, debug=bool(debug), view_args=view_args, **kwargs)
 
 
 def next_page_logic(request):
-    """Next page redirect."""
+    """Next page redirect with proper URL from next data."""
     return redirect(next_page_url(request))
 
 
 def next_page_url(request):
     """Next page URL logic."""
 
-    next_page = next_param(request)
+    next_page = request.args.get('next', 'index')
     next_view_args = request.args.get('next_view_args')
 
-    # Special case of clicking profile in navbar when not logged in.
-    if next_page == 'user_detail':
+    # Special case for user clicking profile in navbar when not logged in.
+    # user_id=0 makes user_detail view load user from g.user data.
+    if next_page == 'user_detail' and not next_view_args:
         return redirect(url_for('user_detail', user_id=0))
 
     if next_view_args:
+        # get key-value pairs
         next_view_args = [x for x in next_view_args.split('--') if x]
+        # make a dictionary with key-value pairs
         next_view_args = {k: v for k, v in [
             k_v.split('-') for k_v in next_view_args]}
+
         return url_for(next_page, **next_view_args)
 
     return url_for(next_page)
-
-
-def next_param(request):
-    """Return next value or default"""
-    return request.args.get('next', 'index')
 
 
 def check_for_existing_report(mission_id, business_id):
