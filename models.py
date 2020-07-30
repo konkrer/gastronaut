@@ -433,7 +433,7 @@ class Report(db.Model):
         db.String, db.ForeignKey(Business.id), nullable=True)
 
     submitted_on = db.Column(
-        db.DateTime, default=datetime.utcnow(), nullable=True)
+        db.DateTime, default=datetime.now(), nullable=True)
 
     text = db.Column(db.Text, nullable=False)
 
