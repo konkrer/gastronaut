@@ -269,7 +269,13 @@ function makeDetailModal(business, longitude = '', latitude = '') {
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="carousel slide border border-left-0 border-right-0" data-ride="carousel">
+        <div class="carousel slide border border-left-0 border-right-0"
+        data-ride="carousel" id="report-carousel">
+          <ol class="carousel-indicators">
+            <li data-target="#report-carousel" data-slide-to="0" class="active"></li>
+            <li data-target="#report-carousel" data-slide-to="1"></li>
+            <li data-target="#report-carousel" data-slide-to="2"></li>
+          </ol>
           <div class="carousel-inner">
             <div class="carousel-item active">
               <div
@@ -303,7 +309,7 @@ function makeDetailModal(business, longitude = '', latitude = '') {
                 "
                 class="detail-modal-img-div"
               ></div>
-              </div>
+            </div>
           </div>
         </div>
         <div class="modal-body">

@@ -149,9 +149,7 @@ class ApiFuncts {
       makeDetailModal(data, longitude, latitude)
     );
     $('#business-detail-modal').modal().show();
-    setTimeout(() => {
-      $('.carousel').carousel();
-    }, 100);
+    $('.carousel').carousel();
   }
 
   /*
