@@ -8,7 +8,7 @@ class ApiFuncts {
     $('.like-mission').on('click', this.likeMission);
     $('.like-report').on('click', this.likeReport);
     this.addMissionListener();
-    $('.card').on(
+    $('main').on(
       'click',
       '.detailsBtn',
       this.getShowBusinessDetails.bind(this)
@@ -199,14 +199,17 @@ class ApiFuncts {
         $('#mission-choices .feedback').text('Error');
         return;
       }
+      const {
+        data: { success },
+      } = resp;
 
-      if (resp.data.success) {
-        $('#mission-choices .feedback').text(resp.data.success);
+      if (success) {
+        $('#mission-choices .feedback').text(success);
         setTimeout(() => {
           $('#mission-choices .feedback').text('');
         }, 2000);
-
-        if (M_C) M_C.addBusinessToMission(mission_id);
+        // M_C needs to know when businesses ared added to missions.
+        if (success === 'Added!' && M_C) M_C.businessAddedToMission(mission_id);
       }
     });
   }

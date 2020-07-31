@@ -57,7 +57,7 @@
         id="info-col"
       >
         <div class="bg-trans-b2 rounded px-2 py-1 mt-2 txt-white-k mb-1">
-          <p for="mission-select" class="mb-1">
+          <div for="mission-select" class="mb-1 flx-row-between">
             <a
               class="txt-orange"
               data-toggle="collapse"
@@ -69,26 +69,32 @@
               Mission Select
               <i class="fas fa-caret-down fa-xs text-dark ml-1"></i>
             </a>
-            <span
-              class="text-dark txt-smlr ml-1 ml-md-2 ml-lg-3 ml-xxl-more"
-              id="likes-zone"
-            ></span>
-            <span class="text-dark" name="likes-count"></span>
-            <span
-              class="ml-1 ml-md-2 ml-lg-3 ml-xxl-more"
-              data-toggle="tooltip"
-              title="Write Report"
+            <span>
+              <span
+                class="text-dark txt-smlr"
+                id="likes-zone"
+                data-toggle="tool-tip"
+                title="Like Mission"
+              ></span>
+              <span class="text-dark" name="likes-count"></span>
+            </span>
+            <span class="mapAll" data-toggle="tooltip" title="Map All">
+              <i
+                class="fas fa-map-marked-alt brand-outline txt-orange iconBtn"
+              ></i>
+            </span>
+            <span class="" data-toggle="tooltip" title="Write Report"
               ><a id="write-mission-report">
                 <i class="fas fa-pen-alt brand-outline txt-orange iconBtn"></i>
               </a>
             </span>
             <button
               id="create-mission-btn"
-              class="btn btn-sm btn-outline-primary ssp float-right"
+              class="btn btn-sm btn-outline-primary ssp px-1 px-sm-0 px-md-2 px-xl-0"
             >
               <b>Create New Mission</b>
             </button>
-          </p>
+          </div>
 
           <form
             name="mission-select-form"
@@ -128,17 +134,19 @@
           class="bg-trans-b2 rounded px-0 pt-1 txt-white-k"
           id="businesses-panel"
         >
-          <a
-            class="txt-orange ml-2"
-            data-toggle="collapse"
-            href="#businesses-list"
-            role="button"
-            aria-expanded="false"
-            aria-controls="mission-form"
-          >
-            Mission Goals
-            <i class="fas fa-caret-down fa-xs text-dark ml-2"></i>
-          </a>
+          <div>
+            <a
+              class="txt-orange ml-2"
+              data-toggle="collapse"
+              href="#businesses-list"
+              role="button"
+              aria-expanded="false"
+              aria-controls="mission-form"
+            >
+              Mission Goals
+              <i class="fas fa-caret-down fa-xs text-dark ml-2"></i>
+            </a>
+          </div>
           <ul
             id="businesses-list"
             class="collapse show list-group bg-dark txt-light"
