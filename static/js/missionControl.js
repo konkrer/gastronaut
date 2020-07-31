@@ -54,6 +54,7 @@ class MissionControl {
       localStorage.setItem('currMissionId', lastMissionId);
     }
     this.loadMission(lastMissionId);
+    if (!isMobileScreen()) $('#businesses-list').addClass('show');
   }
 
   loadMissionListener() {
@@ -99,14 +100,17 @@ class MissionControl {
       country,
     } = missionData;
     const html = `
-    <a class="text-success black-outline hoverUnset" data-toggle="collapse" href="#mission-form" 
+    <a class="text-success font-weight-bold hoverUnset" 
+      data-toggle="collapse" href="#mission-form" 
       role="button" aria-expanded="false" aria-controls="mission-form">
       <div>
-        ${editor ? 'Edit Details ' : 'Details '}
+        <span class="panel-toggle px-2">
+          ${editor ? 'Edit Details ' : 'Details '}
         <i class="fas fa-caret-down fa-xs text-dark ml-2"></i>
+        </span>
       </div>
     </a>
-    <form id="mission-form" class="collapse bg-dark p-4">
+    <form id="mission-form" class="collapse bg-dark p-4 m-2">
       <input type="hidden" value="${id}" name="id" >
       ${this.makeName(editor, name, username, author_id)}          
       ${this.makeDescription(editor, description)}
@@ -117,7 +121,7 @@ class MissionControl {
       ${this.makeButton(editor)}
     </form>
     `;
-    $('#mission-panel').html(html);
+    $('#mission-detail-panel').html(html);
   }
 
   makeName(editor, name, username, author_id) {
@@ -125,7 +129,7 @@ class MissionControl {
       return `<div class="form-group">
                 <input type="text" value="${name}" minlength="2"
                 maxlength="50" name="name" id="name" placeholder="Name *"
-                class="form-control form-control-sm" required>
+                class="form-control form-control-sm font-weight-bold" required>
               </div>`;
     return `
       <div class="txt-xl text-light font-weight-bold underline">${name}</div>
@@ -292,12 +296,15 @@ class MissionControl {
   showCreateForm(e) {
     e.preventDefault();
     const html = `
-    <a class="txt-orange" data-toggle="collapse" href="#create-form" 
+    <a class="text-success font-weight-bold hoverUnset" data-toggle="collapse" href="#create-form" 
       role="button" aria-expanded="false" aria-controls="mission-form">
-      Create Mission 
-      <i class="fas fa-caret-down fa-xs text-dark ml-2"></i>
+      <div>
+        <span class="panel-toggle"
+          >Create Mission<i class="fas fa-caret-down fa-xs text-dark ml-2"></i
+        ></span>
+      </div>
     </a>
-    <form id="create-form" class="collapse show bg-dark p-4">
+    <form id="create-form" class="collapse show bg-dark p-4 m-2">
       <div class="form-group">
         <input type="text" value="" minlength="2"
         maxlength="50" name="name" id="name" placeholder="Name *"
@@ -330,7 +337,7 @@ class MissionControl {
       </div>
     </form>
     `;
-    $('#mission-panel').html(html);
+    $('#mission-detail-panel').html(html);
   }
 
   // Call create mission API endpoint.
@@ -364,7 +371,7 @@ class MissionControl {
     }
     $('.toasts-zone').html('');
     if (resp.data.success) {
-      $('#mission-panel').html('');
+      $('#mission-detail-panel').html('');
       const mission = resp.data.mission;
       // update mission-select with new <option>.
       $('#mission-select').append(
@@ -464,7 +471,7 @@ class MissionControl {
             .each(function () {
               if ($(this).val() === mission_id) $(this).remove();
             });
-          $('#mission-panel').html('');
+          $('#mission-detail-panel').html('');
           $('#businesses-list').html('');
           $('#deleteMissionModal').modal('hide');
           clearMapArray(this.restMarkers);
@@ -504,7 +511,7 @@ class MissionControl {
             .each(function () {
               if ($(this).val() === mission_id) $(this).remove();
             });
-          $('#mission-panel').html('');
+          $('#mission-detail-panel').html('');
           $('#businesses-list').html('');
           $('#removeMissionModal').modal('hide');
           clearMapArray(this.restMarkers);
@@ -537,7 +544,7 @@ class MissionControl {
     const marker = this.restMarkers[idx];
     if (!marker.getPopup().isOpen()) marker.togglePopup();
 
-    if (isMobileScreen) $('#businesses-list').removeClass('show');
+    if (isMobileScreen()) $('#businesses-list').removeClass('show');
   }
 
   businessDblclickListener() {
