@@ -6,7 +6,6 @@ main {
   left: -5px;
   top: 45vh !important;
   padding-left: 4px;
-  color: var(--my-green);
 }
 
 #mission-panel form input,
