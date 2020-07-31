@@ -114,6 +114,10 @@ body {
   font-weight: 200;
 }
 
+.txt-white {
+  color: white !important;
+}
+
 .txt-whitesmoke {
   color: whitesmoke !important;
 }
