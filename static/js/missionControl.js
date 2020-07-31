@@ -99,10 +99,12 @@ class MissionControl {
       country,
     } = missionData;
     const html = `
-    <a class="txt-orange" data-toggle="collapse" href="#mission-form" 
+    <a class="text-success black-outline hoverUnset" data-toggle="collapse" href="#mission-form" 
       role="button" aria-expanded="false" aria-controls="mission-form">
-      ${editor ? 'Edit Details ' : 'Details '} 
-      <i class="fas fa-caret-down fa-xs text-dark ml-2"></i>
+      <div>
+        ${editor ? 'Edit Details ' : 'Details '}
+        <i class="fas fa-caret-down fa-xs text-dark ml-2"></i>
+      </div>
     </a>
     <form id="mission-form" class="collapse bg-dark p-4">
       <input type="hidden" value="${id}" name="id" >

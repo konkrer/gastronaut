@@ -43,7 +43,7 @@
     </div>
   </div>
   <div
-    class="sidebar-toggle-btn pl-1 border border-primary border-left-0 bg-trans-b"
+    class="sidebar-toggle-btn border border-primary border-left-0 bg-trans-b"
   >
     <div class="arrow-wrapper black-outline-1">
       <i class="fas fa-angle-double-left"></i>
@@ -56,10 +56,12 @@
         class="col-11 col-sm-6 col-md-5 col-lg-4 col-xl-3 mb-5"
         id="info-col"
       >
-        <div class="bg-trans-b2 rounded px-2 py-1 mt-2 txt-white-k mb-1">
+        <div
+          class="bg-trans-b rounded px-2 py-1 mt-2 txt-white-k mb-1 mb-lg-2 mb-xl-3 hoverOpaque"
+        >
           <div for="mission-select" class="mb-1 flx-row-between">
             <a
-              class="txt-orange"
+              class="text-success black-outline font-weight-bold"
               data-toggle="collapse"
               href="#mission-select-form"
               role="button"
@@ -71,7 +73,7 @@
             </a>
             <span>
               <span
-                class="text-dark txt-smlr"
+                class="text-dark txt-smlr black-outline-1"
                 id="likes-zone"
                 data-toggle="tool-tip"
                 title="Like Mission"
@@ -115,41 +117,39 @@
           </form>
         </div>
         <div
-          class="bg-trans-b2 rounded px-2 py-1 pb-lg-2 txt-white-k mb-1"
+          class="bg-trans-b rounded px-2 py-1 pb-lg-2 txt-white-k mb-1 mb-lg-2 mb-xl-3 hoverOpaque"
           id="mission-panel"
         >
           <a
-            class="txt-orange"
+            class="text-success black-outline font-weight-bold hoverUnset"
             data-toggle="collapse"
             href="#mission-form"
             role="button"
             aria-expanded="false"
             aria-controls="mission-form"
-          >
-            Details
-            <i class="fas fa-caret-down fa-xs text-dark ml-2"></i>
+            ><div>
+              Details
+              <i class="fas fa-caret-down fa-xs text-dark ml-2"></i>
+            </div>
           </a>
         </div>
-        <div
-          class="bg-trans-b2 rounded px-0 pt-1 txt-white-k"
-          id="businesses-panel"
-        >
-          <div>
-            <a
-              class="txt-orange ml-2"
-              data-toggle="collapse"
-              href="#businesses-list"
-              role="button"
-              aria-expanded="false"
-              aria-controls="mission-form"
-            >
+        <div class="bg-trans-b rounded px-0 txt-white-k" id="businesses-panel">
+          <a
+            class="text-success black-outline font-weight-bold hoverUnset"
+            data-toggle="collapse"
+            href="#businesses-list"
+            role="button"
+            aria-expanded="false"
+            aria-controls="mission-form"
+          >
+            <div class="hoverOpaque pt-1 pl-2 pb-1">
               Mission Goals
               <i class="fas fa-caret-down fa-xs text-dark ml-2"></i>
-            </a>
-          </div>
+            </div>
+          </a>
           <ul
             id="businesses-list"
-            class="collapse show list-group bg-dark txt-light"
+            class="collapse show list-group txt-white black-outline"
           ></ul>
         </div>
       </div>
