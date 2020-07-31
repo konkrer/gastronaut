@@ -8,8 +8,21 @@ main {
   padding-left: 4px;
 }
 
-#mission-panel form input,
-#mission-panel form textarea {
+.hoverOpaque {
+  overflow: hidden;
+}
+
+.panel-toggle {
+  background-color: black;
+  padding: 2px 8px;
+}
+
+a[href='#mission-select-form'] {
+  border-radius: 0 0 5px 0;
+}
+
+#mission-detail-panel form input,
+#mission-detail-panel form textarea {
   background: transparent;
   color: whitesmoke;
   /* border: none; */
@@ -50,6 +63,11 @@ main {
   opacity: 0.7;
 }
 
+a.text-success.hoverUnset:focus,
+a.text-success.hoverUnset:active {
+  color: var(--success) !important;
+}
+
 .flag-marker {
   background-image: url('/static/images/flag_green_straight.png');
   background-position: center;
@@ -75,9 +93,6 @@ main {
   }
   .hoverOpaque:hover {
     background-color: black;
-  }
-  a.text-success.hoverUnset:hover {
-    color: var(--success) !important;
   }
 }
 

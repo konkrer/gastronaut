@@ -56,12 +56,10 @@
         class="col-11 col-sm-6 col-md-5 col-lg-4 col-xl-3 mb-5"
         id="info-col"
       >
-        <div
-          class="bg-trans-b rounded px-2 py-1 mt-2 txt-white-k mb-1 mb-lg-2 mb-xl-3 hoverOpaque"
-        >
-          <div for="mission-select" class="mb-1 flx-row-between">
+        <div class="bg-black hoverOpaque mt-2 mb-1 mb-lg-2 mb-xl-3">
+          <div for="mission-select" class="flx-row-between">
             <a
-              class="text-success black-outline font-weight-bold"
+              class="text-success font-weight-bold hoverUnset panel-toggle"
               data-toggle="collapse"
               href="#mission-select-form"
               role="button"
@@ -92,7 +90,7 @@
             </span>
             <button
               id="create-mission-btn"
-              class="btn btn-sm btn-outline-primary ssp px-1 px-sm-0 px-md-2 px-xl-0"
+              class="btn btn-sm btn-primary-alt ssp px-1 px-sm-0 px-md-2 px-xl-0 mr-2 bg-trans-b2 txt-white"
             >
               <b>Create New Mission</b>
             </button>
@@ -101,7 +99,7 @@
           <form
             name="mission-select-form"
             id="mission-select-form"
-            class="collapse show"
+            class="collapse show mx-2 mt-1 mb-2"
           >
             <div class="form-group mb-1">
               <select
@@ -117,34 +115,37 @@
           </form>
         </div>
         <div
-          class="bg-trans-b rounded px-2 py-1 pb-lg-2 txt-white-k mb-1 mb-lg-2 mb-xl-3 hoverOpaque"
-          id="mission-panel"
+          class="bg-trans-b txt-white-k mb-1 mb-lg-2 mb-xl-3 hoverOpaque"
+          id="mission-detail-panel"
         >
           <a
-            class="text-success black-outline font-weight-bold hoverUnset"
+            class="text-success font-weight-bold hoverUnset"
             data-toggle="collapse"
             href="#mission-form"
             role="button"
             aria-expanded="false"
             aria-controls="mission-form"
             ><div>
-              Details
-              <i class="fas fa-caret-down fa-xs text-dark ml-2"></i>
+              <span class="panel-toggle"
+                >Details <i class="fas fa-caret-down fa-xs text-dark ml-2"></i
+              ></span>
             </div>
           </a>
         </div>
-        <div class="bg-trans-b rounded px-0 txt-white-k" id="businesses-panel">
+        <div class="bg-trans-b px-0" id="businesses-panel">
           <a
-            class="text-success black-outline font-weight-bold hoverUnset"
+            class="text-success font-weight-bold hoverUnset"
             data-toggle="collapse"
             href="#businesses-list"
             role="button"
             aria-expanded="false"
             aria-controls="mission-form"
           >
-            <div class="hoverOpaque pt-1 pl-2 pb-1">
-              Mission Goals
-              <i class="fas fa-caret-down fa-xs text-dark ml-2"></i>
+            <div class="hoverOpaque">
+              <span class="panel-toggle"
+                >Mission Goals
+                <i class="fas fa-caret-down fa-xs text-dark ml-2"></i
+              ></span>
             </div>
           </a>
           <ul
