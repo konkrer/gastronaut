@@ -536,6 +536,8 @@ class MissionControl {
 
     const marker = this.restMarkers[idx];
     if (!marker.getPopup().isOpen()) marker.togglePopup();
+
+    if (isMobileScreen) $('#businesses-list').removeClass('show');
   }
 
   businessDblclickListener() {
