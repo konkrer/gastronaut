@@ -13,6 +13,7 @@ main {
 }
 
 .panel-toggle {
+  /* color: var(--success); */
   background-color: black;
   padding: 2px 8px;
 }
