@@ -540,7 +540,7 @@ class MissionControl {
     const this_ = this;
     $('#info-col').on('dblclick', '.list-group-item', function () {
       const fake_e = { currentTarget: $(this).find('.detailsBtn').get()[0] };
-      this_.callGetDetails(fake_e);
+      ApiFunctsObj.getShowBusinessDetails(fake_e);
       this_.businessMapper($(this).find('.mapBtn'));
     });
   }
