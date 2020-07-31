@@ -90,6 +90,7 @@ a.text-success.hoverUnset:active {
   }
   #businesses-panel .list-group-item:hover {
     opacity: 1;
+    background-color: var(--secondary);
   }
   .hoverOpaque:hover {
     background-color: black;
