@@ -100,7 +100,7 @@ class MissionControl {
       country,
     } = missionData;
     const html = `
-    <a class="text-success font-weight-bold hoverUnset" 
+    <a class="font-weight-bold hoverUnset" 
       data-toggle="collapse" href="#mission-form" 
       role="button" aria-expanded="false" aria-controls="mission-form">
       <div>
