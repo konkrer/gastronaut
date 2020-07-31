@@ -102,17 +102,18 @@ function fitBoundsList(array) {
     });
 }
 
-// map a list of businesses for mission-control.
+// Map a list of businesses for mission-control.
+// Add a regular or flag marker depending if the goal is/isn't completed.
+// Return array of the marker objects.
 function mapArray(array) {
   return array.reduce((acc, el) => {
-    if (el.completed)
-      acc.push(
-        addFlagMarker([el.longitude, el.latitude], `<b><em>${el.name}</em></b>`)
-      );
-    else
-      acc.push(
-        addMarker([el.longitude, el.latitude], `<b><em>${el.name}</em></b>`)
-      );
+    const coords = [el.longitude, el.latitude];
+    const html = `<span class="detailsBtn" data-id="${el.id}">
+                    <b><em>${el.name}</em></b></span>`;
+
+    if (el.completed) acc.push(addFlagMarker(coords, html));
+    else acc.push(addMarker(coords, html));
+
     return acc;
   }, []);
 }

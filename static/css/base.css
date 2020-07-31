@@ -61,6 +61,13 @@ body {
   align-items: center;
 }
 
+.flx-row-between {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .display-1-k {
   font-size: 10vh;
 }

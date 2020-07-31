@@ -5,7 +5,7 @@
 */
 class MissionControl {
   constructor() {
-    this.mission_cache = {};
+    this.missionCache = {};
     this.restMarkers = [];
     this.likeListener = null;
     this.sidebarOpen = true;
@@ -15,12 +15,13 @@ class MissionControl {
     this.updateListener();
     this.deleteMissionListener();
     this.removeMissionListener();
-    this.businessDetailListener();
     this.businessMapListener();
     this.businessDblclickListener();
     this.goalCompletedListener();
     this.removeBusinessListener();
     this.sidebarListener();
+    this.mapAllListener();
+    // Delay for map load.
     setTimeout(() => {
       this.checkLocalStorage();
     }, 2500);
@@ -66,11 +67,11 @@ class MissionControl {
 
   async loadMission(mission_id) {
     let missionData;
-    if (this.mission_cache[mission_id])
-      missionData = this.mission_cache[mission_id];
+    if (this.missionCache[mission_id])
+      missionData = this.missionCache[mission_id];
     else {
       const resp = await axios.get(`/v1/mission/${mission_id}`);
-      this.mission_cache[mission_id] = resp.data;
+      this.missionCache[mission_id] = resp.data;
       missionData = resp.data;
     }
     this.fillForm(missionData.mission);
@@ -413,7 +414,7 @@ class MissionControl {
             `<span class="text-success bg-light p-2 rounded">Updated!</span>
             ${this.makeNote(resp.data.note)}`
           );
-          this.mission_cache[f_d.id].mission = resp.data.mission;
+          this.missionCache[f_d.id].mission = resp.data.mission;
           // update mission-select text.
           $('#mission-select-form #mission-select option').each(function () {
             // if <option> is for edited mission update name text.
@@ -513,16 +514,6 @@ class MissionControl {
     );
   }
 
-  businessDetailListener() {
-    const this_ = this;
-    $('#info-col').on('click', '.detailsBtn', this_.callGetDetails);
-  }
-
-  // was causing problems when called directly above ^.
-  callGetDetails(e) {
-    ApiFunctsObj.getShowBusinessDetails(e);
-  }
-
   businessMapListener() {
     const this_ = this;
     $('#info-col').on('click', '.mapBtn', function () {
@@ -599,22 +590,12 @@ class MissionControl {
         // put new marker in restMarkers array in spot of old marker
         this_.restMarkers.splice(idx, 1, newMarker);
         // update mission cache that this business was/wasn't completed
-        this_.mission_cache[mission_id].businesses[idx].completed = completed;
+        this_.missionCache[mission_id].businesses[idx].completed = completed;
 
         ApiFunctsObj.showToast(success);
       }
     });
   }
-
-  // writeReportListener() {
-  //   const this_ = this;
-  //   $('#info-col').on('click', '.writeReportBtn', function () {
-  //     const business_id = $(this).parent().data('id');
-  //     if (!business_id)
-  //       const mission_id = localStorage.getItem('currMissionId');
-
-  //   });
-  // }
 
   removeBusinessListener() {
     const this_ = this;
@@ -641,7 +622,8 @@ class MissionControl {
       if (resp.data.success) {
         const idx = $(this).parent().data('idx');
         // remove business from cache and reload mission.
-        this_.mission_cache[mission_id].businesses.splice(idx, 1);
+
+        this_.missionCache[mission_id].businesses.splice(idx, 1);
         this_.loadMission(mission_id);
         ApiFunctsObj.showToast(resp.data.success);
       }
@@ -671,11 +653,21 @@ class MissionControl {
     );
   }
 
-  addBusinessToMission(mission_id) {
-    // when user adds a business to another mission delete mission cache
-    // for the altered mission and force API call for new data. Added business
-    // is present in businesses list when user checks.
-    delete this.mission_cache[mission_id];
+  businessAddedToMission(mission_id) {
+    // When user adds a business to another mission delete mission cache
+    // for the altered mission to force API call for new data when needed.
+    // The added business will then be present.
+    delete this.missionCache[mission_id];
+  }
+
+  mapAllListener() {
+    $('.mapAll').click(
+      function () {
+        const missionId = localStorage.getItem('currMissionId');
+        const businesses = this.missionCache[missionId].businesses;
+        if (businesses) fitBoundsList(businesses);
+      }.bind(this)
+    );
   }
 }
 
