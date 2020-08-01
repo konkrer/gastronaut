@@ -9,6 +9,7 @@ class MissionControl {
     this.restMarkers = [];
     this.sidebarOpen = true;
     this.$infoCol = $('#info-col');
+    this.ignoreTogglePopup = false;
     this.loadMissionListener();
     this.createMissionListener();
     this.updateListener();
@@ -79,11 +80,12 @@ class MissionControl {
     this.showLikes(missionData.mission);
     this.mapBusinesses(missionData.businesses);
     this.listBusinesses(missionData);
-    // make mission report <a> element point to /report with current mission id.
+    // make mission report <a> element point to report with current mission id.
     $('#write-mission-report').prop(
       'href',
       `/report?mission_id=${mission_id}&next=mission_control`
     );
+    if (isMobileScreen()) $('#mission-select-form').removeClass('show');
   }
 
   fillForm(missionData) {
@@ -104,7 +106,7 @@ class MissionControl {
       data-toggle="collapse" href="#mission-form" 
       role="button" aria-expanded="false" aria-controls="mission-form">
       <div>
-        <span class="panel-toggle px-2">
+        <span class="panel-toggle pt-1">
           ${editor ? 'Edit Details ' : 'Details '}
         <i class="fas fa-caret-down fa-xs text-dark ml-2"></i>
         </span>
@@ -290,7 +292,7 @@ class MissionControl {
   // Create new mission button listener
   createMissionListener() {
     $('#create-mission-btn').on('click', this.showCreateForm);
-    $('#info-col').on('submit', '#create-form', this.createMission.bind(this));
+    this.$infoCol.on('submit', '#create-form', this.createMission.bind(this));
   }
 
   showCreateForm(e) {
@@ -389,7 +391,7 @@ class MissionControl {
   // Call mission update endpoint.
   // Provide feedback and update mission-select <option> text.
   updateListener() {
-    $('#info-col').on(
+    this.$infoCol.on(
       'submit',
       '#mission-form',
       async function (e) {
@@ -525,7 +527,7 @@ class MissionControl {
 
   businessMapListener() {
     const this_ = this;
-    $('#info-col').on('click', '.mapBtn', function () {
+    this.$infoCol.on('click', '.mapBtn', function () {
       this_.businessMapper($(this));
     });
   }
@@ -543,13 +545,20 @@ class MissionControl {
 
     const marker = this.restMarkers[idx];
     if (!marker.getPopup().isOpen()) marker.togglePopup();
+    this.ignoreTogglePopup = true;
 
     if (isMobileScreen()) $('#businesses-list').removeClass('show');
   }
 
   businessClickListener() {
+    // Toggle business marker popup when business list-group-item is clicked.
+    // Ignore if ignore flag is true.
     const this_ = this;
-    $('#info-col').on('click', '.list-group-item', function () {
+    this.$infoCol.on('click', '.list-group-item', function () {
+      if (this_.ignoreTogglePopup) {
+        this_.ignoreTogglePopup = false;
+        return;
+      }
       const idx = $(this).children().data('idx');
       this_.restMarkers[idx].togglePopup();
     });
@@ -557,7 +566,7 @@ class MissionControl {
 
   businessDblclickListener() {
     const this_ = this;
-    $('#info-col').on('dblclick', '.list-group-item', function () {
+    this.$infoCol.on('dblclick', '.list-group-item', function () {
       const fake_e = { currentTarget: $(this).find('.detailsBtn').get()[0] };
       ApiFunctsObj.getShowBusinessDetails(fake_e);
       this_.businessMapper($(this).find('.mapBtn'));
@@ -566,7 +575,7 @@ class MissionControl {
 
   goalCompletedListener() {
     const this_ = this;
-    $('#info-col').on('click', '.flagBtn', async function () {
+    this.$infoCol.on('click', '.flagBtn', async function () {
       const data = { business_id: $(this).parent().data('id') };
       const mission_id = localStorage.getItem('currMissionId');
 
@@ -618,7 +627,7 @@ class MissionControl {
 
   removeBusinessListener() {
     const this_ = this;
-    $('#info-col').on('click', '.removeBusinessBtn', async function () {
+    this.$infoCol.on('click', '.removeBusinessBtn', async function () {
       const data = { business_id: $(this).parent().data('id') };
       const mission_id = localStorage.getItem('currMissionId');
 
@@ -685,6 +694,8 @@ class MissionControl {
         const missionId = localStorage.getItem('currMissionId');
         const businesses = this.missionCache[missionId].businesses;
         if (businesses) fitBoundsList(businesses);
+        $('#businesses-list').removeClass('show');
+        if (isMobileScreen()) $('#mission-select-form').removeClass('show');
       }.bind(this)
     );
   }

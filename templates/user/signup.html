@@ -20,15 +20,17 @@
           <form method="POST">
             {{ form.hidden_tag() }} {% include 'include/include_form.html' with
             context %}
-
-            <button type="submit" class="btn btn-outline-primary mt-2">
-              SignUp
-            </button>
             <a
               href="/login?next={{next_page}}"
-              class="float-right mt-2 btn btn-sm btn-outline-warning"
+              class="mt-2 btn btn-outline-warning border-0"
               >go to login</a
             >
+            <button
+              type="submit"
+              class="btn btn-outline-primary mt-2 float-right"
+            >
+              SignUp
+            </button>
           </form>
         </div>
       </div>
