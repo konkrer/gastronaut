@@ -13,7 +13,7 @@ main {
 }
 
 .panel-toggle {
-  /* color: var(--success); */
+  color: var(--my-green);
   background-color: black;
   padding: 2px 8px;
 }
@@ -83,7 +83,8 @@ a.text-success.hoverUnset:active {
     background-color: var(--my-green) !important;
     color: var(--my-purp) !important;
   }
-  #mission-form a:hover {
+  #mission-form a:hover,
+  .marker-html:hover {
     color: var(--my-green) !important;
   }
   .iconBtn:hover {
@@ -95,6 +96,11 @@ a.text-success.hoverUnset:active {
   }
   .hoverOpaque:hover {
     background-color: black;
+  }
+  .hover-primary-alt2:hover {
+    color: var(--primary-alt2);
+    text-shadow: 1px 1px 1px cyan, -1px -1px 1px cyan, -1px 1px 1px cyan,
+      1px -1px 1px cyan;
   }
 }
 

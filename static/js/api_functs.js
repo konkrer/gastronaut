@@ -5,7 +5,7 @@ class ApiFuncts {
     this.business_results_cache = {};
     this.mission_btn_business_data = null;
 
-    $('.like-mission').on('click', this.likeMission);
+    $('main').on('click', '.like-mission', this.likeMission);
     $('.like-report').on('click', this.likeReport);
     this.addMissionListener();
     $('main').on(

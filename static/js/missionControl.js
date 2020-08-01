@@ -7,7 +7,6 @@ class MissionControl {
   constructor() {
     this.missionCache = {};
     this.restMarkers = [];
-    this.likeListener = null;
     this.sidebarOpen = true;
     this.$infoCol = $('#info-col');
     this.loadMissionListener();
@@ -16,6 +15,7 @@ class MissionControl {
     this.deleteMissionListener();
     this.removeMissionListener();
     this.businessMapListener();
+    this.businessClickListener();
     this.businessDblclickListener();
     this.goalCompletedListener();
     this.removeBusinessListener();
@@ -228,12 +228,12 @@ class MissionControl {
     if (!data.editor) {
       // if not editor add data-mission_id to liks-zone with user id.
       $('#likes-zone').data('mission_id', data.id);
-      if (this.likeListener) this.likeListener.off();
-      this.likeListener = $('#likes-zone').on(
-        'click',
-        ApiFunctsObj.likeMission
-      );
-    } else if (this.likeListener) this.likeListener.off();
+      $('#likes-zone').addClass('like-mission');
+      $('#likes-zone').addClass('hover-primary-alt2');
+    } else {
+      $('#likes-zone').removeClass('like-mission');
+      $('#likes-zone').removeClass('hover-primary-alt2');
+    }
   }
 
   mapBusinesses(businesses) {
@@ -545,6 +545,14 @@ class MissionControl {
     if (!marker.getPopup().isOpen()) marker.togglePopup();
 
     if (isMobileScreen()) $('#businesses-list').removeClass('show');
+  }
+
+  businessClickListener() {
+    const this_ = this;
+    $('#info-col').on('click', '.list-group-item', function () {
+      const idx = $(this).children().data('idx');
+      this_.restMarkers[idx].togglePopup();
+    });
   }
 
   businessDblclickListener() {
