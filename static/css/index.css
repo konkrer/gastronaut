@@ -382,6 +382,7 @@ a.first-letter.active {
   color: whitesmoke;
   font-family: var(--font-main);
   padding: 5px 10px !important;
+  font-size: medium;
 }
 
 .mapboxgl-popup-tip {
@@ -530,7 +531,6 @@ a:hover {
   }
   #main-interface {
     height: 100vh;
-    /* overflow: hidden; <<<<<<<<<<<<<<<<<<<<< look for overflow issues. */
   }
   .card-map-zone {
     grid-template-rows: auto 50vh;
@@ -687,12 +687,9 @@ a:hover {
     transform: scale(1.3);
     font-weight: 900 !important;
   }
-  .sidebar-toggle-btn:hover {
+  .sidebar-toggle-btn:hover,
+  .marker-html:hover {
     color: var(--my-green) !important;
-    transition: all 0.4s;
-  }
-  .sidebar-toggle-btn:hover {
-    transform: scale(1.1);
   }
   .my-card button:hover,
   #mission-choices a:hover {

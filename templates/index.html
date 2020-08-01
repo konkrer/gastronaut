@@ -16,23 +16,24 @@
   />
   <link rel="stylesheet" href="../static/css/common1.css" />
   <link rel="stylesheet" href="../static/css/index.css" />
+  <link
+    href="https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.css"
+    rel="stylesheet"
+  />
   <script src="../static/js/three.r95.min.js"></script>
   <script src="../static/js/vanta.globe.min.js"></script>
-  <script defer src="../static/js/geolocate.js"></script>
   <script src="../static/js/modernizer.js"></script>
+  <script src="https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.js"></script>
+  <script defer src="../static/js/geolocate.js"></script>
   <script defer src="../static/js/cards.js"></script>
   <script defer src="../static/js/animations.js"></script>
   <script defer src="../static/js/index.js"></script>
-  <script src="https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.js"></script>
+  <script defer src="../static/js/api_functs.js"></script>
   <script
     defer
     type="text/javascript"
     src="https://cdn.rawgit.com/asvd/dragscroll/master/dragscroll.js"
   ></script>
-  <link
-    href="https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.css"
-    rel="stylesheet"
-  />
   {% endblock %}
 </div>
 
@@ -120,7 +121,7 @@
                   class="form-num-display resultsCount ml-1 ml-sm-4 text-light"
                   >0</span
                 >
-                <span class="filter-icon-display black-outline-1">
+                <span class="filter-icon-display dark-outline-1">
                   <i class="fas fa-filter text-warning ml-2 ml-md-3"></i>
                 </span>
               </div>
@@ -132,7 +133,7 @@
                 aria-expanded="true"
                 aria-controls="timing-group"
               >
-                <h5 class="museo black-outline-1 px-2">
+                <h5 class="museo dark-outline-1 px-2">
                   Timing <i class="fas fa-caret-down fa-xs text-dark"></i></h5
               ></a>
               <div class="collapse show" id="timing-group">
@@ -182,7 +183,7 @@
                 aria-expanded="true"
                 aria-controls="interface-group"
               >
-                <h5 class="museo black-outline-1 px-2">
+                <h5 class="museo dark-outline-1 px-2">
                   Interface
                   <i class="fas fa-caret-down fa-xs text-dark"></i></h5
               ></a>
@@ -238,7 +239,7 @@
                 `
                 aria-controls="price-group"
               >
-                <h5 class="museo black-outline-1 px-2">
+                <h5 class="museo dark-outline-1 px-2">
                   Price <i class="fas fa-caret-down fa-xs text-dark"></i></h5
               ></a>
               <div class="collapse show text-dark" id="price-group">
@@ -312,7 +313,7 @@
                 aria-expanded="true"
                 aria-controls="sort-by-group"
               >
-                <h5 class="museo black-outline-1 px-2">
+                <h5 class="museo dark-outline-1 px-2">
                   Sort By <i class="fas fa-caret-down fa-xs text-dark"></i></h5
               ></a>
               <div class="collapse show" id="sort-by-group">
@@ -381,7 +382,7 @@
                 aria-expanded="true"
                 aria-controls="collapseExample"
               >
-                <h5 class="museo black-outline-1 px-2">
+                <h5 class="museo dark-outline-1 px-2">
                   Search
                   <span style="white-space: nowrap;">
                     Radius <i class="fas fa-caret-down fa-xs text-dark"></i>
@@ -429,7 +430,7 @@
                 aria-expanded="true"
                 aria-controls="collapseExample"
               >
-                <h5 class="museo black-outline-1 px-2 mt-1">
+                <h5 class="museo dark-outline-1 px-2 mt-1">
                   <span style="white-space: nowrap;">
                     Attributes <i class="fas fa-caret-down fa-xs text-dark"></i>
                   </span></h5
@@ -546,7 +547,7 @@
             <div class="text-center list-group" id="first-list">
               {% for let, id in first_letters %}
               <a
-                class="list-group-item list-group-item-action first-letter black-outline-1"
+                class="list-group-item list-group-item-action first-letter dark-outline-1"
                 href="#{{id}}"
                 >{{let}}</a
               >
@@ -564,7 +565,7 @@
               {% for show, category in YELP_CATEGORIES %}
               <button
                 type="button"
-                class="list-group-item list-group-item-action cat-btn black-outline-1"
+                class="list-group-item list-group-item-action cat-btn dark-outline-1"
                 value="{{category}}"
                 id="{{show[0:3]}}"
               >
@@ -579,7 +580,7 @@
         <div
           class="sidebar-toggle-btn pl-1 border border-secondary border-left-0 bg-trans-b"
         >
-          <div class="arrow-wrapper black-outline-1">
+          <div class="arrow-wrapper dark-outline-1">
             <i class="fas fa-angle-double-left"></i>
             <i class="fas fa-angle-double-right d-none" aria-hidden="true"></i>
           </div>
@@ -697,7 +698,7 @@
             style="height: 50px;"
           >
             <div class="bg-light rounded p-2">
-              <i class="fas fa-filter txt-orange black-outline-1"></i>
+              <i class="fas fa-filter txt-orange dark-outline-1"></i>
             </div>
             <div class="text-light tip-label">Filters Active Indicator</div>
           </div>

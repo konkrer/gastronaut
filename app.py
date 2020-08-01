@@ -765,8 +765,8 @@ def add_to_mission(mission_id):
         business = Business.create(
             id=data['id'], name=data['name'], city=data['city'],
             state=data['state'], country=data['country'],
-            longitude=float(data['longitude']),
-            latitude=float(data['latitude']))
+            longitude=float(data['longitude'] or 0),
+            latitude=float(data['latitude'] or 0))
 
     mission.businesses.append(business)
 

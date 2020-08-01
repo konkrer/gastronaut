@@ -25,13 +25,6 @@ let paginationListener;
 // of page to hide globe animation and lock control panel view.
 let $scrollListener;
 
-// Current business data for adding business to mission. Gets
-// updated with each press of add to mission button.
-let business_data;
-// Cache all results of user clicking details buttons so repeated
-// clicks will find cached data.
-let business_results_cache = {};
-
 // Used to reset form when passed into setForm.
 const defaultFormState = [
   { name: 'location', value: '' },
@@ -320,7 +313,12 @@ function mapFirstBusiness(data) {
     businesses: [first, ...rest],
   } = data;
   const { longitude: lng, latitude: lat } = first.coordinates;
-  addRestMarkerAndFitBounds([longitude, latitude], [lng, lat], first.name);
+  addRestMarkerAndFitBounds(
+    [longitude, latitude],
+    [lng, lat],
+    first.name,
+    first.id
+  );
 }
 
 /*
@@ -698,8 +696,9 @@ $('.card-track-inner').on('click', '.cardMapButton', function (e) {
   const lng = $(this).next().children().data('lng');
   const lat = $(this).next().children().data('lat');
   const name = $(this).next().children().data('name');
+  const id = $(this).next().children().data('id');
   if (!mapOpen) toggleMap();
-  addRestMarkerAndFitBounds([longitude, latitude], [+lng, +lat], name);
+  addRestMarkerAndFitBounds([longitude, latitude], [+lng, +lat], name, id);
 });
 
 /*
@@ -1033,99 +1032,27 @@ const makeSearch = checkSearchInputOrCheckLocalStorage();
 lockOnScrollBottom(makeSearch);
 
 /*
-/* Add-to-mission button sets card business_data to variable.
+/* Card business detail functionality.
 */
-$('main').on('click', '.mission-btn', function (e) {
-  let data = {};
-
-  data.id = $(this).data('id');
-  data.name = $(this).data('name');
-  data.city = $(this).data('city');
-  data.state = $(this).data('state');
-  data.country = $(this).data('country');
-  data.longitude = $(this).data('lng');
-  data.latitude = $(this).data('lat');
-
-  business_data = data;
-});
+$('.card-track-inner').on('click', '.detailsBtnCard', getBtnAndShowDetails);
+$('.card-track-inner').on('dblclick', '.my-card', getBtnAndShowDetails);
 
 /*
-/* Add business to mission fuctionality.
+/* Get the add-to-missions button which holds the business id and call 
+/* getShowBusinessDetails.
 */
-$('#mission-choices-form').submit(async function (e) {
-  e.preventDefault();
-
-  const mission_id = $('#mission-choices-form #mission-select').val();
-  if (!mission_id) {
-    $('#mission-choices .feedback').html(
-      `Create New Mission <i class="fas fa-hand-point-right fa-lg ml-1"></i>`
-    );
-    return;
-  }
-  try {
-    var resp = await axios.post(
-      `v1/mission/add_business/${mission_id}`,
-      business_data
-    );
-  } catch (error) {
-    // TODO: sentry log error
-    $('#mission-choices .feedback').text('Error');
-    return;
-  }
-
-  if (resp.data.success) {
-    $('#mission-choices .feedback').text(resp.data.success);
-    setTimeout(() => {
-      $('#mission-choices .feedback').text('');
-    }, 2000);
-  }
-});
-
-/*
-/* Bussiness detail functionality
-*/
-$('.card-track-inner').on('click', '.detailsBtn', getShowBusinessDetails);
-$('.card-track-inner').on('dblclick', '.my-card', getShowBusinessDetails);
-
-/*
-/* Get business details from yelp and show details modal.
-*/
-async function getShowBusinessDetails() {
-  $('.spinner-zone').show();
-  let business_result_data;
-
-  const detailBtn = $(this).hasClass('detailsBtn')
+function getBtnAndShowDetails() {
+  const detailBtn = $(this).hasClass('detailsBtnCard')
     ? $(this)
-    : $(this).find('.detailsBtn');
+    : $(this).find('.detailsBtnCard');
 
-  const business_id = detailBtn.next().next().children().data('id');
+  const fakeE = {
+    currentTarget: {
+      dataset: {
+        id: detailBtn.next().next().children().data('id'),
+      },
+    },
+  };
 
-  if (business_results_cache[business_id])
-    business_result_data = business_results_cache[business_id];
-  else {
-    try {
-      var resp = await axios.get(`/v1/business_detail/${business_id}`);
-    } catch (error) {
-      // TODO: sentry log error
-    }
-    if (!resp || resp.error) {
-      // TODO: sentry log error
-      return;
-    }
-    business_result_data = resp.data;
-    business_results_cache[business_id] = business_result_data;
-  }
-  $('.spinner-zone').hide();
-  showDetailModal(business_result_data);
-}
-
-/* 
-/*  Update detail modal with business data and show.
-*/
-function showDetailModal(data) {
-  $('#business-detail-modal').html(makeDetailModal(data, longitude, latitude));
-  $('#business-detail-modal').modal().show();
-  setTimeout(() => {
-    $('.carousel').carousel();
-  }, 100);
+  ApiFunctsObj.getShowBusinessDetails(fakeE);
 }
