@@ -93,6 +93,10 @@ a.text-success.hoverUnset:active {
   width: 64px;
 }
 
+.toasts-zone {
+  bottom: 25px;
+}
+
 @media screen and (hover: hover) {
   main button:hover {
     background-color: var(--my-green) !important;
@@ -137,12 +141,6 @@ a.text-success.hoverUnset:active {
 @media screen and (min-width: 576px) {
   #businesses-list {
     max-height: 60vh;
-  }
-}
-
-@media screen and (min-width: 768px) {
-  .toasts-zone {
-    bottom: 25px;
   }
 }
 
