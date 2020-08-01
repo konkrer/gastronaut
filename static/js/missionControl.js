@@ -599,7 +599,7 @@ class MissionControl {
         const idx = $(this).parent().data('idx');
         const name = $(this).data('name');
         const html = `<span class="detailsBtn marker-html" data-id="${id}">
-                    <b><em>${name}</em></b></span>`;
+                    <b>${name}</b></span>`;
         // get marker for this business
         const marker = M_C.restMarkers[idx];
         const { lng, lat } = marker._lngLat;

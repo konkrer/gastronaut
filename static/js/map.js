@@ -63,8 +63,9 @@ function addFlagMarker(coords, html) {
   return restMarker;
 }
 
-function addRestMarkerAndFitBounds(userCoords, restCoords, name) {
-  const html = `<b><em>${name}</em></b>`;
+function addRestMarkerAndFitBounds(userCoords, restCoords, name, id) {
+  const html = `<span class="detailsBtn marker-html" data-id="${id}">
+                  ${name}</span>`;
   if (restMarker) restMarker.remove();
   restMarker = addMarker(restCoords, html);
   fitBounds(userCoords, restCoords);
@@ -109,7 +110,7 @@ function mapArray(array) {
   return array.reduce((acc, el) => {
     const coords = [el.longitude, el.latitude];
     const html = `<span class="detailsBtn marker-html" data-id="${el.id}">
-                    <b><em>${el.name}</em></b></span>`;
+                    <b>${el.name}</b></span>`;
 
     if (el.completed) acc.push(addFlagMarker(coords, html));
     else acc.push(addMarker(coords, html));

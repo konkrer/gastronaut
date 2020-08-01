@@ -2,7 +2,11 @@
 
 class ApiFuncts {
   constructor() {
+    // Cache all results of user clicking details buttons so repeated
+    // clicks will find cached data.
     this.business_results_cache = {};
+    // Current business data for adding business to mission. The data
+    // gets updated with each press of add to mission button.
     this.mission_btn_business_data = null;
 
     $('main').on('click', '.like-mission', this.likeMission);

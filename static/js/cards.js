@@ -159,7 +159,7 @@ function makeCard(business) {
           ${makeCategoriesText(categories)} ${is_closed ? '- Closed' : ''}
         </p>
         <button class="btn btn-sm btn-primary-alt2 btn-my-card mr-2 mr-sm-1 
-        mr-md-2 px-3 px-sm-2 px-md--3 brand-outline txt-orange detailsBtn"
+        mr-md-2 px-3 px-sm-2 px-md--3 brand-outline txt-orange detailsBtnCard"
         data-toggle="tooltip"
         title="Details"
         ><i class="fas fa-clipboard-list fa-lg"></i>

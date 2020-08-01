@@ -98,8 +98,7 @@ a.text-success.hoverUnset:active {
     background-color: var(--my-green) !important;
     color: var(--my-purp) !important;
   }
-  #mission-form a:hover,
-  .marker-html:hover {
+  #mission-form a:hover {
     color: var(--my-green) !important;
   }
   .iconBtn:hover {
@@ -108,6 +107,8 @@ a.text-success.hoverUnset:active {
   #businesses-panel .list-group-item:hover {
     opacity: 1;
     background-color: var(--secondary);
+    text-shadow: black 2px 1px 1px, black -2px -1px 1px, black 2px -1px 1px,
+      black -2px 1px 1px;
   }
   .hoverOpaque:hover {
     background-color: black;
