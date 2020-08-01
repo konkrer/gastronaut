@@ -53,11 +53,11 @@ function addFlagMarker(coords, html) {
   const options = {
     element: $('<div class="marker flag-marker">').get()[0],
     anchor: 'center',
-    offset: [16, -21],
+    offset: [21, -30],
   };
   restMarker = new mapboxgl.Marker(options)
     .setLngLat(coords)
-    .setPopup(new mapboxgl.Popup({ offset: [0, -45] }).setHTML(html))
+    .setPopup(new mapboxgl.Popup({ offset: [0, -61] }).setHTML(html))
     .addTo(mappyBoi);
   restMarker.togglePopup();
   return restMarker;
