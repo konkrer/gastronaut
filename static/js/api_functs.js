@@ -8,11 +8,7 @@ class ApiFuncts {
     $('main').on('click', '.like-mission', this.likeMission);
     $('.like-report').on('click', this.likeReport);
     this.addMissionListener();
-    $('main').on(
-      'click',
-      '.detailsBtn',
-      this.getShowBusinessDetails.bind(this)
-    );
+    this.addDetailsListener();
     this.addBusinessToMisionListener();
     this.missionBtnDataCacheListener();
     // Turn on toasts.
@@ -110,6 +106,13 @@ class ApiFuncts {
     $('.toast').toast('show');
   }
 
+  addDetailsListener() {
+    $('main').on(
+      'click',
+      '.detailsBtn',
+      this.getShowBusinessDetails.bind(this)
+    );
+  }
   /*
   /* Get business details from yelp and show details modal.
   */

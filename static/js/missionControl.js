@@ -544,8 +544,6 @@ class MissionControl {
     });
 
     const marker = this.restMarkers[idx];
-    if (!marker.getPopup().isOpen()) marker.togglePopup();
-    this.ignoreTogglePopup = true;
 
     if (isMobileScreen()) $('#businesses-list').removeClass('show');
   }
@@ -555,12 +553,9 @@ class MissionControl {
     // Ignore if ignore flag is true.
     const this_ = this;
     this.$infoCol.on('click', '.list-group-item', function () {
-      if (this_.ignoreTogglePopup) {
-        this_.ignoreTogglePopup = false;
-        return;
-      }
       const idx = $(this).children().data('idx');
-      this_.restMarkers[idx].togglePopup();
+      const marker = this_.restMarkers[idx];
+      if (!marker.getPopup().isOpen()) marker.togglePopup();
     });
   }
 
@@ -600,27 +595,31 @@ class MissionControl {
 
       if (success) {
         let newMarker, completed;
+        const id = $(this).parent().data('id');
         const idx = $(this).parent().data('idx');
         const name = $(this).data('name');
+        const html = `<span class="detailsBtn marker-html" data-id="${id}">
+                    <b><em>${name}</em></b></span>`;
         // get marker for this business
         const marker = M_C.restMarkers[idx];
         const { lng, lat } = marker._lngLat;
         marker.remove();
         if (success === 'Goal Completed!') {
           // add flag marker
-          newMarker = addFlagMarker([lng, lat], `<b><em>${name}</em></b>`);
+          newMarker = addFlagMarker([lng, lat], html);
           completed = true;
         } else {
           // add regular marker
-          newMarker = addMarker([lng, lat], `<b><em>${name}</em></b>`);
+          newMarker = addMarker([lng, lat], html);
           completed = false;
         }
+        // newMarker.togglePopup();
         // put new marker in restMarkers array in spot of old marker
         this_.restMarkers.splice(idx, 1, newMarker);
         // update mission cache that this business was/wasn't completed
         this_.missionCache[mission_id].businesses[idx].completed = completed;
 
-        ApiFunctsObj.showToast(success);
+        ApiFunctsObj.showToast(`<div>${success}</div><div>- ${name}</div>`);
       }
     });
   }
@@ -649,11 +648,14 @@ class MissionControl {
 
       if (resp.data.success) {
         const idx = $(this).parent().data('idx');
+        const name = $(this).prevAll('.flagBtn').data('name');
         // remove business from cache and reload mission.
-
         this_.missionCache[mission_id].businesses.splice(idx, 1);
         this_.loadMission(mission_id);
-        ApiFunctsObj.showToast(resp.data.success);
+
+        ApiFunctsObj.showToast(
+          `<div>${resp.data.success}</div><div>- ${name}</div>`
+        );
       }
     });
   }
