@@ -73,7 +73,7 @@
             </a>
             <span>
               <span
-                class="text-dark txt-smlr black-outline-1"
+                class="txt-smlr black-outline-1"
                 id="likes-zone"
                 data-toggle="tool-tip"
                 title="Like Mission"
@@ -109,9 +109,14 @@
                 id="mission-select"
                 class="custom-select custom-select-sm museo"
               >
-                {% for mission in missions %}
+                {% for mission in missions %} {% if mission.editor == g.user.id
+                %}
                 <option value="{{mission.id}}">{{mission.name}}</option>
-                {% endfor %}
+                {% else %}
+                <option value="{{mission.id}}"
+                  >{{mission.name}} (imported)</option
+                >
+                {% endif %} {% endfor %}
               </select>
             </div>
           </form>

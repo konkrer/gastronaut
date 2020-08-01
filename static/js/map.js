@@ -108,7 +108,7 @@ function fitBoundsList(array) {
 function mapArray(array) {
   return array.reduce((acc, el) => {
     const coords = [el.longitude, el.latitude];
-    const html = `<span class="detailsBtn" data-id="${el.id}">
+    const html = `<span class="detailsBtn marker-html" data-id="${el.id}">
                     <b><em>${el.name}</em></b></span>`;
 
     if (el.completed) acc.push(addFlagMarker(coords, html));
