@@ -85,12 +85,12 @@ a.text-success.hoverUnset:active {
 }
 
 .flag-marker {
-  background-image: url('/static/images/flag_green_straight.png');
+  background-image: url('/static/images/flag_red_straight.png');
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
-  height: 50px;
-  width: 50px;
+  height: 64px;
+  width: 64px;
 }
 
 @media screen and (hover: hover) {
@@ -136,6 +136,12 @@ a.text-success.hoverUnset:active {
 @media screen and (min-width: 576px) {
   #businesses-list {
     max-height: 60vh;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .toasts-zone {
+    bottom: 25px;
   }
 }
 
