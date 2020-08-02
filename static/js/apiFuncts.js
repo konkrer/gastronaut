@@ -1,16 +1,20 @@
 'use strict';
 
+/*
+/* Class to hold functions for interacting with backend API endpoints.
+*/
+
 class ApiFuncts {
   constructor() {
-    // Cache all results of user clicking details buttons so repeated
-    // clicks will find cached data.
+    // Cache all  business results from user clicking details buttons.
     this.business_results_cache = {};
-    // Current business data for adding business to mission. The data
-    // gets updated with each press of add to mission button.
+
+    // Current business data for adding business to mission.
+    // This data gets updated with each press of add to mission button.
     this.mission_btn_business_data = null;
 
-    $('main').on('click', '.like-mission', this.likeMission);
-    $('.like-report').on('click', this.likeReport);
+    this.addLikeMissionListener();
+    this.addLikeReportListener();
     this.addMissionListener();
     this.addDetailsListener();
     this.addBusinessToMisionListener();
@@ -23,51 +27,68 @@ class ApiFuncts {
   // Like Mission functionality. Call API, upon success
   // toggle like icon.
   //
-  async likeMission(e) {
-    e.preventDefault();
+  addLikeMissionListener() {
+    $('main').on('click', '.like-mission', async function (e) {
+      e.preventDefault();
+      const mission_id = $(this).data('mission_id');
 
-    const mission_id = $(this).data('mission_id');
+      try {
+        var resp = await axios.post(`/v1/mission/like${mission_id}`);
+      } catch (error) {
+        Sentry.captureException(err);
+        return;
+      }
+      if (!resp || resp.data.error) {
+        Sentry.captureMessage(
+          'Something went wrong: api_functs.addLikeMissionListener'
+        );
+        return;
+      }
 
-    try {
-      var resp = await axios.post(`/v1/mission/like${mission_id}`);
-    } catch (error) {
-      return;
-    }
-
-    if (resp.data.success) {
-      $(this)
-        .children()
-        .children()
-        .each(function () {
-          $(this).toggle();
-        });
-      $(this).next().text(resp.data.likes);
-    }
+      if (resp.data.success) {
+        $(this)
+          .children()
+          .children()
+          .each(function () {
+            $(this).toggle();
+          });
+        $(this).next().text(resp.data.likes);
+      }
+    });
   }
 
   //
   // Like Report functionality. Call API, upon success
   // toggle like icon.
   //
-  async likeReport(e) {
-    e.preventDefault();
-    const report_id = $(this).data('report_id');
+  addLikeReportListener() {
+    $('.like-report').on('click', async function (e) {
+      e.preventDefault();
+      const report_id = $(this).data('report_id');
 
-    try {
-      var resp = await axios.post(`/v1/report/like${report_id}`);
-    } catch (error) {
-      return;
-    }
+      try {
+        var resp = await axios.post(`/v1/report/like${report_id}`);
+      } catch (error) {
+        Sentry.captureException(err);
+        return;
+      }
+      if (!resp || resp.data.error) {
+        Sentry.captureMessage(
+          'Something went wrong: api_functs.addLikeReportListener'
+        );
+        return;
+      }
 
-    if (resp.data.success) {
-      $(this)
-        .children()
-        .children()
-        .each(function (idx) {
-          $(this).toggle();
-        });
-      $(this).next().text(resp.data.likes);
-    }
+      if (resp.data.success) {
+        $(this)
+          .children()
+          .children()
+          .each(function (idx) {
+            $(this).toggle();
+          });
+        $(this).next().text(resp.data.likes);
+      }
+    });
   }
 
   //
@@ -81,6 +102,13 @@ class ApiFuncts {
       try {
         var resp = await axios.post(`/v1/add_mission/${mission_id}`);
       } catch (error) {
+        Sentry.captureException(err);
+        return;
+      }
+      if (!resp || resp.data.error) {
+        Sentry.captureMessage(
+          'Something went wrong: api_functs.addMissionListener'
+        );
         return;
       }
 
@@ -90,24 +118,6 @@ class ApiFuncts {
         this_.showToast(resp.data.success);
       }
     });
-  }
-
-  showToast(message) {
-    $('.toasts-zone').prepend(
-      `<div class="toast bg-dark text-light" role="alert" aria-live="assertive" aria-atomic="true"
-      data-delay="5000" >
-        <div class="toast-header bg-dark text-light">
-          <strong class="mr-auto">Updated!</strong>
-          <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="toast-body">
-        ${message}
-        </div>
-      </div>`
-    );
-    $('.toast').toast('show');
   }
 
   addDetailsListener() {
@@ -132,12 +142,14 @@ class ApiFuncts {
       try {
         var resp = await axios.get(`/v1/business_detail/${business_id}`);
       } catch (error) {
-        // TODO: sentry log error
+        Sentry.captureException(err);
         $('.spinner-zone').hide();
         return;
       }
       if (!resp || resp.data.error) {
-        // TODO: sentry log error
+        Sentry.captureMessage(
+          'Something went wrong: api_functs.getShowBusinessDetails'
+        );
         $('.spinner-zone').hide();
         return;
       }
@@ -151,10 +163,8 @@ class ApiFuncts {
   //*
   /*  Update detail modal with business data and show.
    */
-  showDetailModal(data, longitude, latitude) {
-    $('#business-detail-modal').html(
-      makeDetailModal(data, longitude, latitude)
-    );
+  showDetailModal(data) {
+    $('#business-detail-modal').html(makeDetailModal(data));
     $('#business-detail-modal').modal().show();
     $('.carousel').carousel();
   }
@@ -200,8 +210,17 @@ class ApiFuncts {
           this_.mission_btn_business_data
         );
       } catch (error) {
-        // TODO: sentry log error
         $('#mission-choices .feedback').text('Error');
+        Sentry.captureException(err);
+        $('.spinner-zone').hide();
+        return;
+      }
+      if (!resp || resp.data.error) {
+        $('#mission-choices .feedback').text('Error');
+        Sentry.captureMessage(
+          'Something went wrong: api_functs.addBusinessToMisionListener'
+        );
+        $('.spinner-zone').hide();
         return;
       }
       const {
@@ -213,10 +232,30 @@ class ApiFuncts {
         setTimeout(() => {
           $('#mission-choices .feedback').text('');
         }, 2000);
-        // M_C needs to know when businesses ared added to missions.
-        if (success === 'Added!' && M_C) M_C.businessAddedToMission(mission_id);
+        // MissionControlObj  needs to know when businesses ared added to missions.
+        if (success === 'Added!' && typeof MissionControlObj !== 'undefined')
+          MissionControlObj.businessAddedToMission(mission_id);
       }
     });
+  }
+
+  // Show toast message fuctionality.
+  showToast(message) {
+    $('.toasts-zone').prepend(
+      `<div class="toast bg-dark text-light" role="alert" aria-live="assertive" aria-atomic="true"
+      data-delay="5000" >
+        <div class="toast-header bg-dark text-light">
+          <strong class="mr-auto">Updated!</strong>
+          <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="toast-body">
+        ${message}
+        </div>
+      </div>`
+    );
+    $('.toast').toast('show');
   }
 }
 

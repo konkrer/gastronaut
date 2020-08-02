@@ -12,8 +12,6 @@ const autoSearchDelay = 1500;
 // Cooridnate percision used to look for lng/lat changes
 // which would warant new Yelp API call for fresh data.
 const coordsPercision = 3;
-let latitude = null;
-let longitude = null;
 
 // Cards variables
 let firstCardsAdded = false;
@@ -42,11 +40,11 @@ const defaultFormState = [
 */
 function getFormData() {
   let data = $mainForm.serialize();
-  data = `${data}&categories=${category}&limit=50`;
-  if (latitude)
-    data += `&latitude=${latitude.toFixed(3)}&longitude=${longitude.toFixed(
+  data = `${data}&categories=${Animations.category}&limit=50`;
+  if (Map_Obj.latitude)
+    data += `&latitude=${Map_Obj.latitude.toFixed(
       3
-    )}`;
+    )}&longitude=${Map_Obj.longitude.toFixed(3)}`;
   return data;
 }
 
@@ -111,20 +109,28 @@ function checkCoordsChange(change) {
   const prevCoords = JSON.parse(localStorage.getItem('coords'));
 
   // if there is lng/lat data but no previous stored coords data
-  if (longitude && !prevCoords) {
-    localStorage.setItem('coords', JSON.stringify([longitude, latitude]));
+  if (Map_Obj.longitude && !prevCoords) {
+    localStorage.setItem(
+      'coords',
+      JSON.stringify([Map_Obj.longitude, Map_Obj.latitude])
+    );
     // if there is not a location given having coords warrants an API call
     console.log('was blank now coords');
     if (!$locationInput.val()) return true;
     // if no location given and new ond old coords to compare:
-  } else if (!$locationInput.val() && longitude && prevCoords) {
+  } else if (!$locationInput.val() && Map_Obj.longitude && prevCoords) {
     const [prevLng, prevLat] = prevCoords;
     // if coords have changed:
     if (
-      longitude.toFixed(coordsPercision) !== prevLng.toFixed(coordsPercision) ||
-      latitude.toFixed(coordsPercision) !== prevLat.toFixed(coordsPercision)
+      Map_Obj.longitude.toFixed(coordsPercision) !==
+        prevLng.toFixed(coordsPercision) ||
+      Map_Obj.latitude.toFixed(coordsPercision) !==
+        prevLat.toFixed(coordsPercision)
     ) {
-      localStorage.setItem('coords', JSON.stringify([longitude, latitude]));
+      localStorage.setItem(
+        'coords',
+        JSON.stringify([Map_Obj.longitude, Map_Obj.latitude])
+      );
       console.log('coords have changed');
       return true;
     }
@@ -139,8 +145,8 @@ function checkCategoryChange(change) {
   const prevCategory = localStorage.getItem('category');
 
   // category change warrants an API call
-  if (prevCategory !== category) {
-    localStorage.setItem('category', category);
+  if (prevCategory !== Animations.category) {
+    localStorage.setItem('category', Animations.category);
     console.log('category changed');
     return true;
   }
@@ -245,23 +251,14 @@ function yelpSetLocation(data) {
     },
   } = data;
   // if lng/lat has changed
-  if (longitude !== lng || latitude !== lat) {
-    longitude = lng;
-    latitude = lat;
+  if (Map_Obj.longitude !== lng || Map_Obj.latitude !== lat) {
+    Map_Obj.longitude = lng;
+    Map_Obj.latitude = lat;
     // Set location placeholder back to 'Location'.
     $locationInput.prop('placeholder', `Location`);
     // store coords, render map, note rendered first coords map
     localStorage.setItem('coords', JSON.stringify([lng, lat]));
   }
-}
-
-/*
-/* Mark user on map. 
-*/
-function markUser() {
-  if (!longitude) return;
-  if (userMarker) userMarker.remove();
-  userMarker = addUserMarker([longitude, latitude]);
 }
 
 /*
@@ -272,10 +269,10 @@ function userMarkAndYelpCoordsLogic(data) {
   // if text location given and new Yelp data
   // use coords Yelp returned for lng, lat.
   if ($locationInput.val() && data) {
-    navigator.geolocation.clearWatch(locationWatcher);
+    navigator.geolocation.clearWatch(Geolocation_Obj.locationWatcher);
     yelpSetLocation(data);
   }
-  markUser();
+  Map_Obj.addUserMarker();
 }
 
 /*
@@ -313,12 +310,7 @@ function mapFirstBusiness(data) {
     businesses: [first, ...rest],
   } = data;
   const { longitude: lng, latitude: lat } = first.coordinates;
-  addRestMarkerAndFitBounds(
-    [longitude, latitude],
-    [lng, lat],
-    first.name,
-    first.id
-  );
+  Map_Obj.addRestMarkerAndFitBounds([lng, lat], first.name, first.id);
 }
 
 /*
@@ -333,14 +325,14 @@ function mapAndAddCardsForNewApiCall(data) {
 
   if (data.businesses.length == 0) {
     $('.card-track-inner').html(getNoResultsCard());
-    if (restMarker) restMarker.remove();
+    if (Map_Obj.restMarker) Map_Obj.restMarker.remove();
     return;
   }
   $('.card-track-inner').hide();
   userMarkAndYelpCoordsLogic(data);
 
   const cards = getCards(data);
-  currCard = 0;
+  Animations.currCard = 0;
 
   // Scroll to first card and fade in.
   $('#scrl4').scrollLeft(0);
@@ -351,18 +343,19 @@ function mapAndAddCardsForNewApiCall(data) {
     .removeClass('opaque');
 
   // If cards map first bussiness, watch scroll position for mapping,
-  // watch scroll position for adding more cards.
+  // watch scroll position for adding more cards. Filtering for transactions
+  // (interface) may result in no cards.
   if (cards) {
     mapFirstBusiness(data);
     if (!resultsRemaining && data.total !== 1) addDummyCard();
     $('.arrow-wrapper').addClass('pulse-outline-mobile');
-    setCardScrollTrackerMapper();
+    Animations.setCardScrollTrackerMapper();
     setTimeout(() => {
       addNextCardsListener();
     }, 1000);
   } else {
     // if no cards no restMarker should be visible.
-    if (restMarker) restMarker.remove();
+    if (Map_Obj.restMarker) Map_Obj.restMarker.remove();
   }
 }
 
@@ -384,7 +377,7 @@ async function searchYelp() {
   console.log('searchYelp');
 
   // Make sure there is a location to search.
-  if (!latitude && $locationInput.val() === '') {
+  if (!Map_Obj.latitude && $locationInput.val() === '') {
     alert('Enter a location or press detect location.');
     return;
   }
@@ -420,7 +413,7 @@ async function searchYelp() {
 
   if (transactionsNoChangeAndNoNewData(!!data)) return;
 
-  justSearchedYelp = true;
+  Animations.justSearchedYelp = true;
 
   // If no new data use last data.
   var data = data ? data.data : JSON.parse(lastData);
@@ -449,7 +442,7 @@ async function addNextCards() {
   if (!resultsRemaining || offset === 20) {
     addDummyCard();
     setTimeout(() => {
-      setCardScrollTrackerMapper();
+      Animations.setCardScrollTrackerMapper();
     }, 100);
     return;
   }
@@ -460,7 +453,7 @@ async function addNextCards() {
 
   resultsRemaining -= data.data.businesses.length;
   $('.card-track-inner').append(getCards(data.data));
-  setCardScrollTrackerMapper();
+  Animations.setCardScrollTrackerMapper();
 
   if (resultsRemaining)
     setTimeout(() => {
@@ -522,7 +515,7 @@ $mainForm.on('change', '.onChange', function (e) {
 $categoryButtons.on('click', 'button', function (e) {
   clearTimeout(keyupTimer);
   $('.spinner-zone').show();
-  category = e.target.value;
+  Animations.category = e.target.value;
   $('.cat-display').text(e.target.textContent);
   turnActiveOffCatBtns();
   $(this).addClass('active');
@@ -564,7 +557,7 @@ function navbarSearch() {
       window.location.href = `/?q=${term}`;
       return;
     }
-    category = 'restaurants,bars,food';
+    Animations.category = 'restaurants,bars,food';
     $('.cat-display').text('All');
     turnActiveOffCatBtns();
     $('#All').addClass('active');
@@ -614,7 +607,7 @@ $('.explore').on('click', function (e) {
 */
 $('#detect-location').on('click', function (e) {
   $(this).children().removeClass('pulse-5');
-  detectLocation(e);
+  Geolocation_Obj.detectLocation(e);
 });
 
 /*
@@ -697,8 +690,8 @@ $('.card-track-inner').on('click', '.cardMapButton', function (e) {
   const lat = $(this).next().children().data('lat');
   const name = $(this).next().children().data('name');
   const id = $(this).next().children().data('id');
-  if (!mapOpen) toggleMap();
-  addRestMarkerAndFitBounds([longitude, latitude], [+lng, +lat], name, id);
+  if (!Map_Obj.mapOpen) toggleMap();
+  Map_Obj.addRestMarkerAndFitBounds([+lng, +lat], name, id);
 });
 
 /*
@@ -709,7 +702,7 @@ $('.showMap').each(function (index) {
 });
 
 function toggleMap() {
-  if (mapOpen && $('.card-map-zone').hasClass('cards-collapse')) {
+  if (Map_Obj.mapOpen && $('.card-map-zone').hasClass('cards-collapse')) {
     $('.card-map-zone').removeClass('cards-collapse');
     $('.card-track').show();
     $('.toggleCards')
@@ -718,7 +711,7 @@ function toggleMap() {
         $(this).toggleClass('d-none');
       });
     if (!$('.card-map-zone').hasClass('cards-collapse')) {
-      setCardsScrollLeft();
+      Animations.setCardsScrollLeft();
     }
   }
   $('.card-map-zone').toggleClass('map-collapse');
@@ -726,11 +719,11 @@ function toggleMap() {
   $('.mapBtns').toggle();
   $('.map-toggle').toggleClass('toggle-on-map');
   $('.map-track').toggleClass(['border-top', 'border-secondary']);
-  if (mapOpen) {
-    mapOpen = false;
+  if (Map_Obj.mapOpen) {
+    Map_Obj.mapOpen = false;
   } else {
-    mapOpen = true;
-    mappyBoi.resize();
+    Map_Obj.mapOpen = true;
+    Map_Obj.mappyBoi.resize();
   }
 }
 
@@ -742,7 +735,7 @@ $('.toggleCards').on('click', toggleCards);
 function toggleCards() {
   $('.card-map-zone').toggleClass('cards-collapse');
   $('.card-track').toggle();
-  mappyBoi.resize();
+  Map_Obj.mappyBoi.resize();
   // toggle up/down arrow
   $('.toggleCards')
     .children()
@@ -750,7 +743,7 @@ function toggleCards() {
       $(this).toggleClass('d-none');
     });
   if (!$('.card-map-zone').hasClass('cards-collapse')) {
-    setCardsScrollLeft();
+    Animations.setCardsScrollLeft();
   }
 }
 
@@ -762,7 +755,7 @@ function showCardTrack() {
   if ($('.card-map-zone').hasClass('cards-collapse')) {
     $('.card-map-zone').removeClass('cards-collapse');
     $('.card-track').show();
-    mappyBoi.resize();
+    Map_Obj.mappyBoi.resize();
     $('.toggleCards')
       .children()
       .each(function (index) {
@@ -796,7 +789,7 @@ function setCategoryFromStorage() {
     localStorage.setItem('category', 'restaurants');
     currCat = 'restaurants';
   }
-  category = currCat;
+  Animations.category = currCat;
   // set list-group button to active for current category
   $categoryButtons.children().each(function (index) {
     if ($(this).val() === currCat) {
@@ -822,7 +815,7 @@ function setFormTransactions(transactions) {
 /* Set form checkboxes for yelp parameters.
 */
 function setForm(data) {
-  data = convertDataArrayToObj(data);
+  data = Base.convertDataArrayToObj(data);
 
   // inputs to run through and check or uncheck
   const inputIds = [
@@ -919,23 +912,24 @@ function updateFormFromStorage() {
 function hideHeroAndSearch() {
   $('.hero-animation').hide();
   $('.alert').hide();
-  // mappyBoi.resize(); <<<<< look for any problems then remove
-  scrollCategoriesToCurrent();
+  Animations.scrollCategoriesToCurrent();
   // if there is given location request search
   if ($locationInput.val()) searchYelp();
   // if no given location but allowing location sharing detect location
-  else if (!locationWatcher && localStorage.getItem('geoAllowed') === 'true')
+  else if (
+    !Geolocation_Obj.locationWatcher &&
+    localStorage.getItem('geoAllowed') === 'true'
+  )
     setTimeout(() => {
-      detectLocation();
+      Geolocation_Obj.detectLocation();
     }, 600);
   // If coords use those to search.
-  else if (longitude) searchYelp();
+  else if (Map_Obj.longitude) searchYelp();
 }
 
 /*
-/* If page loads scrolled to bottom call scrollCategoriesToCurrent.
-/* Otherwise when user scroll to bottom of page call scrollCategoriesToCurrent.
-/* Only call once.
+/* When user scrolls to bottom of page call hideHeroAndSearch() if makeSearch is true.
+/* else hide hero animation.
 */
 function lockOnScrollBottom(makeSearch = true) {
   $scrollListener = $(window).on('scroll', function () {
@@ -956,8 +950,8 @@ function lockOnScrollBottom(makeSearch = true) {
 */
 function setLngLatFromHiddenInputs() {
   // Set lng/lat from hidden inputs then remove hidden inputs.
-  latitude = +$('#main-form input[name=lat]').val();
-  longitude = +$('#main-form input[name=lng]').val();
+  Map_Obj.latitude = +$('#main-form input[name=lat]').val();
+  Map_Obj.longitude = +$('#main-form input[name=lng]').val();
   $('#main-form input[name=lat]').remove();
   $('#main-form input[name=lng]').remove();
 }
@@ -970,8 +964,8 @@ function setCoordsFromStorage() {
   const coords = localStorage.getItem('coords');
   if (coords) {
     const [lng, lat] = JSON.parse(coords);
-    longitude = lng;
-    latitude = lat;
+    Map_Obj.longitude = lng;
+    Map_Obj.latitude = lat;
   }
 }
 
@@ -980,7 +974,7 @@ function setCoordsFromStorage() {
 */
 function setLngLatInit() {
   setLngLatFromHiddenInputs();
-  if (!latitude) setCoordsFromStorage();
+  if (!Map_Obj.latitude) setCoordsFromStorage();
 }
 
 /*
@@ -1001,7 +995,7 @@ function setLocationValue() {
   // Set location from storage if there was location previously given.
   if (data) {
     data = JSON.parse(data);
-    data = convertDataArrayToObj(data);
+    data = Base.convertDataArrayToObj(data);
     if (data.location) $locationInput.val(data.location);
   } else {
     setTimeout(() => $('#tips').modal(), 10000);

@@ -219,7 +219,7 @@ function makeCard(business) {
     `;
 }
 
-function makeDetailModal(business, longitude = '', latitude = '') {
+function makeDetailModal(business) {
   // unpack data items for card display
   const {
     name,
@@ -248,7 +248,9 @@ function makeDetailModal(business, longitude = '', latitude = '') {
 
   if (hours) var { open, is_open_now } = hours[0];
 
-  const originStr = latitude ? `${latitude},${longitude}` : '';
+  const originStr = Map_Obj.latitude
+    ? `${Map_Obj.latitude},${Map_Obj.longitude}`
+    : '';
 
   const trans_text = makeTransactionsText(transactions);
 

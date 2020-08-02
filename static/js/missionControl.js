@@ -6,7 +6,6 @@
 class MissionControl {
   constructor() {
     this.missionCache = {};
-    this.restMarkers = [];
     this.sidebarOpen = true;
     this.$infoCol = $('#info-col');
     this.ignoreTogglePopup = false;
@@ -239,9 +238,9 @@ class MissionControl {
   }
 
   mapBusinesses(businesses) {
-    clearMapArray(this.restMarkers);
+    Map_Obj.clearMapArray();
     if (businesses.length == 0) return;
-    this.restMarkers = mapArrayAndFitBounds(businesses);
+    Map_Obj.mapArrayAndFitBounds(businesses);
   }
 
   listBusinesses(missionData) {
@@ -349,7 +348,7 @@ class MissionControl {
     e.preventDefault();
 
     const formData = $('#create-form').serializeArray();
-    const f_d = convertDataArrayToObj(formData);
+    const f_d = Base.convertDataArrayToObj(formData);
 
     // Don't pass default textarea content 'Add a Description' to backend.
     f_d.description =
@@ -380,8 +379,7 @@ class MissionControl {
         $(`<option value="${mission.id}">${mission.name}</option>`)
       );
       localStorage.setItem('currMissionId', mission.id);
-      clearMapArray(this.restMarkers);
-      this.restMarkers = [];
+      Map_Obj.clearMapArray();
       this.checkLocalStorage();
       ApiFunctsObj.showToast(resp.data.success);
     }
@@ -398,7 +396,7 @@ class MissionControl {
         e.preventDefault();
 
         const formData = $('#mission-form').serializeArray();
-        const f_d = convertDataArrayToObj(formData);
+        const f_d = Base.convertDataArrayToObj(formData);
 
         // Don't pass default textarea content 'Add a Description' to backend.
         f_d.description =
@@ -476,8 +474,7 @@ class MissionControl {
           $('#mission-detail-panel').html('');
           $('#businesses-list').html('');
           $('#deleteMissionModal').modal('hide');
-          clearMapArray(this.restMarkers);
-          this.restMarkers = [];
+          Map_Obj.clearMapArray();
           this.checkLocalStorage();
           ApiFunctsObj.showToast(resp.data.success);
         }
@@ -516,8 +513,7 @@ class MissionControl {
           $('#mission-detail-panel').html('');
           $('#businesses-list').html('');
           $('#removeMissionModal').modal('hide');
-          clearMapArray(this.restMarkers);
-          this.restMarkers = [];
+          Map_Obj.clearMapArray();
           this.checkLocalStorage();
           ApiFunctsObj.showToast(resp.data.success);
         }
@@ -537,13 +533,11 @@ class MissionControl {
     const lat = $el.data('lat');
     const idx = $el.parent().data('idx');
 
-    mappyBoi.flyTo({
+    Map_Obj.mappyBoi.flyTo({
       center: [lng, lat],
-      essential: true, // this animation is considered essential with respect to prefers-reduced-motion
+      essential: true,
       zoom: 17,
     });
-
-    const marker = this.restMarkers[idx];
 
     if (isMobileScreen()) $('#businesses-list').removeClass('show');
   }
@@ -554,7 +548,7 @@ class MissionControl {
     const this_ = this;
     this.$infoCol.on('click', '.list-group-item', function () {
       const idx = $(this).children().data('idx');
-      const marker = this_.restMarkers[idx];
+      const marker = Map_Obj.restMarkers[idx];
       if (!marker.getPopup().isOpen()) marker.togglePopup();
     });
   }
@@ -601,21 +595,21 @@ class MissionControl {
         const html = `<span class="detailsBtn marker-html" data-id="${id}">
                     <b>${name}</b></span>`;
         // get marker for this business
-        const marker = M_C.restMarkers[idx];
+        const marker = Map_Obj.restMarkers[idx];
         const { lng, lat } = marker._lngLat;
         marker.remove();
         if (success === 'Goal Completed!') {
           // add flag marker
-          newMarker = addFlagMarker([lng, lat], html);
+          newMarker = Map_Obj.addFlagMarker([lng, lat], html);
           completed = true;
         } else {
           // add regular marker
-          newMarker = addMarker([lng, lat], html);
+          newMarker = Map_Obj.addMarker([lng, lat], html);
           completed = false;
         }
         // newMarker.togglePopup();
         // put new marker in restMarkers array in spot of old marker
-        this_.restMarkers.splice(idx, 1, newMarker);
+        Map_Obj.restMarkers.splice(idx, 1, newMarker);
         // update mission cache that this business was/wasn't completed
         this_.missionCache[mission_id].businesses[idx].completed = completed;
 
@@ -695,7 +689,7 @@ class MissionControl {
       function () {
         const missionId = localStorage.getItem('currMissionId');
         const businesses = this.missionCache[missionId].businesses;
-        if (businesses) fitBoundsList(businesses);
+        if (businesses) Map_Obj.fitBoundsList(businesses);
         $('#businesses-list').removeClass('show');
         if (isMobileScreen()) $('#mission-select-form').removeClass('show');
       }.bind(this)
@@ -703,4 +697,4 @@ class MissionControl {
   }
 }
 
-const M_C = new MissionControl();
+const MissionControlObj = new MissionControl();
