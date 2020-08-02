@@ -127,6 +127,8 @@ def mission_control():
 
     missions = g.user.missions
 
+    missions.sort(key=lambda x: x.name.lower())
+
     return render_template('mission_control.html', missions=missions)
 
 
@@ -585,10 +587,26 @@ def business_detail_yelp(business_id):
 
     data = res.json()
 
-    # Make a reports boolean flag attribute on data and set
-    # true if there are reports about this businesss.
     business = Business.query.get(business_id)
-    data['reports'] = bool(business.reports if business else False)
+
+    if business:
+        data['reports'] = db.session.query(
+            Report.id, Report.submitted_on, Report.text, Report.photo_file,
+            Report.photo_url, Report.likes, User.id, User.username
+        ).filter(
+            Report.business_id == business.id
+        ).join(
+            User
+        ).order_by(
+            Report.submitted_on.desc()
+        ).limit(
+            10
+        ).all()
+        # convert likes to number of likes (likes length).
+        data['reports'] = [(ri, s, t, f, u, len(l), ui, n)
+                           for ri, s, t, f, u, l, ui, n in data['reports']]
+    else:
+        data['reports'] = []
 
     return data
 
@@ -623,7 +641,8 @@ def set_prefrences():
 @app.route('/v1/mission/<mission_id>')
 @add_user_to_g
 def load_mission(mission_id):
-    """Endpoint to return a mission and all business on that mission."""
+    """Endpoint to return a mission and all business on that mission.
+       Used by mission-control."""
 
     if not g.user:
         return Unauthorized()
@@ -634,6 +653,8 @@ def load_mission(mission_id):
         user_id=g.user.id, mission_id=mission.id).one()
 
     businesses = [b.serialize() for b in mission.businesses]
+
+    businesses.sort(key=lambda x: x['name'].lower())
 
     for b in businesses:
         if b['id'] in user_mission.goals_completed:

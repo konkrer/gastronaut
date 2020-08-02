@@ -54,32 +54,38 @@ class MapObj {
   }
 
   // Add a business map marker and open popup.
-  addMarker(coords, html) {
-    return new mapboxgl.Marker(this.markerOptions)
+  addMarker(coords, html, openPopupMobile = true) {
+    const marker = new mapboxgl.Marker(this.markerOptions)
       .setLngLat(coords)
       .setPopup(new mapboxgl.Popup().setHTML(html))
       .addTo(this.mappyBoi)
       .togglePopup();
+    // Close popup if not openPopupMobile and screen size is mobile size screen.
+    if (!openPopupMobile && isMobileScreen()) marker.togglePopup();
+    return marker;
   }
 
   // Add a flag map marker and open popup.
-  addFlagMarker(coords, html) {
+  addFlagMarker(coords, html, openPopupMobile = true) {
     const options = {
       element: $('<div class="marker flag-marker">').get()[0],
       anchor: 'center',
       offset: [21, -30],
     };
-    return new mapboxgl.Marker(options)
+    const marker = new mapboxgl.Marker(options)
       .setLngLat(coords)
       .setPopup(new mapboxgl.Popup({ offset: [0, -61] }).setHTML(html))
       .addTo(this.mappyBoi)
       .togglePopup();
+    // Close popup if not openPopupMobile and screen size is mobile size screen.
+    if (!openPopupMobile && isMobileScreen()) marker.togglePopup();
+    return marker;
   }
 
   // Add a restaurant marker and fit bounds to user position and restaurant location.
   addRestMarkerAndFitBounds(restCoords, name, id) {
-    const html = `<span class="detailsBtn marker-html" data-id="${id}">
-                    ${name}</span>`;
+    const html = `<span class="detailsBtn marker-html mr-2" data-id="${id}">
+                    <b>${name}</b></span>`;
     if (this.restMarker) this.restMarker.remove();
     this.restMarker = this.addMarker(restCoords, html);
     this.fitBounds([this.longitude, this.latitude], restCoords);
@@ -96,14 +102,14 @@ class MapObj {
 
   // Map list of bussiness and fit bounds for outliers.
   mapArrayAndFitBounds(array) {
-    this.fitBoundsList(array);
+    this.fitBoundsArray(array);
     this.mapArray(array);
   }
 
   // For list of businesses with lng/lat data
   // determine least and most lng/lat combo and fit bounds.
   // If only one coordinate set in list fly to location.
-  fitBoundsList(array) {
+  fitBoundsArray(array) {
     if (array.length > 1) {
       const least = [Infinity, Infinity];
       const most = [-Infinity, -Infinity];
@@ -118,7 +124,8 @@ class MapObj {
       this.mappyBoi.flyTo({
         center: [array[0].longitude, array[0].latitude],
         essential: true,
-        zoom: 17,
+        zoom: 16.1,
+        speed: 1,
       });
   }
 
@@ -128,11 +135,11 @@ class MapObj {
   mapArray(array) {
     this.restMarkers = array.reduce((acc, el) => {
       const coords = [el.longitude, el.latitude];
-      const html = `<span class="detailsBtn marker-html" data-id="${el.id}">
+      const html = `<span class="detailsBtn marker-html mr-2" data-id="${el.id}">
                     <b>${el.name}</b></span>`;
 
-      if (el.completed) acc.push(this.addFlagMarker(coords, html));
-      else acc.push(this.addMarker(coords, html));
+      if (el.completed) acc.push(this.addFlagMarker(coords, html, false));
+      else acc.push(this.addMarker(coords, html, false));
 
       return acc;
     }, []);

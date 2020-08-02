@@ -84,7 +84,7 @@ class MissionControl {
       'href',
       `/report?mission_id=${mission_id}&next=mission_control`
     );
-    if (isMobileScreen()) $('#mission-select-form').removeClass('show');
+    if (isMobileScreen()) $('#businesses-list').removeClass('show');
   }
 
   fillForm(missionData) {
@@ -249,15 +249,15 @@ class MissionControl {
         <li class="list-group-item px-2 px-lg-3 px-xl-4">
           ${el.name}
           <span class="float-right" data-id="${el.id}" data-idx="${idx}">
-            <span class="detailsBtn mr-2" data-toggle="tooltip" title="Show Details" data-id="${
-              el.id
-            }">
-              <i class="fas fa-clipboard-list brand-outline txt-orange iconBtn"></i>
-            </span>
             <span class="mapBtn mr-2" data-toggle="tooltip" title="Show on Map" data-lng="${
               el.longitude
             }" data-lat="${el.latitude}">
               <i class="fas fa-map-marked-alt brand-outline txt-orange iconBtn"></i>
+            </span>
+            <span class="detailsBtn mr-2" data-toggle="tooltip" title="Show Details" data-id="${
+              el.id
+            }">
+              <i class="fas fa-clipboard-list brand-outline txt-orange iconBtn"></i>
             </span>
             <span class="flagBtn mr-2" data-toggle="tooltip" title="Plant a Flag" data-name="${
               el.name
@@ -531,7 +531,6 @@ class MissionControl {
   businessMapper($el) {
     const lng = $el.data('lng');
     const lat = $el.data('lat');
-    const idx = $el.parent().data('idx');
 
     Map_Obj.mappyBoi.flyTo({
       center: [lng, lat],
@@ -539,7 +538,10 @@ class MissionControl {
       zoom: 17,
     });
 
-    if (isMobileScreen()) $('#businesses-list').removeClass('show');
+    if (isMobileScreen()) {
+      $('#businesses-list').removeClass('show');
+      $('#mission-select-form').removeClass('show');
+    }
   }
 
   businessClickListener() {
@@ -689,9 +691,8 @@ class MissionControl {
       function () {
         const missionId = localStorage.getItem('currMissionId');
         const businesses = this.missionCache[missionId].businesses;
-        if (businesses) Map_Obj.fitBoundsList(businesses);
+        if (businesses) Map_Obj.fitBoundsArray(businesses);
         $('#businesses-list').removeClass('show');
-        if (isMobileScreen()) $('#mission-select-form').removeClass('show');
       }.bind(this)
     );
   }

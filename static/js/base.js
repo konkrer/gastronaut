@@ -26,7 +26,16 @@ class BaseLogic {
     const data = this.convertDataArrayToObj(
       $('#preferences-form').serializeArray()
     );
-    const resp = await axios.post('/v1/preferences', data);
+    try {
+      var resp = await axios.post('/v1/preferences', data);
+    } catch (err) {
+      Sentry.captureException(err);
+      return;
+    }
+    if (!resp || resp.data.error) {
+      Sentry.captureMessage('Something went wrong: base.updatePreferences');
+      return;
+    }
 
     $('#preferencesModal .feedback').text(resp.data.feedback);
     clearTimeout(this.feedbackClearTimer);

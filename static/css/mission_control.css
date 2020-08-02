@@ -22,6 +22,10 @@ a[href='#mission-select-form'] {
   border-radius: 0 0 5px 0;
 }
 
+#mission-select {
+  font-size: xx-small;
+}
+
 #mission-detail-panel form input,
 #mission-detail-panel form textarea {
   background: transparent;
@@ -68,11 +72,11 @@ a[href='#mission-select-form'] {
   background-color: var(--light);
 }
 #businesses-list::-webkit-scrollbar-thumb {
-  background-color: var(--secondary);
+  background-color: var(--my-warning);
   border-radius: 5px;
 }
 #businesses-list::-webkit-scrollbar-thumb:hover {
-  background-color: var(--my-warning);
+  background-color: #ff6701;
 }
 
 #businesses-panel .list-group-item {
@@ -141,6 +145,12 @@ a.text-success.hoverUnset:active {
 @media screen and (min-width: 576px) {
   #businesses-list {
     max-height: 60vh;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  #mission-select {
+    font-size: initial;
   }
 }
 

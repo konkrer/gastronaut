@@ -1,30 +1,30 @@
 {% from '/macros/report_text.html' import report_text with context %}
 
-<section class="text-center txt-white-k card-columns">
+<section class="text-center txt-white-k card-columns museo">
   {% if reports %} {% for report in reports %}
-  <div class="card d-inline-block m-2 text-left">
-    <div class="card-header">
+  <div class="card d-inline-block my-2 mx-1 text-left mb-3 mb-lg-4">
+    <div class="card-header pt-3">
       {% if report.business_id %}{% set b = report.business %}
       <h5
-        class="card-title font-weight-bold detailsBtn hover-primary"
+        class="card-title font-weight-bold detailsBtn hover-primary mb-0"
         data-id="{{b.id}}"
       >
         {{b.name}}
       </h5>
       <h5 class="lead txt-green"><small>Business</small></h5>
       {% else %} {% set m = report.mission %}
-      <h5 class="card-title font-weight-bold">
+      <h5 class="card-title font-weight-bold mb-0">
         <a class="txt-white-k hover-primary" href="/missions/{{m.id}}">
           {{m.name}}
         </a>
       </h5>
       <h5 class="lead text-info"><small>Mission</small></h5>
       {% endif %}
-      <div class="card-text">
+      <div class="card-text ssp">
         <a href="/user/profile/{{report.user.id}}">
           <em class="txt-orange"> by @{{report.user.username}}</em>
         </a>
-        <div class="txt-smlr">
+        <div class="txt-smlr ssp">
           {{report.submitted_on.strftime('%a %b %d, %Y')}}
         </div>
       </div>
@@ -64,13 +64,13 @@
         </span>
       </a>
       {% endif %}
-      <span class="px-3 text-dark likes">
+      <span class="pl-1 pl-md-3 text-dark likes">
         {{ report.likes | length}}
       </span>
       {% if report.user_id == g.user.id %}
       <a
         href="/report/{{report.id}}/edit?next={{request.endpoint}}&next_view_args={{view_args}}"
-        class="btn btn-sm btn-outline-primary float-right px-3 ml-4 ml-sm-1 ml-md-4 mb-2"
+        class="btn btn-sm btn-outline-primary float-right px-3 px-sm-2 px-md-3 ml-3 ml-md-4 mb-2"
         >Edit Report</a
       >
       {% endif %} {% if not request.endpoint == 'report_detail' %}

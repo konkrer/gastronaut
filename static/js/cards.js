@@ -236,7 +236,6 @@ function makeDetailModal(business) {
     url,
     photos,
     hours,
-    reports,
     coordinates: { latitude: lat, longitude: lng },
     location: {
       city,
@@ -248,9 +247,10 @@ function makeDetailModal(business) {
 
   if (hours) var { open, is_open_now } = hours[0];
 
-  const originStr = Map_Obj.latitude
-    ? `${Map_Obj.latitude},${Map_Obj.longitude}`
-    : '';
+  const originStr =
+    typeof Map_Obj !== 'undefined' && Map_Obj.longitude
+      ? `${Map_Obj.latitude},${Map_Obj.longitude}`
+      : '';
 
   const trans_text = makeTransactionsText(transactions);
 
@@ -364,12 +364,6 @@ function makeDetailModal(business) {
             </a>
           </div>
           <div>
-            ${
-              reports
-                ? `<a class="" href="/reports/business/${id}" target="blank"><button class="btn btn-primary-alt2 text-white-k see-reports-btn">See Reports</button></a>`
-                : ''
-            }
-            
             <span data-toggle="tooltip" title="Add to Mission" class="">
               <button
                 class="btn btn-primary-alt2 mission-btn font-weight-bold"
@@ -397,7 +391,74 @@ function makeDetailModal(business) {
             </button>
           </div>
         </div>
+        <div class="">${makeReportsForDetailModal(business)}</div>
       </div>
+    </div>`;
+}
+
+function makeReportsForDetailModal(business) {
+  const reportCards = business.reports.reduce((acc, report) => {
+    const [
+      report_id,
+      submitted_on,
+      text,
+      photo_file,
+      photo_url,
+      likes,
+      user_id,
+      username,
+    ] = report;
+
+    const html = `
+    <div class="card d-inline-block my-2 mx-1 text-left mb-4 mb-lg-5 detailReport">
+      <div class="card-header pt-3">
+        <h5 class="mb-0">
+          ${business.name}
+        </h5>
+        <h5 class="lead txt-green"><small>Business</small></h5>
+        <div class="card-text">
+          <a href="/user/profile/${user_id}">
+            <em class="txt-orange"> by @${username}</em>
+          </a>
+          <div class="txt-smlr">
+            ${submitted_on}
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        ${text} 
+        ${reportImageUrl(photo_file, photo_url)}
+      </div>
+  
+      <div class="card-footer">
+        <span>
+          <i class="fas fa-thumbs-up fa-lg text-primary"></i>
+        </span>
+        <span class="pl-1 pl-md-3 text-dark likes">
+          ${likes}
+        </span>
+        <a href="/report/${report_id}" class="card-link float-right"
+          >Read More</a
+        >
+      </div>
+    </div>`;
+
+    acc = `${acc}${html}`;
+    return acc;
+  }, '');
+
+  return reportCards
+    ? `<h4 class="text-left text-info ml-3 ml-lg-5 mt-4 mb-4">Reports</h4>${reportCards}`
+    : '';
+}
+
+function reportImageUrl(photo_file, photo_url) {
+  if (!photo_file && !photo_url) return '';
+  return `
+    <div class="flx-std">
+      <img src="${
+        photo_file || photo_url
+      }" alt="User Image" class="img-fluid" />
     </div>`;
 }
 
