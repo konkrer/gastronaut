@@ -27,16 +27,9 @@
   align-items: center;
 }
 
-/* cards. not single report page card */
 .card {
-  width: 80vw;
+  width: 90%;
   display: inline-block;
-}
-
-/* single report page card */
-
-.card .card-title {
-  margin-bottom: 0px;
 }
 
 .card h5.lead {
@@ -76,10 +69,11 @@
 
 #business-detail-modal table {
   color: #adafae;
+  font-size: smaller;
 }
 
 #business-detail-modal td {
-  padding: 2px 5px;
+  padding: 2px 3px;
 }
 
 #business-detail-modal .modal-footer {
@@ -90,6 +84,10 @@
   line-height: 1.3;
 }
 
+.detailReport {
+  box-shadow: #ffffff29 0px 0px 8px;
+}
+
 .toasts-zone {
   position: fixed;
   bottom: 0;
@@ -98,9 +96,8 @@
 }
 
 @media screen and (min-width: 576px) {
-  /* cards. not single report page card */
-  .card:not(div.report card-norm) {
-    width: 38vw;
+  .card {
+    width: 90%;
   }
   .toasts-zone {
     right: 20px;
@@ -111,11 +108,20 @@
   .toasts-zone {
     right: 30px;
   }
+  #business-detail-modal table {
+    font-size: unset;
+  }
+  #business-detail-modal td {
+    padding: 2px 3px;
+  }
 }
 
 @media screen and (min-width: 992px) {
   .toasts-zone {
     right: 40px;
+  }
+  .card {
+    width: 85%;
   }
 }
 

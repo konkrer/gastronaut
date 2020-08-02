@@ -209,6 +209,9 @@ body {
 .bg-trans-b3 {
   background-color: rgba(0, 0, 0, 0.944);
 }
+.bg-trans-light {
+  background-color: #555555df;
+}
 
 .btn-primary {
   background-color: var(--primary) !important;

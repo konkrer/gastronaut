@@ -1,23 +1,24 @@
-<section class="text-center txt-white-k card-columns">
+<section class="text-center txt-white-k card-columns museo">
   {% if missions %} {% for mission in missions %}
-  <div class="card d-inline-block m-2 text-left">
+  <div class="card d-inline-block m-2 text-left mb-3 mb-lg-4">
     <div class="card-body">
       <h5 class="card-title font-weight-bold">{{mission.name}}</h5>
-      <div class="card-text">
+      <div class="card-text ssp">
         <a href="/user/profile/{{mission.user.id}}">
           <em class="txt-orange"> by @{{mission.author.username}}</em>
         </a>
-        <div class="txt-smlr">
+        <div class="txt-smlr ssp">
           {{mission.date_shared.strftime('%a %b %d, %Y')}}
         </div>
-        <div class="txt-smlr">
+        <div class="txt-smlr ssp">
           {{mission.city}} {{mission.state}}
         </div>
       </div>
-      <br />
-      <p class="card-text txt-green-alt font-weight-bold">
+      {% if mission.description %}
+      <p class="card-text txt-green-alt font-weight-bold mt-3">
         <em>{{mission.description}}</em>
       </p>
+      {% endif %}
     </div>
     <ul class="list-group list-group-flush">
       {% for business in mission.businesses %}
