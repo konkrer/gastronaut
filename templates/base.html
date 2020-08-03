@@ -150,7 +150,7 @@
               <a class="dropdown-item" href="#"
                 >Gastronaut groups (Coming Soon!)</a
               >
-              {% if request.endpoint == 'index' %}
+              {% if request.endpoint in ['index', 'mission_control'] %}
               <a
                 class="dropdown-item"
                 href="#tips"

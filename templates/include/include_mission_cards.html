@@ -2,7 +2,7 @@
   {% if missions %} {% for mission in missions %}
   <div class="card d-inline-block m-2 text-left mb-3 mb-lg-4">
     <div class="card-body">
-      <h5 class="card-title black-outline-1-2 font-weight-bold mb-0">
+      <h5 class="card-title font-weight-bold black-outline-1-2 mb-0">
         {{mission.name}}
       </h5>
       <h5 class="lead text-info black-outline-1"><small>Mission</small></h5>
@@ -12,10 +12,10 @@
             by @{{mission.author.username}}</em
           >
         </a>
-        <div class="txt-smlr ssp">
+        <div class="txt-smlr">
           {{mission.date_shared.strftime('%a %b %d, %Y')}}
         </div>
-        <div class="txt-smlr ssp">
+        <div class="txt-smlr">
           {{mission.city}} {{mission.state}}
         </div>
       </div>
@@ -86,11 +86,14 @@
   {% endfor %} {% else %}
   <div class="card d-inline-block m-2 text-left">
     <div class="card-body">
-      <h5 class="card-title font-weight-bold">
+      <h5 class="card-title font-weight-bold black-outline-1-2 mb-0">
         Missions you create and share will appear here
       </h5>
-      <div class="card-text">
-        <em class="txt-orange"> by @gastronaut</em>
+      <h5 class="lead text-info black-outline-1"><small>Mission</small></h5>
+      <div class="card-text ssp">
+        <em class="txt-orange font-weight-bold black-outline-1">
+          by @gastronaut</em
+        >
         <div class="txt-smlr">
           Wed Jul 3, 2020
         </div>
@@ -98,8 +101,7 @@
           San Francisco CA
         </div>
       </div>
-      <br />
-      <p class="card-text txt-green-alt font-weight-bold">
+      <p class="card-text txt-green-alt black-outline-1 mt-3">
         <em>Your mission description will go here.</em>
       </p>
     </div>
@@ -128,9 +130,14 @@
   </div>
   <div class="card d-inline-block m-2 text-left">
     <div class="card-body">
-      <h5 class="card-title font-weight-bold">I'm another shared mission!</h5>
-      <div class="card-text">
-        <em class="txt-orange"> by @gastronaut</em>
+      <h5 class="card-title font-weight-bold black-outline-1-2 mb-0">
+        I'm another shared mission!
+      </h5>
+      <h5 class="lead text-info black-outline-1"><small>Mission</small></h5>
+      <div class="card-text ssp">
+        <em class="txt-orange font-weight-bold black-outline-1">
+          by @gastronaut</em
+        >
         <div class="txt-smlr">
           Wed Jul 3, 2020
         </div>
@@ -138,8 +145,7 @@
           San Francisco CA
         </div>
       </div>
-      <br />
-      <p class="card-text txt-green-alt font-weight-bold">
+      <p class="card-text txt-green-alt black-outline-1 mt-3">
         <em>Your mission description will go here.</em>
       </p>
     </div>

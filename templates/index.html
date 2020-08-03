@@ -645,13 +645,13 @@
     id="tips"
     tabindex="-1"
     role="dialog"
-    aria-labelledby="newUserModalLabel"
+    aria-labelledby="tipsLabel"
     aria-hidden="true"
   >
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title txt-orange museo" id="newUserModalLabel">
+          <h5 class="modal-title txt-orange museo" id="tipsLabel">
             Hey...
           </h5>
           <button
@@ -704,12 +704,13 @@
           </div>
           <p class="txt-lg font-weight-bold">Map</p>
           <p>
-            Desktop: Use the second mouse button or the Ctrl/Command key with a
-            mouse draag to rotate and/or tilt the map.
+            <span class="pr-1">Desktop:</span> Use the second mouse button or
+            the Ctrl/Command key with a mouse drag to rotate and/or tilt the
+            map.
           </p>
           <p>
-            Mobile: Putting two fingers on the screen and immediately sliding up
-            or down changes the tilt.
+            <span class="pr-1">Mobile:</span> Putting two fingers on the screen
+            and immediately sliding up or down changes the tilt.
           </p>
         </div>
         <div class="modal-footer">
@@ -767,10 +768,10 @@
             class="flx-row-around width-100 bg-dark rounded mb-4"
             style="height: 50px;"
           >
-            <div class="bg-white txt-333 rounded p-2">
+            <div class="p-2 hidden">
               <i class="fas fa-map-marked-alt fa-lg"></i>
             </div>
-            <div class="p-2 hidden">
+            <div class="bg-white txt-333 rounded p-2">
               <i class="fas fa-map-marked-alt fa-lg"></i>
             </div>
             <div class="text-light tip-label">Toggle Map</div>
