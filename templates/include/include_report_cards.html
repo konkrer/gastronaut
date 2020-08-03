@@ -6,26 +6,36 @@
     <div class="card-header pt-3">
       {% if report.business_id %}{% set b = report.business %}
       <h5
-        class="card-title font-weight-bold detailsBtn hover-primary mb-0"
+        class="card-title font-weight-bold black-outline-1-2 detailsBtn hover-primary mb-0"
         data-id="{{b.id}}"
       >
         {{b.name}}
       </h5>
-      <h5 class="lead txt-green"><small>Business</small></h5>
+      <h5 class="lead txt-green black-outline-1">
+        <small>Business Report</small>
+      </h5>
       {% else %} {% set m = report.mission %}
-      <h5 class="card-title font-weight-bold mb-0">
+      <h5 class="card-title font-weight-bold black-outline-1-2 mb-0">
         <a class="txt-white-k hover-primary" href="/missions/{{m.id}}">
           {{m.name}}
         </a>
       </h5>
-      <h5 class="lead text-info"><small>Mission</small></h5>
+      <h5 class="lead text-info black-outline-1">
+        <small>Mission Report</small>
+      </h5>
       {% endif %}
       <div class="card-text ssp">
         <a href="/user/profile/{{report.user.id}}">
-          <em class="txt-orange"> by @{{report.user.username}}</em>
+          <em class="txt-orange black-outline-1 font-weight-bold">
+            by @{{report.user.username}}</em
+          >
         </a>
         <div class="txt-smlr ssp">
           {{report.submitted_on.strftime('%a %b %d, %Y')}}
+        </div>
+        <div class="txt-smlr ssp">
+          {% if m %} {{m.city}} {{m.state}} {% else %} {{b.city}} {{b.state}} {%
+          endif %}
         </div>
       </div>
     </div>
