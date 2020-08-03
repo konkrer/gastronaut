@@ -410,7 +410,8 @@ function makeReportsForDetailModal(business) {
     ] = report;
 
     const html = `
-    <div class="card d-inline-block my-2 mx-1 text-left mb-4 mb-lg-5 detailReport">
+    <div class="card d-inline-block my-2 mx-1 text-left mb-4 mb-lg-5 detailReport"
+    data-id="${report_id}">
       <div class="card-header pt-3">
         <h5 class="mb-0">
           ${business.name}
@@ -426,7 +427,7 @@ function makeReportsForDetailModal(business) {
         </div>
       </div>
       <div class="card-body">
-        ${text} 
+        ${makeParagraphs(text)} 
         ${reportImageUrl(photo_file, photo_url)}
       </div>
   
@@ -437,19 +438,31 @@ function makeReportsForDetailModal(business) {
         <span class="pl-1 pl-md-3 text-dark likes">
           ${likes}
         </span>
-        <a href="/report/${report_id}" class="card-link float-right"
-          >Read More</a
-        >
+        ${addMoreText(text, report_id)}
       </div>
     </div>`;
 
-    acc = `${acc}${html}`;
-    return acc;
+    return `${acc}${html}`;
   }, '');
 
   return reportCards
     ? `<h4 class="text-left text-info ml-3 ml-lg-5 mt-4 mb-4">Reports</h4>${reportCards}`
     : '';
+}
+
+function makeParagraphs(text) {
+  if (text.length > 500) {
+    text = text.slice(0, 499);
+    var sliced = true;
+  }
+  let paragraphs = text.split('\n');
+  return paragraphs.reduce((acc, str, idx) => {
+    if (!str) return acc;
+    if (sliced && idx + 1 === paragraphs.length) str += '...';
+    const html = `
+      <p>${str}</p>`;
+    return `${acc}${html}`;
+  }, '');
 }
 
 function reportImageUrl(photo_file, photo_url) {
@@ -460,6 +473,14 @@ function reportImageUrl(photo_file, photo_url) {
         photo_file || photo_url
       }" alt="User Image" class="img-fluid" />
     </div>`;
+}
+
+function addMoreText(text, report_id) {
+  if (text.length > 500)
+    return `
+    <a href="/report/${report_id}" class="float-right"
+    >Read More</a>`;
+  return '';
 }
 
 function filterForTransactions(transactions, business) {
@@ -538,3 +559,10 @@ function convertTime(in_) {
 
   return `${hour}:${minutes} ${am_pm}`;
 }
+
+$('.card.reportCard').dblclick(function () {
+  window.location.href = `/report/${$(this).data('id')}`;
+});
+$('#business-detail-modal').on('dblclick', '.card.detailReport', function () {
+  window.location.href = `/report/${$(this).data('id')}`;
+});

@@ -2,7 +2,10 @@
 
 <section class="text-center txt-white-k card-columns museo">
   {% if reports %} {% for report in reports %}
-  <div class="card d-inline-block my-2 mx-1 text-left mb-3 mb-lg-4">
+  <div
+    class="card d-inline-block my-2 mx-1 text-left mb-3 mb-lg-4 reportCard"
+    data-id="{{report.id}}"
+  >
     <div class="card-header pt-3">
       {% if report.business_id %}{% set b = report.business %}
       <h5
@@ -83,7 +86,8 @@
         class="btn btn-sm btn-outline-primary float-right px-3 px-sm-2 px-md-3 ml-3 ml-md-4 mb-2"
         >Edit Report</a
       >
-      {% endif %} {% if not request.endpoint == 'report_detail' %}
+      {% endif %} {% if not request.endpoint == 'report_detail' and report.text
+      | length > 500 %}
       <a href="/report/{{report.id}}" class="card-link float-right"
         >Read More</a
       >

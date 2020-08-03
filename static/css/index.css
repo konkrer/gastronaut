@@ -296,10 +296,6 @@ a.first-letter.active {
   border-top: none;
 }
 
-.card-link {
-  color: var(--my-info);
-}
-
 .map-track {
   grid-area: map-track;
   position: relative;
@@ -702,7 +698,6 @@ a:hover {
   .card-text-noHover:hover {
     color: unset;
   }
-  .card-link:hover,
   .my-card li a:hover {
     color: white;
   }
