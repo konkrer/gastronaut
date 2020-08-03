@@ -259,5 +259,66 @@
     aria-labelledby="businessDetailTitle"
     aria-hidden="true"
   ></div>
+  <div
+    class="modal fade"
+    id="tips"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="newUserModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title txt-orange museo" id="newUserModalLabel">
+            Tips
+          </h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p class="txt-lg font-weight-bold">Map</p>
+          <p>
+            <span class="pr-1">Desktop:</span> Use the second mouse button or
+            the Ctrl/Command key with a mouse drag to rotate and/or tilt the
+            map.
+          </p>
+          <p>
+            <span class="pr-1">Mobile:</span> Putting two fingers on the screen
+            and immediately sliding up or down changes the tilt.
+          </p>
+          <div
+            class="flx-row-around width-100 bg-dark rounded my-5"
+            style="height: 50px;"
+          >
+            <div class="bg-trans-b rounded p-2 border border-secondary">
+              <i class="fas fa-angle-double-left fa-lg"></i>
+            </div>
+            <div class="bg-trans-b rounded p-2 border border-secondary">
+              <i class="fas fa-angle-double-right fa-lg"></i>
+            </div>
+            <div class="text-light tip-label">Toggle Sidebar</div>
+          </div>
+          <p class="text-lg">Recommended:</p>
+          <p>
+            On mobile save app to your home screen for best user experience. The
+            permanent full-screen allows better interaction with the user
+            interface.
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
   {% include '/include/include_mission_choices.html' %} {% endblock %}
 </main>
