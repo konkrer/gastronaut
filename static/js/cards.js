@@ -415,10 +415,10 @@ function makeReportsForDetailModal(business) {
         <h5 class="mb-0">
           ${business.name}
         </h5>
-        <h5 class="lead txt-green"><small>Business</small></h5>
+        <h5 class="lead txt-green black-outline-1"><small>Business Report</small></h5>
         <div class="card-text">
           <a href="/user/profile/${user_id}">
-            <em class="txt-orange"> by @${username}</em>
+            <em class="txt-orange black-outline-1"> by @${username}</em>
           </a>
           <div class="txt-smlr">
             ${submitted_on}

@@ -2,10 +2,15 @@
   {% if missions %} {% for mission in missions %}
   <div class="card d-inline-block m-2 text-left mb-3 mb-lg-4">
     <div class="card-body">
-      <h5 class="card-title font-weight-bold">{{mission.name}}</h5>
+      <h5 class="card-title black-outline-1-2 font-weight-bold mb-0">
+        {{mission.name}}
+      </h5>
+      <h5 class="lead text-info black-outline-1"><small>Mission</small></h5>
       <div class="card-text ssp">
         <a href="/user/profile/{{mission.user.id}}">
-          <em class="txt-orange"> by @{{mission.author.username}}</em>
+          <em class="txt-orange black-outline-1 font-weight-bold">
+            by @{{mission.author.username}}</em
+          >
         </a>
         <div class="txt-smlr ssp">
           {{mission.date_shared.strftime('%a %b %d, %Y')}}
@@ -15,7 +20,7 @@
         </div>
       </div>
       {% if mission.description %}
-      <p class="card-text txt-green-alt font-weight-bold mt-3">
+      <p class="card-text txt-green-alt black-outline-1 mt-3">
         <em>{{mission.description}}</em>
       </p>
       {% endif %}
