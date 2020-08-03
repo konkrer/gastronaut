@@ -72,6 +72,10 @@
   font-size: smaller;
 }
 
+#business-detail-modal th {
+  padding: 0px 10px;
+}
+
 #business-detail-modal td {
   padding: 2px 3px;
 }

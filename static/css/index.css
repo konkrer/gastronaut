@@ -379,6 +379,8 @@ a.first-letter.active {
   font-family: var(--font-main);
   padding: 5px 10px !important;
   font-size: medium;
+  font-weight: bold;
+  text-align: center;
 }
 
 .mapboxgl-popup-tip {
@@ -684,7 +686,7 @@ a:hover {
     font-weight: 900 !important;
   }
   .sidebar-toggle-btn:hover,
-  .marker-html:hover {
+  .mapboxgl-popup-content .detailsBtn:hover {
     color: var(--my-green) !important;
   }
   .my-card button:hover,

@@ -24,6 +24,7 @@ a[href='#mission-select-form'] {
 
 #mission-select {
   font-size: xx-small;
+  color: var(--my-info-alt);
 }
 
 #mission-detail-panel form input,
@@ -125,6 +126,9 @@ a.text-success.hoverUnset:active {
     color: var(--primary-alt2);
     text-shadow: 1px 1px 1px cyan, -1px -1px 1px cyan, -1px 1px 1px cyan,
       1px -1px 1px cyan;
+  }
+  .card-header a:hover {
+    text-decoration: underline;
   }
 }
 

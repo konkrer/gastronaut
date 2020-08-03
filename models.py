@@ -1,5 +1,6 @@
 """Models for Gastronaut."""
 from datetime import datetime
+from flask import g
 from flask_bcrypt import Bcrypt
 from types import SimpleNamespace
 from flask_sqlalchemy import SQLAlchemy
@@ -508,6 +509,40 @@ class Report(db.Model):
 
         out = []
         [out.extend(s) for s in statements]
+
+        return out
+
+    @classmethod
+    def get_reports_users(self, business_id):
+        """Function to return all reports, and their relevant user data,
+        associated with a particular business."""
+        data = db.session.query(
+            Report.id, Report.submitted_on, Report.text, Report.photo_file,
+            Report.photo_url, Report.likes, User.id, User.username
+        ).filter(
+            Report.business_id == business_id
+        ).join(
+            User
+        ).order_by(
+            Report.submitted_on.desc()
+        ).limit(
+            10
+        ).all()
+        out = []
+        # for report_id, submitted_on, text, photo_file,
+        # photo_url, likes, id, username in data list tuples.
+        for ri, so, tx, pf, pu, lk, ui, un in data:
+            allow_likes, liked = False, False
+            g_user = bool(g.user)
+            if g_user:
+                # if user_id (ui) of report is not current user allow likes.
+                allow_likes = ui != g.user.id
+                liked = g.user.id in lk
+            # convert likes to number of likes (likes length).
+            lk = len(lk)
+
+            out.append((ri, so, tx, pf, pu, lk, ui,
+                        un, allow_likes, g_user, liked))
 
         return out
 

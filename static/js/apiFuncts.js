@@ -34,7 +34,7 @@ class ApiFuncts {
 
       try {
         var resp = await axios.post(`/v1/mission/like${mission_id}`);
-      } catch (error) {
+      } catch (err) {
         Sentry.captureException(err);
         return;
       }
@@ -62,13 +62,13 @@ class ApiFuncts {
   // toggle like icon.
   //
   addLikeReportListener() {
-    $('.like-report').on('click', async function (e) {
+    $('main').on('click', '.like-report', async function (e) {
       e.preventDefault();
       const report_id = $(this).data('report_id');
 
       try {
         var resp = await axios.post(`/v1/report/like${report_id}`);
-      } catch (error) {
+      } catch (err) {
         Sentry.captureException(err);
         return;
       }
@@ -101,7 +101,7 @@ class ApiFuncts {
       const mission_id = $(this).data('mission_id');
       try {
         var resp = await axios.post(`/v1/add_mission/${mission_id}`);
-      } catch (error) {
+      } catch (err) {
         Sentry.captureException(err);
         return;
       }
@@ -141,7 +141,7 @@ class ApiFuncts {
     else {
       try {
         var resp = await axios.get(`/v1/business_detail/${business_id}`);
-      } catch (error) {
+      } catch (err) {
         Sentry.captureException(err);
         $('.spinner-zone').hide();
         return;
@@ -209,7 +209,7 @@ class ApiFuncts {
           `/v1/mission/add_business/${mission_id}`,
           this_.mission_btn_business_data
         );
-      } catch (error) {
+      } catch (err) {
         $('#mission-choices .feedback').text('Error');
         Sentry.captureException(err);
         $('.spinner-zone').hide();
