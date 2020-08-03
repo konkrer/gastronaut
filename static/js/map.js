@@ -17,6 +17,7 @@ class MapObj {
     // restaurant markers for mission-control page.
     this.restMarkers = [];
     // options
+    this.userMarkerOptions = { color: '#3bdb53' };
     this.markerOptions = { color: '#3bdb53' };
     this.fitBoundsOptions = [
       {
@@ -47,9 +48,11 @@ class MapObj {
   addUserMarker() {
     if (!this.longitude) return;
     if (this.userMarker) this.userMarker.remove();
-    this.userMarker = new mapboxgl.Marker(this.markerOptions)
+    this.userMarker = new mapboxgl.Marker(this.userMarkerOptions)
       .setLngLat([this.longitude, this.latitude])
-      .setPopup(new mapboxgl.Popup().setHTML(`<b><em>You</em></b>`))
+      .setPopup(
+        new mapboxgl.Popup().setHTML(`<div class="mr-2"><em>You</em></div>`)
+      )
       .addTo(this.mappyBoi);
   }
 
@@ -84,8 +87,8 @@ class MapObj {
 
   // Add a restaurant marker and fit bounds to user position and restaurant location.
   addRestMarkerAndFitBounds(restCoords, name, id) {
-    const html = `<span class="detailsBtn marker-html mr-2" data-id="${id}">
-                    <b>${name}</b></span>`;
+    const html = `<span class="detailsBtn mr-2" data-id="${id}">
+                    ${name}</span>`;
     if (this.restMarker) this.restMarker.remove();
     this.restMarker = this.addMarker(restCoords, html);
     this.fitBounds([this.longitude, this.latitude], restCoords);
@@ -124,7 +127,7 @@ class MapObj {
       this.mappyBoi.flyTo({
         center: [array[0].longitude, array[0].latitude],
         essential: true,
-        zoom: 16.1,
+        zoom: 16.01,
         speed: 1,
       });
   }
@@ -135,8 +138,8 @@ class MapObj {
   mapArray(array) {
     this.restMarkers = array.reduce((acc, el) => {
       const coords = [el.longitude, el.latitude];
-      const html = `<span class="detailsBtn marker-html mr-2" data-id="${el.id}">
-                    <b>${el.name}</b></span>`;
+      const html = `<span class="detailsBtn mr-2" data-id="${el.id}">
+                    ${el.name}</span>`;
 
       if (el.completed) acc.push(this.addFlagMarker(coords, html, false));
       else acc.push(this.addMarker(coords, html, false));

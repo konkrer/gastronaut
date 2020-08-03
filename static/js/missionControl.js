@@ -535,7 +535,12 @@ class MissionControl {
     Map_Obj.mappyBoi.flyTo({
       center: [lng, lat],
       essential: true,
-      zoom: 17,
+      zoom: 16.01,
+      speed: 1.2,
+      curve: 1.42,
+      easing(t) {
+        return t;
+      },
     });
 
     if (isMobileScreen()) {
@@ -594,8 +599,8 @@ class MissionControl {
         const id = $(this).parent().data('id');
         const idx = $(this).parent().data('idx');
         const name = $(this).data('name');
-        const html = `<span class="detailsBtn marker-html" data-id="${id}">
-                    <b>${name}</b></span>`;
+        const html = `<span class="detailsBtn" data-id="${id}">
+                    ${name}</span>`;
         // get marker for this business
         const marker = Map_Obj.restMarkers[idx];
         const { lng, lat } = marker._lngLat;

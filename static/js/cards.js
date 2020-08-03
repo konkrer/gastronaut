@@ -407,6 +407,9 @@ function makeReportsForDetailModal(business) {
       likes,
       user_id,
       username,
+      allowLikes,
+      user_logged_in,
+      liked,
     ] = report;
 
     const html = `
@@ -432,13 +435,11 @@ function makeReportsForDetailModal(business) {
       </div>
   
       <div class="card-footer">
-        <span>
-          <i class="fas fa-thumbs-up fa-lg text-primary"></i>
-        </span>
+        ${addLikesButton(user_logged_in, allowLikes, report_id, liked)}
         <span class="pl-1 pl-md-3 text-dark likes">
           ${likes}
         </span>
-        ${addMoreText(text, report_id)}
+        ${addReadMoreText(text, report_id)}
       </div>
     </div>`;
 
@@ -475,7 +476,38 @@ function reportImageUrl(photo_file, photo_url) {
     </div>`;
 }
 
-function addMoreText(text, report_id) {
+function addLikesButton(user_logged_in, allowLikes, report_id, liked) {
+  if (!user_logged_in)
+    return `
+    <button
+      type="button"
+      class="like-button text-primary"
+      data-toggle="modal"
+      data-target="#signupModal"
+    >
+      <i class="far fa-thumbs-up fa-lg"></i>
+    </button>`;
+  if (allowLikes)
+    return `
+    <a href="#" class="card-link like-report" data-report_id="${report_id}">
+      <span>
+        ${
+          liked
+            ? `<i class="fas fa-thumbs-up fa-lg"></i>
+               <i class="far fa-thumbs-up fa-lg" style="display: none;"></i>`
+            : `<i class="far fa-thumbs-up fa-lg"></i>
+               <i class="fas fa-thumbs-up fa-lg" style="display: none;"></i>`
+        }
+      </span>
+    </a>
+    `;
+  return `
+    <span>
+      <i class="fas fa-thumbs-up fa-lg text-primary"></i>
+    </span>`;
+}
+
+function addReadMoreText(text, report_id) {
   if (text.length > 500)
     return `
     <a href="/report/${report_id}" class="float-right"

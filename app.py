@@ -573,6 +573,7 @@ def search_yelp():
 
 
 @app.route('/v1/business_detail/<business_id>')
+@add_user_to_g
 def business_detail_yelp(business_id):
     """API endpoint to relay business search to Yelp business search."""
 
@@ -590,21 +591,7 @@ def business_detail_yelp(business_id):
     business = Business.query.get(business_id)
 
     if business:
-        data['reports'] = db.session.query(
-            Report.id, Report.submitted_on, Report.text, Report.photo_file,
-            Report.photo_url, Report.likes, User.id, User.username
-        ).filter(
-            Report.business_id == business.id
-        ).join(
-            User
-        ).order_by(
-            Report.submitted_on.desc()
-        ).limit(
-            10
-        ).all()
-        # convert likes to number of likes (likes length).
-        data['reports'] = [(ri, s, t, f, u, len(l), ui, n)
-                           for ri, s, t, f, u, l, ui, n in data['reports']]
+        data['reports'] = Report.get_reports_users(business.id)
     else:
         data['reports'] = []
 
