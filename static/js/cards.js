@@ -398,7 +398,7 @@ function makeDetailModal(business) {
 
 function makeReportsForDetailModal(business) {
   const reportCards = business.reports.reduce((acc, report) => {
-    const [
+    const {
       report_id,
       submitted_on,
       text,
@@ -408,9 +408,9 @@ function makeReportsForDetailModal(business) {
       user_id,
       username,
       allowLikes,
-      user_logged_in,
+      userLoggedIn,
       liked,
-    ] = report;
+    } = report;
 
     const html = `
     <div class="card d-inline-block my-2 mx-1 text-left mb-4 mb-lg-5 detailReport"
@@ -435,7 +435,13 @@ function makeReportsForDetailModal(business) {
       </div>
   
       <div class="card-footer">
-        ${addLikesButton(user_logged_in, allowLikes, report_id, liked)}
+        ${addLikesButton(
+          userLoggedIn,
+          allowLikes,
+          report_id,
+          business.id,
+          liked
+        )}
         <span class="pl-1 pl-md-3 text-dark likes">
           ${likes}
         </span>
@@ -476,8 +482,14 @@ function reportImageUrl(photo_file, photo_url) {
     </div>`;
 }
 
-function addLikesButton(user_logged_in, allowLikes, report_id, liked) {
-  if (!user_logged_in)
+function addLikesButton(
+  userLoggedIn,
+  allowLikes,
+  report_id,
+  business_id,
+  liked
+) {
+  if (!userLoggedIn)
     return `
     <button
       type="button"
@@ -489,7 +501,7 @@ function addLikesButton(user_logged_in, allowLikes, report_id, liked) {
     </button>`;
   if (allowLikes)
     return `
-    <a href="#" class="card-link like-report" data-report_id="${report_id}">
+    <a href="#" class="card-link like-report" data-report_id="${report_id}" data-business_id="${business_id}">
       <span>
         ${
           liked

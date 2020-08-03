@@ -513,10 +513,11 @@ class Report(db.Model):
         return out
 
     @classmethod
-    def get_reports_users(self, business_id):
+    def get_business_reports_users(self, business_id):
         """Function to return all reports, and their relevant user data,
-        associated with a particular business."""
-        data = db.session.query(
+        associated with a particular business. Also set flags for JavaScript
+        use to determine like button actions for each report."""
+        query_results = db.session.query(
             Report.id, Report.submitted_on, Report.text, Report.photo_file,
             Report.photo_url, Report.likes, User.id, User.username
         ).filter(
@@ -530,19 +531,25 @@ class Report(db.Model):
         ).all()
         out = []
         # for report_id, submitted_on, text, photo_file,
-        # photo_url, likes, id, username in data list tuples.
-        for ri, so, tx, pf, pu, lk, ui, un in data:
+        # photo_url, likes, id, username in query_results list tuples.
+        for ri, so, tx, pf, pu, lk, ui, un in query_results:
             allow_likes, liked = False, False
-            g_user = bool(g.user)
-            if g_user:
-                # if user_id (ui) of report is not current user allow likes.
+            user_logged_in = bool(g.user)
+            if user_logged_in:
+                # if user_id (ui) of report is not current user allow liking.
                 allow_likes = ui != g.user.id
                 liked = g.user.id in lk
             # convert likes to number of likes (likes length).
             lk = len(lk)
+            so = so.strftime('%a %b %d, %Y')
 
-            out.append((ri, so, tx, pf, pu, lk, ui,
-                        un, allow_likes, g_user, liked))
+            data = (ri, so, tx, pf, pu, lk, ui, un,
+                    allow_likes, user_logged_in, liked)
+            labels = ['report_id', 'submitted_on', 'text', 'photo_file',
+                      'photo_url', 'likes', 'user_id', 'username',
+                      'allowLikes', 'userLoggedIn', 'liked']
+
+            out.append({k: v for k, v in zip(labels, data)})
 
         return out
 

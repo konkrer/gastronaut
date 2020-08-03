@@ -591,7 +591,7 @@ def business_detail_yelp(business_id):
     business = Business.query.get(business_id)
 
     if business:
-        data['reports'] = Report.get_reports_users(business.id)
+        data['reports'] = Report.get_business_reports_users(business.id)
     else:
         data['reports'] = []
 

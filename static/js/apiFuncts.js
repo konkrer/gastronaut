@@ -46,6 +46,7 @@ class ApiFuncts {
       }
 
       if (resp.data.success) {
+        // toggle solid/outline thumbs up icons.
         $(this)
           .children()
           .children()
@@ -62,9 +63,11 @@ class ApiFuncts {
   // toggle like icon.
   //
   addLikeReportListener() {
+    const this_ = this;
     $('main').on('click', '.like-report', async function (e) {
       e.preventDefault();
       const report_id = $(this).data('report_id');
+      const business_id = $(this).data('business_id');
 
       try {
         var resp = await axios.post(`/v1/report/like${report_id}`);
@@ -78,8 +81,8 @@ class ApiFuncts {
         );
         return;
       }
-
       if (resp.data.success) {
+        // toggle solid/outline thumbs up icons.
         $(this)
           .children()
           .children()
@@ -87,6 +90,14 @@ class ApiFuncts {
             $(this).toggle();
           });
         $(this).next().text(resp.data.likes);
+        // For modal like button.
+        // There will only be business_id data from modal like-button.
+        // If there's cache data update liked attribute.
+        if (business_id && this_.business_results_cache[business_id]) {
+          this_.business_results_cache[business_id].reports.forEach(report => {
+            if (report_id === report.report_id) report.liked = !report.liked;
+          });
+        }
       }
     });
   }
