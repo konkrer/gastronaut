@@ -7,6 +7,7 @@ class BaseLogic {
     this.feedbackClearTimer;
     this.addPreferencesListener();
     this.addAlertCloseListener();
+    this.addReportsDblclickListeners();
   }
 
   // User Preferences listener
@@ -44,6 +45,33 @@ class BaseLogic {
     }, 2000);
   }
 
+  /*
+  /* Close Alert (flash) function.
+  */
+  addAlertCloseListener() {
+    $('.alert-close').click(() => {
+      $('.alert').remove();
+    });
+  }
+
+  /*
+  /* Allow double clicking reports cards to open report detail page.
+  */
+  addReportsDblclickListeners() {
+    // Double clicking regular report card opens report detail page.
+    $('.card.reportCard').dblclick(function () {
+      window.location.href = `/report/${$(this).data('id')}`;
+    });
+    // Double clicking detail modal report card opens report detail page.
+    $('#business-detail-modal').on(
+      'dblclick',
+      '.card.detailReport',
+      function () {
+        window.location.href = `/report/${$(this).data('id')}`;
+      }
+    );
+  }
+
   // Enable service worker for PWA.
   // Pulled from Google docs about service workers.
   enableServiceWorker() {
@@ -67,15 +95,6 @@ class BaseLogic {
   }
 
   /*
-  /* Close Alert (flash) function.
-  */
-  addAlertCloseListener() {
-    $('.alert-close').click(() => {
-      $('.alert').remove();
-    });
-  }
-
-  /*
   /* Convert the array of objects that jQuery returns from serializeArray
   /* to a single object with key value pairs for all data.
   */
@@ -89,9 +108,3 @@ class BaseLogic {
 }
 
 const Base = new BaseLogic();
-
-function sleep(delay) {
-  return new Promise(resolve => {
-    setTimeout(resolve, delay);
-  });
-}

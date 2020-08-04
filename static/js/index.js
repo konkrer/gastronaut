@@ -234,7 +234,7 @@ async function searchApiCall(useOffset) {
     return false;
   }
   if (data.data.error) {
-    errorCard(data.data);
+    CardsModalsFactoryObj.errorCard(data.data);
     return false;
   }
   return data;
@@ -324,22 +324,23 @@ function mapAndAddCardsForNewApiCall(data) {
   offset = 1;
 
   if (data.businesses.length == 0) {
-    $('.card-track-inner').html(getNoResultsCard());
+    $('.card-track-inner').html(CardsModalsFactoryObj.getNoResultsCard());
     if (Map_Obj.restMarker) Map_Obj.restMarker.remove();
     return;
   }
   $('.card-track-inner').hide();
   userMarkAndYelpCoordsLogic(data);
 
-  const cards = getCards(data);
+  const cards = CardsModalsFactoryObj.getCardsHtml(data);
   Animations.currCard = 0;
 
   // Scroll to first card and fade in.
+  // There may not be results cards because of transaction post filtering.
   $('#scrl4').scrollLeft(0);
   $('.card-track-inner')
     .addClass('opaque')
     .show()
-    .html(cards ? cards : getNoResultsCard())
+    .html(cards ? cards : CardsModalsFactoryObj.getNoResultsCard())
     .removeClass('opaque');
 
   // If cards map first bussiness, watch scroll position for mapping,
@@ -347,7 +348,9 @@ function mapAndAddCardsForNewApiCall(data) {
   // (interface) may result in no cards.
   if (cards) {
     mapFirstBusiness(data);
-    if (!resultsRemaining && data.total !== 1) addDummyCard();
+    // No dummy card needed for one result.
+    if (!resultsRemaining && data.total !== 1)
+      CardModalFactoryObj.addDummyCard();
     $('.arrow-wrapper').addClass('pulse-outline-mobile');
     Animations.setCardScrollTrackerMapper();
     setTimeout(() => {
@@ -440,7 +443,7 @@ function addNextCardsListener() {
 */
 async function addNextCards() {
   if (!resultsRemaining || offset === 20) {
-    addDummyCard();
+    CardModalFactoryObj.addDummyCard();
     setTimeout(() => {
       Animations.setCardScrollTrackerMapper();
     }, 100);
@@ -452,14 +455,14 @@ async function addNextCards() {
   if (data === false) return;
 
   resultsRemaining -= data.data.businesses.length;
-  $('.card-track-inner').append(getCards(data.data));
+  $('.card-track-inner').append(CardsModalsFactoryObj.getCardsHtml(data.data));
   Animations.setCardScrollTrackerMapper();
 
   if (resultsRemaining)
     setTimeout(() => {
       addNextCardsListener();
     }, 10000);
-  else addDummyCard();
+  else CardModalFactoryObj.addDummyCard();
 }
 
 /*

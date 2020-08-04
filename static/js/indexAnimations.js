@@ -94,7 +94,7 @@ class IndexAnimations {
     const onMobile = isMobileScreen();
     if (!onMobile) {
       $('.card-track-inner').addClass('opaque');
-      await sleep(200);
+      await this.sleep(200);
       $('.card-track-inner').hide();
     }
 
@@ -211,6 +211,15 @@ class IndexAnimations {
     //Open more tips modal when user clicks more tips button.
     $('.moreTips').click(() => {
       $('#tips-2').modal();
+    });
+  }
+
+  /*
+  /* Inline sleep timer function.
+  */
+  sleep(delay) {
+    return new Promise(resolve => {
+      setTimeout(resolve, delay);
     });
   }
 }
