@@ -1,0 +1,74 @@
+<div class="my-card mr-card bg-dark txt-black d-inline-block">
+  <div
+    style="
+      background: url('${image_url}');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+    "
+    class="my-card-img-div"
+  ></div>
+  <div class="card-body">
+    <h5 class="card-title txt-black"><b>${name}</b></h5>
+    <p class="card-text">
+      ${makeCategoriesText(categories)} ${is_closed ? '- Closed' : ''}
+    </p>
+    <button
+      class="btn btn-sm btn-primary-alt2 btn-my-card mr-2 mr-sm-1 mr-md-2 px-3 px-sm-2 px-md--3 brand-outline txt-orange detailsBtnCard"
+      data-toggle="tooltip"
+      title="Details"
+    >
+      <i class="fas fa-clipboard-list fa-lg"></i>
+    </button>
+    <button
+      class="btn btn-sm btn-primary-alt2 btn-my-card cardMapButton brand-outline txt-orange mr-2 mr-sm-1 mr-md-2 px-3 px-sm-2 px-md--3"
+      data-toggle="tooltip"
+      title="Show on Map"
+    >
+      <i class="fas fa-map-marked-alt fa-lg"></i>
+    </button>
+    <span data-toggle="tooltip" title="Add to Mission">
+      <button
+        class="btn btn-sm btn-primary-alt2 btn-my-card mission-btn"
+        data-toggle="modal"
+        data-target="#mission-choices"
+        data-city="${city}"
+        data-state="${state}"
+        data-country="${country}"
+        data-name="${name}"
+        data-lng="${longitude}"
+        data-lat="${latitude}"
+        data-id="${id}"
+      >
+        <i class="fas fa-plus-square mr-2"></i>
+        <i class="fas fa-rocket fa-lg txt-orange brand-outline"></i>
+      </button>
+    </span>
+  </div>
+  <ul class="list-group list-group-flush bg-transparent">
+    <li class="list-group-item bg-transparent text-secondary card-text-noHover">
+      ${makeReviewStars(rating)}
+    </li>
+    <li class="list-group-item bg-transparent card-text-noHover">
+      ${makePriceDollars(price)}
+    </li>
+    ${ trans_text ? '
+    <li class="list-group-item bg-transparent card-text-noHover">
+      ' : '' } ${trans_text} ${trans_text ? '
+    </li>
+    ' : ''} ${phone ? `
+    <li class="list-group-item bg-transparent">
+      ` : ''}
+      <a href="tel:${phone}">${display_phone}</a>
+      ${phone ? '
+    </li>
+    ' : ''}
+    <li class="list-group-item bg-transparent card-text-noHover">
+      <div>${street ? street : ''}</div>
+      <div>${city_disp ? city_disp : ''}</div>
+    </li>
+    <li class="list-group-item bg-transparent card-text-noHover">
+      ${metersToMiles(distance)} mi
+    </li>
+  </ul>
+</div>

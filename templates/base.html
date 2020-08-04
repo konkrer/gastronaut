@@ -112,7 +112,14 @@
             >
           </li>
           <li class="nav-item {{ nav_link_active('mission_control') }}">
+            {% if g.user %}
             <a class="nav-link" href="/mission-control">Mission Control</a>
+            {% set next_page = '' %} {% else %} {% set next_page =
+            'mission_control' %}
+            <a class="nav-link" href="#signupModal" data-toggle="modal"
+              >Mission Control</a
+            >
+            {% endif %}
           </li>
           <li class="nav-item {{ nav_link_active('missions') }}">
             <a class="nav-link" href="/missions">Missions</a>

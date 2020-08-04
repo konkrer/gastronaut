@@ -85,6 +85,10 @@ body {
   font-family: 'MuseoModerno', cursive;
 }
 
+.txt-xs {
+  font-size: x-small;
+}
+
 .txt-smlr {
   font-size: smaller;
 }
@@ -168,7 +172,7 @@ body {
 }
 
 .txt-yelp-red {
-  color: #d32323;
+  color: #d32323 !important;
 }
 
 .bg-green {
@@ -355,7 +359,7 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 @media screen and (hover: hover) {
-  .modal button:hover {
+  .modal button:hover:not(.like-button) {
     background: var(--my-green) !important;
     color: var(--my-info) !important;
   }

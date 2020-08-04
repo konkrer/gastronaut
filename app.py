@@ -452,7 +452,11 @@ def add_report():
     if existing_report:
         # redirect to edit_report view for this report and relay next data.
         URL = url_for('edit_report', report_id=existing_report.id)
-        return redirect(f"{URL}?next={request.args.get('next')}")
+        next_ = request.args.get('next')
+        next_url = request.args.get('next_url')
+        return redirect(
+            f"{URL}?next={next_}&next_url={next_url}"
+        )
 
     if mission_id:
         obj = Mission.query.get_or_404(mission_id)
@@ -582,11 +586,14 @@ def business_detail_yelp(business_id):
     try:
         res = requests.get(f'{YELP_URL}/businesses/{business_id}',
                            headers=headers)
+        res2 = requests.get(
+            f'{YELP_URL}/businesses/{business_id}/reviews', headers=headers)
     except Exception as e:
         error_logging(e)
         return jsonify({'error': repr(e)})
 
     data = res.json()
+    data['reviews'] = res2.json()['reviews']
 
     business = Business.query.get(business_id)
 
@@ -1047,6 +1054,10 @@ def next_page_logic(request):
 
 def next_page_url(request):
     """Next page URL logic."""
+
+    next_url = request.args.get('next_url')
+    if next_url:
+        return next_url
 
     next_page = request.args.get('next', 'index')
     next_view_args = request.args.get('next_view_args')

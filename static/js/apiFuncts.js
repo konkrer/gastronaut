@@ -175,7 +175,9 @@ class ApiFuncts {
   /*  Update detail modal with business data and show.
    */
   showDetailModal(data) {
-    $('#business-detail-modal').html(makeDetailModal(data));
+    $('#business-detail-modal').html(
+      CardsModalsFactoryObj.makeDetailModal(data)
+    );
     $('#business-detail-modal').modal().show();
     $('.carousel').carousel();
   }
