@@ -34,7 +34,7 @@ class GeolocationObj {
   geoSuccess(position) {
     // stop detect location icon from pulsing.
     $('#detect-location').children().removeClass('pulse');
-    clearTimeout(keyupTimer);
+    clearTimeout(FormFunctsObj.keyupTimer);
     const {
       coords: { latitude: lat, longitude: lng },
     } = position;

@@ -57,8 +57,8 @@ class APIViewTests(TestCase):
         self.assertEqual(data['name'], 'Little Nepal')
 
     def test_reports_flag_yelp_business_detail(self):
-        """Test tht calling business detail on a business that has reports
-           written about it sets a reports flag to True on data dict.
+        """Test that calling business detail on a business that has reports
+           written about it includes details about that business.
 
            # TODO: MOCK out actual yelp API call."""
 
@@ -71,17 +71,18 @@ class APIViewTests(TestCase):
 
         db.session.commit()
 
-        Report.create(user_id=u1.id, business_id='iUockw0CUssKZLyoGJYEXA',
-                      text='Good fud.')
+        Report.create(user_id=u1.id, text='Good fud.',
+                      business_id='iUockw0CUssKZLyoGJYEXA')
 
         db.session.commit()
 
-        resp = self.client.get('/v1/business_detail/iUockw0CUssKZLyoGJYEXA')
-        data = resp.get_json()
+        with self.client as c:
+            resp = c.get('/v1/business_detail/iUockw0CUssKZLyoGJYEXA')
+            data = resp.get_json()
 
         self.assertEqual(resp.status_code, 200)
         self.assertIn('reports', data)
-        self.assertEqual(data['reports'], True)
+        self.assertEqual(data['reports'][0]['text'], 'Good fud.')
 
     def test_get_coords_from_IP_address(self):
         """Test reaching the IPWhois API for data."""

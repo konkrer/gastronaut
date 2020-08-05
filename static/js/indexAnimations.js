@@ -174,8 +174,7 @@ class IndexAnimations {
     if (sT >= 50) $scrl3.scrollTop(sT - 50);
     else $scrl3.scrollTop(0);
 
-    $locationInput.focus();
-    $locationInput.blur();
+    FormFunctsObj.focusBlur();
   }
 
   /* 
@@ -211,6 +210,16 @@ class IndexAnimations {
     //Open more tips modal when user clicks more tips button.
     $('.moreTips').click(() => {
       $('#tips-2').modal();
+    });
+    /* Make map icon grow when hovered.
+  /* Add grow-1_3 class to map icon 
+  /* with hover of containing div. 
+  */
+    $('.jsGrow').on('mouseover', function (e) {
+      $(this).children().addClass('grow-1_3');
+    });
+    $('.jsGrow').on('mouseout', function (e) {
+      $(this).children().removeClass('grow-1_3');
     });
   }
 
