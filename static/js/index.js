@@ -1,14 +1,5 @@
 'use strict';
 
-const $locationInput = $('#location');
-const $searchTerm = $('#search-term');
-const $mainForm = $('#main-form');
-const $categoryButtons = $('#cat-btns');
-
-// Keyup timer for autosearch and keyup autosearch delay.
-let keyupTimer;
-const autoSearchDelay = 1500;
-
 // Cooridnate percision used to look for lng/lat changes
 // which would warant new Yelp API call for fresh data.
 const coordsPercision = 3;
@@ -23,62 +14,6 @@ let paginationListener;
 // of page to hide globe animation and lock control panel view.
 let $scrollListener;
 
-// Used to reset form when passed into setForm.
-const defaultFormState = [
-  { name: 'location', value: '' },
-  { name: 'term', value: '' },
-  { name: 'price-1', value: '1' },
-  { name: 'price-2', value: '2' },
-  { name: 'price-3', value: '3' },
-  { name: 'price-4', value: '4' },
-  { name: 'sort_by', value: 'best_match' },
-];
-
-/*
-/* Get current form data plus lat, lng, and category
-/* as query string for search request api endpoint.
-*/
-function getFormData() {
-  let data = $mainForm.serialize();
-  data = `${data}&categories=${Animations.category}&limit=50`;
-  if (Map_Obj.latitude)
-    data += `&latitude=${Map_Obj.latitude.toFixed(
-      3
-    )}&longitude=${Map_Obj.longitude.toFixed(3)}`;
-  return data;
-}
-
-/*
-/* Get current form data as obj array.
-/* Store in local storage as "formData".
-*/
-function setFormDataArray(data) {
-  data = data ? data : $mainForm.serializeArray();
-  localStorage.setItem('formData', JSON.stringify(data));
-}
-
-/*
-/* Get current interface form data as array of strings.
-/* Used to filter results after api call.
-*/
-function getTransactions() {
-  const transactions = [];
-  $('.interface:checked').each(function (index) {
-    transactions.push($(this).val());
-  });
-  if (transactions.length > 0) $('.resultsCount').addClass('bg-disabled');
-  else $('.resultsCount').removeClass('bg-disabled');
-  return transactions;
-}
-
-/*
-/* Save transactions data in local storage.
-*/
-function setTransactions(transactions) {
-  transactions = transactions ? transactions : getTransactions();
-  localStorage.setItem('transactions', JSON.stringify(transactions));
-}
-
 /*
 /* Check if control panel form data has changed.
 */
@@ -87,7 +22,7 @@ function checkFormChanges(change, currFormState) {
 
   // if form data changed warrants API call
   if (JSON.stringify(currFormState) !== prevFormState) {
-    setFormDataArray(currFormState);
+    FormFunctsObj.setFormDataArray(currFormState);
     console.log('form data changed');
     return true;
   }
@@ -116,9 +51,13 @@ function checkCoordsChange(change) {
     );
     // if there is not a location given having coords warrants an API call
     console.log('was blank now coords');
-    if (!$locationInput.val()) return true;
+    if (!FormFunctsObj.$locationInput.val()) return true;
     // if no location given and new ond old coords to compare:
-  } else if (!$locationInput.val() && Map_Obj.longitude && prevCoords) {
+  } else if (
+    !FormFunctsObj.$locationInput.val() &&
+    Map_Obj.longitude &&
+    prevCoords
+  ) {
     const [prevLng, prevLat] = prevCoords;
     // if coords have changed:
     if (
@@ -165,42 +104,6 @@ function checkLastData(lastData) {
 }
 
 /*
-/* If filters are on show filter indicator.
-*/
-function filterIndicatorCheck() {
-  const formArray = $mainForm.serializeArray();
-  // no need to show filter indicator for these inputs
-  const notFilters = ['location', 'sort_by', 'lng', 'lat'];
-  let initLength = formArray.length;
-  const withoutPrices = formArray.filter(
-    obj => obj.name.substring(0, 5) !== 'price'
-  );
-  // number of price options slected
-  const numPrices = initLength - withoutPrices.length;
-  if (
-    // if prices filters in use
-    numPrices === 1 ||
-    numPrices === 2 ||
-    numPrices === 3 ||
-    // if transactions filters in use
-    getTransactions().length > 0 ||
-    // if any of the other filter inputs are n use
-    withoutPrices.some(obj => {
-      if (!notFilters.includes(obj.name) && obj.value !== '') return true;
-    })
-  )
-    // turn filter indicator on
-    $('.filter-icon-display').each(function () {
-      $(this).show();
-    });
-  // turn filter indicator off
-  else
-    $('.filter-icon-display').each(function () {
-      $(this).hide();
-    });
-}
-
-/*
 /* Check for changes that warrant a new Yelp API call.
 /* Form, category, significant GPS change, or no stored data warrant API call.
 /* Called functions update local storage if they detect changes.
@@ -224,7 +127,7 @@ function checkParameterChange(lastData, currFormState) {
 /* Make a requst to /v1/search endpoint. 
 */
 async function searchApiCall(useOffset) {
-  let queryData = getFormData();
+  let queryData = FormFunctsObj.getFormData();
   if (useOffset) queryData += `&offset=${offset * 50}`;
   // axios get search endpoint with query data
   try {
@@ -255,7 +158,7 @@ function yelpSetLocation(data) {
     Map_Obj.longitude = lng;
     Map_Obj.latitude = lat;
     // Set location placeholder back to 'Location'.
-    $locationInput.prop('placeholder', `Location`);
+    FormFunctsObj.$locationInput.prop('placeholder', `Location`);
     // store coords, render map, note rendered first coords map
     localStorage.setItem('coords', JSON.stringify([lng, lat]));
   }
@@ -268,21 +171,11 @@ function yelpSetLocation(data) {
 function userMarkAndYelpCoordsLogic(data) {
   // if text location given and new Yelp data
   // use coords Yelp returned for lng, lat.
-  if ($locationInput.val() && data) {
+  if (FormFunctsObj.$locationInput.val() && data) {
     navigator.geolocation.clearWatch(Geolocation_Obj.locationWatcher);
     yelpSetLocation(data);
   }
   Map_Obj.addUserMarker();
-}
-
-/*
-/* Check if transactions have changed.
-/* Compare form data to storage data.
-*/
-function checkTransactionsChange() {
-  const transactions = JSON.stringify(getTransactions());
-  const prevTransactions = localStorage.getItem('transactions');
-  return transactions !== prevTransactions;
 }
 
 /*
@@ -295,10 +188,10 @@ function transactionsNoChangeAndNoNewData(newData) {
     firstCardsAdded = true;
     return false;
   }
-  const transactionsChanged = checkTransactionsChange();
+  const transactionsChanged = FormFunctsObj.checkTransactionsChange();
 
   if (!transactionsChanged && !newData) return true;
-  setTransactions();
+  FormFunctsObj.setTransactions();
   return false;
 }
 
@@ -331,7 +224,7 @@ function mapAndAddCardsForNewApiCall(data) {
   $('.card-track-inner').hide();
   userMarkAndYelpCoordsLogic(data);
 
-  const cards = CardsModalsFactoryObj.getCardsHtml(data);
+  const cards = CardsModalsFactoryObj.getCardsHtml(data.businesses);
   Animations.currCard = 0;
 
   // Scroll to first card and fade in.
@@ -350,7 +243,7 @@ function mapAndAddCardsForNewApiCall(data) {
     mapFirstBusiness(data);
     // No dummy card needed for one result.
     if (!resultsRemaining && data.total !== 1)
-      CardModalFactoryObj.addDummyCard();
+      CardsModalsFactoryObj.addDummyCard();
     $('.arrow-wrapper').addClass('pulse-outline-mobile');
     Animations.setCardScrollTrackerMapper();
     setTimeout(() => {
@@ -368,7 +261,7 @@ function mapAndAddCardsForNewApiCall(data) {
 function postSearchDomManipulation(currFormState) {
   $('.spinner-zone').hide();
   showCardTrack();
-  filterIndicatorCheck(currFormState);
+  FormFunctsObj.filterIndicatorCheck(currFormState);
 }
 
 /*
@@ -380,14 +273,14 @@ async function searchYelp() {
   console.log('searchYelp');
 
   // Make sure there is a location to search.
-  if (!Map_Obj.latitude && $locationInput.val() === '') {
+  if (!Map_Obj.latitude && FormFunctsObj.$locationInput.val() === '') {
     alert('Enter a location or press detect location.');
     return;
   }
   // Get last search results from API call.
   const lastData = localStorage.getItem('currData');
   // Get current form data array.
-  const currFormState = $mainForm.serializeArray();
+  const currFormState = FormFunctsObj.$mainForm.serializeArray();
 
   // if yelp parameters have changed call api endpoint
   if (checkParameterChange(lastData, currFormState)) {
@@ -397,7 +290,7 @@ async function searchYelp() {
 
     if (data === false) {
       $('.spinner-zone').hide();
-      filterIndicatorCheck();
+      FormFunctsObj.filterIndicatorCheck();
       return;
     }
 
@@ -443,7 +336,7 @@ function addNextCardsListener() {
 */
 async function addNextCards() {
   if (!resultsRemaining || offset === 20) {
-    CardModalFactoryObj.addDummyCard();
+    CardsModalsFactoryObj.addDummyCard();
     setTimeout(() => {
       Animations.setCardScrollTrackerMapper();
     }, 100);
@@ -462,78 +355,7 @@ async function addNextCards() {
     setTimeout(() => {
       addNextCardsListener();
     }, 10000);
-  else CardModalFactoryObj.addDummyCard();
-}
-
-/*
-/* Auto search with location input change.
-*/
-$locationInput.on('keyup', function (e) {
-  clearTimeout(keyupTimer);
-  $('.spinner-zone').show();
-  if ($locationInput.val()) {
-    keyupTimer = setTimeout(function () {
-      searchYelp();
-    }, autoSearchDelay);
-  } else $('.spinner-zone').hide();
-});
-
-/*
-/* Auto search with search term input change.
-*/
-$searchTerm.on('keyup', function (e) {
-  clearTimeout(keyupTimer);
-  $('.spinner-zone').show();
-  const term = $searchTerm.val();
-  keywordDisplayLogic(term);
-  keyupTimer = setTimeout(function () {
-    searchYelp();
-  }, autoSearchDelay);
-});
-
-/*
-/* Auto search with other form input changes.
-*/
-$mainForm.on('change', '.onChange', function (e) {
-  clearTimeout(keyupTimer);
-  // if the form change is the checking of "open at"
-  // but no datetime entered yet return.
-  if (
-    $(this).prop('id') === 'open-at' &&
-    $(this).prop('checked') === true &&
-    $('#open_at').val() === ''
-  )
-    return;
-  $('.spinner-zone').show();
-  keyupTimer = setTimeout(function () {
-    searchYelp();
-  }, autoSearchDelay);
-});
-
-/*
-/* Auto search with category input change.
-/* Set clicked category to active.
-/* Set category in local storage and display in filter display.
-*/
-$categoryButtons.on('click', 'button', function (e) {
-  clearTimeout(keyupTimer);
-  $('.spinner-zone').show();
-  Animations.category = e.target.value;
-  $('.cat-display').text(e.target.textContent);
-  turnActiveOffCatBtns();
-  $(this).addClass('active');
-  keyupTimer = setTimeout(function () {
-    searchYelp();
-  }, autoSearchDelay);
-});
-
-/*
-/* Turn active off for all category buttons.
-*/
-function turnActiveOffCatBtns() {
-  $categoryButtons.children().each(function (index) {
-    $(this).removeClass('active');
-  });
+  else CardsModalsFactoryObj.addDummyCard();
 }
 
 /*
@@ -551,8 +373,8 @@ function navbarSearch() {
   $('.spinner-zone').show();
   $('.navbar-collapse').removeClass('open');
   const term = $('.navbar form.searchForm input').val();
-  $searchTerm.val(term);
-  keywordDisplayLogic(term);
+  FormFunctsObj.$searchTerm.val(term);
+  FormFunctsObj.keywordDisplayLogic(term);
   if (term) {
     // check for @ symbol and redirect index with q query term
     // to check for user.
@@ -562,26 +384,12 @@ function navbarSearch() {
     }
     Animations.category = 'restaurants,bars,food';
     $('.cat-display').text('All');
-    turnActiveOffCatBtns();
+    FormFunctsObj.turnActiveOffCatBtns();
     $('#All').addClass('active');
     location.href = '#';
     location.href = '#All';
   }
   hideHeroAndSearch();
-}
-
-/*
-/* Turn keyword input orange or not with keyword input
-/* and display keyword in keyword display.
-*/
-function keywordDisplayLogic(term) {
-  if (term) {
-    $searchTerm.addClass('bg-orange');
-    $('.keyword-display').text(` - ${term}`);
-  } else {
-    $searchTerm.removeClass('bg-orange');
-    $('.keyword-display').text('');
-  }
 }
 
 /*
@@ -603,85 +411,6 @@ $('.explore-nav').on('click', function (e) {
 $('.explore').on('click', function (e) {
   e.preventDefault();
   hideHeroAndSearch();
-});
-
-/*
-/* Detect location button fuctionality. Call detectLocation.
-*/
-$('#detect-location').on('click', function (e) {
-  $(this).children().removeClass('pulse-5');
-  Geolocation_Obj.detectLocation(e);
-});
-
-/*
-/* Clear All Filters button fuctionality.
-*/
-$('#clear-filters').on('click', function (e) {
-  $('.spinner-zone').show();
-  keyupTimer = setTimeout(() => {
-    setForm(defaultFormState);
-    setFormTransactions([]);
-    searchYelp();
-  }, autoSearchDelay);
-});
-
-/*
-/* Exclusive  checkbox inputs "open now" and "open at".
-/* When "open now" checked uncheck "open at".
-*/
-$('#open_now').on('click', function (e) {
-  // uncheck "open at" and disable datetime input
-  $('#open-at').prop('checked', false);
-  $('#open_at').prop('disabled', true);
-});
-
-/*
-/* Exclusive  checkbox inputs "open now" and "open at".
-/* When "open at" checked uncheck "open now".
-/* Additionaly, "open at" needs a datetime input enabled
-/* and disabled when it is checked and unchecked.
-*/
-$('#open-at').on('click', function (e) {
-  // uncheck "open now"
-  $('#open_now').prop('checked', false);
-  // enable or disable datetime input as input is checked or unchecked
-  if ($('#open-at').prop('checked')) {
-    $('#open_at').prop('disabled', false);
-  } else {
-    $('#open_at').prop('disabled', true);
-  }
-});
-
-/*
-/* Turn dollar signs green when checkbox is checked.
-*/
-$('#price-group').on('change', function (e) {
-  const parent = e.target.parentElement;
-  parent.classList.toggle('txt-green');
-});
-
-/*
-/* Enable and disable radius range input with power button
-/* that is located under Search Radius header.
-/* Turn button green when radius input is enabled.
-/* Turn display background muted or white.
-*/
-$('#radius-check').on('click', function () {
-  const $radius = $('#radius');
-  if ($radius.prop('disabled') === true) {
-    $radius.prop('disabled', false);
-  } else {
-    $radius.prop('disabled', true);
-  }
-  $('.radiusDisplay').toggleClass('bg-disabled');
-  $radius.parent().prev().toggleClass(['txt-green', 'dark-green-outline']);
-});
-
-/*
-/* Update radius display with range input change.
-*/
-$('#radius').on('change', function () {
-  $('.radiusDisplay').text(metersToMiles($(this).val()));
 });
 
 /*
@@ -767,157 +496,16 @@ function showCardTrack() {
   }
 }
 
-/* Make map icon grow when hovered.
-/* Add grow-1_3 class to map icon 
-/* with hover of containing div. 
-*/
-$('.jsGrow').on('mouseover', function (e) {
-  $(this).children().addClass('grow-1_3');
-});
-$('.jsGrow').on('mouseout', function (e) {
-  $(this).children().removeClass('grow-1_3');
-});
-
 /*
 /* Updating from local storage.
 */
-
-/*
-/* Check localStorage for last choosen category and set active
-*/
-function setCategoryFromStorage() {
-  // check for category. if none set to all.
-  let currCat = localStorage.getItem('category');
-  if (!currCat) {
-    localStorage.setItem('category', 'restaurants');
-    currCat = 'restaurants';
-  }
-  Animations.category = currCat;
-  // set list-group button to active for current category
-  $categoryButtons.children().each(function (index) {
-    if ($(this).val() === currCat) {
-      $(this).addClass('active');
-      // set card-map-zone filter display to category name
-      $('.cat-display').text($(this).text());
-    }
-  });
-}
-
-/*
-/* Set interface checkboxes.
-*/
-function setFormTransactions(transactions) {
-  if (!transactions) return;
-  ['delivery', 'pickup', 'restaurant_reservation'].forEach(id => {
-    if (transactions.includes(id)) $(`#${id}`).prop('checked', true);
-    else $(`#${id}`).prop('checked', false);
-  });
-}
-
-/*
-/* Set form checkboxes for yelp parameters.
-*/
-function setForm(data) {
-  data = Base.convertDataArrayToObj(data);
-
-  // inputs to run through and check or uncheck
-  const inputIds = [
-    'open_now',
-    'price-1',
-    'price-2',
-    'price-3',
-    'price-4',
-    'hot_and_new',
-    'reservation',
-    'cashback',
-    'deals',
-    'wheelchair_accessible',
-    'open_to_all',
-    'gender_neutral_restrooms',
-  ];
-  // set location, term
-  if (data.location) $locationInput.val(data.location);
-  if (data.term) {
-    $searchTerm.val(data.term).addClass('bg-orange');
-    $('.keyword-display').text(` - ${data.term}`);
-  } else {
-    $searchTerm.val('');
-    $searchTerm.val(data.term).removeClass('bg-orange');
-    $('.keyword-display').text(``);
-  }
-  // if data has input id as a key make that input checked, otherwise un-check.
-  inputIds.forEach(id => {
-    if (data[id]) $(`#${id}`).prop('checked', true);
-    else $(`#${id}`).prop('checked', false);
-  });
-  // make dollar signs green
-  $('#price-group')
-    .children()
-    .each(function (index) {
-      if ($(this).children().prop('checked')) $(this).addClass('txt-green');
-      else $(this).removeClass('txt-green');
-    });
-  // if open_at data enable datetime input, add value, and check box.
-  if (data.open_at) {
-    $('#open_at').val(data.open_at).prop('disabled', false);
-    $('#open-at').prop('checked', true);
-  }
-  // set sort_by radio to stored value, un-check other options.
-  const sortBy = ['best_match', 'rating', 'review_count', 'distance'];
-  sortBy.forEach(id => {
-    if (data.sort_by === id) $(`#${id}`).prop('checked', true);
-    else $(`#${id}`).prop('checked', false);
-  });
-  // enable radius input and update value if radius data present
-  if (data.radius) {
-    $('#radius')
-      .prop('disabled', false)
-      .val(data.radius)
-      .parent()
-      .prev()
-      .addClass('txt-green')
-      .addClass('dark-green-outline')
-      .children()
-      .prop('checked');
-    $('.radiusDisplay')
-      .removeClass('bg-disabled')
-      .text(metersToMiles(data.radius));
-  } else {
-    $('#radius')
-      .prop('disabled', true)
-      .val(16094)
-      .parent()
-      .prev()
-      .removeClass('txt-green')
-      .removeClass('dark-green-outline')
-      .children()
-      .prop('checked', false);
-    $('.radiusDisplay').addClass('bg-disabled').text(10);
-  }
-}
-
-/*
-/* Check localStorage for data to bring form to last state.
-*/
-function updateFormFromStorage() {
-  // check for data if none return
-  let data = localStorage.getItem('formData');
-  if (!data) {
-    setTransactions([]);
-    setTimeout(() => $('#tips').modal(), 10000);
-    return;
-  }
-  setForm(JSON.parse(data));
-  // set the interface (transactions) options on the form
-  setFormTransactions(JSON.parse(localStorage.getItem('transactions')));
-}
 
 function hideHeroAndSearch() {
   $('.hero-animation').hide();
   $('.alert').hide();
   Animations.scrollCategoriesToCurrent();
   // if there is given location request search
-  if ($locationInput.val()) searchYelp();
+  if (FormFunctsObj.$locationInput.val()) searchYelp();
   // if no given location but allowing location sharing detect location
   else if (
     !Geolocation_Obj.locationWatcher &&
@@ -949,17 +537,6 @@ function lockOnScrollBottom(makeSearch = true) {
 }
 
 /*
-/* Set Lng/lat data from hidden inputs then remove hidden inputs.
-*/
-function setLngLatFromHiddenInputs() {
-  // Set lng/lat from hidden inputs then remove hidden inputs.
-  Map_Obj.latitude = +$('#main-form input[name=lat]').val();
-  Map_Obj.longitude = +$('#main-form input[name=lng]').val();
-  $('#main-form input[name=lat]').remove();
-  $('#main-form input[name=lng]').remove();
-}
-
-/*
 /* Check localStorage for coordinate data.
 /* Set script lng/lat. Return coords.
 */
@@ -974,9 +551,10 @@ function setCoordsFromStorage() {
 
 /*
 /* Set Lng/lat data from hidden inputs then remove hidden inputs.
+/* If no data in hidden inputs use last location data.
 */
 function setLngLatInit() {
-  setLngLatFromHiddenInputs();
+  FormFunctsObj.setLngLatFromHiddenInputs();
   if (!Map_Obj.latitude) setCoordsFromStorage();
 }
 
@@ -985,24 +563,8 @@ function setLngLatInit() {
 /* state set last category active, and search.
 */
 function checkLocalStorage() {
-  setCategoryFromStorage();
-  updateFormFromStorage();
-}
-
-/*
-/* Set locaton value if there is a data object
-/* and there is locaton attribute on that object.
-*/
-function setLocationValue() {
-  let data = localStorage.getItem('formData');
-  // Set location from storage if there was location previously given.
-  if (data) {
-    data = JSON.parse(data);
-    data = Base.convertDataArrayToObj(data);
-    if (data.location) $locationInput.val(data.location);
-  } else {
-    setTimeout(() => $('#tips').modal(), 10000);
-  }
+  FormFunctsObj.setCategoryFromStorage();
+  FormFunctsObj.updateFormFromStorage();
 }
 
 /*
@@ -1014,7 +576,7 @@ function setLocationValue() {
 function checkSearchInputOrCheckLocalStorage() {
   if ($('.navbar form.searchForm input').val()) {
     // Set location then search using navbarSearch function.
-    setLocationValue();
+    FormFunctsObj.setLocationValue();
     navbarSearch();
     return false;
     //
@@ -1039,6 +601,7 @@ $('.card-track-inner').on('dblclick', '.my-card', getBtnAndShowDetails);
 /* getShowBusinessDetails.
 */
 function getBtnAndShowDetails() {
+  // Get the details button.
   const detailBtn = $(this).hasClass('detailsBtnCard')
     ? $(this)
     : $(this).find('.detailsBtnCard');

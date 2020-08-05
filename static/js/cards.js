@@ -11,10 +11,10 @@ class CardsModalsFactory {
   /*
   /* Get cards for index page dragscroll card track. Filter for transactions.
   */
-  getCardsHtml(data) {
+  getCardsHtml(businesses) {
     let cards = '';
-    const transactions = getTransactions();
-    data.businesses.forEach(business => {
+    const transactions = FormFunctsObj.getTransactions();
+    businesses.forEach(business => {
       cards += this.filterForTransactions(transactions, business);
     });
     return cards;

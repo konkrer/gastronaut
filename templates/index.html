@@ -27,6 +27,7 @@
   <script defer src="../static/js/geolocate.js"></script>
   <script defer src="../static/js/cards.js"></script>
   <script defer src="../static/js/indexAnimations.js"></script>
+  <script defer src="../static/js/indexFormFuncts.js"></script>
   <script defer src="../static/js/index.js"></script>
   <script defer src="../static/js/apiFuncts.js"></script>
   <script
@@ -95,12 +96,12 @@
                   placeholder="Location"
                 />
               </div>
-              <label class="sr-only" for="search-term">Keywords</label>
+              <label class="sr-only" for="keywords">Keywords</label>
               <div class="input-group mb-2 px-2">
                 <input
                   type="text"
                   class="form-control form-control-sm font-weight-bold"
-                  id="search-term"
+                  id="keywords"
                   name="term"
                   placeholder="Keywords"
                 />
@@ -156,10 +157,10 @@
                     <input
                       class="onChange custom-control-input"
                       type="checkbox"
-                      id="open-at"
+                      id="open-at-checkbox"
                       value="true"
                     />
-                    <label class="custom-control-label" for="open-at">
+                    <label class="custom-control-label" for="open-at-checkbox">
                       Open At
                     </label>
                   </div>

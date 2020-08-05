@@ -30,8 +30,9 @@ def parse_query_params(multi_dict):
             attributes += f'{key},'
         # convert open at datetime to utc timestamp if present.
         elif key == 'open_at':
-            date = datetime.fromisoformat(value)
-            utc_timestamp = date.replace(tzinfo=timezone.utc).timestamp()
+
+            date_time = datetime.fromisoformat(value)
+            utc_timestamp = date_time.replace(tzinfo=timezone.utc).timestamp()
             out['open_at'] = str(int(utc_timestamp))
         else:
             if value:
