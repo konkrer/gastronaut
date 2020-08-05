@@ -1,15 +1,23 @@
 '''Yelp helper functions, restaurant categories,
 categories first letter list.'''
 
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
+import requests
+import logging
+import os
 
 
 YELP_URL = 'https://api.yelp.com/v3'
 
+API_KEY = os.environ.get('GOOGLE_API_KEY')
+
+if not API_KEY:
+    from development_local.local_settings import GOOGLE_API_KEY as API_KEY
+
 
 def parse_query_params(multi_dict):
     """Function to convert request parameters into
-        state ready to be passed to Yelp.
+        dictionary state ready to be passed to Yelp.
 
         Args:
             multi_dict (multi_dict): request.args data
@@ -30,10 +38,10 @@ def parse_query_params(multi_dict):
             attributes += f'{key},'
         # convert open at datetime to utc timestamp if present.
         elif key == 'open_at':
-
-            date_time = datetime.fromisoformat(value)
-            utc_timestamp = date_time.replace(tzinfo=timezone.utc).timestamp()
-            out['open_at'] = str(int(utc_timestamp))
+            utc_timestamp = get_timestamp(multi_dict, value)
+            if not utc_timestamp:
+                continue
+            out['open_at'] = utc_timestamp
         else:
             if value:
                 out[key] = value
@@ -51,6 +59,90 @@ def parse_query_params(multi_dict):
             del out['longitude']
 
     return out
+
+
+def get_timestamp(multi_dict, value):
+    """Get UTC timestamp offset for timezone of search location."""
+
+    date_time = datetime.fromisoformat(value)
+    # Datetime as UTC timestamp for google timezone endpoint.
+    # Not accurate as date_time is naive but google needs a timestamp.
+    timestamp = date_time.replace(tzinfo=timezone.utc).timestamp()
+    # get timezone object for current location.
+    tz = get_tz(multi_dict, timestamp)
+
+    if not tz:
+        return
+
+    # Return integer as required by yelp.
+    # ????? need str??????
+    return str(int(date_time.replace(tzinfo=tz).timestamp()))
+
+
+def get_tz(multi_dict, timestamp):
+    """Use coords or location to get timezone information.
+       Return timzone class object."""
+
+    if multi_dict.get('location'):
+        # geocode locaion
+        geo_results = geocode(multi_dict['location'])
+
+        if not geo_results or not geo_results.get('status') == 'OK':
+            return None
+
+        location = geo_results['results'][0]['geometry']['location']
+        lat = location['lat']
+        lng = location['lng']
+    else:
+        lat = multi_dict.get('latitude', 0)
+        lng = multi_dict.get('longitude', 0)
+
+    tz_data = get_tz_data(lat, lng, timestamp)
+
+    if not tz_data or not tz_data.get('status') == 'OK':
+        return None
+
+    tz_offset = tz_data['rawOffset'] + tz_data['dstOffset']
+    offset_time_delta = timedelta(seconds=tz_offset)
+
+    return timezone(offset_time_delta)
+
+
+def geocode(location):
+    """Geocode a location string."""
+
+    url = 'https://maps.googleapis.com/maps/api/geocode/json'
+
+    location = location.split(' ')
+    location = '+'.join(location)
+
+    try:
+        resp = requests.get(
+            f'{url}?address={location}&key={API_KEY}'
+        )
+    except Exception as e:
+        logging.error(repr(e))
+        return
+
+    return resp.json()
+
+
+def get_tz_data(lat, lng, timestamp):
+    """Call google timezone APi."""
+
+    url = 'https://maps.googleapis.com/maps/api/timezone/json'
+
+    coords = f'{lat},{lng}'
+
+    try:
+        resp = requests.get(
+            f'{url}?location={coords}&timestamp={timestamp}&key={API_KEY}'
+        )
+    except Exception as e:
+        logging.error(repr(e))
+        return
+
+    return resp.json()
 
 
 YELP_CATEGORIES = [
