@@ -316,6 +316,13 @@ body {
   white-space: nowrap;
 }
 
+.no-select {
+  -webkit-user-select: none; /* Chrome all / Safari all */
+  -moz-user-select: none; /* Firefox all */
+  -ms-user-select: none; /* IE 10+ */
+  user-select: none;
+}
+
 body::-webkit-scrollbar {
   width: 6px;
   background-color: #6c757d;

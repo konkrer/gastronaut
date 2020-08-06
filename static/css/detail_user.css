@@ -2,6 +2,7 @@
 
 .avatar-col {
   padding: 0px;
+  position: static;
 }
 
 #profile-avatar {
@@ -89,6 +90,15 @@ main div.container > div.row.justify-content-end {
   margin-top: -98px;
 }
 
+/*first instance of pills-tab hidden on xs screens.*/
+#pills-tab {
+  display: none;
+}
+
+.sticky {
+  position: relative;
+}
+
 @media screen and (min-width: 576px) {
   #profile-avatar {
     margin-top: -33px;
@@ -109,6 +119,17 @@ main div.container > div.row.justify-content-end {
   }
   .card-columns {
     column-count: 1;
+  }
+  div[role='tablist'] .nav-link,
+  .user-location .location,
+  .byline {
+    font-size: x-small;
+  }
+  #pills-tab {
+    display: block;
+  }
+  #pills-tab-2 {
+    display: none;
   }
 }
 
@@ -145,9 +166,11 @@ main div.container > div.row.justify-content-end {
   .card-columns {
     column-count: 2;
   }
-  /* .toasts-zone {
-    right: 40px;
-  } */
+  div[role='tablist'] .nav-link,
+  .user-location .location,
+  .byline {
+    font-size: initial;
+  }
 }
 
 @media screen and (min-width: 1200px) {

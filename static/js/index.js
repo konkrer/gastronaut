@@ -594,7 +594,7 @@ lockOnScrollBottom(makeSearch);
 /* Card business detail functionality.
 */
 $('.card-track-inner').on('click', '.detailsBtnCard', getBtnAndShowDetails);
-$('.card-track-inner').on('dblclick', '.my-card', getBtnAndShowDetails);
+$('.card-track-inner').on('dblclick', '.my-card.mr-card', getBtnAndShowDetails);
 
 /*
 /* Get the add-to-missions button which holds the business id and call 

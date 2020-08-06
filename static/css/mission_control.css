@@ -82,6 +82,7 @@ a[href='#mission-select-form'] {
 
 #businesses-panel .list-group-item {
   opacity: 0.7;
+  cursor: pointer;
 }
 
 a.text-success.hoverUnset:focus,

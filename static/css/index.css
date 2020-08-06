@@ -670,11 +670,11 @@ a:hover {
   #clear-filters:hover {
     color: rgb(98, 98, 255);
   }
-  form label:not(.noHoverCl):hover {
+  form label:not(.no-hover):hover {
     color: white;
   }
   .form-check:hover,
-  .switch-wrapper:not(.noHoverBg):hover {
+  .switch-wrapper:not(.no-hover-bg):hover {
     background: #422424;
   }
   .first-letter:hover {
