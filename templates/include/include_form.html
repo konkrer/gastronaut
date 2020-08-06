@@ -14,7 +14,7 @@
   {% endif %} {{field(class_="form-control") }} {% else %}
   {{field(class_="form-control") }} {% endif %}
   <small>{{field.description}}</small> {% for error in field.errors %}
-  <b class="form-text text-danger mt-0">
+  <b class="form-text text-warning mt-0">
     {{ error }}
   </b>
   {% endfor %}
