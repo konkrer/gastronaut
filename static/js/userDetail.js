@@ -2,13 +2,9 @@
 
 class StickyScroll {
   constructor() {
-    // flag to indicate if avatar-col top padding is being activly adjusted
-    //  as of last scroll event.
-    this.scrollPaddingAdjust = false;
     this.avatarCol = document.querySelector('.avatar-col');
     this.avatarColOffset = null; // ACO
     this.adjustedACO = null;
-    this.originalDocHeight = $(document).height();
 
     this.addScrollListener();
     this.addTabslistListener();
@@ -63,12 +59,8 @@ class StickyScroll {
 
     // If mobile portrait oreintation no padding ajustment needed.
     if (this.isMobilePortrait()) {
-      // If top padding was just being adjusted in landscape orientation.
-      if (this.scrollPaddingAdjust) {
-        // remove top padding.
-        this.avatarCol.setAttribute('style', '');
-        this.scrollPaddingAdjust = false;
-      }
+      // remove top padding.
+      this.avatarCol.setAttribute('style', '');
       return;
     }
 
@@ -79,13 +71,8 @@ class StickyScroll {
         'style',
         `padding-top: ${window.pageYOffset - this.adjustedACO}px;`
       );
-      this.scrollPaddingAdjust = true;
-      // If not user scrolled greater amount than our adjusted offset
-      // but flag is true remove top padding and set flag false.
-    } else if (this.scrollPaddingAdjust) {
-      this.avatarCol.setAttribute('style', '');
-      this.scrollPaddingAdjust = false;
-    }
+      // If not user scrolled greater amount than our adjusted offset.
+    } else this.avatarCol.setAttribute('style', '');
   }
 
   /*
@@ -97,7 +84,7 @@ class StickyScroll {
         setTimeout(() => {
           window.location.href = '#pills-tabContent';
           $(window).scrollTop($(window).scrollTop() - 60);
-        }, 400);
+        }, 100);
       }.bind(this)
     );
   }

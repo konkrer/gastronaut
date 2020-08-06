@@ -54,7 +54,7 @@ class GeolocationObj {
       this.watchError,
       this.options
     );
-    searchYelp();
+    IndexSearchObj.searchYelp();
   }
 
   showError(error) {
@@ -78,7 +78,7 @@ class GeolocationObj {
     if (Map_Obj.longitude) {
       Map_Obj.addUserMarker();
     }
-    searchYelp();
+    IndexSearchObj.searchYelp();
   }
 
   watchSuccess(position) {

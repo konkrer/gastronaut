@@ -33,12 +33,6 @@ main {
   overflow: hidden;
 }
 
-/*  Turned off look for overflow issues index.html
-#main-interface {
-  height: var(--vh-minus-navbar);
-  overflow: hidden;
-} */
-
 .main-form-div {
   padding-left: 0;
   padding-right: 0;
@@ -98,7 +92,8 @@ main {
 
 #scrl1::-webkit-scrollbar-thumb:hover,
 #scrl3::-webkit-scrollbar-thumb:hover,
-#scrl4::-webkit-scrollbar-thumb:hover {
+#scrl4::-webkit-scrollbar-thumb:hover,
+.my-card::-webkit-scrollbar-thumb:hover {
   background-color: var(--my-warning);
 }
 

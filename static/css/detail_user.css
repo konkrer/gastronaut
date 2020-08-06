@@ -2,7 +2,7 @@
 
 .avatar-col {
   padding: 0px;
-  position: static;
+  position: relative;
 }
 
 #profile-avatar {

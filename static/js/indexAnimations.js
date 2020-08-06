@@ -138,7 +138,7 @@ class IndexAnimations {
 
     // Listeners, current category display.
     this.setCardScrollTrackerMapper();
-    addNextCardsListener();
+    IndexSearchObj.addNextCardsListener();
     if (this.sidebarOpen) this.scrollCategoriesToCurrent();
 
     // On mobile portrait zoom into first business when sidebar closed.

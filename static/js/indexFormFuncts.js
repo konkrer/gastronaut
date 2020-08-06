@@ -210,7 +210,7 @@ class FormFuncts {
         .prop('checked');
       $('.radiusDisplay')
         .removeClass('bg-disabled')
-        .text(metersToMiles(radius));
+        .text(CardsModalsFactoryObj.funct.metersToMiles(radius));
     } else {
       $('#radius')
         .prop('disabled', true)
@@ -235,7 +235,7 @@ class FormFuncts {
       $('.spinner-zone').show();
       if (this_.$locationInput.val()) {
         this_.keyupTimer = setTimeout(function () {
-          searchYelp();
+          IndexSearchObj.searchYelp();
         }, this_.autoSearchDelay);
       } else $('.spinner-zone').hide();
     });
@@ -262,7 +262,7 @@ class FormFuncts {
       const term = this_.$searchTerm.val();
       this_.keywordDisplayLogic(term);
       this_.keyupTimer = setTimeout(function () {
-        searchYelp();
+        IndexSearchObj.searchYelp();
       }, this_.autoSearchDelay);
     });
   }
@@ -284,7 +284,7 @@ class FormFuncts {
         return;
       $('.spinner-zone').show();
       this_.keyupTimer = setTimeout(function () {
-        searchYelp();
+        IndexSearchObj.searchYelp();
       }, this_.autoSearchDelay);
     });
   }
@@ -304,7 +304,7 @@ class FormFuncts {
       this_.turnActiveOffCatBtns();
       $(this).addClass('active');
       this_.keyupTimer = setTimeout(function () {
-        searchYelp();
+        IndexSearchObj.searchYelp();
       }, this_.autoSearchDelay);
     });
   }
@@ -343,7 +343,7 @@ class FormFuncts {
       $('.spinner-zone').show();
       this_.setForm('default');
       this_.setFormTransactions([]);
-      searchYelp();
+      IndexSearchObj.searchYelp();
     });
   }
 
@@ -373,10 +373,7 @@ class FormFuncts {
         $radius.prop('disabled', true);
       }
       $('.radiusDisplay').toggleClass('bg-disabled');
-      this_.$radius
-        .parent()
-        .prev()
-        .toggleClass(['txt-green', 'dark-green-outline']);
+      $radius.parent().prev().toggleClass(['txt-green', 'dark-green-outline']);
     });
   }
 
@@ -385,7 +382,9 @@ class FormFuncts {
   */
   initRadiusDisplayLogic() {
     $('#radius').on('change', function () {
-      $('.radiusDisplay').text(metersToMiles($(this).val()));
+      $('.radiusDisplay').text(
+        CardsModalsFactoryObj.funct.metersToMiles($(this).val())
+      );
     });
   }
 
