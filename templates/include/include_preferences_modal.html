@@ -1,17 +1,17 @@
 <div
   class="modal fade"
-  id="mission-choices"
+  id="preferencesModal"
   tabindex="-1"
   role="dialog"
-  aria-labelledby="missionsModalTitle"
+  aria-labelledby="preferencesModalLabel"
   aria-hidden="true"
 >
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       {% if g.user %}
       <div class="modal-header">
-        <h5 class="modal-title txt-warning" id="missionsModalTitle">
-          Add To Mission
+        <h5 class="modal-title txt-warning" id="preferencesModalLabel">
+          Preferences
         </h5>
         <button
           type="button"
@@ -23,50 +23,49 @@
         </button>
       </div>
       <div class="modal-body">
-        <form action="/v1/add_mission/..." id="mission-choices-form" class="">
-          <div class="form-group">
-            <label for="mission-select" class="">Mission</label>
-            <select
-              name="mission-select"
-              id="mission-select"
-              class="form-control form-control-lg"
+        {% from '/macros/preferences_check.html' import preferences_check with
+        context %}
+
+        <form id="preferences-form" action="#">
+          <h5 class="txt-medium txt-white-k mb-4">
+            <strong>Gastronaut Search</strong>
+          </h5>
+          <div class="custom-control custom-switch">
+            <input
+              type="checkbox"
+              name="show_alcohol"
+              id="show_alcohol"
+              class="custom-control-input"
+              {{
+              preferences_check(g.user.preferences.show_alcohol)
+              }}
+            />
+            <label
+              for="show_alcohol"
+              class="custom-control-label txt-white-k txt-medium d-block"
+              >Show Alcohol
+              <small class="ml-2">(Bars, Breweries, etc.)</small></label
             >
-              {% for m in g.user.my_missions %}
-              <option value="{{m.id}}">{{m.name}}</option>
-              {% endfor %}
-            </select>
+            <small class="help-text"
+              >Takes effect on next home page load.</small
+            >
           </div>
-          <button
-            type="submit"
-            class="btn btn-primary btn-lg form-control"
-            data-toggle="tooltip"
-            title="Add to Mission"
-          >
-            <i class="fas fa-plus-square mr-2"></i>
-            <i class="fas fa-rocket fa-lg txt-warning brand-outline"></i>
-          </button>
         </form>
       </div>
-      <div class="modal-footer">
-        <div class="float-left feedback"></div>
+      <div class="modal-footer" style="position: relative;">
+        <div class="feedback txt-green"></div>
         <button
           type="button"
-          class="btn btn-sm btn-outline-secondary txt-white-k"
+          class="btn btn-outline-secondary txt-white-k"
           data-dismiss="modal"
         >
           Close
         </button>
-        {% if request.endpoint != 'mission_control' %}
-        <a
-          href="/mission-control"
-          class="btn btn-sm btn-outline-secondary txt-white-k"
-          >Create New Mission</a
-        >{% endif %}
       </div>
       {% else %}
       <div class="modal-header">
         <h5 class="modal-title txt-warning" id="missionsModalTitle">
-          Add To Mission
+          Preferences
         </h5>
         <button
           type="button"
@@ -79,7 +78,7 @@
       </div>
       <div class="modal-body">
         <p class="txt-whitesmoke">
-          <em>You must sign up or login to add to a mission!</em>
+          <em>You must sign up or login to change preferences!</em>
         </p>
         <a
           class="signup btn btn-lg btn-outline-primary"

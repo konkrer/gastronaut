@@ -36,7 +36,7 @@
 
   <div class="middle-gap py-3 px-5 p-sm-0 flx-std">
     <a href="/user/profile/{{user.id}}">
-      <h4 class="txt-orange brand-outline mr-5">
+      <h4 class="txt-warning brand-outline mr-5">
         <em>@{{user.username}}</em>
       </h4>
     </a>
@@ -49,8 +49,7 @@
       </div>
     </div>
   </div>
-  {% include 'include/include_signup_login_modal.html' with context %} {%
-  include '/include/include_mission_choices.html' %}
+  {% include '/include/include_mission_choices.html' with context %}
   <div
     class="modal fade p-0"
     id="business-detail-modal"

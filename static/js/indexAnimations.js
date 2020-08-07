@@ -209,7 +209,7 @@ class IndexAnimations {
     });
     //Open more tips modal when user clicks more tips button.
     $('.moreTips').click(() => {
-      $('#tips-2').modal();
+      $('#tips-2-modal').modal();
     });
     /* Make map icon grow when hovered.
   /* Add grow-1_3 class to map icon 

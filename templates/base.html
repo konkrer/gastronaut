@@ -83,9 +83,12 @@
     {% block head %}{% endblock %}
   </head>
   <body>
+    <div class="preloader-div flx-std">
+      <div class="reverse-spinner"></div>
+    </div>
     <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
       <a
-        class="navbar-brand mr-auto mr-lg-0 fw-900 txt-orange brand-outline"
+        class="navbar-brand mr-auto mr-lg-0 fw-900 txt-warning brand-outline"
         href="/"
       >
         <i class="fas fa-user-astronaut"></i>
@@ -154,19 +157,35 @@
               >
                 Prefrences
               </button>
-              <a class="dropdown-item" href="#"
-                >Gastronaut groups (Coming Soon!)</a
-              >
               {% if request.endpoint in ['index', 'mission_control'] %}
               <a
                 class="dropdown-item"
-                href="#tips"
+                href="#tips-modal"
                 data-toggle="modal"
-                data-target="#tips"
+                data-target="#tips-modal"
               >
                 Tips</a
               >
               {% endif %}
+              <a
+                class="dropdown-item"
+                href="#user-feedback-modal"
+                data-toggle="modal"
+                data-target="#user-feedback-modal"
+              >
+                Feedback</a
+              >
+              <a class="dropdown-item" href="#"
+                >Gastronaut groups (Coming Soon!)</a
+              >
+              <div class="ml-4 mt-3 text-dark">
+                Powered by
+                <img
+                  src="https://s3-media0.fl.yelpcdn.com/assets/public/default.yji-a536dc4612adf182807e56e390709483.png"
+                  alt="yelp logo"
+                  class="navbar-yelp-logo ml-1"
+                />
+              </div>
             </div>
           </li>
         </ul>
@@ -206,7 +225,7 @@
       </div>
     </nav>
     <div class="navbar-traverse">
-      <i class="fas fa-rocket fa-2x txt-orange brand-outline horiz-rocket"></i>
+      <i class="fas fa-rocket fa-2x txt-warning brand-outline horiz-rocket"></i>
     </div>
     {% with mssgs = get_flashed_messages(with_categories=True) %} {% if mssgs %}
     {% for category, mssg in mssgs %}
@@ -224,112 +243,9 @@
     </main>
 
     <!-- Modal -->
-    <div
-      class="modal fade"
-      id="preferencesModal"
-      tabindex="-1"
-      role="dialog"
-      aria-labelledby="preferencesModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          {% if g.user %}
-          <div class="modal-header">
-            <h5 class="modal-title txt-orange" id="preferencesModalLabel">
-              Preferences
-            </h5>
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            {% from '/macros/preferences_check.html' import preferences_check
-            with context %}
-
-            <form id="preferences-form" action="#">
-              <h5 class="txt-medium txt-white-k mb-4">
-                <strong>Gastronaut Search</strong>
-              </h5>
-              <div class="custom-control custom-switch">
-                <input
-                  type="checkbox"
-                  name="show_alcohol"
-                  id="show_alcohol"
-                  class="custom-control-input"
-                  {{
-                  preferences_check(g.user.preferences.show_alcohol)
-                  }}
-                />
-                <label
-                  for="show_alcohol"
-                  class="custom-control-label txt-white-k txt-medium d-block"
-                  >Show Alcohol
-                  <small class="ml-2">(Bars, Breweries, etc.)</small></label
-                >
-                <small class="help-text"
-                  >Takes effect on next home page load.</small
-                >
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer" style="position: relative;">
-            <div class="feedback txt-green"></div>
-            <button
-              type="button"
-              class="btn btn-outline-secondary txt-white-k"
-              data-dismiss="modal"
-            >
-              Close
-            </button>
-          </div>
-          {% else %}
-          <div class="modal-header">
-            <h5 class="modal-title txt-orange" id="missionsModalTitle">
-              Preferences
-            </h5>
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <p class="txt-whitesmoke">
-              <em>You must sign up or login to change preferences!</em>
-            </p>
-            <a
-              class="signup btn btn-lg btn-outline-primary"
-              href="/signup?next={{request.endpoint}}"
-              >Sign Up</a
-            >
-            <span class="px-4">- OR -</span>
-            <a
-              class="login btn btn-lg btn-outline-primary"
-              href="/login?next={{request.endpoint}}"
-              >Log in</a
-            >
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-outline-secondary txt-white-k"
-              data-dismiss="modal"
-            >
-              Close
-            </button>
-          </div>
-          {% endif %}
-        </div>
-      </div>
-    </div>
+    {% if not request.endpoint in ['mission_control'] %} {% include
+    'include/include_signup_login_modal.html' %} {% endif %} {% include
+    "/include/include_feedback_modal.html" %}{% include
+    "/include/include_preferences_modal.html" with context %}
   </body>
 </html>
