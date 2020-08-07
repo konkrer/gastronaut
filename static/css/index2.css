@@ -4,65 +4,6 @@
 /* Breakpoints */
 /* Breakpoints */
 
-@media screen and (max-width: 350px) {
-  h5 {
-    font-size: 1.3rem !important;
-  }
-  #business-detail-modal table {
-    font-size: x-small !important;
-  }
-}
-@media screen and (max-width: 420px) {
-  #detect-location,
-  #clear-filters {
-    padding: 6px 5px;
-  }
-  h5 {
-    font-size: 1.5rem;
-  }
-  .cat-btn {
-    padding: 4px 5px !important;
-    /* font-size: 0.67rem !important; */
-  }
-  button.cat-btn.active {
-    transform: scale(1.1);
-  }
-  #scrl2 {
-    padding: 16px 5px;
-  }
-  .filter-display {
-    width: 94vw;
-    left: calc(50vw - 47vw);
-    z-index: 900;
-  }
-  .dummy-card {
-    width: 0px;
-    min-width: 0px;
-  }
-  #scrl4::-webkit-scrollbar:horizontal {
-    -webkit-appearance: none;
-    height: 0px;
-  }
-  #scrl4::-webkit-scrollbar-thumb {
-    -webkit-appearance: none;
-  }
-  #scrl4::-webkit-scrollbar-thumb:hover {
-    -webkit-appearance: none;
-  }
-  .drive,
-  .bike,
-  .walk {
-    width: 30px;
-    height: 30px;
-  }
-  .map-directions div i {
-    font-size: 1.5em;
-  }
-  #business-detail-modal table {
-    font-size: small;
-  }
-}
-
 @media screen and (min-width: 420px) and (max-width: 840px) {
   #detect-location,
   #clear-filters {
