@@ -1,199 +1,198 @@
-.hero-animation {
-  height: var(--vh-minus-navbar);
-  color: white;
-  font-family: 'MuseoModerno', cursive;
-  /* top: -5px; */
+.filter-display {
+  position: absolute;
+  height: 23px;
+  width: 30vw;
+  top: 0px;
+  left: calc(50vw - 15vw);
+  transition: 1s opacity;
+  overflow: hidden;
+  font-family: var(--font-main);
+  display: none;
+  background-color: var(--primary-alt);
+  z-index: 1100;
 }
 
-.hero-animation h1 {
-  font-weight: 900;
+.filter-d-text {
+  font-size: 20px;
+  line-height: 1.2;
+  color: #d6d6d6;
 }
 
-.hero-animation h2 {
-  font-weight: 200;
+.padtop-card-filter-d {
+  padding-top: 20px;
 }
 
-.hero-lead {
-  max-width: 80%;
-}
-
-main {
+.card-track {
+  grid-area: card-track;
   position: relative;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  padding: 8px 0;
+  cursor: grab;
+  cursor: -o-grab;
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
+  padding-top: 4px;
+  padding-bottom: 6px;
 }
 
-.bg-stars1 {
-  background: url('../images/stars2.jpg'), black;
+.card-track-inner {
+  height: 100%;
+  position: relative;
+  padding-left: calc(50% - 26%);
+  /* transition: padding 0.4s; */
+  transition: opacity 0.25s;
+}
+
+.my-card {
+  height: 100%;
+  width: 70%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  border-radius: 5px;
+  font-family: var(--font-main);
+  white-space: normal;
+  min-width: 342px;
+}
+
+.mr-card {
+  margin-right: 50px;
+}
+
+.no-results {
+  background: url('https://media.giphy.com/media/Txh1UzI7d0aqs/giphy.gif');
+  background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-  background-size: cover;
 }
 
-.control-panel {
-  transition: all 0.4s;
-  overflow: hidden;
-}
-
-.main-form-div {
-  padding-left: 0;
-  padding-right: 0;
-  background-color: var(--my-secondary);
-}
-
-#main-interface,
-.main-form-div,
-.card-map-zone,
-#scrl2,
-#scrl3 {
-  height: var(--vh-minus-navbar);
-  overflow-y: auto;
-  overflow-x: hidden;
-  font-family: var(--font-main);
-}
-
-#scrl3 {
-  padding: 0 !important;
-  font-size: 1rem;
-  position: relative;
-}
-
-#scrl2::-webkit-scrollbar,
-#scrl4::-webkit-scrollbar {
-  -webkit-appearance: none;
-  width: 0;
-}
-
-.my-card::-webkit-scrollbar {
-  width: 4px;
-}
-
-#scrl1::-webkit-scrollbar,
-#scrl3::-webkit-scrollbar {
-  width: 6px;
-  background-color: var(--light);
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-}
-
-#scrl4::-webkit-scrollbar:horizontal {
-  height: 6px;
-}
-
-#scrl1::-webkit-scrollbar-thumb,
-#scrl3::-webkit-scrollbar-thumb,
-#scrl4::-webkit-scrollbar-thumb {
-  background-color: var(--secondary);
-  border-radius: 5px;
-}
-
-.my-card::-webkit-scrollbar-thumb {
-  background-color: #757575;
-  border-radius: 5px;
-  border: #422424 1px solid;
-}
-
-#scrl1::-webkit-scrollbar-thumb:hover,
-#scrl3::-webkit-scrollbar-thumb:hover,
-#scrl4::-webkit-scrollbar-thumb:hover,
-.my-card::-webkit-scrollbar-thumb:hover {
-  background-color: var(--my-warning);
-}
-
-.white-a {
-  color: whitesmoke;
-}
-
-form h5.museo {
-  color: var(--warning);
-  margin-bottom: 0px;
-  margin-top: 10px;
-  font-weight: 200;
-}
-
-form label.results-label {
-  width: 38px;
-}
-
-form label {
-  font-family: var(--font-main);
+.my-card-img-div {
   width: 100%;
-  font-weight: 600;
+  height: 50%;
 }
 
-.form-num-display {
-  height: 19px;
-  width: 45px;
-  background-color: whitesmoke;
-  text-align: center;
-  font-size: 18px;
-  line-height: 0.95;
-  border-radius: 5px;
-  display: inline-block;
-  text-shadow: none;
+.card-body {
+  padding-bottom: 10px;
 }
 
-.filter-icon-display {
-  display: none;
+.card-body h5 {
+  margin-bottom: 6px;
 }
 
-.cat-btn {
-  color: whitesmoke !important;
-  transition: transform 0.2s !important;
-  font-style: italic;
-  font-family: var(--font-main);
-  background-color: var(--my-info);
+.my-card button {
+  padding-top: 6px;
 }
 
-.list-group-item.active {
-  transform: scale(1.3);
-  /* color: var(--my-warning) !important; */
-
-  border: none;
-}
-button.cat-btn.active {
-  font-weight: 900 !important;
-  background-color: var(--my-warning) !important;
-  text-shadow: black 1px 1px 2px, black -1px -1px 1px, black 1px -1px 2px,
-    black -1px 1px 1px;
-}
-a.first-letter.active {
-  background-color: var(--light);
-  text-shadow: black 1px 1px 1px, black -1px -1px 1px, black 1px -1px 1px,
-    black -1px 1px 1px;
-  /* color: var(--my-info);
-  text-shadow: none; */
+.my-card li a {
+  color: black;
 }
 
-.first-letter {
-  padding: 0.7vh !important;
-  transition: all 0.2s !important;
-  /* background-color: #211212; */
+.cardAddress li {
+  border-left: none;
+  border-right: none;
+  border-top: none;
 }
 
-.card-map-zone {
-  display: grid;
-  padding: 0;
-  grid-template-rows: auto 50%;
-  grid-template-columns: auto;
-  grid-template-areas:
-    'card-track'
-    'map-track';
+.map-track {
+  grid-area: map-track;
+  position: relative;
+  width: 100%;
 }
 
-.card-map-zone.map-collapse {
-  grid-template-rows: auto 0px;
-}
-
-.card-map-zone.cards-collapse {
-  grid-template-rows: auto 100%;
-}
-
-.sidebar-toggle-btn {
+.map-directions {
   position: absolute;
-  left: 0;
-  top: 30vh;
-  font-size: 4vh;
+  color: #333333;
+  left: 15px;
+  top: 10px;
+}
+
+.drive,
+.walk,
+.bike {
+  height: 40px;
+  width: 40px;
+  background-color: rgba(255, 255, 255, 0.904);
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+.map-toggle {
+  position: absolute;
+  top: -32px;
+  right: 20px;
+  background-color: rgba(0, 0, 0, 0.589);
+  border: 1px solid var(--secondary);
+  border-radius: 5px;
+  color: white;
+  border-radius: 5px;
+  height: 30px;
+  width: 30px;
+  font-size: 10px;
+}
+
+.toggle-on-map {
+  top: 100px;
+  right: 10px;
+  background-color: white;
+  color: #333;
+  border: none;
+  text-shadow: none;
+  height: 29px;
+  width: 29px;
+  font-size: 10px;
+}
+
+.map-hide-cards {
+  position: absolute;
+  top: 55px;
+  right: 10px;
+  background-color: white;
+  border-radius: 5px;
+  color: #333333;
+  height: 29px;
+  width: 29px;
+  font-size: 1.2em;
+}
+
+.map-info {
+  display: none;
+  position: absolute;
+  color: #333;
+  bottom: 11.3px;
+  right: 14.5px;
   z-index: 100;
-  border-radius: 0px 10px 10px 0px;
+}
+
+#map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+.mapboxgl-popup-content {
+  background-color: var(--primary) !important;
+  color: whitesmoke;
+  font-family: var(--font-main);
+  padding: 5px 10px !important;
+  font-size: medium;
+  font-weight: bold;
+  text-align: center;
+}
+
+.mapboxgl-popup-tip {
+  border-top-color: var(--primary) !important;
+  border-bottom-color: var(--primary) !important;
+}
+
+/* for tips modal */
+.tip-label {
+  width: 140px;
+}
+
+a:hover {
+  text-decoration: none;
 }
 
 /* Breakpoints */
