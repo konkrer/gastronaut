@@ -13,6 +13,7 @@ from flask import (
 from werkzeug.utils import secure_filename
 from werkzeug.exceptions import Unauthorized, BadRequest
 
+
 from models import (db, connect_db, User, Mission, UserMission,  # noqa F401
                     Business, Report, MissionBusiness, DEFAULT_PREFERENCES)  # noqa F401
 from forms import (
