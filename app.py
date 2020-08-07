@@ -969,7 +969,7 @@ def submit_feedback():
 
     user = g.user.username if g.user else 'Anynomous'
 
-    receiver = "rivortex@gmail.com"
+    receiver = "richardiannucelli@gmail.com"
     body = f"Feedback: {feedback} --From: {user} --Email: {email}"
 
     try:
@@ -981,6 +981,7 @@ def submit_feedback():
         )
     except Exception as e:
         error_logging(e)
+        capture_message(GMAIL_PASSWORD)
         return jsonify({'error': 'Error sending message', 'color': 'warning'})
 
     return jsonify({'success': 'Feedback Received!', 'color': 'green'})
