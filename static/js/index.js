@@ -16,11 +16,24 @@ class IndexSearchLogic {
     // of page to hide globe animation and lock control panel view.
     this.$scrollListener = null;
 
+    this.addNavbarTogglerListener();
     this.addNavbarSearchListener();
     this.addExploreBtnsListeners();
     this.setLngLatInit();
     const makeSearch = this.checkSearchInputOrCheckLocalStorage();
     this.lockOnScrollBottom(makeSearch);
+  }
+
+  /*
+  /* When navbar toggler is clicked (sandwich menu) make navbar have
+  /* a display of flex !important so opening keyboard on mobile does 
+  /* not allow landscape mobile breakpoint change navbar to  display 
+  /* none.
+  */
+  addNavbarTogglerListener() {
+    $('.navbar-toggler').click(function () {
+      $('nav.navbar').toggleClass('display-flex-important');
+    });
   }
 
   /*
@@ -41,6 +54,7 @@ class IndexSearchLogic {
   navbarSearch() {
     $('.spinner-zone').show();
     $('.navbar-collapse').removeClass('open');
+    $('nav.navbar').removeClass('display-flex-important');
     const term = $('.navbar form.searchForm input').val();
     FormFunctsObj.$searchTerm.val(term);
     FormFunctsObj.keywordDisplayLogic(term);
