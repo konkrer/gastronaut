@@ -215,7 +215,8 @@ class IndexSearchLogic {
       // No dummy card needed for one result.
       if (!this.resultsRemaining && data.total !== 1)
         CardsModalsFactoryObj.addDummyCard();
-      $('.arrow-wrapper').addClass('pulse-outline-mobile');
+      if (Animations.sidebarOpen)
+        $('.arrow-wrapper').addClass('pulse-outline-mobile');
       Animations.setCardScrollTrackerMapper();
       setTimeout(() => {
         this.addNextCardsListener();
