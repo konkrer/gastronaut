@@ -6,6 +6,7 @@
 
 class ApiFuncts {
   constructor() {
+    this.feedbackTimer = null;
     // Cache all  business results from user clicking details buttons.
     this.business_results_cache = {};
 
@@ -209,6 +210,7 @@ class ApiFuncts {
     const this_ = this;
     $('#mission-choices-form').submit(async function (e) {
       e.preventDefault();
+      clearTimeout(this.feedbackTimer);
 
       const mission_id = $('#mission-choices-form #mission-select').val();
       if (!mission_id) {
@@ -223,13 +225,17 @@ class ApiFuncts {
           this_.mission_btn_business_data
         );
       } catch (err) {
-        $('#mission-choices .feedback').text('Error');
+        $('#mission-choices .feedback').html(
+          '<p class="text-danger">Error</p>'
+        );
         Sentry.captureException(err);
         $('.spinner-zone').hide();
         return;
       }
       if (!resp || resp.data.error) {
-        $('#mission-choices .feedback').text('Error');
+        $('#mission-choices .feedback').html(
+          '<p class="txt-warning">Error</p>'
+        );
         Sentry.captureMessage(
           'Something went wrong: api_functs.addBusinessToMisionListener'
         );
@@ -237,13 +243,15 @@ class ApiFuncts {
         return;
       }
       const {
-        data: { success },
+        data: { success, color },
       } = resp;
 
       if (success) {
-        $('#mission-choices .feedback').text(success);
-        setTimeout(() => {
-          $('#mission-choices .feedback').text('');
+        $('#mission-choices .feedback').html(
+          `<p class="txt-${color}">${success}</p>`
+        );
+        this.feedbackTimer = setTimeout(() => {
+          $('#mission-choices .feedback').html('');
         }, 2000);
         // MissionControlObj  needs to know when businesses ared added to missions.
         if (success === 'Added!' && typeof MissionControlObj !== 'undefined')

@@ -35,7 +35,7 @@
   </div>
   <div class="middle-gap py-3 px-5 py-sm-1 p-lg-0 flx-std">
     <a href="/user/profile/{{user.id}}">
-      <h4 class="txt-orange brand-outline mr-5">
+      <h4 class="txt-warning brand-outline mr-5">
         <em>@{{user.username}}</em>
       </h4>
     </a>
@@ -43,13 +43,12 @@
   <div class="container">
     <div class="row mb-5">
       <div class="col-12 mt-md-1 mt-lg-5 px-0">
-        {%include "include/include_mission_cards.html" with context %}
+        {% include "include/include_mission_cards.html" with context %}
       </div>
     </div>
   </div>
   <div class="toasts-zone" aria-live="polite" aria-atomic="true"></div>
-  {% include 'include/include_signup_login_modal.html' with context %} {%
-  include '/include/include_mission_choices.html' %}
+  {% include '/include/include_mission_choices.html' %}
   <div
     class="modal fade p-0"
     id="business-detail-modal"

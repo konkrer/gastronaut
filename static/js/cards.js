@@ -45,7 +45,7 @@ class CardsModalsFactory {
     return `
     <div class="my-card flx-std no-results"
     >
-      <div class="txt-orange brand-outline txt-xxl">
+      <div class="txt-warning brand-outline txt-xxl">
       No Results!
       </div>
     </div>
@@ -117,14 +117,14 @@ class CardsModalsFactory {
     }
         </p>
         <button
-          class="btn btn-sm btn-primary-alt2 btn-my-card mr-2 mr-sm-1 mr-md-2 px-3 px-sm-2 px-md--3 brand-outline txt-orange detailsBtnCard"
+          class="btn btn-sm btn-primary-alt2 btn-my-card mr-2 mr-sm-1 mr-md-2 px-3 px-sm-2 px-md--3 brand-outline txt-warning detailsBtnCard"
           data-toggle="tooltip"
           title="Details"
         >
           <i class="fas fa-clipboard-list fa-lg"></i>
         </button>
         <button
-          class="btn btn-sm btn-primary-alt2 btn-my-card cardMapButton brand-outline txt-orange mr-2 mr-sm-1 mr-md-2 px-3 px-sm-2 px-md--3"
+          class="btn btn-sm btn-primary-alt2 btn-my-card cardMapButton brand-outline txt-warning mr-2 mr-sm-1 mr-md-2 px-3 px-sm-2 px-md--3"
           data-toggle="tooltip"
           title="Show on Map"
         >
@@ -144,7 +144,7 @@ class CardsModalsFactory {
             data-id="${id}"
           >
             <i class="fas fa-plus-square mr-2"></i>
-            <i class="fas fa-rocket fa-lg txt-orange brand-outline"></i>
+            <i class="fas fa-rocket fa-lg txt-warning brand-outline"></i>
           </button>
         </span>
       </div>
@@ -182,32 +182,23 @@ class CardsModalsFactory {
       phone,
       display_phone,
       transactions,
-      image_url,
-      id,
       is_closed,
-      url,
       photos,
       hours,
       coordinates: { latitude: lat, longitude: lng },
       location: {
-        city,
-        state,
-        country,
         display_address: [street, city_disp],
       },
     } = business;
 
     if (hours) var { open, is_open_now } = hours[0];
-    // nextUrl for next page functionality. If user logs-in or
-    // signs-up allows navigating back to current page
-    const nextUrl = window.location.pathname;
 
     return `
       <div class="modal-dialog modal-dialog-centered modal-lg text-center museo" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <div></div>
-            <h5 class="modal-title txt-orange" id="businessDetailTitle">
+            <h5 class="modal-title txt-warning" id="businessDetailTitle">
               ${name}
             </h5>
             <button
@@ -267,160 +258,12 @@ class CardsModalsFactory {
               </li>
             </ul>
           </div>
-          <div class="modal-footer">
-            <div>
-              <a href="${url}" target="blank" class="txt-yelp-red">
-                <i class="fab fa-yelp fa-lg" ></i>
-              </a>
-            </div>
-            <div>
-              <span data-toggle="tooltip" title="Add to Mission">
-                <button
-                  class="btn btn-primary-alt2 mission-btn mr-1"
-                  data-toggle="modal"
-                  data-target="#mission-choices"
-                  data-dismiss="modal"
-                  data-city="${city}"
-                  data-state="${state}"
-                  data-country="${country}"
-                  data-name="${name}"
-                  data-lng="${lng}"
-                  data-lat="${lat}"
-                  data-id="${id}"
-                >
-                  <i class="fas fa-plus-square mr-2"></i>
-                  <i class="fas fa-rocket fa-lg txt-orange brand-outline"></i>
-                </button>
-              </span>
-              <span data-toggle="tooltip" title="Write Report">
-                <button type="button"  class="btn btn-primary-alt2 mr-1">
-                  <a href="/report?business_id=${id}&next_url=${nextUrl}">
-                    <i class="fas fa-pen-alt brand-outline txt-orange iconBtn fa-lg"></i>
-                  </a>
-                </button>
-              </span>
-              <button
-                type="button"
-                class="btn btn-outline-secondary txt-white-k ssp detail-close-btn"
-                data-dismiss="modal"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-          <div>${this.makeReportsForDetailModal(business)}</div>
-          <div>${this.makeReviewsForDetailModal(business)}</div>
+          ${this.funct.makeModalFooter(business)}       
+          <div>${this.funct.makeReportsForDetailModal(business)}</div>
+          <div>${this.funct.makeReviewsForDetailModal(business)}</div>
+          ${this.funct.makeModalFooter(business)}       
         </div>
       </div>`;
-  }
-
-  /*
-  /* Make Report cards that go inside business details modal.
-  */
-  makeReportsForDetailModal(business) {
-    const reportCards = business.reports.reduce((acc, report) => {
-      const {
-        report_id,
-        submitted_on,
-        text,
-        photo_file,
-        photo_url,
-        likes,
-        user_id,
-        username,
-        allowLikes,
-        userLoggedIn,
-        liked,
-      } = report;
-
-      const html = `
-      <div class="card d-inline-block my-2 mx-1 text-left mb-4 mb-lg-5 detailReport card-shadow"
-      data-id="${report_id}">
-        <div class="card-header pt-3">
-          <h5 class="mb-0">
-            ${business.name}
-          </h5>
-          <h5 class="lead txt-green black-outline-1"><small>Business Report</small></h5>
-          <div class="card-text">
-            <a href="/user/profile/${user_id}">
-              <em class="txt-orange black-outline-1"> by @${username}</em>
-            </a>
-            <div class="txt-smlr">
-              ${submitted_on}
-            </div>
-          </div>
-        </div>
-        <div class="card-body">
-          ${this.funct.makeParagraphs(text)} 
-          ${this.funct.reportImageUrl(photo_file, photo_url)}
-        </div>
-    
-        <div class="card-footer">
-          ${this.funct.addLikesButton(
-            userLoggedIn,
-            allowLikes,
-            report_id,
-            business.id,
-            liked
-          )}
-          <span class="pl-1 pl-md-3 text-dark likes">
-            ${likes}
-          </span>
-          ${this.funct.addReadMoreText(text, report_id)}
-        </div>
-      </div>`;
-
-      return `${acc}${html}`;
-    }, '');
-    // If there are report cards prepend with Reports header.
-    return reportCards
-      ? `<h4 class="text-left text-info ml-3 ml-lg-5 mt-4 mb-4">Reports</h4>${reportCards}`
-      : '';
-  }
-
-  /*
-  /* Make Yelp review cards that go inside business details modal.
-  */
-  makeReviewsForDetailModal(business) {
-    const reportCards = business.reviews.reduce((acc, review) => {
-      const {
-        rating,
-        user: { name },
-        text,
-        time_created,
-        url,
-      } = review;
-
-      const html = `
-      <div class="card d-inline-block my-2 mx-1 text-left mb-4 mb-lg-5 card-shadow">
-        <div class="card-header pt-3">
-          <h5 class="mb-0">
-            ${business.name}
-          </h5>
-          <div class="my-2 txt-xs">${this.funct.makeReviewStarsWithHalves(
-            rating
-          )}</div>
-          <div class="card-text">
-            <em class="txt-orange black-outline-1"> by ${name}</em>
-            <div class="txt-smlr">
-              ${time_created}
-            </div>
-          </div>
-        </div>
-        <div class="card-body">
-          ${text}
-        </div>
-        <div class="card-footer text-right">
-          <a href="${url}" target="blank">Read More</a>
-        </div>
-      </div>`;
-
-      return `${acc}${html}`;
-    }, '');
-
-    return reportCards
-      ? `<h4 class="text-left text-info ml-3 ml-lg-5 mt-4 mb-4">Yelps</h4>${reportCards}`
-      : '';
   }
 }
 
@@ -578,6 +421,174 @@ class CardTextHtmlFunctions {
         </tr>
       </tbody>
     </table>`;
+  }
+
+  /*
+  /* Make footer for business detail modal.
+  */
+  makeModalFooter(business) {
+    const {
+      name,
+      id,
+      url,
+      coordinates: { latitude: lat, longitude: lng },
+      location: { city, state, country },
+    } = business;
+
+    // nextUrl for next page functionality. If user logs-in or
+    // signs-up allows navigating back to current page
+    const nextUrl = window.location.pathname;
+
+    return `
+  <div class="modal-footer">
+    <div>
+      <a href="${url}" class="txt-yelp-red">
+        <i class="fab fa-yelp fa-lg" ></i>
+      </a>
+    </div>
+    <div>
+      <span data-toggle="tooltip" title="Add to Mission">
+        <button
+          class="btn btn-primary-alt2 mission-btn mr-1"
+          data-toggle="modal"
+          data-target="#mission-choices"
+          data-dismiss="modal"
+          data-city="${city}"
+          data-state="${state}"
+          data-country="${country}"
+          data-name="${name}"
+          data-lng="${lng}"
+          data-lat="${lat}"
+          data-id="${id}"
+        >
+          <i class="fas fa-plus-square mr-2"></i>
+          <i class="fas fa-rocket fa-lg txt-warning brand-outline"></i>
+        </button>
+      </span>
+      <span data-toggle="tooltip" title="Write Report">
+        <button type="button"  class="btn btn-primary-alt2 mr-1">
+          <a href="/report?business_id=${id}&next_url=${nextUrl}">
+            <i class="fas fa-pen-alt brand-outline txt-warning iconBtn fa-lg"></i>
+          </a>
+        </button>
+      </span>
+      <button
+        type="button"
+        class="btn btn-outline-secondary txt-white-k ssp detail-close-btn"
+        data-dismiss="modal"
+      >
+        Close
+      </button>
+    </div>
+  </div>`;
+  }
+
+  /*
+/* Make Report cards that go inside business details modal.
+*/
+  makeReportsForDetailModal(business) {
+    const reportCards = business.reports.reduce((acc, report) => {
+      const {
+        report_id,
+        submitted_on,
+        text,
+        photo_file,
+        photo_url,
+        likes,
+        user_id,
+        username,
+        allowLikes,
+        userLoggedIn,
+        liked,
+      } = report;
+
+      const html = `
+    <div class="card d-inline-block my-2 mx-1 text-left mb-4 mb-lg-5 detailReport card-shadow"
+    data-id="${report_id}">
+      <div class="card-header pt-3">
+        <h5 class="mb-0">
+          ${business.name}
+        </h5>
+        <h5 class="lead txt-green black-outline-1"><small>Business Report</small></h5>
+        <div class="card-text">
+          <a href="/user/profile/${user_id}">
+            <em class="txt-warning black-outline-1"> by @${username}</em>
+          </a>
+          <div class="txt-smlr">
+            ${submitted_on}
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        ${this.makeParagraphs(text)} 
+        ${this.reportImageUrl(photo_file, photo_url)}
+      </div>
+  
+      <div class="card-footer">
+        ${this.addLikesButton(
+          userLoggedIn,
+          allowLikes,
+          report_id,
+          business.id,
+          liked
+        )}
+        <span class="pl-1 pl-md-3 text-dark likes">
+          ${likes}
+        </span>
+        ${this.addReadMoreText(text, report_id)}
+      </div>
+    </div>`;
+
+      return `${acc}${html}`;
+    }, '');
+    // If there are report cards prepend with Reports header.
+    return reportCards
+      ? `<h4 class="text-left text-info ml-3 ml-lg-5 mt-4 mb-4">Reports</h4>${reportCards}`
+      : '';
+  }
+
+  /*
+/* Make Yelp review cards that go inside business details modal.
+*/
+  makeReviewsForDetailModal(business) {
+    const reportCards = business.reviews.reduce((acc, review) => {
+      const {
+        rating,
+        user: { name },
+        text,
+        time_created,
+        url,
+      } = review;
+
+      const html = `
+    <div class="card d-inline-block my-2 mx-1 text-left mb-4 mb-lg-5 card-shadow">
+      <div class="card-header pt-3">
+        <h5 class="mb-0">
+          ${business.name}
+        </h5>
+        <div class="my-2 txt-xs">${this.makeReviewStarsWithHalves(rating)}</div>
+        <div class="card-text">
+          <em class="txt-warning black-outline-1"> by ${name}</em>
+          <div class="txt-smlr">
+            ${time_created}
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        ${text}
+      </div>
+      <div class="card-footer text-right">
+        <a href="${url}">Read More</a>
+      </div>
+    </div>`;
+
+      return `${acc}${html}`;
+    }, '');
+
+    // Prepend header if there are Yelp review cards.
+    return reportCards
+      ? `<h4 class="text-left text-info ml-3 ml-lg-5 mt-4 mb-4">Yelps</h4>${reportCards}`
+      : '';
   }
 
   makeParagraphs(text) {

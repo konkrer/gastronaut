@@ -12,6 +12,8 @@ from flask import (
     redirect, jsonify, url_for, g, render_template as r_t)
 from werkzeug.utils import secure_filename
 from werkzeug.exceptions import Unauthorized, BadRequest
+# from sendgrid import SendGridAPIClient
+# from sendgrid.helpers.mail import Mail
 
 from models import (db, connect_db, User, Mission, UserMission,  # noqa F401
                     Business, Report, MissionBusiness, DEFAULT_PREFERENCES)  # noqa F401
@@ -766,7 +768,7 @@ def add_to_mission(mission_id):
 
     if business:
         if business in mission.businesses:
-            return jsonify({'success': 'Already Added.'})
+            return jsonify({'success': 'Already Added.', 'color': 'warning'})
     else:
         # Index page adds new businesses to DB.
         business = Business.create(
@@ -783,7 +785,7 @@ def add_to_mission(mission_id):
         error_logging(e)
         return jsonify({'error': 'Error!'})
 
-    return jsonify({'success': 'Added!'})
+    return jsonify({'success': 'Added!', 'color': 'green'})
 
 
 @app.route('/v1/mission/remove_business/<mission_id>', methods=['POST'])
@@ -956,6 +958,36 @@ def like_report(report_id):
         return jsonify({'feedback': 'Error!'})
 
     return jsonify({'success': success, 'likes': len(report.likes)})
+
+
+@app.route('/feedback', methods=['POST'])
+@add_user_to_g
+def submit_feedback():
+    """Endpoint for user to submit feedback to be emailed to developer."""
+
+    # data = request.json
+    # feedback = data['feedback']
+    # email = data.get('email', '')
+
+    # user = g.user.username if g.user else 'Anynomous'
+
+    # message = Mail(
+    #     from_email='feedback@gastronaut.life',
+    #     to_emails='developeroriented@gmail.com',
+    #     subject='User Feedback',
+    #     html_content=f'<p>User: {user} {email}</p><p>{feedback}</p>')
+    try:
+        pass
+        # sg = SendGridAPIClient(SENDGRID_API_KEY)
+        # response = sg.send(message)
+        # print(response.status_code)
+        # print(response.body)
+        # print(response.headers)
+    except Exception as e:
+        error_logging(e)
+        return jsonify({'error': 'Error sending message', 'color': 'warning'})
+
+    return jsonify({'success': 'Feedback Received!', 'color': 'green'})
 
 
 #  $$    $$   $$$$$$$$  x$Y       $$$$$$$   $$$$$$$$  $$$$$$$$

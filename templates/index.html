@@ -56,7 +56,7 @@
         class="col-8 col-sm-5 col-md-4 col-lg-5 col-xl-3 text-center"
         style="font-size: 5px;"
       >
-        <h1 class="display-1-k txt-orange brand-outline">Gastronaut</h1>
+        <h1 class="display-1-k txt-warning brand-outline">Gastronaut</h1>
         <div class="text-center hero-lead mx-auto">
           <h2 class="display-2-k lead-k">Explore the world of food.</h2>
           <a
@@ -593,7 +593,7 @@
 
         <div class="filter-display rounded-bottom text-center">
           <span class="filter-icon-display filter-d-text">
-            <i class="fas fa-filter fa-sm txt-orange mr-3 mt-1"></i>
+            <i class="fas fa-filter fa-sm txt-warning mr-3 mt-1"></i>
           </span>
           <span class="cat-display filter-d-text"></span>
           <span class="keyword-display filter-d-text"></span>
@@ -647,7 +647,7 @@
   <!-- MODALS -->
   <div
     class="modal fade"
-    id="tips"
+    id="tips-modal"
     tabindex="-1"
     role="dialog"
     aria-labelledby="tipsLabel"
@@ -656,7 +656,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title txt-orange museo" id="tipsLabel">
+          <h5 class="modal-title txt-warning museo" id="tipsLabel">
             Hey...
           </h5>
           <button
@@ -703,7 +703,7 @@
             style="height: 50px;"
           >
             <div class="bg-light rounded p-2">
-              <i class="fas fa-filter txt-orange dark-outline-1"></i>
+              <i class="fas fa-filter txt-warning dark-outline-1"></i>
             </div>
             <div class="text-light tip-label">Filters Active Indicator</div>
           </div>
@@ -735,7 +735,7 @@
   </div>
   <div
     class="modal fade"
-    id="tips-2"
+    id="tips-2-modal"
     tabindex="-1"
     role="dialog"
     aria-labelledby="newUserModalLabel2"
@@ -744,7 +744,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title txt-orange museo" id="newUserModalLabel2">
+          <h5 class="modal-title txt-warning museo" id="newUserModalLabel2">
             Tips
           </h5>
           <button
@@ -808,7 +808,7 @@
       </div>
     </div>
   </div>
-  {% include '/include/include_mission_choices.html' %} {% include
+  {% include '/include/include_mission_choices.html' with context %} {% include
   '/include/include_signup_login_modal.html' %}
   <div
     class="modal fade p-0"

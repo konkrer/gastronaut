@@ -84,12 +84,12 @@
             </span>
             <span class="mapAll" data-toggle="tooltip" title="Map All">
               <i
-                class="fas fa-map-marked-alt brand-outline txt-orange iconBtn"
+                class="fas fa-map-marked-alt brand-outline txt-warning iconBtn"
               ></i>
             </span>
             <span class="" data-toggle="tooltip" title="Write Report"
               ><a id="write-mission-report">
-                <i class="fas fa-pen-alt brand-outline txt-orange iconBtn"></i>
+                <i class="fas fa-pen-alt brand-outline txt-warning iconBtn"></i>
               </a>
             </span>
             <button
@@ -178,7 +178,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title txt-orange" id="deleteMissionModalLabel">
+          <h5 class="modal-title txt-warning" id="deleteMissionModalLabel">
             Delete Mission
           </h5>
           <button
@@ -222,7 +222,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title txt-orange" id="removeMissionModalLabel">
+          <h5 class="modal-title txt-warning" id="removeMissionModalLabel">
             Remove Mission
           </h5>
           <button
@@ -274,7 +274,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title txt-orange museo" id="newUserModalLabel">
+          <h5 class="modal-title txt-warning museo" id="newUserModalLabel">
             Tips
           </h5>
           <button
@@ -324,5 +324,6 @@
       </div>
     </div>
   </div>
-  {% include '/include/include_mission_choices.html' %} {% endblock %}
+  {% include '/include/include_mission_choices.html' with context %} {% endblock
+  %}
 </main>

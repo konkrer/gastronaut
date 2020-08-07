@@ -40,7 +40,7 @@
         <div class="">
           <h4
             id="sidebar-username"
-            class="txt-orange brand-outline font-italic"
+            class="txt-warning brand-outline font-italic"
           >
             @{{ user.username }}
           </h4>
@@ -216,8 +216,7 @@
     </div>
   </div>
   <div class="toasts-zone" aria-live="polite" aria-atomic="true"></div>
-  {% include 'include/include_signup_login_modal.html' with context %} {%
-  include '/include/include_mission_choices.html' %}
+  {% include '/include/include_mission_choices.html' with context %}
   <div
     class="modal fade p-0"
     id="business-detail-modal"

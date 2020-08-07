@@ -5,9 +5,18 @@ class BaseLogic {
   constructor() {
     this.preferencesTimer;
     this.feedbackClearTimer;
+    this.addPreloaderRemover();
     this.addPreferencesListener();
     this.addAlertCloseListener();
     this.addReportsDblclickListeners();
+    this.addFeedbackListener();
+  }
+
+  // Remove preloader overlay when page animations fully loaded.
+  addPreloaderRemover() {
+    window.onload = () => {
+      $('.preloader-div').fadeOut(500);
+    };
   }
 
   // User Preferences listener
@@ -70,6 +79,40 @@ class BaseLogic {
         window.location.href = `/report/${$(this).data('id')}`;
       }
     );
+  }
+
+  /*
+  /* Call /feedback endpoint when user submits feedback.
+  */
+  addFeedbackListener() {
+    $('#user-feedback').submit(async function (e) {
+      e.preventDefault();
+
+      const feedback_data = {
+        feedback: $(this).find('textarea[name="feedback"]').val(),
+        email: $(this).find('input[type="email"]').val(),
+      };
+      try {
+        var resp = await axios.post('/feedback', feedback_data);
+      } catch (error) {
+        Sentry.captureException(error);
+        $('.feedback').text('Internal Error. Try again later.');
+        return;
+      }
+      const data = resp.data;
+      if (data.error) {
+        $('.feedback').html(`<p class="txt-${data.color}">${data.error}</p>`);
+      } else if (data.success) {
+        $('#user-feedback-modal .feedback').html(
+          `<p class="txt-${data.color}">${data.success}</p>`
+        );
+        $(this).find('textarea[name="feedback"]').val('');
+      }
+      setTimeout(() => {
+        $('#user-feedback-modal').modal('hide');
+        $('#user-feedback-modal .feedback').html('');
+      }, 3000);
+    });
   }
 
   // Enable service worker for PWA.

@@ -85,6 +85,7 @@ class IndexSearchLogic {
         e.preventDefault();
         $('.hero-animation').toggle();
         $('.alert').hide();
+        $('nav.navbar').removeClass('display-flex-important');
         window.dispatchEvent(new Event('resize'));
         $('.navbar-collapse').removeClass('open');
         this.lockOnScrollBottom(false);

@@ -252,27 +252,27 @@ class MissionControl {
             <span class="mapBtn mr-2" data-toggle="tooltip" title="Show on Map" data-lng="${
               el.longitude
             }" data-lat="${el.latitude}">
-              <i class="fas fa-map-marked-alt brand-outline txt-orange iconBtn"></i>
+              <i class="fas fa-map-marked-alt brand-outline txt-warning iconBtn"></i>
             </span>
             <span class="detailsBtn mr-2" data-toggle="tooltip" title="Show Details" data-id="${
               el.id
             }">
-              <i class="fas fa-clipboard-list brand-outline txt-orange iconBtn"></i>
+              <i class="fas fa-clipboard-list brand-outline txt-warning iconBtn"></i>
             </span>
             <span class="flagBtn mr-2" data-toggle="tooltip" title="Plant a Flag" data-name="${
               el.name
             }">
-              <i class="fas fa-flag brand-outline txt-orange iconBtn"></i>
+              <i class="fas fa-flag brand-outline txt-warning iconBtn"></i>
             </span>
             <span data-toggle="tooltip" title="Write Report">
               <a href="/report?business_id=${el.id}&next=mission_control">
-                <i class="fas fa-pen-alt brand-outline txt-orange iconBtn"></i>
+                <i class="fas fa-pen-alt brand-outline txt-warning iconBtn"></i>
               </a>
             </span>
             ${
               missionData.mission.editor
                 ? `<span class = "removeBusinessBtn ml-2" data-toggle="tooltip" title="Remove from mission">
-                    <i class="fas fa-trash-alt brand-outline txt-orange iconBtn"></i>
+                    <i class="fas fa-trash-alt brand-outline txt-warning iconBtn"></i>
                    </span>`
                 : ''
             }

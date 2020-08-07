@@ -1,0 +1,59 @@
+<div
+  class="modal fade"
+  id="user-feedback-modal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="userFeedbackLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title txt-warning" id="userFeedbackLabel">
+          Feedback
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="txt-whitesmoke">
+          <em
+            >Have a suggestion, notice a bug, or any other feedback you'd like
+            to submit? Please enter it below.</em
+          >
+        </p>
+        <form id="user-feedback" method="POST">
+          <div class="form-group">
+            <label for="feedback">Feedback</label>
+            <textarea name="feedback" class="form-control" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="contact">Email (optional)</label>
+            <input type="email" name="email" class="form-control" />
+          </div>
+          <button type="submit" class="btn btn-outline-primary">
+            Submit Feedback
+          </button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <div class="flx-row-between">
+          <div class="feedback"></div>
+          <button
+            type="button"
+            class="btn btn-outline-secondary txt-white-k"
+            data-dismiss="modal"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
