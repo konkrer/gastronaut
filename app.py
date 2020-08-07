@@ -12,8 +12,6 @@ from flask import (
     redirect, jsonify, url_for, g, render_template as r_t)
 from werkzeug.utils import secure_filename
 from werkzeug.exceptions import Unauthorized, BadRequest
-# from sendgrid import SendGridAPIClient
-# from sendgrid.helpers.mail import Mail
 
 from models import (db, connect_db, User, Mission, UserMission,  # noqa F401
                     Business, Report, MissionBusiness, DEFAULT_PREFERENCES)  # noqa F401
@@ -38,7 +36,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 if not os.environ.get('SECRET_KEY'):
     from flask_debugtoolbar import DebugToolbarExtension
     from development_local.local_settings import (
-        API_KEY, SECRET_KEY, SENDGRID_API_KEY)
+        API_KEY, SECRET_KEY)
 
     app.config["SECRET_KEY"] = SECRET_KEY
     app.config['SQLALCHEMY_ECHO'] = True
@@ -55,7 +53,6 @@ else:
     )
     app.config["SECRET_KEY"] = os.environ.get('SECRET_KEY')
     API_KEY = os.environ.get('YELP_API_KEY')
-    SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
     debug = False
 
 
@@ -971,18 +968,8 @@ def submit_feedback():
 
     # user = g.user.username if g.user else 'Anynomous'
 
-    # message = Mail(
-    #     from_email='feedback@gastronaut.life',
-    #     to_emails='developeroriented@gmail.com',
-    #     subject='User Feedback',
-    #     html_content=f'<p>User: {user} {email}</p><p>{feedback}</p>')
     try:
         pass
-        # sg = SendGridAPIClient(SENDGRID_API_KEY)
-        # response = sg.send(message)
-        # print(response.status_code)
-        # print(response.body)
-        # print(response.headers)
     except Exception as e:
         error_logging(e)
         return jsonify({'error': 'Error sending message', 'color': 'warning'})

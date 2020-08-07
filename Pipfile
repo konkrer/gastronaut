@@ -19,7 +19,6 @@ flask-bcrypt = "*"
 gunicorn = "*"
 requests = "*"
 sentry-sdk = {extras = ["flask"],version = "==0.16.0"}
-sendgrid = "*"
 
 [requires]
 python_version = "3.8"
