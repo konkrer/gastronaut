@@ -1,3 +1,339 @@
+/* Breakpoints */
+/* Breakpoints */
+/* Breakpoints */
+/* Breakpoints */
+/* Breakpoints */
+
+@media screen and (max-width: 350px) {
+  h5 {
+    font-size: 1.3rem !important;
+  }
+  #business-detail-modal table {
+    font-size: x-small !important;
+  }
+}
+@media screen and (max-width: 420px) {
+  #detect-location,
+  #clear-filters {
+    padding: 6px 5px;
+  }
+  h5 {
+    font-size: 1.5rem;
+  }
+  .cat-btn {
+    padding: 4px 5px !important;
+    /* font-size: 0.67rem !important; */
+  }
+  button.cat-btn.active {
+    transform: scale(1.1);
+  }
+  #scrl2 {
+    padding: 16px 5px;
+  }
+  .filter-display {
+    width: 94vw;
+    left: calc(50vw - 47vw);
+    z-index: 900;
+  }
+  .dummy-card {
+    width: 0px;
+    min-width: 0px;
+  }
+  #scrl4::-webkit-scrollbar:horizontal {
+    -webkit-appearance: none;
+    height: 0px;
+  }
+  #scrl4::-webkit-scrollbar-thumb {
+    -webkit-appearance: none;
+  }
+  #scrl4::-webkit-scrollbar-thumb:hover {
+    -webkit-appearance: none;
+  }
+  .drive,
+  .bike,
+  .walk {
+    width: 30px;
+    height: 30px;
+  }
+  .map-directions div i {
+    font-size: 1.5em;
+  }
+  #business-detail-modal table {
+    font-size: small;
+  }
+}
+
+@media screen and (min-width: 420px) and (max-width: 840px) {
+  #detect-location,
+  #clear-filters {
+    padding: 6px 8px;
+  }
+  h5 {
+    font-size: 1.5rem;
+  }
+  .cat-btn {
+    padding: 4px 5px !important;
+    font-size: 0.8rem !important;
+  }
+  .filter-display {
+    width: 50vw;
+    left: calc(50vw - 25vw);
+  }
+  #scrl4::-webkit-scrollbar:horizontal {
+    -webkit-appearance: none;
+    height: 0px;
+  }
+  #scrl4::-webkit-scrollbar-thumb {
+    -webkit-appearance: none;
+  }
+  #scrl4::-webkit-scrollbar-thumb:hover {
+    -webkit-appearance: none;
+  }
+  .drive,
+  .bike,
+  .walk {
+    width: 29px;
+    height: 29px;
+  }
+  .map-directions div i {
+    font-size: 1.5em;
+  }
+}
+
+/* landscape on phones */
+@media screen and (orientation: landscape) and (max-width: 880px) and (max-height: 450px) {
+  body {
+    padding-top: 0px !important;
+  }
+  .navbar {
+    display: none;
+  }
+  .display-1-k {
+    font-size: 11vh;
+  }
+  .display-2-k {
+    font-size: 5vh;
+  }
+  .hero-animation,
+  .main-form-div,
+  .card-map-zone,
+  #scrl2,
+  #scrl3 {
+    height: 100vh;
+  }
+  header {
+    background-color: var(--light);
+    opacity: 0.95;
+    border-radius: 10px;
+    padding: 10px 2px;
+    border: black 1px solid;
+  }
+  #main-interface {
+    height: 100vh;
+  }
+  .card-map-zone {
+    grid-template-rows: auto 50vh;
+  }
+  .sidebar-toggle-btn {
+    font-size: 7vh;
+    top: 25vh;
+  }
+  .pulse-outline-mobile {
+    animation: greenGlowPulseulse 0.6s ease-in 5;
+  }
+  .filter-display {
+    display: none !important;
+  }
+  .padtop-card-filter-d {
+    padding-top: 0px !important;
+  }
+  .card-track {
+    padding-top: 5px;
+  }
+  .card-track-inner {
+    padding-left: calc(50% - 125px) !important;
+  }
+  .my-card {
+    width: 250px;
+    min-width: 250px;
+  }
+}
+
+/* portrait on phones */
+@media screen and (orientation: portrait) and (max-width: 450px) and (max-height: 880px) {
+  header {
+    background-color: var(--light);
+    opacity: 0.95;
+    border-radius: 10px;
+    padding: 10px 2px;
+    border: black 1px solid;
+  }
+  .sidebar-toggle-btn {
+    left: -5px;
+    top: 26vh;
+  }
+  .my-card {
+    width: 320px;
+    min-width: 320px;
+  }
+  .card-track-inner {
+    padding-left: calc(50% - 160px);
+  }
+  .sidebar-toggle-btn {
+    font-size: 3.5vh;
+  }
+  .pulse-outline-mobile {
+    animation: greenGlowPulseulse 0.6s ease-in 5;
+  }
+  .filter-display {
+    display: none !important;
+  }
+  .padtop-card-filter-d {
+    padding-top: 0px !important;
+  }
+}
+
+@media screen and (min-width: 840px) and (max-width: 1200px) {
+  .filter-display {
+    height: 25px;
+    width: 40vw;
+    left: calc(50vw - 20vw);
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .mr-card {
+    margin-right: 60px;
+  }
+  .filter-display {
+    width: 34vw;
+    left: calc(50vw - 17vw);
+  }
+  .hero-lead {
+    max-width: 140%;
+  }
+  .my-card {
+    width: 50%;
+  }
+  .card-track-inner {
+    padding-left: calc(50% - 16.6%);
+  }
+}
+
+@media screen and (min-width: 1450px) {
+  .control-panel {
+    max-width: 32vw;
+  }
+  .filter-display {
+    position: fixed;
+    width: 24vw;
+    left: calc(50vw - 12vw);
+  }
+  .padtop-card-filter-d {
+    padding-top: 0px !important;
+  }
+  .hero-lead {
+    max-width: 90%;
+  }
+  .form-check,
+  .switch-wrapper {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+  }
+  .ml-xxl-more {
+    margin-left: 25px !important;
+  }
+}
+
+@media screen and (min-width: 1768px) {
+  .cat-btn {
+    font-size: large;
+  }
+  label {
+    font-size: medium;
+  }
+  .control-panel {
+    max-width: 25vw;
+  }
+  .hero-lead {
+    max-width: 100%;
+  }
+  .sidebar-toggle-btn {
+    font-size: 3.5vh;
+  }
+  .ml-xxl-more {
+    margin-left: 75px !important;
+  }
+}
+
+@media screen and (hover: hover) {
+  #detect-location:hover,
+  #clear-filters:hover {
+    color: rgb(98, 98, 255);
+  }
+  form label:not(.no-hover):hover {
+    color: white;
+  }
+  .form-check:hover,
+  .switch-wrapper:not(.no-hover-bg):hover {
+    background: #422424;
+  }
+  .first-letter:hover {
+    background-color: var(--primary) !important;
+  }
+  .cat-btn:hover {
+    background-color: var(--primary) !important;
+    transform: scale(1.3);
+    font-weight: 900 !important;
+  }
+  .sidebar-toggle-btn:hover,
+  .mapboxgl-popup-content .detailsBtn:hover {
+    color: var(--my-green) !important;
+  }
+  .my-card button:hover,
+  #mission-choices a:hover {
+    background-color: var(--my-green) !important;
+  }
+  .my-card button.mission-btn:hover,
+  #mission-choices a:hover {
+    color: var(--my-info) !important;
+  }
+  .card-text-noHover:hover {
+    color: unset;
+  }
+  .my-card li a:hover {
+    color: white;
+  }
+  .drive:hover,
+  .walk:hover,
+  .bike:hover,
+  .map-info:hover {
+    color: var(--my-warning);
+    transition: 0.4s;
+  }
+  .map-toggle:hover,
+  .map-hide-cards:hover,
+  button.mapboxgl-ctrl-fullscreen:hover {
+    background-color: var(--my-warning) !important;
+    transition: 0.4s;
+    transform: scale(1.1);
+    border-radius: 5px;
+  }
+  .map-info {
+    display: block;
+  }
+}
+
+/* moving filter display for screen too small to put in navbar*/
+@media screen and (min-width: 576px) and (max-width: 991px) {
+  .filter-display {
+    position: fixed;
+  }
+  .padtop-card-filter-d {
+    padding-top: 0px !important;
+  }
+}
+
 /* Animations  */
 /* Animations  */
 /* Animations  */
