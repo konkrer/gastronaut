@@ -4,6 +4,126 @@
 /* Breakpoints */
 /* Breakpoints */
 
+@media screen and (min-width: 420px) and (max-width: 840px) {
+  #detect-location,
+  #clear-filters {
+    padding: 6px 8px;
+  }
+  h5 {
+    font-size: 1.5rem;
+  }
+  .cat-btn {
+    padding: 4px 5px !important;
+    font-size: 0.8rem !important;
+  }
+  .filter-display {
+    width: 50vw;
+    left: calc(50vw - 25vw);
+  }
+  #scrl4::-webkit-scrollbar:horizontal {
+    -webkit-appearance: none;
+    height: 0px;
+  }
+  #scrl4::-webkit-scrollbar-thumb {
+    -webkit-appearance: none;
+  }
+  #scrl4::-webkit-scrollbar-thumb:hover {
+    -webkit-appearance: none;
+  }
+  .drive,
+  .bike,
+  .walk {
+    width: 29px;
+    height: 29px;
+  }
+  .map-directions div i {
+    font-size: 1.5em;
+  }
+}
+
+@media screen and (min-width: 840px) and (max-width: 1200px) {
+  .filter-display {
+    height: 25px;
+    width: 40vw;
+    left: calc(50vw - 20vw);
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .mr-card {
+    margin-right: 60px;
+  }
+  .filter-display {
+    width: 34vw;
+    left: calc(50vw - 17vw);
+  }
+  .hero-lead {
+    max-width: 140%;
+  }
+  .my-card {
+    width: 50%;
+  }
+  .card-track-inner {
+    padding-left: calc(50% - 16.6%);
+  }
+}
+
+@media screen and (min-width: 1450px) {
+  .control-panel {
+    max-width: 32vw;
+  }
+  .filter-display {
+    position: fixed;
+    width: 24vw;
+    left: calc(50vw - 12vw);
+  }
+  .padtop-card-filter-d {
+    padding-top: 0px !important;
+  }
+  .hero-lead {
+    max-width: 90%;
+  }
+  .form-check,
+  .switch-wrapper {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+  }
+  .ml-xxl-more {
+    margin-left: 25px !important;
+  }
+}
+
+@media screen and (min-width: 1768px) {
+  .cat-btn {
+    font-size: large;
+  }
+  label {
+    font-size: medium;
+  }
+  .control-panel {
+    max-width: 25vw;
+  }
+  .hero-lead {
+    max-width: 100%;
+  }
+  .sidebar-toggle-btn {
+    font-size: 3.5vh;
+  }
+  .ml-xxl-more {
+    margin-left: 75px !important;
+  }
+}
+
+/* moving filter display for screen too small to put in navbar*/
+@media screen and (min-width: 576px) and (max-width: 991px) {
+  .filter-display {
+    position: fixed;
+  }
+  .padtop-card-filter-d {
+    padding-top: 0px !important;
+  }
+}
+
 /* Animations  */
 /* Animations  */
 /* Animations  */
