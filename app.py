@@ -111,14 +111,6 @@ def navbar_search():
     return redirect(url_for('index', q=search_term))
 
 
-@app.route("/navtest")
-def navtest():
-    """Navber search testing view."""
-    # TODO: FIX navbar search from disappearing
-    #      on text entry on mobile chrome/edge.
-    return render_template('base.html')
-
-
 @app.route("/mission-control")
 @add_user_to_g
 @login_required
