@@ -173,64 +173,6 @@
   }
 }
 
-@media screen and (hover: hover) {
-  #detect-location:hover,
-  #clear-filters:hover {
-    color: rgb(98, 98, 255);
-  }
-  form label:not(.no-hover):hover {
-    color: white;
-  }
-  .form-check:hover,
-  .switch-wrapper:not(.no-hover-bg):hover {
-    background: #422424;
-  }
-  .first-letter:hover {
-    background-color: var(--primary) !important;
-  }
-  .cat-btn:hover {
-    background-color: var(--primary) !important;
-    transform: scale(1.3);
-    font-weight: 900 !important;
-  }
-  .sidebar-toggle-btn:hover,
-  .mapboxgl-popup-content .detailsBtn:hover {
-    color: var(--my-green) !important;
-  }
-  .my-card button:hover,
-  #mission-choices a:hover {
-    background-color: var(--my-green) !important;
-  }
-  .my-card button.mission-btn:hover,
-  #mission-choices a:hover {
-    color: var(--my-info) !important;
-  }
-  .card-text-noHover:hover {
-    color: unset;
-  }
-  .my-card li a:hover {
-    color: white;
-  }
-  .drive:hover,
-  .walk:hover,
-  .bike:hover,
-  .map-info:hover {
-    color: var(--my-warning);
-    transition: 0.4s;
-  }
-  .map-toggle:hover,
-  .map-hide-cards:hover,
-  button.mapboxgl-ctrl-fullscreen:hover {
-    background-color: var(--my-warning) !important;
-    transition: 0.4s;
-    transform: scale(1.1);
-    border-radius: 5px;
-  }
-  .map-info {
-    display: block;
-  }
-}
-
 /* moving filter display for screen too small to put in navbar*/
 @media screen and (min-width: 576px) and (max-width: 991px) {
   .filter-display {
