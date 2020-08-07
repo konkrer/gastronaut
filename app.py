@@ -88,25 +88,6 @@ def index():
     )
 
 
-@app.route("/navtest")
-@add_user_to_g
-def index2():
-    """Home view."""
-
-    search_term = request.args.get('q')
-
-    lat, lng = get_coords_from_IP_address(request)
-
-    return render_template(
-        'index2.html',
-        YELP_CATEGORIES=get_yelp_categories(),
-        first_letters=first_letters,
-        lat=lat,
-        lng=lng,
-        search_term=search_term
-    )
-
-
 @app.route('/navbar-search')
 def navbar_search():
     """View to route navbar searches. If normal term search on index page.
