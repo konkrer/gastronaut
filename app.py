@@ -36,7 +36,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 if not os.environ.get('SECRET_KEY'):
     from flask_debugtoolbar import DebugToolbarExtension
     from development_local.local_settings import (
-        YELP_API_KEY, SECRET_KEY)
+        YELP_API_KEY, SECRET_KEY, GMAIL_PASSWORD)
 
     app.config["SECRET_KEY"] = SECRET_KEY
     app.config['SQLALCHEMY_ECHO'] = True
@@ -53,6 +53,7 @@ else:
     )
     app.config["SECRET_KEY"] = os.environ.get('SECRET_KEY')
     YELP_API_KEY = os.environ.get('YELP_API_KEY')
+    GMAIL_PASSWORD = os.environ.get('GMAIL_PASSWORD')
     debug = False
 
 
@@ -972,7 +973,7 @@ def submit_feedback():
     body = f"Feedback: {feedback} --From: {user} --Email: {email}"
 
     try:
-        yag = yagmail.SMTP("developeroriented@gmail.com")
+        yag = yagmail.SMTP("developeroriented@gmail.com", GMAIL_PASSWORD)
         yag.send(
             to=receiver,
             subject="Gastronaut Feedback",

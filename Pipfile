@@ -20,7 +20,6 @@ gunicorn = "*"
 requests = "*"
 sentry-sdk = {extras = ["flask"],version = "==0.16.0"}
 yagmail = "*"
-keyring = "*"
 
 [requires]
 python_version = "3.8"
