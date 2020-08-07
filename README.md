@@ -32,7 +32,8 @@ JavaScript, Python/Flask, Flask-SQLAlchemy, Postgres, jQuery, API integration (i
 
 ## APIs
 
-This app uses the Yelp API for business data [Yelp](https://www.yelp.com/fusion 'yelp.com/fusion')  
-and IPWHOIS API for IP geoloaction. [IPWHOIS](https://ipwhois.io/ 'ipwhois.io')
+This app uses the Yelp API for business data [Yelp](https://www.yelp.com/fusion 'yelp.com/fusion'),  
+IPWHOIS API for IP geocoding. [IPWHOIS](https://ipwhois.io/ 'ipwhois.io'), Google
+Maps API for the Time Zone API and geocoding API.
 
 \*_This app was created as a capstone project for Springboard Software Engineering fellowship. This is capstone one of two._
