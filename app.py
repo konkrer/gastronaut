@@ -3,6 +3,7 @@
 import requests
 import logging
 import os
+import yagmail
 from types import SimpleNamespace
 from sentry_sdk.integrations.flask import FlaskIntegration
 from sentry_sdk import (capture_message, capture_exception,
@@ -12,8 +13,6 @@ from flask import (
     redirect, jsonify, url_for, g, render_template as r_t)
 from werkzeug.utils import secure_filename
 from werkzeug.exceptions import Unauthorized, BadRequest
-
-
 from models import (db, connect_db, User, Mission, UserMission,  # noqa F401
                     Business, Report, MissionBusiness, DEFAULT_PREFERENCES)  # noqa F401
 from forms import (
@@ -37,7 +36,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 if not os.environ.get('SECRET_KEY'):
     from flask_debugtoolbar import DebugToolbarExtension
     from development_local.local_settings import (
-        API_KEY, SECRET_KEY)
+        YELP_API_KEY, SECRET_KEY)
 
     app.config["SECRET_KEY"] = SECRET_KEY
     app.config['SQLALCHEMY_ECHO'] = True
@@ -53,7 +52,7 @@ else:
         integrations=[FlaskIntegration()]
     )
     app.config["SECRET_KEY"] = os.environ.get('SECRET_KEY')
-    API_KEY = os.environ.get('YELP_API_KEY')
+    YELP_API_KEY = os.environ.get('YELP_API_KEY')
     debug = False
 
 
@@ -555,7 +554,7 @@ def delete_report(report_id):
 def search_yelp():
     """API endpoint to relay search to Yelp search."""
 
-    headers = {'Authorization': f'Bearer {API_KEY}'}
+    headers = {'Authorization': f'Bearer {YELP_API_KEY}'}
     params = parse_query_params(request.args)
 
     try:
@@ -573,7 +572,7 @@ def search_yelp():
 def business_detail_yelp(business_id):
     """API endpoint to relay business search to Yelp business search."""
 
-    headers = {'Authorization': f'Bearer {API_KEY}'}
+    headers = {'Authorization': f'Bearer {YELP_API_KEY}'}
 
     try:
         res = requests.get(f'{YELP_URL}/businesses/{business_id}',
@@ -963,14 +962,22 @@ def like_report(report_id):
 def submit_feedback():
     """Endpoint for user to submit feedback to be emailed to developer."""
 
-    # data = request.json
-    # feedback = data['feedback']
-    # email = data.get('email', '')
+    data = request.json
+    feedback = data['feedback']
+    email = data.get('email', '')
 
-    # user = g.user.username if g.user else 'Anynomous'
+    user = g.user.username if g.user else 'Anynomous'
+
+    receiver = "rivortex@gmail.com"
+    body = f"Feedback: {feedback} --From: {user} --Email: {email}"
 
     try:
-        pass
+        yag = yagmail.SMTP("developeroriented@gmail.com")
+        yag.send(
+            to=receiver,
+            subject="Gastronaut Feedback",
+            contents=body,
+        )
     except Exception as e:
         error_logging(e)
         return jsonify({'error': 'Error sending message', 'color': 'warning'})
