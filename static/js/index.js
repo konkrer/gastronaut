@@ -2,10 +2,6 @@
 
 class IndexSearchLogic {
   constructor() {
-    // Cooridnate percision used to look for lng/lat changes
-    // which would warant new Yelp API call for fresh data.
-    this.coordsPercision = 5;
-
     // Cards variables
     this.firstCardsAdded = false;
     this.resultsRemaining = 0;
@@ -427,6 +423,13 @@ class IndexSearchLogic {
   }
 }
 
+/* ParamsChange -----------------------------------------------------------  */
+/* ParamsChange -----------------------------------------------------------  */
+/* ParamsChange -----------------------------------------------------------  */
+/* ParamsChange -----------------------------------------------------------  */
+/* ParamsChange -----------------------------------------------------------  */
+/* ParamsChange -----------------------------------------------------------  */
+
 class ParamsChange {
   constructor() {}
   /*
@@ -437,6 +440,9 @@ class ParamsChange {
   checkParameterChange(lastData, currFormState) {
     // set change to true if a new API call is waranted.
     let change = false;
+    // Cooridnate percision used to look for lng/lat changes
+    // which would warant new Yelp API call for fresh data.
+    this.coordsPercision = 3;
 
     change = this.checkFormChanges(change, currFormState);
 
