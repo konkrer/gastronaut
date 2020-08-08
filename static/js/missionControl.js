@@ -54,7 +54,7 @@ class MissionControl {
       localStorage.setItem('currMissionId', lastMissionId);
     }
     this.loadMission(lastMissionId);
-    if (!isMobileScreen()) $('#businesses-list').addClass('show');
+    if (!Map_Obj.isMobileScreen()) $('#businesses-list').addClass('show');
   }
 
   loadMissionListener() {
@@ -84,7 +84,7 @@ class MissionControl {
       'href',
       `/report?mission_id=${mission_id}&next=mission_control`
     );
-    if (isMobileScreen()) $('#businesses-list').removeClass('show');
+    if (Map_Obj.isMobileScreen()) $('#businesses-list').removeClass('show');
   }
 
   fillForm(missionData) {
@@ -543,7 +543,7 @@ class MissionControl {
       },
     });
 
-    if (isMobileScreen()) {
+    if (Map_Obj.isMobileScreen()) {
       $('#businesses-list').removeClass('show');
       $('#mission-select-form').removeClass('show');
     }

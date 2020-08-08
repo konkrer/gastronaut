@@ -91,7 +91,7 @@ class IndexAnimations {
 
     // If not on mobile -
     // Fade cards out then hide cards.
-    const onMobile = isMobileScreen();
+    const onMobile = Map_Obj.isMobileScreen();
     if (!onMobile) {
       $('.card-track-inner').addClass('opaque');
       await this.sleep(200);
@@ -142,7 +142,7 @@ class IndexAnimations {
     if (this.sidebarOpen) this.scrollCategoriesToCurrent();
 
     // On mobile portrait zoom into first business when sidebar closed.
-    if (this.justSearchedYelp && isMobilePortrait()) this.mapCurrCard();
+    if (this.justSearchedYelp && Map_Obj.isMobilePortrait()) this.mapCurrCard();
     this.justSearchedYelp = false;
   }
 

@@ -5,6 +5,8 @@
 //
 class MapObj {
   constructor() {
+    this.accessToken =
+      'pk.eyJ1Ijoia29ua3JlciIsImEiOiJja2NiNnI3bjgyMjVnMnJvNmJ6dTF0enlmIn0.AH_5N70IYIX4_tslm49Kmw';
     this.mapOpen = true;
     // rendered map object
     this.mappyBoi = null;
@@ -16,6 +18,7 @@ class MapObj {
     this.restMarker = null;
     // restaurant markers for mission-control page.
     this.restMarkers = [];
+    this.maboxClient = mapboxSdk({ accessToken: this.accessToken });
     // options
     this.userMarkerOptions = { color: '#3bdb53' };
     this.markerOptions = { color: '#3bdb53' };
@@ -31,8 +34,7 @@ class MapObj {
 
   // Render Map.
   renderMiniMap(mapCenter = [-85, 26.8], zoom = 1.3, navControl = false) {
-    mapboxgl.accessToken =
-      'pk.eyJ1Ijoia29ua3JlciIsImEiOiJja2NiNnI3bjgyMjVnMnJvNmJ6dTF0enlmIn0.AH_5N70IYIX4_tslm49Kmw';
+    mapboxgl.accessToken = this.accessToken;
     this.mappyBoi = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/konkrer/ckd9yhr2a0oaf1iplamr9t21y', // <<<<< remove /draft in production
@@ -64,7 +66,7 @@ class MapObj {
       .addTo(this.mappyBoi)
       .togglePopup();
     // Close popup if not openPopupMobile and screen size is mobile size screen.
-    if (!openPopupMobile && isMobileScreen()) marker.togglePopup();
+    if (!openPopupMobile && this.isMobileScreen()) marker.togglePopup();
     return marker;
   }
 
@@ -81,7 +83,7 @@ class MapObj {
       .addTo(this.mappyBoi)
       .togglePopup();
     // Close popup if not openPopupMobile and screen size is mobile size screen.
-    if (!openPopupMobile && isMobileScreen()) marker.togglePopup();
+    if (!openPopupMobile && this.isMobileScreen()) marker.togglePopup();
     return marker;
   }
 
@@ -96,7 +98,7 @@ class MapObj {
 
   // Call fit bounds with proper options for screen size.
   fitBounds(userCoords, restCoords) {
-    const optIdx = isMobileScreen() ? 0 : 1;
+    const optIdx = this.isMobileScreen() ? 0 : 1;
     this.mappyBoi.fitBounds(
       [userCoords, restCoords],
       this.fitBoundsOptions[optIdx]
@@ -153,18 +155,20 @@ class MapObj {
     this.restMarkers.forEach(el => el.remove());
     this.restMarkers = [];
   }
+
+  showDirections() {}
+
+  // check if screen size is mobile.
+  isMobileScreen() {
+    if (window.innerWidth <= 880) return true;
+    return false;
+  }
+
+  // check if screen size is mobile in portrait.
+  isMobilePortrait() {
+    if (window.innerWidth <= 450) return true;
+    return false;
+  }
 }
 
 const Map_Obj = new MapObj();
-
-// check if screen size is mobile.
-function isMobileScreen() {
-  if (window.innerWidth <= 880) return true;
-  return false;
-}
-
-// check if screen size is mobile in portrait.
-function isMobilePortrait() {
-  if (window.innerWidth <= 450) return true;
-  return false;
-}

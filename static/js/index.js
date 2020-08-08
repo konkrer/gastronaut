@@ -4,7 +4,7 @@ class IndexSearchLogic {
   constructor() {
     // Cooridnate percision used to look for lng/lat changes
     // which would warant new Yelp API call for fresh data.
-    this.coordsPercision = 3;
+    this.coordsPercision = 5;
 
     // Cards variables
     this.firstCardsAdded = false;
