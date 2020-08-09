@@ -13,12 +13,14 @@ class MapObj {
     // user data
     this.longitude = null;
     this.latitude = null;
+    this.restCoords = null;
     this.userMarker = null;
     // restaurant marker for index page.
     this.restMarker = null;
     // restaurant markers for mission-control page.
     this.restMarkers = [];
-    this.maboxClient = mapboxSdk({ accessToken: this.accessToken });
+    this.mapboxClient = mapboxSdk({ accessToken: this.accessToken });
+    this.route = false;
     // options
     this.userMarkerOptions = { color: '#3bdb53' };
     this.markerOptions = { color: '#3bdb53' };
@@ -30,6 +32,7 @@ class MapObj {
         padding: { top: 80, bottom: 40, left: 200, right: 200 },
       },
     ];
+    this.addDirectionsListener();
   }
 
   // Render Map.
@@ -89,6 +92,7 @@ class MapObj {
 
   // Add a restaurant marker and fit bounds to user position and restaurant location.
   addRestMarkerAndFitBounds(restCoords, name, id) {
+    this.restCoords = restCoords;
     const html = `<span class="detailsBtn mr-2" data-id="${id}">
                     ${name}</span>`;
     if (this.restMarker) this.restMarker.remove();
@@ -156,7 +160,69 @@ class MapObj {
     this.restMarkers = [];
   }
 
-  showDirections() {}
+  // When DOM content is loaded add directions buttons listener.
+  addDirectionsListener() {
+    const this_ = this;
+    window.addEventListener('DOMContentLoaded', () => {
+      $('div.map-directions').on('click', '.directionsBtn', function () {
+        const profile = $(this).data('profile');
+        this_.showDirections(profile);
+      });
+    });
+  }
+
+  async showDirections(profile) {
+    const resp = await this.mapboxClient.directions
+      .getDirections({
+        profile,
+        geometries: 'geojson',
+        waypoints: [
+          {
+            coordinates: [this.longitude, this.latitude],
+            approach: 'unrestricted',
+          },
+          {
+            coordinates: this.restCoords,
+          },
+        ],
+      })
+      .send();
+
+    const coordinates = resp.body.routes[0].geometry.coordinates;
+    this.addGeoJsonLine(coordinates);
+  }
+
+  addGeoJsonLine(coordinates) {
+    if (this.route) {
+      this.mappyBoi.removeLayer('route');
+      this.mappyBoi.removeSource('route');
+    }
+    this.mappyBoi.addSource('route', {
+      type: 'geojson',
+      data: {
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'LineString',
+          coordinates,
+        },
+      },
+    });
+    this.mappyBoi.addLayer({
+      id: 'route',
+      type: 'line',
+      source: 'route',
+      layout: {
+        'line-join': 'round',
+        'line-cap': 'round',
+      },
+      paint: {
+        'line-color': '#26ff00',
+        'line-width': 8,
+      },
+    });
+    this.route = true;
+  }
 
   // check if screen size is mobile.
   isMobileScreen() {
