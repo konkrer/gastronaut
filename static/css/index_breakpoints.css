@@ -51,12 +51,22 @@
   }
   .drive,
   .bike,
-  .walk {
-    width: 30px;
-    height: 30px;
+  .walk,
+  .reset {
+    width: 29px;
+    height: 29px;
   }
   .map-directions div i {
     font-size: 1.5em;
+  }
+  .walkHorizontal {
+    transform: translate(50px, -45px);
+  }
+  .bikeHorizontal {
+    transform: translate(100px, -90px);
+  }
+  .resetHorizontal {
+    transform: translate(150px, -135px);
   }
   #business-detail-modal table {
     font-size: small;
@@ -91,9 +101,19 @@
   }
   .drive,
   .bike,
-  .walk {
+  .walk,
+  .reset {
     width: 29px;
     height: 29px;
+  }
+  .walkHorizontal {
+    transform: translate(50px, -45px);
+  }
+  .bikeHorizontal {
+    transform: translate(100px, -90px);
+  }
+  .resetHorizontal {
+    transform: translate(150px, -135px);
   }
   .map-directions div i {
     font-size: 1.5em;
@@ -307,6 +327,7 @@
   .drive:hover,
   .walk:hover,
   .bike:hover,
+  .reset:hover,
   .map-info:hover {
     color: var(--my-warning);
     transition: 0.4s;

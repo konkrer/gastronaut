@@ -306,12 +306,25 @@ a.first-letter.active {
 
 .drive,
 .walk,
-.bike {
+.bike,
+.reset {
   height: 40px;
   width: 40px;
   background-color: rgba(255, 255, 255, 0.904);
   border-radius: 5px;
   margin-bottom: 15px;
+  transition: transform 0.6s;
+}
+
+.walkHorizontal {
+  transform: translate(60px, -55px);
+}
+
+.bikeHorizontal {
+  transform: translate(120px, -110px);
+}
+.resetHorizontal {
+  transform: translate(180px, -165px);
 }
 
 .map-toggle {

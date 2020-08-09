@@ -20,7 +20,9 @@ class MapObj {
     // restaurant markers for mission-control page.
     this.restMarkers = [];
     this.mapboxClient = mapboxSdk({ accessToken: this.accessToken });
-    this.route = false;
+    this.currentRoute = null;
+    this.routeCache = new Set();
+    this.profile = null;
     // options
     this.userMarkerOptions = { color: '#3bdb53' };
     this.markerOptions = { color: '#3bdb53' };
@@ -33,6 +35,7 @@ class MapObj {
       },
     ];
     this.addDirectionsListener();
+    this.addCancelDirectionsListener();
   }
 
   // Render Map.
@@ -98,6 +101,7 @@ class MapObj {
     if (this.restMarker) this.restMarker.remove();
     this.restMarker = this.addMarker(restCoords, html);
     this.fitBounds([this.longitude, this.latitude], restCoords);
+    if (this.profile) this.showDirectionsLine();
   }
 
   // Call fit bounds with proper options for screen size.
@@ -165,16 +169,28 @@ class MapObj {
     const this_ = this;
     window.addEventListener('DOMContentLoaded', () => {
       $('div.map-directions').on('click', '.directionsBtn', function () {
-        const profile = $(this).data('profile');
-        this_.showDirections(profile);
+        this_.profile = $(this).data('profile');
+        this_.fitBounds([this_.longitude, this_.latitude], this_.restCoords);
+        this_.showDirectionsLine();
+        $('.walk').addClass('walkHorizontal');
+        $('.bike').addClass('bikeHorizontal');
+        $('div.reset').fadeIn().addClass('resetHorizontal');
       });
     });
   }
 
-  async showDirections(profile) {
+  async showDirectionsLine() {
+    const t = this;
+    const routeKey = `${t.longitude},${t.latitude};${t.restCoords[0]},${t.restCoords[1]};${t.profile}`;
+
+    if (this.routeCache.has(routeKey)) {
+      this.reloadRoute(routeKey);
+      return;
+    }
+
     const resp = await this.mapboxClient.directions
       .getDirections({
-        profile,
+        profile: this.profile,
         geometries: 'geojson',
         waypoints: [
           {
@@ -189,15 +205,33 @@ class MapObj {
       .send();
 
     const coordinates = resp.body.routes[0].geometry.coordinates;
-    this.addGeoJsonLine(coordinates);
+    this.addGeoJsonLine(coordinates, routeKey);
   }
 
-  addGeoJsonLine(coordinates) {
-    if (this.route) {
-      this.mappyBoi.removeLayer('route');
-      this.mappyBoi.removeSource('route');
+  reloadRoute(routeKey) {
+    this.mappyBoi.removeLayer(this.currentRoute);
+    this.currentRoute = routeKey;
+    this.mappyBoi.addLayer({
+      id: routeKey,
+      type: 'line',
+      source: routeKey,
+      layout: {
+        'line-join': 'round',
+        'line-cap': 'round',
+      },
+      paint: {
+        'line-color': '#26ff00',
+        'line-width': 8,
+      },
+    });
+  }
+
+  addGeoJsonLine(coordinates, routeKey) {
+    if (this.currentRoute) {
+      this.mappyBoi.removeLayer(this.currentRoute);
+      // this.mappyBoi.removeSource(this.currentRoute);
     }
-    this.mappyBoi.addSource('route', {
+    this.mappyBoi.addSource(routeKey, {
       type: 'geojson',
       data: {
         type: 'Feature',
@@ -209,9 +243,9 @@ class MapObj {
       },
     });
     this.mappyBoi.addLayer({
-      id: 'route',
+      id: routeKey,
       type: 'line',
-      source: 'route',
+      source: routeKey,
       layout: {
         'line-join': 'round',
         'line-cap': 'round',
@@ -221,7 +255,32 @@ class MapObj {
         'line-width': 8,
       },
     });
-    this.route = true;
+    this.currentRoute = routeKey;
+    this.routeCache.add(routeKey);
+  }
+
+  addCancelDirectionsListener() {
+    window.addEventListener('DOMContentLoaded', () => {
+      $('.map-directions').on(
+        'click',
+        'div.reset',
+        function () {
+          this.clearRouting();
+        }.bind(this)
+      );
+    });
+  }
+
+  clearRouting() {
+    this.mappyBoi.removeLayer(this.currentRoute);
+    this.currentRoute = null;
+    this.profile = null;
+    $('.walk').removeClass('walkHorizontal');
+    $('.bike').removeClass('bikeHorizontal');
+    $('div.reset').removeClass('resetHorizontal');
+    setTimeout(() => {
+      $('.reset').fadeOut();
+    }, 600);
   }
 
   // check if screen size is mobile.
