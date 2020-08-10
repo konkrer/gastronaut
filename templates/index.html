@@ -611,7 +611,38 @@
               Map_Obj.renderMiniMap();
             </script>
           </div>
-          <div class="map-directions mapBtns">
+          <div class="directions-col">
+            <div class="map-directions bg-trans-b" style="display: none;">
+              <div class="directionsToggle hover-orange hoverOpaque h-100">
+                <div>
+                  <div class="flx-std pt-1 directionsCaret">
+                    <i class="fas fa-caret-right"></i>
+                    <i class="fas fa-caret-left" style="display: none;"></i>
+                  </div>
+                </div>
+                <div>
+                  <div
+                    class="flx-std pt-3 directionsClipboard"
+                    data-toggle="tooltip"
+                    title="Toggle Directions"
+                  >
+                    <i class="fas fa-clipboard-list fa-sm"></i>
+                  </div>
+                </div>
+                <span
+                  class="directionsHeader pl-2 pb-1 pb-lg-2"
+                  style="display: none;"
+                  >Directions</span
+                >
+              </div>
+              <div class="directions-text pt-3" style="display: none;">
+                <ol>
+                  <li>turn left mofo</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+          <div class="map-routing mapBtns">
             <div
               class="drive flx-std directionsBtn"
               data-profile="driving-traffic"
@@ -625,9 +656,10 @@
               <i class="fas fa-bicycle fa-2x"></i>
             </div>
             <div class="reset flx-std" style="display: none;">
-              <i class="fas fa-recycle fa-2x"></i>
+              <i class="fas fa-times fa-2x"></i>
             </div>
           </div>
+
           <div
             class="map-toggle toggle-on-map showMap flx-std"
             data-toggle="tooltip"

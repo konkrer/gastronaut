@@ -36,6 +36,7 @@ class MapObj {
     ];
     this.addDirectionsListener();
     this.addCancelDirectionsListener();
+    this.addToggleDirectionsDivListener();
   }
 
   // Render Map.
@@ -167,15 +168,14 @@ class MapObj {
   // When DOM content is loaded add directions buttons listener.
   addDirectionsListener() {
     const this_ = this;
-    window.addEventListener('DOMContentLoaded', () => {
-      $('div.map-directions').on('click', '.directionsBtn', function () {
-        this_.profile = $(this).data('profile');
-        this_.fitBounds([this_.longitude, this_.latitude], this_.restCoords);
-        this_.showDirectionsLine();
-        $('.walk').addClass('walkHorizontal');
-        $('.bike').addClass('bikeHorizontal');
-        $('div.reset').fadeIn().addClass('resetHorizontal');
-      });
+    $('.map-track').on('click', '.directionsBtn', function () {
+      this_.profile = $(this).data('profile');
+      this_.fitBounds([this_.longitude, this_.latitude], this_.restCoords);
+      this_.showDirectionsLine();
+      $('.walk').addClass('walkHorizontal');
+      $('.bike').addClass('bikeHorizontal');
+      $('div.reset').fadeIn().addClass('resetHorizontal');
+      $('.map-directions').addClass('show').fadeIn();
     });
   }
 
@@ -209,7 +209,7 @@ class MapObj {
   }
 
   reloadRoute(routeKey) {
-    this.mappyBoi.removeLayer(this.currentRoute);
+    if (this.currentRoute) this.mappyBoi.removeLayer(this.currentRoute);
     this.currentRoute = routeKey;
     this.mappyBoi.addLayer({
       id: routeKey,
@@ -260,27 +260,48 @@ class MapObj {
   }
 
   addCancelDirectionsListener() {
-    window.addEventListener('DOMContentLoaded', () => {
-      $('.map-directions').on(
-        'click',
-        'div.reset',
-        function () {
-          this.clearRouting();
-        }.bind(this)
-      );
-    });
+    $('.map-track').on(
+      'click',
+      '.map-routing div.reset',
+      function () {
+        this.clearRouting();
+      }.bind(this)
+    );
   }
 
   clearRouting() {
     this.mappyBoi.removeLayer(this.currentRoute);
     this.currentRoute = null;
     this.profile = null;
+    if ($('.map-directions').hasClass('directionsShow'))
+      this.toggleDirectionsDiv();
+    $('.map-directions').removeClass('show').fadeOut();
     $('.walk').removeClass('walkHorizontal');
     $('.bike').removeClass('bikeHorizontal');
-    $('div.reset').removeClass('resetHorizontal');
-    setTimeout(() => {
-      $('.reset').fadeOut();
-    }, 600);
+    $('div.reset').fadeOut().removeClass('resetHorizontal');
+  }
+
+  addToggleDirectionsDivListener() {
+    $('.map-track').on('click', '.directionsToggle', this.toggleDirectionsDiv);
+  }
+
+  toggleDirectionsDiv() {
+    $('.directionsToggle')
+      .toggleClass(['h-100', 'border-bottom', 'border-dark', 'bg-trans-b2'])
+      .children()
+      .each(function () {
+        $(this).toggleClass('d-inline-block');
+      });
+    $('.directionsClipboard').toggleClass(['pt-3', 'pl-2']);
+    $('.directionsHeader').toggle();
+    // flip left/right arrow
+    $('.directionsCaret')
+      .children()
+      .each(function () {
+        $(this).toggle();
+      });
+    $('.map-directions').toggleClass('directionsShow');
+    $('.directions-text').toggle();
   }
 
   // check if screen size is mobile.

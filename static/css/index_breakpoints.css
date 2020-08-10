@@ -17,13 +17,7 @@
   #clear-filters {
     padding: 6px 5px;
   }
-  h5 {
-    font-size: 1.5rem;
-  }
-  .cat-btn {
-    padding: 4px 5px !important;
-    /* font-size: 0.67rem !important; */
-  }
+
   button.cat-btn.active {
     transform: scale(1.1);
   }
@@ -39,6 +33,18 @@
     width: 0px;
     min-width: 0px;
   }
+  #business-detail-modal table {
+    font-size: small;
+  }
+}
+
+@media screen and (max-width: 840px) {
+  h5 {
+    font-size: 1.5rem;
+  }
+  .cat-btn {
+    padding: 4px 5px !important;
+  }
   #scrl4::-webkit-scrollbar:horizontal {
     -webkit-appearance: none;
     height: 0px;
@@ -49,15 +55,15 @@
   #scrl4::-webkit-scrollbar-thumb:hover {
     -webkit-appearance: none;
   }
+  .map-routing div i {
+    font-size: 1.5em;
+  }
   .drive,
   .bike,
   .walk,
   .reset {
     width: 29px;
     height: 29px;
-  }
-  .map-directions div i {
-    font-size: 1.5em;
   }
   .walkHorizontal {
     transform: translate(50px, -45px);
@@ -68,8 +74,19 @@
   .resetHorizontal {
     transform: translate(150px, -135px);
   }
-  #business-detail-modal table {
-    font-size: small;
+  .directions-col {
+    padding-top: 45px;
+  }
+  .map-directions {
+    height: 80px;
+  }
+  .directionsShow {
+    width: 200px;
+    height: 200px;
+    font-size: x-small;
+  }
+  .clipboardHorizontal {
+    transform: translate(50px, -45px);
   }
 }
 
@@ -78,45 +95,12 @@
   #clear-filters {
     padding: 6px 8px;
   }
-  h5 {
-    font-size: 1.5rem;
-  }
   .cat-btn {
-    padding: 4px 5px !important;
     font-size: 0.8rem !important;
   }
   .filter-display {
     width: 50vw;
     left: calc(50vw - 25vw);
-  }
-  #scrl4::-webkit-scrollbar:horizontal {
-    -webkit-appearance: none;
-    height: 0px;
-  }
-  #scrl4::-webkit-scrollbar-thumb {
-    -webkit-appearance: none;
-  }
-  #scrl4::-webkit-scrollbar-thumb:hover {
-    -webkit-appearance: none;
-  }
-  .drive,
-  .bike,
-  .walk,
-  .reset {
-    width: 29px;
-    height: 29px;
-  }
-  .walkHorizontal {
-    transform: translate(50px, -45px);
-  }
-  .bikeHorizontal {
-    transform: translate(100px, -90px);
-  }
-  .resetHorizontal {
-    transform: translate(150px, -135px);
-  }
-  .map-directions div i {
-    font-size: 1.5em;
   }
 }
 
@@ -307,7 +291,8 @@
     font-weight: 900 !important;
   }
   .sidebar-toggle-btn:hover,
-  .mapboxgl-popup-content .detailsBtn:hover {
+  .mapboxgl-popup-content .detailsBtn:hover,
+  .hover-green:hover {
     color: var(--my-green) !important;
   }
   .my-card button:hover,
@@ -328,7 +313,8 @@
   .walk:hover,
   .bike:hover,
   .reset:hover,
-  .map-info:hover {
+  .map-info:hover,
+  .hover-orange:hover {
     color: var(--my-warning);
     transition: 0.4s;
   }
@@ -342,6 +328,9 @@
   }
   .map-info {
     display: block;
+  }
+  .hoverOpaque:hover {
+    background-color: black;
   }
 }
 

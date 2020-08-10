@@ -541,6 +541,14 @@ class ParamsChange {
   }
 }
 
+/* Buttons Logic ---------------------------------------------------------- */
+/* Buttons Logic ---------------------------------------------------------- */
+/* Buttons Logic ---------------------------------------------------------- */
+/* Buttons Logic ---------------------------------------------------------- */
+/* Buttons Logic ---------------------------------------------------------- */
+/* Buttons Logic ---------------------------------------------------------- */
+/* Buttons Logic ---------------------------------------------------------- */
+
 class ButtonsLogics {
   constructor() {
     this.addMapBusinessBtnListener();
@@ -553,13 +561,14 @@ class ButtonsLogics {
   /* Show restaurant marker and fit bounds when card map button is clicked.
   */
   addMapBusinessBtnListener() {
+    const this_ = this;
     $('.card-track-inner').on('click', '.cardMapButton', function (e) {
       e.preventDefault();
       const lng = $(this).next().children().data('lng');
       const lat = $(this).next().children().data('lat');
       const name = $(this).next().children().data('name');
       const id = $(this).next().children().data('id');
-      if (!Map_Obj.mapOpen) this.toggleMap();
+      if (!Map_Obj.mapOpen) this_.toggleMap();
       Map_Obj.addRestMarkerAndFitBounds([+lng, +lat], name, id);
     });
   }
@@ -594,11 +603,15 @@ class ButtonsLogics {
     $('.mapBtns').toggle();
     $('.map-toggle').toggleClass('toggle-on-map');
     $('.map-track').toggleClass(['border-top', 'border-secondary']);
+    if ($('.map-directions').hasClass('show'))
+      $('.map-directions').removeClass('show').hide();
     if (Map_Obj.mapOpen) {
       Map_Obj.mapOpen = false;
     } else {
       Map_Obj.mapOpen = true;
       Map_Obj.mappyBoi.resize();
+      if ($('div.map-routing .reset').hasClass('resetHorizontal'))
+        $('.map-directions').addClass('show').fadeIn();
     }
   }
 
