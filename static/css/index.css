@@ -66,7 +66,8 @@ main {
 }
 
 #scrl1::-webkit-scrollbar,
-#scrl3::-webkit-scrollbar {
+#scrl3::-webkit-scrollbar,
+#directions-text::-webkit-scrollbar {
   width: 6px;
   background-color: var(--light);
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
@@ -79,7 +80,8 @@ main {
 
 #scrl1::-webkit-scrollbar-thumb,
 #scrl3::-webkit-scrollbar-thumb,
-#scrl4::-webkit-scrollbar-thumb {
+#scrl4::-webkit-scrollbar-thumb,
+#directions-text::-webkit-scrollbar-thumb {
   background-color: var(--secondary);
   border-radius: 5px;
 }
@@ -93,7 +95,8 @@ main {
 #scrl1::-webkit-scrollbar-thumb:hover,
 #scrl3::-webkit-scrollbar-thumb:hover,
 #scrl4::-webkit-scrollbar-thumb:hover,
-.my-card::-webkit-scrollbar-thumb:hover {
+.my-card::-webkit-scrollbar-thumb:hover,
+#directions-text::-webkit-scrollbar-thumb:hover {
   background-color: var(--my-warning);
 }
 
@@ -188,7 +191,7 @@ a.first-letter.active {
 
 .sidebar-toggle-btn {
   position: absolute;
-  left: 0;
+  left: -5px;
   top: 30vh;
   font-size: 4vh;
   z-index: 100;
@@ -307,11 +310,11 @@ a.first-letter.active {
 
 .directions-col {
   position: absolute;
-  padding-top: 65px;
-  padding-bottom: 35px;
-  height: 100%;
-  overflow-y: auto;
-  padding-left: 15px;
+  top: 65px;
+  /* margin-bottom: 35px; */
+  max-height: calc(100% - 65px);
+  overflow: hidden;
+  left: 15px;
   z-index: 10;
 }
 
@@ -346,29 +349,30 @@ a.first-letter.active {
   transform: translate(180px, -165px);
 }
 
-.map-directions {
-  font-size: 22px;
-  line-height: 0.8;
+#map-directions {
+  font-size: 18px;
   width: 30px;
   height: 95px;
   top: 65px;
   border-radius: 5px;
-  word-break: break-all;
   color: white;
   overflow: hidden;
-  z-index: 10000;
+  z-index: 10;
+}
+
+#map-directions.directionsShow {
+  width: 300px;
+  height: 300px;
 }
 
 .directionsCaret {
   width: 30px;
 }
-.directionsShow {
-  width: 300px;
-  height: 300px;
-}
 
-.directions-text {
-  margin-bottom: 180px;
+#directions-text {
+  padding-bottom: 110px;
+  height: 100%;
+  overflow-y: auto;
 }
 
 .map-toggle {

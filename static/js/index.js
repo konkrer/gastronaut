@@ -603,15 +603,15 @@ class ButtonsLogics {
     $('.mapBtns').toggle();
     $('.map-toggle').toggleClass('toggle-on-map');
     $('.map-track').toggleClass(['border-top', 'border-secondary']);
-    if ($('.map-directions').hasClass('show'))
-      $('.map-directions').removeClass('show').hide();
+    if ($('#map-directions').hasClass('show'))
+      $('#map-directions').removeClass('show').hide();
     if (Map_Obj.mapOpen) {
       Map_Obj.mapOpen = false;
     } else {
       Map_Obj.mapOpen = true;
       Map_Obj.mappyBoi.resize();
       if ($('div.map-routing .reset').hasClass('resetHorizontal'))
-        $('.map-directions').addClass('show').fadeIn();
+        $('#map-directions').addClass('show').fadeIn();
     }
   }
 

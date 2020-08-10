@@ -612,8 +612,16 @@
             </script>
           </div>
           <div class="directions-col">
-            <div class="map-directions bg-trans-b" style="display: none;">
-              <div class="directionsToggle hover-orange hoverOpaque h-100">
+            <div
+              class="map-directions bg-trans-b2"
+              style="display: none;"
+              id="map-directions"
+            >
+              <div
+                class="directionsToggle hover-orange hoverOpaque h-100"
+                data-toggle="tooltip"
+                title="Toggle Directions"
+              >
                 <div>
                   <div class="flx-std pt-1 directionsCaret">
                     <i class="fas fa-caret-right"></i>
@@ -621,24 +629,22 @@
                   </div>
                 </div>
                 <div>
-                  <div
-                    class="flx-std pt-3 directionsClipboard"
-                    data-toggle="tooltip"
-                    title="Toggle Directions"
-                  >
+                  <div class="flx-std pt-3 directionsClipboard">
                     <i class="fas fa-clipboard-list fa-sm"></i>
                   </div>
                 </div>
                 <span
-                  class="directionsHeader pl-2 pb-1 pb-lg-2"
+                  class="directionsHeader pl-2 pb-1 pb-lg-2 pt-lg-1"
                   style="display: none;"
-                  >Directions</span
-                >
+                  >Directions <span class="profileDisplay"></span
+                ></span>
               </div>
-              <div class="directions-text pt-3" style="display: none;">
-                <ol>
-                  <li>turn left mofo</li>
-                </ol>
+              <div
+                id="directions-text"
+                class="pt-3 hoverBgLight"
+                style="display: none;"
+              >
+                <ol></ol>
               </div>
             </div>
           </div>
@@ -646,16 +652,33 @@
             <div
               class="drive flx-std directionsBtn"
               data-profile="driving-traffic"
+              data-toggle="tooltip"
+              title="Driving Directions"
             >
               <i class="fas fa-car fa-2x"></i>
             </div>
-            <div class="walk flx-std directionsBtn" data-profile="walking">
+            <div
+              class="walk flx-std directionsBtn"
+              data-profile="walking"
+              data-toggle="tooltip"
+              title="Walking Directions"
+            >
               <i class="fas fa-walking fa-2x"></i>
             </div>
-            <div class="bike flx-std directionsBtn" data-profile="cycling">
+            <div
+              class="bike flx-std directionsBtn"
+              data-profile="cycling"
+              data-toggle="tooltip"
+              title="Cycling Directions"
+            >
               <i class="fas fa-bicycle fa-2x"></i>
             </div>
-            <div class="reset flx-std" style="display: none;">
+            <div
+              class="reset flx-std"
+              style="display: none;"
+              data-toggle="tooltip"
+              title="End Directions Routing"
+            >
               <i class="fas fa-times fa-2x"></i>
             </div>
           </div>

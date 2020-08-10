@@ -34,6 +34,11 @@ class MapObj {
         padding: { top: 80, bottom: 40, left: 200, right: 200 },
       },
     ];
+    this.profileDict = {
+      'driving-traffic': '- Driving',
+      walking: '- Walking',
+      cycling: '- Cycling',
+    };
     this.addDirectionsListener();
     this.addCancelDirectionsListener();
     this.addToggleDirectionsDivListener();
@@ -165,17 +170,18 @@ class MapObj {
     this.restMarkers = [];
   }
 
-  // When DOM content is loaded add directions buttons listener.
+  // add directions buttons listener.
   addDirectionsListener() {
     const this_ = this;
     $('.map-track').on('click', '.directionsBtn', function () {
       this_.profile = $(this).data('profile');
+      $('.profileDisplay').text(this_.profileDict[this_.profile]);
       this_.fitBounds([this_.longitude, this_.latitude], this_.restCoords);
       this_.showDirectionsLine();
       $('.walk').addClass('walkHorizontal');
       $('.bike').addClass('bikeHorizontal');
       $('div.reset').fadeIn().addClass('resetHorizontal');
-      $('.map-directions').addClass('show').fadeIn();
+      $('#map-directions').addClass('show').fadeIn();
     });
   }
 
@@ -191,6 +197,7 @@ class MapObj {
     const resp = await this.mapboxClient.directions
       .getDirections({
         profile: this.profile,
+        steps: true,
         geometries: 'geojson',
         waypoints: [
           {
@@ -204,8 +211,13 @@ class MapObj {
       })
       .send();
 
-    const coordinates = resp.body.routes[0].geometry.coordinates;
+    const route = resp.body.routes[0];
+    const {
+      geometry: { coordinates },
+      legs,
+    } = route;
     this.addGeoJsonLine(coordinates, routeKey);
+    this.addDirectionsText(legs);
   }
 
   reloadRoute(routeKey) {
@@ -259,6 +271,17 @@ class MapObj {
     this.routeCache.add(routeKey);
   }
 
+  addDirectionsText(legs) {
+    const olContents = legs[0].steps.reduce((acc, step) => {
+      const {
+        maneuver: { instruction },
+      } = step;
+      const li = `<li class="mb-2">${instruction}</li>`;
+      return `${acc}${li}`;
+    }, '');
+    $('#directions-text ol').html(olContents);
+  }
+
   addCancelDirectionsListener() {
     $('.map-track').on(
       'click',
@@ -273,9 +296,9 @@ class MapObj {
     this.mappyBoi.removeLayer(this.currentRoute);
     this.currentRoute = null;
     this.profile = null;
-    if ($('.map-directions').hasClass('directionsShow'))
+    if ($('#map-directions').hasClass('directionsShow'))
       this.toggleDirectionsDiv();
-    $('.map-directions').removeClass('show').fadeOut();
+    $('#map-directions').removeClass('show').fadeOut();
     $('.walk').removeClass('walkHorizontal');
     $('.bike').removeClass('bikeHorizontal');
     $('div.reset').fadeOut().removeClass('resetHorizontal');
@@ -287,12 +310,12 @@ class MapObj {
 
   toggleDirectionsDiv() {
     $('.directionsToggle')
-      .toggleClass(['h-100', 'border-bottom', 'border-dark', 'bg-trans-b2'])
+      .toggleClass(['h-100', 'border-bottom', 'border-dark', 'bg-trans-b0'])
       .children()
       .each(function () {
         $(this).toggleClass('d-inline-block');
       });
-    $('.directionsClipboard').toggleClass(['pt-3', 'pl-2']);
+    $('.directionsClipboard').toggleClass(['pt-3', 'pr-sm-1']);
     $('.directionsHeader').toggle();
     // flip left/right arrow
     $('.directionsCaret')
@@ -300,8 +323,8 @@ class MapObj {
       .each(function () {
         $(this).toggle();
       });
-    $('.map-directions').toggleClass('directionsShow');
-    $('.directions-text').toggle();
+    $('#map-directions').toggleClass('directionsShow');
+    $('#directions-text').toggle();
   }
 
   // check if screen size is mobile.

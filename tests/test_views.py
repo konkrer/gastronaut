@@ -43,7 +43,7 @@ class FunctionTests(TestCase):
         ])
 
         converted_to_dict_for_yelp = {
-            'location': 'sf', 'open_at': '1594942200', 'sort_by': 'best_match',
+            'location': 'sf', 'open_at': '1594967400', 'sort_by': 'best_match',
             'radius': '30352', 'categories': 'restaurants', 'limit': '50',
             'price': '1,3,4', 'attributes': 'hot_and_new,deals'
         }

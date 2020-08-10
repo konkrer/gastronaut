@@ -33,6 +33,9 @@
     width: 0px;
     min-width: 0px;
   }
+  #map-directions.directionsShow {
+    width: 170px;
+  }
   #business-detail-modal table {
     font-size: small;
   }
@@ -66,24 +69,26 @@
     height: 29px;
   }
   .walkHorizontal {
-    transform: translate(50px, -45px);
+    transform: translate(50px, -44px);
   }
   .bikeHorizontal {
-    transform: translate(100px, -90px);
+    transform: translate(100px, -88px);
   }
   .resetHorizontal {
-    transform: translate(150px, -135px);
+    transform: translate(150px, -132px);
   }
   .directions-col {
-    padding-top: 45px;
+    top: 45px;
   }
-  .map-directions {
+  #map-directions {
     height: 80px;
   }
-  .directionsShow {
-    width: 200px;
+  #map-directions.directionsShow {
     height: 200px;
-    font-size: x-small;
+    font-size: small;
+  }
+  #directions-text ol {
+    padding-inline-start: 20px;
   }
   .clipboardHorizontal {
     transform: translate(50px, -45px);
@@ -101,6 +106,9 @@
   .filter-display {
     width: 50vw;
     left: calc(50vw - 25vw);
+  }
+  #map-directions.directionsShow {
+    width: 225px;
   }
 }
 
@@ -331,6 +339,9 @@
   }
   .hoverOpaque:hover {
     background-color: black;
+  }
+  .hoverBgLight:hover {
+    background-color: var(--light);
   }
 }
 

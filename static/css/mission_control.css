@@ -3,7 +3,6 @@ main {
 }
 
 .sidebar-toggle-btn {
-  left: -5px;
   top: 45vh !important;
   padding-left: 4px;
 }
