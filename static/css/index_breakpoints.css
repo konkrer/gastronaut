@@ -78,10 +78,7 @@
     transform: translate(150px, -132px);
   }
   .directions-col {
-    top: 45px;
-  }
-  #map-directions {
-    height: 80px;
+    top: 55px;
   }
   #map-directions.directionsShow {
     height: 200px;
@@ -340,8 +337,8 @@
   .hoverOpaque:hover {
     background-color: black;
   }
-  .hoverBgLight:hover {
-    background-color: var(--light);
+  .hoverBgWhite:hover {
+    background-color: whitesmoke;
   }
 }
 

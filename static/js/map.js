@@ -315,7 +315,7 @@ class MapObj {
       .each(function () {
         $(this).toggleClass('d-inline-block');
       });
-    $('.directionsClipboard').toggleClass(['pt-3', 'pr-sm-1']);
+    $('.directionsClipboard').toggleClass('pr-sm-1');
     $('.directionsHeader').toggle();
     // flip left/right arrow
     $('.directionsCaret')
