@@ -242,8 +242,8 @@ class FormFuncts {
   }
 
   /*
-/* Detect location button fuctionality. Call detectLocation.
-*/
+  /* Detect location button fuctionality. Call detectLocation.
+  */
   addDetectLocationListener() {
     $('#detect-location').on('click', function (e) {
       $(this).children().removeClass('pulse-5');
@@ -252,8 +252,8 @@ class FormFuncts {
   }
 
   /*
-/* Auto search with search term input change.
-*/
+  /* Auto search with search term input change.
+  */
   addKeywordKeyupListener() {
     const this_ = this;
     this.$searchTerm.on('keyup', function (e) {
@@ -268,8 +268,8 @@ class FormFuncts {
   }
 
   /*
-/* Auto search with other form input changes.
-*/
+  /* Auto search with other form input changes.
+  */
   addFormChangeListener() {
     const this_ = this;
     this.$mainForm.on('change', '.onChange', function (e) {
@@ -290,10 +290,10 @@ class FormFuncts {
   }
 
   /*
-/* Auto search with category input change.
-/* Set clicked category to active.
-/* Set category in local storage and display in filter display.
-*/
+  /* Auto search with category input change.
+  /* Set clicked category to active.
+  /* Set category in local storage and display in filter display.
+  */
   addCategoryClickListener() {
     const this_ = this;
     this.$categoryButtons.on('click', 'button', function (e) {

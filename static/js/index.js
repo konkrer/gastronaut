@@ -555,6 +555,9 @@ class ButtonsLogics {
     this.addMapToggleBtnListener();
     this.addCardsToggleBtnListener();
     this.addBusinessDetailsListeners();
+    this.addDirectionsListener();
+    this.addToggleDirectionsDivListener();
+    this.addCancelDirectionsListener();
   }
 
   /*
@@ -692,6 +695,65 @@ class ButtonsLogics {
     };
 
     ApiFunctsObj.getShowBusinessDetails(fakeE);
+  }
+
+  // add directions buttons listener.
+  addDirectionsListener() {
+    $('.map-track').on('click', '.directionsBtn', function () {
+      Map_Obj.profile = $(this).data('profile');
+      $('.profileDisplay').text(Map_Obj.profileDict[Map_Obj.profile]);
+      Map_Obj.fitBounds();
+      Map_Obj.showDirectionsAndLine();
+      $('.walk').addClass('walkHorizontal');
+      $('.bike').addClass('bikeHorizontal');
+      $('div.reset').fadeIn().addClass('resetHorizontal');
+      $('#map-directions').addClass('show').fadeIn();
+    });
+  }
+
+  /*
+  /* Add listener to show text directions. 
+  */
+  addToggleDirectionsDivListener() {
+    $('.map-track').on('click', '.directionsToggle', this.toggleDirectionsDiv);
+  }
+
+  /*
+  /* Show directions text and alter directionsToggle alignment (vertical to horizontal).
+  */
+  toggleDirectionsDiv() {
+    $('.directionsToggle')
+      .toggleClass(['h-100', 'border-bottom', 'border-dark', 'bg-trans-b0'])
+      .children()
+      .each(function () {
+        $(this).toggleClass('d-inline-block');
+      });
+    $('.directionsClipboard').toggleClass('pr-sm-1');
+    $('.directionsHeader').toggle();
+    // flip left/right arrow
+    $('.directionsCaret')
+      .children()
+      .each(function () {
+        $(this).toggle();
+      });
+    $('#map-directions').toggleClass('directionsShow');
+    $('#directions-text').toggle();
+  }
+
+  addCancelDirectionsListener() {
+    $('.map-track').on(
+      'click',
+      '.map-routing div.reset',
+      function () {
+        Map_Obj.clearRouting();
+        if ($('#map-directions').hasClass('directionsShow'))
+          this.toggleDirectionsDiv();
+        $('#map-directions').removeClass('show').fadeOut();
+        $('.walk').removeClass('walkHorizontal');
+        $('.bike').removeClass('bikeHorizontal');
+        $('div.reset').fadeOut().removeClass('resetHorizontal');
+      }.bind(this)
+    );
   }
 }
 

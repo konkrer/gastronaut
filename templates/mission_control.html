@@ -23,7 +23,7 @@
     href="https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.css"
     rel="stylesheet"
   />
-  <!-- <script defer src="../static/js/geolocate.js"></script> -->
+  <script defer src="../static/js/geolocate.js"></script>
   <script defer src="../static/js/cards.js"></script>
   <script defer src="../static/js/apiFuncts.js"></script>
   <script defer src="../static/js/missionControl.js"></script>
@@ -37,9 +37,10 @@
   <div id="map" style="position: absolute;">
     <script src="../static/js/map.js"></script>
     <script>
-      Map_Obj.renderMiniMap([-85, 26.8], 2.5, true);
+      Map_Obj.renderMiniMap([-85, 26.8], 2.5);
     </script>
   </div>
+  {% include '/include/include_nav_btns.html' %}
   <div class="spinner-zone flx-std rounded-bottom" style="display: none;">
     <div class="spinner-border txt-green" role="status">
       <span class="sr-only">Loading...</span>
@@ -56,7 +57,7 @@
   <div class="container-fluid ssp" id="main-interface">
     <div class="row">
       <div
-        class="col-11 col-sm-6 col-md-5 col-lg-4 col-xl-3 mb-5 bg-trans-b0 p-0 mt-2 ml-1 ml-lg-2 ml-xl-4 rounded border border-light"
+        class="col-10 col-sm-6 col-md-5 col-lg-4 col-xl-3 mb-5 bg-trans-b0 p-0 mt-2 ml-sm-1 ml-lg-2 ml-xl-4 rounded border border-light"
         id="info-col"
       >
         <div
@@ -257,14 +258,6 @@
     </div>
   </div>
   <div
-    class="modal fade p-0"
-    id="business-detail-modal"
-    tabindex="-1"
-    role="dialog"
-    aria-labelledby="businessDetailTitle"
-    aria-hidden="true"
-  ></div>
-  <div
     class="modal fade"
     id="tips"
     tabindex="-1"
@@ -325,6 +318,73 @@
       </div>
     </div>
   </div>
-  {% include '/include/include_mission_choices.html' with context %} {% endblock
-  %}
+  <!-- ----------- Navigation ---------------- -->
+  <div
+    class="modal fade"
+    id="navigationModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="navigationModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title txt-warning museo" id="navigationModalLabel">
+            Navigation
+          </h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body bg-dark txt-black pt-4">
+          <form id="nav-start-form">
+            <label class="mb-3" for="location">
+              Enter a starting location or click the detect location button
+              below. <i class="fas fa-street-view ml-2"></i>
+            </label>
+            <div class="input-group mb-4">
+              <div class="input-group-prepend">
+                <div
+                  class="input-group-text jsPulser"
+                  id="detect-location"
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title="Detect Location"
+                >
+                  <i class="fas fa-street-view"></i>
+                </div>
+              </div>
+              <input
+                type="text"
+                class="form-control form-control-sm font-weight-bold"
+                id="location"
+                name="location"
+                placeholder="Location"
+              />
+            </div>
+            <p class="pb-3">
+              The navigation destination will change as Mission Goals are
+              selected.
+            </p>
+            <button class="btn btn-primary form-control" type="submit">
+              Go
+            </button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% include '/include/include_business_detail_modal.html' %} {% include
+  '/include/include_mission_choices.html' with context %} {% endblock %}
 </main>

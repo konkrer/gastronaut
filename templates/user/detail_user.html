@@ -216,14 +216,6 @@
     </div>
   </div>
   <div class="toasts-zone" aria-live="polite" aria-atomic="true"></div>
-  {% include '/include/include_mission_choices.html' with context %}
-  <div
-    class="modal fade p-0"
-    id="business-detail-modal"
-    tabindex="-1"
-    role="dialog"
-    aria-labelledby="businessDetailTitle"
-    aria-hidden="true"
-  ></div>
-  {% endblock %}
+  {% include '/include/include_mission_choices.html' with context %} {% include
+  '/include/include_business_detail_modal.html' %} {% endblock %}
 </main>

@@ -80,9 +80,13 @@ main {
 
 #scrl1::-webkit-scrollbar-thumb,
 #scrl3::-webkit-scrollbar-thumb,
-#scrl4::-webkit-scrollbar-thumb,
-#directions-text::-webkit-scrollbar-thumb {
+#scrl4::-webkit-scrollbar-thumb {
   background-color: var(--secondary);
+  border-radius: 5px;
+}
+
+#directions-text::-webkit-scrollbar-thumb {
+  background-color: var(--my-warning);
   border-radius: 5px;
 }
 
@@ -95,9 +99,12 @@ main {
 #scrl1::-webkit-scrollbar-thumb:hover,
 #scrl3::-webkit-scrollbar-thumb:hover,
 #scrl4::-webkit-scrollbar-thumb:hover,
-.my-card::-webkit-scrollbar-thumb:hover,
-#directions-text::-webkit-scrollbar-thumb:hover {
+.my-card::-webkit-scrollbar-thumb:hover {
   background-color: var(--my-warning);
+}
+
+#directions-text::-webkit-scrollbar-thumb:hover {
+  background-color: #ff6701;
 }
 
 .white-a {
@@ -331,7 +338,7 @@ a.first-letter.active {
 
 .drive,
 .walk {
-  margin-bottom: 15px;
+  margin-bottom: 16px;
 }
 
 .reset {
@@ -379,7 +386,7 @@ a.first-letter.active {
 
 .map-toggle {
   position: absolute;
-  top: -32px;
+  top: -40px;
   right: 20px;
   background-color: rgba(0, 0, 0, 0.589);
   border: 1px solid var(--secondary);

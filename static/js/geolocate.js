@@ -34,7 +34,8 @@ class GeolocationObj {
   geoSuccess(position) {
     // stop detect location icon from pulsing.
     $('#detect-location').children().removeClass('pulse');
-    clearTimeout(FormFunctsObj.keyupTimer);
+    if (typeof FormFunctsObj !== 'undefined')
+      clearTimeout(FormFunctsObj.keyupTimer);
     const {
       coords: { latitude: lat, longitude: lng },
     } = position;
@@ -54,7 +55,8 @@ class GeolocationObj {
       this.watchError,
       this.options
     );
-    IndexSearchObj.searchYelp();
+    if (typeof IndexSearchObj !== 'undefined') IndexSearchObj.searchYelp();
+    else MissionControlObj.detectSuccess();
   }
 
   showError(error) {
@@ -78,7 +80,7 @@ class GeolocationObj {
     if (Map_Obj.longitude) {
       Map_Obj.addUserMarker();
     }
-    IndexSearchObj.searchYelp();
+    if (typeof IndexSearchObj !== 'undefined') IndexSearchObj.searchYelp();
   }
 
   watchSuccess(position) {

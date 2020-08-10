@@ -39,9 +39,14 @@ class MapObj {
       walking: '- Walking',
       cycling: '- Cycling',
     };
-    this.addDirectionsListener();
-    this.addCancelDirectionsListener();
-    this.addToggleDirectionsDivListener();
+    this.layout = {
+      'line-join': 'round',
+      'line-cap': 'round',
+    };
+    this.paint = {
+      'line-color': '#26ff00',
+      'line-width': 8,
+    };
   }
 
   // Render Map.
@@ -106,17 +111,16 @@ class MapObj {
                     ${name}</span>`;
     if (this.restMarker) this.restMarker.remove();
     this.restMarker = this.addMarker(restCoords, html);
-    this.fitBounds([this.longitude, this.latitude], restCoords);
-    if (this.profile) this.showDirectionsLine();
+    this.fitBounds();
+    if (this.profile) this.showDirectionsAndLine();
   }
 
   // Call fit bounds with proper options for screen size.
-  fitBounds(userCoords, restCoords) {
+  fitBounds(coords1, coords2) {
+    coords1 = coords1 ? coords1 : [this.longitude, this.latitude];
+    coords2 = coords2 ? coords2 : this.restCoords;
     const optIdx = this.isMobileScreen() ? 0 : 1;
-    this.mappyBoi.fitBounds(
-      [userCoords, restCoords],
-      this.fitBoundsOptions[optIdx]
-    );
+    this.mappyBoi.fitBounds([coords1, coords2], this.fitBoundsOptions[optIdx]);
   }
 
   // Map list of bussiness and fit bounds for outliers.
@@ -152,8 +156,10 @@ class MapObj {
   // Add a regular or flag marker depending if the goal is/isn't completed.
   // Return array of the marker objects.
   mapArray(array) {
-    this.restMarkers = array.reduce((acc, el) => {
+    this.restMarkers = array.reduce((acc, el, idx) => {
       const coords = [el.longitude, el.latitude];
+      // On mission load use first business for restCoords for navigation.
+      if (idx === 0) this.restCoords = coords;
       const html = `<span class="detailsBtn mr-2" data-id="${el.id}">
                     ${el.name}</span>`;
 
@@ -164,31 +170,23 @@ class MapObj {
     }, []);
   }
 
+  // Close all popups in marker array
+  closePopupsArray(array) {
+    array = array ? array : this.restMarkers;
+    array.forEach(marker => {
+      if (marker.getPopup().isOpen()) marker.togglePopup();
+    });
+  }
+
   // clear map of a list of points for mission-control.
   clearMapArray() {
     this.restMarkers.forEach(el => el.remove());
     this.restMarkers = [];
   }
 
-  // add directions buttons listener.
-  addDirectionsListener() {
-    const this_ = this;
-    $('.map-track').on('click', '.directionsBtn', function () {
-      this_.profile = $(this).data('profile');
-      $('.profileDisplay').text(this_.profileDict[this_.profile]);
-      this_.fitBounds([this_.longitude, this_.latitude], this_.restCoords);
-      this_.showDirectionsLine();
-      $('.walk').addClass('walkHorizontal');
-      $('.bike').addClass('bikeHorizontal');
-      $('div.reset').fadeIn().addClass('resetHorizontal');
-      $('#map-directions').addClass('show').fadeIn();
-    });
-  }
-
-  async showDirectionsLine() {
+  async showDirectionsAndLine() {
     const t = this;
     const routeKey = `${t.longitude},${t.latitude};${t.restCoords[0]},${t.restCoords[1]};${t.profile}`;
-
     if (this.routeCache.has(routeKey)) {
       this.reloadRoute(routeKey);
       return;
@@ -216,25 +214,20 @@ class MapObj {
       geometry: { coordinates },
       legs,
     } = route;
-    this.addGeoJsonLine(coordinates, routeKey);
     this.addDirectionsText(legs);
+    this.addGeoJsonLine(coordinates, routeKey);
   }
 
   reloadRoute(routeKey) {
+    if (this.currentRoute === routeKey) return;
     if (this.currentRoute) this.mappyBoi.removeLayer(this.currentRoute);
     this.currentRoute = routeKey;
     this.mappyBoi.addLayer({
       id: routeKey,
       type: 'line',
       source: routeKey,
-      layout: {
-        'line-join': 'round',
-        'line-cap': 'round',
-      },
-      paint: {
-        'line-color': '#26ff00',
-        'line-width': 8,
-      },
+      layout: this.layout,
+      paint: this.paint,
     });
   }
 
@@ -258,14 +251,8 @@ class MapObj {
       id: routeKey,
       type: 'line',
       source: routeKey,
-      layout: {
-        'line-join': 'round',
-        'line-cap': 'round',
-      },
-      paint: {
-        'line-color': '#26ff00',
-        'line-width': 8,
-      },
+      layout: this.layout,
+      paint: this.paint,
     });
     this.currentRoute = routeKey;
     this.routeCache.add(routeKey);
@@ -282,49 +269,10 @@ class MapObj {
     $('#directions-text ol').html(olContents);
   }
 
-  addCancelDirectionsListener() {
-    $('.map-track').on(
-      'click',
-      '.map-routing div.reset',
-      function () {
-        this.clearRouting();
-      }.bind(this)
-    );
-  }
-
   clearRouting() {
     this.mappyBoi.removeLayer(this.currentRoute);
     this.currentRoute = null;
     this.profile = null;
-    if ($('#map-directions').hasClass('directionsShow'))
-      this.toggleDirectionsDiv();
-    $('#map-directions').removeClass('show').fadeOut();
-    $('.walk').removeClass('walkHorizontal');
-    $('.bike').removeClass('bikeHorizontal');
-    $('div.reset').fadeOut().removeClass('resetHorizontal');
-  }
-
-  addToggleDirectionsDivListener() {
-    $('.map-track').on('click', '.directionsToggle', this.toggleDirectionsDiv);
-  }
-
-  toggleDirectionsDiv() {
-    $('.directionsToggle')
-      .toggleClass(['h-100', 'border-bottom', 'border-dark', 'bg-trans-b0'])
-      .children()
-      .each(function () {
-        $(this).toggleClass('d-inline-block');
-      });
-    $('.directionsClipboard').toggleClass('pr-sm-1');
-    $('.directionsHeader').toggle();
-    // flip left/right arrow
-    $('.directionsCaret')
-      .children()
-      .each(function () {
-        $(this).toggle();
-      });
-    $('#map-directions').toggleClass('directionsShow');
-    $('#directions-text').toggle();
   }
 
   // check if screen size is mobile.

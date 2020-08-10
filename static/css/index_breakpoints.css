@@ -33,6 +33,10 @@
     width: 0px;
     min-width: 0px;
   }
+  /* when directions list is open */
+  .directionsToggle.border-bottom .directionsCaret {
+    width: 20px;
+  }
   #map-directions.directionsShow {
     width: 170px;
   }
@@ -69,13 +73,13 @@
     height: 29px;
   }
   .walkHorizontal {
-    transform: translate(50px, -44px);
+    transform: translate(50px, -45px);
   }
   .bikeHorizontal {
-    transform: translate(100px, -88px);
+    transform: translate(100px, -89px);
   }
   .resetHorizontal {
-    transform: translate(150px, -132px);
+    transform: translate(150px, -133px);
   }
   .directions-col {
     top: 55px;
@@ -145,7 +149,7 @@
   }
   .sidebar-toggle-btn {
     font-size: 7vh;
-    top: 25vh;
+    top: 35vh;
   }
   .pulse-outline-mobile {
     animation: greenGlowPulseulse 0.6s ease-in 5;

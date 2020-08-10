@@ -1,0 +1,459 @@
+<form action="#" id="main-form" class="txt-black">
+  <input type="hidden" name="lat" value="{{lat}}" />
+  <input type="hidden" name="lng" value="{{lng}}" />
+  <label class="sr-only" for="location">Location</label>
+  <div class="input-group mb-2 px-2">
+    <div class="input-group-prepend">
+      <div
+        class="input-group-text jsPulser"
+        id="detect-location"
+        data-toggle="tooltip"
+        data-placement="top"
+        title="Detect Location"
+      >
+        <i class="fas fa-street-view"></i>
+      </div>
+    </div>
+    <input
+      type="text"
+      class="form-control form-control-sm font-weight-bold"
+      id="location"
+      name="location"
+      placeholder="Location"
+    />
+  </div>
+  <label class="sr-only" for="keywords">Keywords</label>
+  <div class="input-group mb-2 px-2">
+    <input
+      type="text"
+      class="form-control form-control-sm font-weight-bold"
+      id="keywords"
+      name="term"
+      placeholder="Keywords"
+    />
+    <div
+      class="input-group-append"
+      data-toggle="tooltip"
+      data-placement="top"
+      title="Clear All Filters"
+    >
+      <div class="input-group-text jsPulser" id="clear-filters">
+        <i class="fas fa-recycle"></i>
+      </div>
+    </div>
+  </div>
+  <div class="px-2">
+    <label class="m-0 results-label no-hover">Found</label>
+    <span class="form-num-display resultsCount ml-1 ml-sm-4 text-light">0</span>
+    <span class="filter-icon-display dark-outline-1">
+      <i class="fas fa-filter text-warning ml-2 ml-md-3"></i>
+    </span>
+  </div>
+
+  <a
+    data-toggle="collapse"
+    href="#timing-group"
+    role="button"
+    aria-expanded="true"
+    aria-controls="timing-group"
+  >
+    <h5 class="museo dark-outline-1 px-2">
+      Timing <i class="fas fa-caret-down fa-xs text-dark"></i></h5
+  ></a>
+  <div class="collapse show" id="timing-group">
+    <div class="switch-wrapper pl-2">
+      <div class="custom-control custom-switch">
+        <input
+          class="onChange custom-control-input"
+          type="checkbox"
+          id="open_now"
+          name="open_now"
+          value="true"
+        />
+        <label class="custom-control-label" for="open_now">
+          Open Now
+        </label>
+      </div>
+    </div>
+    <div class="switch-wrapper pl-2 openAt">
+      <div class="custom-control custom-switch">
+        <input
+          class="onChange custom-control-input"
+          type="checkbox"
+          id="open-at-checkbox"
+          value="true"
+        />
+        <label class="custom-control-label" for="open-at-checkbox">
+          Open At
+        </label>
+      </div>
+    </div>
+    <div class="switch-wrapper px-2 no-hover-bg openAt">
+      <div class="input-group mb-2 mr-sm-2">
+        <input
+          type="datetime-local"
+          class="onChange form-control form-control-sm"
+          id="open_at"
+          name="open_at"
+          disabled
+        />
+      </div>
+    </div>
+  </div>
+  <a
+    data-toggle="collapse"
+    href="#interface-group"
+    role="button"
+    aria-expanded="true"
+    aria-controls="interface-group"
+  >
+    <h5 class="museo dark-outline-1 px-2">
+      Interface
+      <i class="fas fa-caret-down fa-xs text-dark"></i></h5
+  ></a>
+  <div class="collapse show" id="interface-group">
+    <div class="switch-wrapper pl-2">
+      <div class="custom-control custom-switch">
+        <input
+          class="onChange custom-control-input interface"
+          type="checkbox"
+          value="delivery"
+          id="delivery"
+        />
+        <label class="custom-control-label" for="delivery">
+          Delivery
+        </label>
+      </div>
+    </div>
+    <div class="switch-wrapper pl-2">
+      <div class="custom-control custom-switch">
+        <input
+          class="onChange custom-control-input interface"
+          type="checkbox"
+          value="pickup"
+          id="pickup"
+        />
+        <label class="custom-control-label" for="pickup">
+          Pickup
+        </label>
+      </div>
+    </div>
+    <div class="switch-wrapper pl-2">
+      <div class="custom-control custom-switch">
+        <input
+          class="onChange custom-control-input interface"
+          type="checkbox"
+          value="restaurant_reservation"
+          id="restaurant_reservation"
+        />
+        <label class="custom-control-label" for="restaurant_reservation">
+          Reservations
+        </label>
+      </div>
+    </div>
+  </div>
+  <a
+    data-toggle="collapse"
+    href="#price-group"
+    role="button"
+    aria-expanded="true"
+    `
+    aria-controls="price-group"
+  >
+    <h5 class="museo dark-outline-1 px-2">
+      Price <i class="fas fa-caret-down fa-xs text-dark"></i></h5
+  ></a>
+  <div class="collapse show text-dark" id="price-group">
+    <div class="form-check pl-2 pb-1 txt-green dark-green-outline">
+      <input
+        class="onChange form-check-input"
+        type="checkbox"
+        value="1"
+        id="price-1"
+        name="price-1"
+        checked
+        hidden
+      />
+      <label class="form-check-label no-hover" for="price-1">
+        <i class="fas fa-dollar-sign fa-lg"></i>
+      </label>
+    </div>
+    <div class="form-check pl-2 pb-1 txt-green dark-green-outline">
+      <input
+        class="onChange form-check-input"
+        type="checkbox"
+        value="2"
+        id="price-2"
+        name="price-2"
+        checked
+        hidden
+      />
+      <label class="form-check-label no-hover" for="price-2">
+        <i class="fas fa-dollar-sign fa-lg mr-1"></i
+        ><i class="fas fa-dollar-sign fa-lg mr-1"></i>
+      </label>
+    </div>
+    <div class="form-check pl-2 pb-1 txt-green dark-green-outline">
+      <input
+        class="onChange form-check-input"
+        type="checkbox"
+        value="3"
+        id="price-3"
+        name="price-3"
+        checked
+        hidden
+      />
+      <label class="form-check-label no-hover" for="price-3">
+        <i class="fas fa-dollar-sign fa-lg mr-1"></i
+        ><i class="fas fa-dollar-sign fa-lg mr-1"></i
+        ><i class="fas fa-dollar-sign fa-lg mr-1"></i>
+      </label>
+    </div>
+    <div class="form-check pl-2 txt-green dark-green-outline">
+      <input
+        class="onChange form-check-input"
+        type="checkbox"
+        value="4"
+        id="price-4"
+        name="price-4"
+        checked
+        hidden
+      />
+      <label class="form-check-label no-hover" for="price-4">
+        <i class="fas fa-dollar-sign fa-lg mr-1"></i
+        ><i class="fas fa-dollar-sign fa-lg mr-1"></i
+        ><i class="fas fa-dollar-sign fa-lg mr-1"></i
+        ><i class="fas fa-dollar-sign fa-lg mr-1"></i>
+      </label>
+    </div>
+  </div>
+  <a
+    data-toggle="collapse"
+    href="#sort-by-group"
+    role="button"
+    aria-expanded="true"
+    aria-controls="sort-by-group"
+  >
+    <h5 class="museo dark-outline-1 px-2">
+      Sort By <i class="fas fa-caret-down fa-xs text-dark"></i></h5
+  ></a>
+  <div class="collapse show" id="sort-by-group">
+    <div class="switch-wrapper pl-2">
+      <div class="custom-control custom-radio">
+        <input
+          class="onChange custom-control-input"
+          type="radio"
+          id="best_match"
+          name="sort_by"
+          value="best_match"
+          checked
+        />
+        <label class="custom-control-label" for="best_match">
+          Best Match
+        </label>
+      </div>
+    </div>
+    <div class="switch-wrapper pl-2">
+      <div class="custom-control custom-radio">
+        <input
+          class="onChange custom-control-input"
+          type="radio"
+          id="rating"
+          name="sort_by"
+          value="rating"
+        />
+        <label class="custom-control-label" for="rating">
+          Rating
+        </label>
+      </div>
+    </div>
+    <div class="switch-wrapper pl-2">
+      <div class="custom-control custom-radio">
+        <input
+          class="onChange custom-control-input"
+          type="radio"
+          id="review_count"
+          name="sort_by"
+          value="review_count"
+        />
+        <label class="custom-control-label" for="review_count">
+          Review Count
+        </label>
+      </div>
+    </div>
+    <div class="switch-wrapper pl-2">
+      <div class="custom-control custom-radio">
+        <input
+          class="onChange custom-control-input"
+          type="radio"
+          id="distance"
+          name="sort_by"
+          value="distance"
+        />
+        <label class="custom-control-label" for="distance">
+          Distance
+        </label>
+      </div>
+    </div>
+  </div>
+  <a
+    data-toggle="collapse"
+    href="#radius-collapse"
+    role="button"
+    aria-expanded="true"
+    aria-controls="collapseExample"
+  >
+    <h5 class="museo dark-outline-1 px-2">
+      Search
+      <span style="white-space: nowrap;">
+        Radius <i class="fas fa-caret-down fa-xs text-dark"></i>
+      </span></h5
+  ></a>
+  <div class="collapse show text-dark" id="radius-collapse">
+    <div class="form-group mb-0">
+      <div class="switch-wrapper pl-2">
+        <input
+          class="onChange form-check-input"
+          type="checkbox"
+          id="radius-check"
+          hidden
+        /><label
+          class="form-check-label no-hover"
+          for="radius-check"
+          id="radius-power-btn"
+        >
+          <i class="fas fa-power-off fa-lg"></i>
+          <span
+            class="form-num-display radiusDisplay ml-2 ml-sm-4 ml-lg-5 text-light bg-disabled"
+            >10</span
+          >
+          <span class="txt-whitesmoke">mi</span>
+        </label>
+      </div>
+      <div class="switch-wrapper px-2 no-hover-bg">
+        <input
+          type="range"
+          class="custom-range onChange"
+          id="radius"
+          name="radius"
+          min="1000"
+          max="40000"
+          value="16094"
+          disabled
+        />
+      </div>
+    </div>
+  </div>
+  <a
+    data-toggle="collapse"
+    href="#attributes"
+    role="button"
+    aria-expanded="true"
+    aria-controls="collapseExample"
+  >
+    <h5 class="museo dark-outline-1 px-2 mt-1">
+      <span style="white-space: nowrap;">
+        Attributes <i class="fas fa-caret-down fa-xs text-dark"></i>
+      </span></h5
+  ></a>
+  <div class="collapse show" id="attributes">
+    <div class="switch-wrapper pl-2">
+      <div class="custom-control custom-switch">
+        <input
+          class="onChange custom-control-input"
+          type="checkbox"
+          id="hot_and_new"
+          name="hot_and_new"
+          value="true"
+        />
+        <label class="custom-control-label" for="hot_and_new">
+          Hot and New!
+        </label>
+      </div>
+    </div>
+    <div class="switch-wrapper pl-2">
+      <div class="custom-control custom-switch">
+        <input
+          class="onChange custom-control-input"
+          type="checkbox"
+          id="reservation"
+          name="reservation"
+          value="true "
+        />
+        <label class="custom-control-label" for="reservation">
+          Yelp Reservations
+        </label>
+      </div>
+    </div>
+    <div class="switch-wrapper pl-2">
+      <div class="custom-control custom-switch">
+        <input
+          class="onChange custom-control-input"
+          type="checkbox"
+          id="cashback"
+          name="cashback"
+          value="true "
+        />
+        <label class="custom-control-label" for="cashback">
+          Yelp Cashback
+        </label>
+      </div>
+    </div>
+    <div class="switch-wrapper pl-2">
+      <div class="custom-control custom-switch">
+        <input
+          class="onChange custom-control-input"
+          type="checkbox"
+          id="deals"
+          name="deals"
+          value="true"
+        />
+        <label class="custom-control-label" for="deals">
+          Yelp Deals
+        </label>
+      </div>
+    </div>
+    <div class="switch-wrapper pl-2">
+      <div class="custom-control custom-switch">
+        <input
+          class="onChange custom-control-input"
+          type="checkbox"
+          id="gender_neutral_restrooms"
+          name="gender_neutral_restrooms"
+          value="true"
+        />
+        <label class="custom-control-label" for="gender_neutral_restrooms">
+          Gender Neutral Restrooms
+        </label>
+      </div>
+    </div>
+    <div class="switch-wrapper pl-2">
+      <div class="custom-control custom-switch">
+        <input
+          class="onChange custom-control-input"
+          type="checkbox"
+          id="open_to_all"
+          name="open_to_all"
+          value="true"
+        />
+        <label class="custom-control-label" for="open_to_all">
+          Open to All
+        </label>
+      </div>
+    </div>
+    <div class="switch-wrapper pl-2">
+      <div class="custom-control custom-switch">
+        <input
+          class="onChange custom-control-input"
+          type="checkbox"
+          id="wheelchair_accessible"
+          name="wheelchair_accessible"
+          value="true"
+        />
+        <label class="custom-control-label" for="wheelchair_accessible">
+          Wheelchair Accessible
+        </label>
+      </div>
+    </div>
+  </div>
+</form>

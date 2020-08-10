@@ -2,6 +2,13 @@ main {
   height: var(--vh-minus-navbar);
 }
 
+.map-routing {
+  left: unset;
+  right: 10px;
+  top: 56px;
+  height: 40px;
+}
+
 .sidebar-toggle-btn {
   top: 45vh !important;
   padding-left: 4px;

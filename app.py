@@ -451,16 +451,16 @@ def add_report():
         )
 
     if mission_id:
-        obj = Mission.query.get_or_404(mission_id)
+        model = Mission.query.get_or_404(mission_id)
         kind = 'Mission'
     else:
-        obj = Business.query.get_or_404(business_id)
+        model = Business.query.get_or_404(business_id)
         kind = 'Business'
 
     if request.method == 'POST':
         flash("Please fix all form errors.", "danger")
 
-    return render_template("add_report.html", form=form, obj=obj,
+    return render_template("add_report.html", form=form, model=model,
                            kind=kind, next_=next_page_url(request))
 
 
@@ -500,17 +500,17 @@ def edit_report(report_id):
             error_logging(e)
 
     if report.mission_id:
-        obj = Mission.query.get_or_404(report.mission_id)
+        model = Mission.query.get_or_404(report.mission_id)
         kind = 'Mission'
     else:
-        obj = Business.query.get_or_404(report.business_id)
+        model = Business.query.get_or_404(report.business_id)
         kind = 'Business'
 
     if request.method == 'POST':
         flash("Please fix all form errors.", "danger")
 
     return render_template(
-        "edit_report.html", form=form, obj=obj, kind=kind,
+        "edit_report.html", form=form, model=model, kind=kind,
         next_=next_page_url(request),
         report_id=report.id)
 
