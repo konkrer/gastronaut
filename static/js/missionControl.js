@@ -9,18 +9,19 @@ class MissionControl {
     this.sidebarOpen = true;
     this.$infoCol = $('#info-col');
     this.ignoreTogglePopup = false;
-    this.loadMissionListener();
-    this.createMissionListener();
-    this.updateListener();
-    this.deleteMissionListener();
-    this.removeMissionListener();
-    this.businessMapListener();
-    this.businessClickListener();
-    this.businessDblclickListener();
-    this.goalCompletedListener();
-    this.removeBusinessListener();
-    this.sidebarListener();
-    this.mapAllListener();
+    this.addLoadMissionListener();
+    this.addCreateMissionListener();
+    this.addUpdateListener();
+    this.addDeleteMissionListener();
+    this.addRemoveMissionListener();
+    this.addDetailsListener();
+    this.addBusinessMapListener();
+    this.addBusinessClickListener();
+    this.addBusinessDblclickListener();
+    this.addGoalCompletedListener();
+    this.addRemoveBusinessListener();
+    this.addSidebarListener();
+    this.addMapAllListener();
     this.addNavigationListeners();
     // Delay for map load.
     setTimeout(() => {
@@ -58,7 +59,7 @@ class MissionControl {
     if (!Map_Obj.isMobileScreen()) $('#businesses-list').addClass('show');
   }
 
-  loadMissionListener() {
+  addLoadMissionListener() {
     $('#mission-select').change(
       function (e) {
         localStorage.setItem('currMissionId', e.target.value);
@@ -102,10 +103,10 @@ class MissionControl {
       country,
     } = missionData;
     const html = `
-    <a class="font-weight-bold hoverUnset" 
+    <a class="font-weight-bold " 
       data-toggle="collapse" href="#mission-form" 
       role="button" aria-expanded="false" aria-controls="mission-form">
-      <div>
+      <div  class="txt-warning hoverBlue">
         <span class="panel-toggle pt-1">
           ${editor ? 'Edit Details ' : 'Details '}
         <i class="fas fa-caret-down fa-xs text-dark ml-2"></i>
@@ -290,7 +291,7 @@ class MissionControl {
   }
 
   // Create new mission button listener
-  createMissionListener() {
+  addCreateMissionListener() {
     $('#create-mission-btn').on('click', this.showCreateForm);
     this.$infoCol.on('submit', '#create-form', this.createMission.bind(this));
   }
@@ -298,7 +299,7 @@ class MissionControl {
   showCreateForm(e) {
     e.preventDefault();
     const html = `
-    <a class="text-success font-weight-bold hoverUnset" data-toggle="collapse" href="#create-form" 
+    <a class="text-success font-weight-bold " data-toggle="collapse" href="#create-form" 
       role="button" aria-expanded="false" aria-controls="mission-form">
       <div>
         <span class="panel-toggle"
@@ -389,7 +390,7 @@ class MissionControl {
   // Listen for mission-form being submitted.
   // Call mission update endpoint.
   // Provide feedback and update mission-select <option> text.
-  updateListener() {
+  addUpdateListener() {
     this.$infoCol.on(
       'submit',
       '#mission-form',
@@ -446,7 +447,7 @@ class MissionControl {
   // Listen for mission-form delete button being clicked.
   // Call mission delete endpoint.
   // Update mission-select <option> text.
-  deleteMissionListener() {
+  addDeleteMissionListener() {
     $('#deleteMissionModal').on(
       'submit',
       'form',
@@ -485,7 +486,7 @@ class MissionControl {
   // Listen for remove mission button being clicked.
   // Call mission remove endpoint.
   // Update mission-select <option> text.
-  removeMissionListener() {
+  addRemoveMissionListener() {
     $('#removeMissionModal').on(
       'submit',
       'form',
@@ -522,10 +523,19 @@ class MissionControl {
     );
   }
 
-  businessMapListener() {
+  addDetailsListener() {
+    const this_ = this;
+    $('#businesses-list').on('click', '.detailsBtn', function (e) {
+      this_.setBusinessClickBlocker();
+      ApiFunctsObj.getShowBusinessDetails(e);
+    });
+  }
+
+  addBusinessMapListener() {
     const this_ = this;
     this.$infoCol.on('click', '.mapBtn', function () {
       this_.businessMapper($(this));
+      this_.setBusinessClickBlocker();
     });
   }
 
@@ -552,8 +562,11 @@ class MissionControl {
 
   // Toggle business marker popup and set restCoords
   // when business list-group-item is clicked.
-  businessClickListener() {
+  addBusinessClickListener() {
+    const this_ = this;
     this.$infoCol.on('click', '.list-group-item', function () {
+      if (this_.businessClickBlocker) return;
+      this_.setBusinessClickBlocker();
       Map_Obj.closePopupsArray();
       // toggle popup
       const idx = $(this).children().data('idx');
@@ -571,7 +584,16 @@ class MissionControl {
     });
   }
 
-  businessDblclickListener() {
+  // Block double clicks from activating businessClickListerner twice.
+  setBusinessClickBlocker() {
+    clearTimeout(this.businessClickBlockerTimer);
+    this.businessClickBlocker = true;
+    this.businessClickBlockerTimer = setTimeout(() => {
+      this.businessClickBlocker = false;
+    }, 1000);
+  }
+
+  addBusinessDblclickListener() {
     const this_ = this;
     this.$infoCol.on('dblclick', '.list-group-item', function () {
       const fake_e = { currentTarget: $(this).find('.detailsBtn').get()[0] };
@@ -580,9 +602,10 @@ class MissionControl {
     });
   }
 
-  goalCompletedListener() {
+  addGoalCompletedListener() {
     const this_ = this;
     this.$infoCol.on('click', '.flagBtn', async function () {
+      this_.setBusinessClickBlocker();
       const data = { business_id: $(this).parent().data('id') };
       const mission_id = localStorage.getItem('currMissionId');
 
@@ -636,9 +659,10 @@ class MissionControl {
     });
   }
 
-  removeBusinessListener() {
+  addRemoveBusinessListener() {
     const this_ = this;
     this.$infoCol.on('click', '.removeBusinessBtn', async function () {
+      this_.setBusinessClickBlocker();
       const data = { business_id: $(this).parent().data('id') };
       const mission_id = localStorage.getItem('currMissionId');
 
@@ -672,7 +696,7 @@ class MissionControl {
     });
   }
 
-  sidebarListener() {
+  addSidebarListener() {
     $('.sidebar-toggle-btn').click(
       function () {
         // Toggle sidebar.
@@ -702,7 +726,7 @@ class MissionControl {
     delete this.missionCache[mission_id];
   }
 
-  mapAllListener() {
+  addMapAllListener() {
     $('.mapAll').click(
       function () {
         const missionId = localStorage.getItem('currMissionId');
@@ -723,21 +747,27 @@ class MissionControl {
       if (Map_Obj.currentRoute) this_.detectSuccess();
       else $('#navigationModal').modal('show');
     });
+
     // detect location
     $('#detect-location').click(function () {
       Geolocation_Obj.detectLocation();
     });
+
     // enter location or update navigation profile
     $('#nav-start-form').submit(function (e) {
       e.preventDefault();
 
       const location = $(this).find('#location').val();
       if (location) {
+        // geocode / places
       } else if (Map_Obj.longitude) {
         this_.detectSuccess();
       } else
         alert('Enter a starting location or click the detect location button.');
     });
+
+    // clear directions routing
+    $('.map-routing .reset').click(this_.endNavigation);
   }
 
   detectSuccess() {
@@ -747,6 +777,13 @@ class MissionControl {
     $('#businesses-list').removeClass('show');
     $('#directions-panel').show();
     $('#directions-text').addClass('show');
+    $('.map-routing .reset').fadeIn();
+  }
+
+  endNavigation() {
+    Map_Obj.clearRouting();
+    $('#directions-panel').fadeOut();
+    $('.map-routing .reset').fadeOut();
   }
 }
 

@@ -19,7 +19,7 @@ main {
 }
 
 .panel-toggle {
-  color: var(--my-warning);
+  color: inherit;
   background-color: black;
   padding: 2px 8px;
 }
@@ -95,11 +95,6 @@ a[href='#mission-select-form'] {
   padding-bottom: unset;
 }
 
-a.text-success.hoverUnset:focus,
-a.text-success.hoverUnset:active {
-  color: var(--success) !important;
-}
-
 .flag-marker {
   background-image: url('/static/images/flag_red_straight.png');
   background-position: center;
@@ -129,6 +124,9 @@ a.text-success.hoverUnset:active {
     background-color: var(--secondary);
     text-shadow: black 2px 1px 1px, black -2px -1px 1px, black 2px -1px 1px,
       black -2px 1px 1px;
+  }
+  .hoverBlue:hover {
+    color: #1d7097 !important;
   }
   .hover-primary-alt2:hover {
     color: var(--primary-alt2);

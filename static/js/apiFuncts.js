@@ -135,7 +135,7 @@ class ApiFuncts {
   addDetailsListener() {
     $('main').on(
       'click',
-      '.detailsBtn',
+      '.detailsBtn:not(#businesses-list .detailsBtn)',
       this.getShowBusinessDetails.bind(this)
     );
   }
