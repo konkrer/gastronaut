@@ -93,6 +93,9 @@ a[href='#mission-select-form'] {
 
 #directions-text {
   padding-bottom: unset;
+  max-height: 50vh;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .flag-marker {

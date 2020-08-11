@@ -25,7 +25,10 @@ class MapObj {
     this.directionsCache = {};
     this.profile = null;
     // options
-    this.userMarkerOptions = { color: '#3bdb53' };
+    this.userMarkerOptions = [
+      { color: '#3bdb53' },
+      { color: 'var(--my-info-alt)' },
+    ];
     this.markerOptions = { color: '#3bdb53' };
     this.fitBoundsOptions = [
       {
@@ -65,10 +68,10 @@ class MapObj {
   }
 
   // Add a user marker and open popup.
-  addUserMarker() {
+  addUserMarker(optionsFlag = 0) {
     if (!this.longitude) return;
     if (this.userMarker) this.userMarker.remove();
-    this.userMarker = new mapboxgl.Marker(this.userMarkerOptions)
+    this.userMarker = new mapboxgl.Marker(this.userMarkerOptions[optionsFlag])
       .setLngLat([this.longitude, this.latitude])
       .setPopup(
         new mapboxgl.Popup().setHTML(`<div class="mr-2"><em>You</em></div>`)
@@ -160,15 +163,21 @@ class MapObj {
     this.restMarkers = array.reduce((acc, el, idx) => {
       const coords = [el.longitude, el.latitude];
       // On mission load use first business for restCoords for navigation.
-      if (idx === 0) this.restCoords = coords;
       const html = `<span class="detailsBtn mr-2" data-id="${el.id}">
-                    ${el.name}</span>`;
+      ${el.name}</span>`;
 
-      if (el.completed) acc.push(this.addFlagMarker(coords, html, false));
-      else acc.push(this.addMarker(coords, html, false));
+      if (el.completed) var marker = this.addFlagMarker(coords, html, false);
+      else var marker = this.addMarker(coords, html, false);
+      acc.push(marker);
 
+      if (idx === 0) {
+        this.restCoords = coords;
+        this.restMarker = marker;
+      }
       return acc;
     }, []);
+
+    if (this.profile) this.showDirectionsAndLine();
   }
 
   // Close all popups in marker array
@@ -183,6 +192,23 @@ class MapObj {
   clearMapArray() {
     this.restMarkers.forEach(el => el.remove());
     this.restMarkers = [];
+  }
+
+  async geocode(query) {
+    query = query.replace(';', ',');
+    try {
+      var resp = await this.mapboxClient.geocoding
+        .forwardGeocode({
+          query,
+          proximity: this.restCoords,
+        })
+        .send();
+    } catch (error) {
+      return [];
+    }
+
+    if (resp.statusCode !== 200) return [];
+    return resp.body.features;
   }
 
   async showDirectionsAndLine() {

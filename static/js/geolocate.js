@@ -56,7 +56,7 @@ class GeolocationObj {
       this.options
     );
     if (typeof IndexSearchObj !== 'undefined') IndexSearchObj.searchYelp();
-    else MissionControlObj.detectSuccess();
+    else MissionControlObj.startLocationSuccess();
   }
 
   showError(error) {

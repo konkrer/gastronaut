@@ -8,7 +8,7 @@ class MissionControl {
     this.missionCache = {};
     this.sidebarOpen = true;
     this.$infoCol = $('#info-col');
-    this.ignoreTogglePopup = false;
+    this.locationAutocompleteCache = {};
     this.addLoadMissionListener();
     this.addCreateMissionListener();
     this.addUpdateListener();
@@ -26,7 +26,7 @@ class MissionControl {
     // Delay for map load.
     setTimeout(() => {
       this.checkLocalStorage();
-    }, 2500);
+    }, 2000);
   }
 
   /*
@@ -107,7 +107,7 @@ class MissionControl {
       data-toggle="collapse" href="#mission-form" 
       role="button" aria-expanded="false" aria-controls="mission-form">
       <div  class="txt-warning hoverBlue">
-        <span class="panel-toggle pt-1">
+        <span class="panel-toggle pt-1 rounded-right">
           ${editor ? 'Edit Details ' : 'Details '}
         <i class="fas fa-caret-down fa-xs text-dark ml-2"></i>
         </span>
@@ -572,6 +572,7 @@ class MissionControl {
       const idx = $(this).children().data('idx');
       const marker = Map_Obj.restMarkers[idx];
       if (!marker.getPopup().isOpen()) marker.togglePopup();
+      Map_Obj.restMarker = marker;
       // set restcoords
       const $mapBtn = $(this).find('.mapBtn');
       const lng = $mapBtn.data('lng');
@@ -738,41 +739,85 @@ class MissionControl {
   }
 
   addNavigationListeners() {
-    const this_ = this;
     // nav buttons
+    this.addNavProfileBtnsListener();
+    // detect location
+    $('#detect-location').click(() => Geolocation_Obj.detectLocation());
+    // Add location autocomplete.
+    this.addAutocompleteListener();
+    // Location entry or restart navigation.
+    this.addNavStartListener();
+    // clear directions routing
+    $('.map-routing .reset').click(this.endNavigation);
+  }
+
+  /*
+  /* Navigation Profile Buttons Listener (drive, walk, cycle). 
+  */
+  addNavProfileBtnsListener() {
+    const this_ = this;
     $('.map-routing').on('click', '.directionsBtn', function () {
       const profile = $(this).data('profile');
       Map_Obj.profile = profile;
       $('.profileDisplay').text(Map_Obj.profileDict[profile]);
-      if (Map_Obj.currentRoute) this_.detectSuccess();
+      if (Map_Obj.currentRoute) this_.startLocationSuccess();
       else $('#navigationModal').modal('show');
     });
+  }
 
-    // detect location
-    $('#detect-location').click(function () {
-      Geolocation_Obj.detectLocation();
-    });
-
-    // enter location or update navigation profile
-    $('#nav-start-form').submit(function (e) {
+  /*
+  /* Start/Restart Navigation Listener.
+  */
+  addNavStartListener() {
+    const this_ = this;
+    $('#nav-start-form').submit(async function (e) {
       e.preventDefault();
 
       const location = $(this).find('#location').val();
-      if (location) {
-        // geocode / places
-      } else if (Map_Obj.longitude) {
-        this_.detectSuccess();
-      } else
-        alert('Enter a starting location or click the detect location button.');
-    });
 
-    // clear directions routing
-    $('.map-routing .reset').click(this_.endNavigation);
+      if (location) {
+        let coords = this_.locationAutocompleteCache[location];
+        if (!coords) {
+          const features = await Map_Obj.geocode(location);
+          if (features.length === 0) {
+            alert('No location found. Please fix location input.');
+            return;
+          }
+          coords = features[0].geometry.coordinates;
+        }
+        Map_Obj.longitude = coords[0];
+        Map_Obj.latitude = coords[1];
+        Map_Obj.addUserMarker(1);
+        Map_Obj.userMarker.togglePopup();
+      }
+      if (Map_Obj.longitude) {
+        this_.startLocationSuccess();
+      } else alert('Enter a starting location or click the detect location button.');
+    });
   }
 
-  detectSuccess() {
+  addAutocompleteListener() {
+    const this_ = this;
+    $('#location').on('keyup', async function () {
+      const query = $(this).val();
+      if (this_.locationAutocompleteCache[query]) return;
+      if (query.length < 3) return;
+      const features = await Map_Obj.geocode(query);
+      let options = '';
+      features.forEach(el => {
+        options = `${options}<option value="${el.place_name}"></option>`;
+        this_.locationAutocompleteCache[el.place_name] =
+          el.geometry.coordinates;
+      });
+      $('#datalist').html(options);
+    });
+  }
+
+  startLocationSuccess() {
     Map_Obj.showDirectionsAndLine();
     $('#navigationModal').modal('hide');
+    Map_Obj.closePopupsArray();
+    Map_Obj.restMarker.togglePopup();
     Map_Obj.fitBounds();
     $('#businesses-list').removeClass('show');
     $('#directions-panel').show();

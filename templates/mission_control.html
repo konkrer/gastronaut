@@ -137,13 +137,17 @@
             aria-expanded="false"
             aria-controls="mission-form"
             ><div class="hoverOpaque txt-warning hoverBlue">
-              <span class="panel-toggle pt-1"
+              <span class="panel-toggle pt-1 rounded-right"
                 >Details <i class="fas fa-caret-down fa-xs text-dark ml-2"></i
               ></span>
             </div>
           </a>
         </div>
-        <div id="directions-panel" style="display: none;">
+        <div
+          id="directions-panel"
+          class="border-bottom border-light"
+          style="display: none;"
+        >
           <a
             class="font-weight-bold"
             data-toggle="collapse"
@@ -153,7 +157,7 @@
             aria-controls="directions-text"
           >
             <div class="hoverOpaque txt-warning hoverBlue">
-              <span class="panel-toggle"
+              <span class="panel-toggle rounded-right"
                 >Directions
                 <i class="fas fa-caret-down fa-xs text-dark ml-2"></i
               ></span>
@@ -161,9 +165,11 @@
           </a>
           <div
             id="directions-text"
-            class="collapse txt-white black-outline-1 pt-3 bg-trans-b2 hoverBgLight"
+            class="collapse txt-white black-outline-1 bg-trans-b2 hoverBgLight"
           >
-            <h5 class="text-center">Directions <span class="profileDisplay"></span></h5>
+            <h5 class="text-center pt-3">
+              Directions <span class="profileDisplay"></span>
+            </h5>
             <ol></ol>
           </div>
         </div>
@@ -174,10 +180,10 @@
             href="#businesses-list"
             role="button"
             aria-expanded="false"
-            aria-controls="mission-form"
+            aria-controls="businesses-list"
           >
             <div class="hoverOpaque txt-warning hoverBlue">
-              <span class="panel-toggle"
+              <span class="panel-toggle rounded-right"
                 >Mission Goals
                 <i class="fas fa-caret-down fa-xs text-dark ml-2"></i
               ></span>
@@ -187,8 +193,6 @@
             id="businesses-list"
             class="collapse list-group txt-white black-outline"
           ></ul>
-        </div>
-        
         </div>
       </div>
     </div>
@@ -392,7 +396,10 @@
                 id="location"
                 name="location"
                 placeholder="Location"
+                maxlength="256"
+                list="datalist"
               />
+              <datalist id="datalist"></datalist>
             </div>
             <p class="pb-3">
               The navigation destination will change as Mission Goals are
