@@ -180,3 +180,16 @@ main div.container > div.row.justify-content-end {
     height: 200px;
   }
 }
+
+@media screen and (orientation: landscape) and (max-width: 992px) {
+  #sidebar-username {
+    margin-top: 0px;
+    margin-bottom: 0px;
+  }
+  .byline {
+    margin-bottom: 0px;
+  }
+  .nav-pills {
+    margin-top: 10px !important;
+  }
+}

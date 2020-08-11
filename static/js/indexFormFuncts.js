@@ -24,7 +24,8 @@ class FormFuncts {
       { name: 'sort_by', value: 'best_match' },
     ];
 
-    this.addLocationKeyupListener();
+    this.addAutocompleteLocation();
+    this.addLocationSubmitListener();
     this.addDetectLocationListener();
     this.addKeywordKeyupListener();
     this.addFormChangeListener();
@@ -226,19 +227,55 @@ class FormFuncts {
   }
 
   /*
-  /* Auto search with location input change.
+  /* Add autocomplete location suggestions.
   */
-  addLocationKeyupListener() {
-    const this_ = this;
-    this.$locationInput.on('keyup', function (e) {
-      clearTimeout(this_.keyupTimer);
+  addAutocompleteLocation() {
+    this.$locationInput.on(
+      'keyup',
+      async function (e) {
+        const key = e.which || e.keyCode;
+        if (key === 13) return;
+        // If location suggestion clicked search yelp.
+        if (key === undefined) {
+          this.locationSearch();
+          return;
+        }
+        const query = this.$locationInput.val();
+        if (query.length < 3) return;
+
+        const features = await Map_Obj.geocode(query);
+        console.log(features);
+        let options = '';
+        features.forEach(el => {
+          options = `${options}<option value="${el.place_name}"></option>`;
+        });
+        $('#datalist-location').html(options);
+      }.bind(this)
+    );
+  }
+
+  /*
+  /* When form is submitted check for location to make search.
+  */
+  addLocationSubmitListener() {
+    this.$locationInput.on(
+      'keydown',
+      function (e) {
+        const key = e.which || e.keyCode;
+        if (key === 13) {
+          this.locationSearch();
+        }
+      }.bind(this)
+    );
+  }
+
+  locationSearch() {
+    if (this.$locationInput.val()) {
       $('.spinner-zone').show();
-      if (this_.$locationInput.val()) {
-        this_.keyupTimer = setTimeout(function () {
-          IndexSearchObj.searchYelp();
-        }, this_.autoSearchDelay);
-      } else $('.spinner-zone').hide();
-    });
+      IndexSearchObj.searchYelp();
+      this.$searchTerm.focus();
+      this.$searchTerm.blur();
+    }
   }
 
   /*
@@ -260,9 +297,9 @@ class FormFuncts {
       clearTimeout(this_.keyupTimer);
       $('.spinner-zone').show();
       const term = this_.$searchTerm.val();
-      this_.keywordDisplayLogic(term);
       this_.keyupTimer = setTimeout(function () {
         IndexSearchObj.searchYelp();
+        this_.keywordDisplayLogic(term);
       }, this_.autoSearchDelay);
     });
   }

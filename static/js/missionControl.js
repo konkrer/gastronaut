@@ -789,6 +789,7 @@ class MissionControl {
         Map_Obj.latitude = coords[1];
         Map_Obj.addUserMarker(1);
         Map_Obj.userMarker.togglePopup();
+        $('#location').prop('placeholder', 'Starting Location');
       }
       if (Map_Obj.longitude) {
         this_.startLocationSuccess();

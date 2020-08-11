@@ -69,7 +69,6 @@ class CardsModalsFactory {
   */
   errorCard(data) {
     alert(`${data.error.code}, ${data.error.description}`);
-    console.error(data);
   }
 
   /*
