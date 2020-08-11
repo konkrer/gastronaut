@@ -386,7 +386,7 @@ body::-webkit-scrollbar-thumb:hover {
     background: var(--my-green) !important;
     color: var(--my-info) !important;
   }
-  .modal label:hover {
+  .modal label:hover:not(.no-hover) {
     color: var(--blue) !important;
   }
 }

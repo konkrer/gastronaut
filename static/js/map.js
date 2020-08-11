@@ -22,6 +22,7 @@ class MapObj {
     this.mapboxClient = mapboxSdk({ accessToken: this.accessToken });
     this.currentRoute = null;
     this.routeCache = new Set();
+    this.directionsCache = {};
     this.profile = null;
     // options
     this.userMarkerOptions = { color: '#3bdb53' };
@@ -214,7 +215,7 @@ class MapObj {
       geometry: { coordinates },
       legs,
     } = route;
-    this.addDirectionsText(legs);
+    this.addDirectionsText(legs, routeKey);
     this.addGeoJsonLine(coordinates, routeKey);
   }
 
@@ -229,6 +230,7 @@ class MapObj {
       layout: this.layout,
       paint: this.paint,
     });
+    $('#directions-text ol').html(this.directionsCache[routeKey]);
   }
 
   addGeoJsonLine(coordinates, routeKey) {
@@ -258,7 +260,7 @@ class MapObj {
     this.routeCache.add(routeKey);
   }
 
-  addDirectionsText(legs) {
+  addDirectionsText(legs, routeKey) {
     const olContents = legs[0].steps.reduce((acc, step) => {
       const {
         maneuver: { instruction },
@@ -267,6 +269,7 @@ class MapObj {
       return `${acc}${li}`;
     }, '');
     $('#directions-text ol').html(olContents);
+    this.directionsCache[routeKey] = olContents;
   }
 
   clearRouting() {

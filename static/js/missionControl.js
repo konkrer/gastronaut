@@ -21,7 +21,7 @@ class MissionControl {
     this.removeBusinessListener();
     this.sidebarListener();
     this.mapAllListener();
-    this.addNavigationListener();
+    this.addNavigationListeners();
     // Delay for map load.
     setTimeout(() => {
       this.checkLocalStorage();
@@ -713,13 +713,30 @@ class MissionControl {
     );
   }
 
-  addNavigationListener() {
+  addNavigationListeners() {
+    const this_ = this;
+    // nav buttons
     $('.map-routing').on('click', '.directionsBtn', function () {
-      $('#navigationModal').modal('show');
-      Map_Obj.profile = $(this).data('profile');
+      const profile = $(this).data('profile');
+      Map_Obj.profile = profile;
+      $('.profileDisplay').text(Map_Obj.profileDict[profile]);
+      if (Map_Obj.currentRoute) this_.detectSuccess();
+      else $('#navigationModal').modal('show');
     });
+    // detect location
     $('#detect-location').click(function () {
       Geolocation_Obj.detectLocation();
+    });
+    // enter location or update navigation profile
+    $('#nav-start-form').submit(function (e) {
+      e.preventDefault();
+
+      const location = $(this).find('#location').val();
+      if (location) {
+      } else if (Map_Obj.longitude) {
+        this_.detectSuccess();
+      } else
+        alert('Enter a starting location or click the detect location button.');
     });
   }
 
@@ -728,6 +745,8 @@ class MissionControl {
     $('#navigationModal').modal('hide');
     Map_Obj.fitBounds();
     $('#businesses-list').removeClass('show');
+    $('#directions-panel').show();
+    $('#directions-text').addClass('show');
   }
 }
 

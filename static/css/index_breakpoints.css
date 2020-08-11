@@ -344,6 +344,9 @@
   .hoverBgWhite:hover {
     background-color: whitesmoke;
   }
+  .hoverBgLight:hover {
+    background-color: var(--light);
+  }
 }
 
 /* moving filter display for screen too small to put in navbar*/

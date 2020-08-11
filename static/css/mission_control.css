@@ -91,6 +91,10 @@ a[href='#mission-select-form'] {
   cursor: pointer;
 }
 
+#directions-text {
+  padding-bottom: unset;
+}
+
 a.text-success.hoverUnset:focus,
 a.text-success.hoverUnset:active {
   color: var(--success) !important;

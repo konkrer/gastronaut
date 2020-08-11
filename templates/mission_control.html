@@ -143,6 +143,30 @@
             </div>
           </a>
         </div>
+        <div id="directions-panel" style="display: none;">
+          <a
+            class="font-weight-bold hoverUnset"
+            data-toggle="collapse"
+            href="#directions-text"
+            role="button"
+            aria-expanded="false"
+            aria-controls="directions-text"
+          >
+            <div class="hoverOpaque">
+              <span class="panel-toggle"
+                >Directions
+                <i class="fas fa-caret-down fa-xs text-dark ml-2"></i
+              ></span>
+            </div>
+          </a>
+          <div
+            id="directions-text"
+            class="collapse txt-white black-outline-1 pt-3 bg-trans-b2 hoverBgLight"
+          >
+            <h5 class="text-center">Directions<span class="profileDisplay"></span></h5>
+            <ol></ol>
+          </div>
+        </div>
         <div class="px-0 rounded-bottom no-select" id="businesses-panel">
           <a
             class="font-weight-bold hoverUnset"
@@ -163,6 +187,8 @@
             id="businesses-list"
             class="collapse list-group txt-white black-outline"
           ></ul>
+        </div>
+        
         </div>
       </div>
     </div>
@@ -344,7 +370,7 @@
         </div>
         <div class="modal-body bg-dark txt-black pt-4">
           <form id="nav-start-form">
-            <label class="mb-3" for="location">
+            <label class="mb-3 no-hover" for="location">
               Enter a starting location or click the detect location button
               below. <i class="fas fa-street-view ml-2"></i>
             </label>
