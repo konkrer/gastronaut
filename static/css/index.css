@@ -91,9 +91,8 @@ main {
 }
 
 .my-card::-webkit-scrollbar-thumb {
-  background-color: #693a3a;
+  background-color: var(--primary);
   border-radius: 2px;
-  border: black 1px solid;
 }
 
 #scrl1::-webkit-scrollbar-thumb:hover,
