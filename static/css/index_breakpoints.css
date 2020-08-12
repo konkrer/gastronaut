@@ -37,7 +37,7 @@
   .directionsToggle.border-bottom .directionsCaret {
     width: 20px;
   }
-  #map-directions.directionsShow {
+  #map-panel.directionsShow {
     width: 170px;
   }
   #business-detail-modal table {
@@ -82,11 +82,14 @@
     transform: translate(150px, -133px);
   }
   .directions-col {
-    top: 55px;
+    top: 45px;
   }
-  #map-directions.directionsShow {
+  #map-panel.directionsShow {
     height: 200px;
     font-size: small;
+  }
+  #map-panel.directionsShow .directionsToggle {
+    font-size: x-small;
   }
   #directions-text ol {
     padding-inline-start: 20px;
@@ -108,7 +111,7 @@
     width: 50vw;
     left: calc(50vw - 25vw);
   }
-  #map-directions.directionsShow {
+  #map-panel.directionsShow {
     width: 225px;
   }
 }

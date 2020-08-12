@@ -606,15 +606,15 @@ class ButtonsLogics {
     $('.mapBtns').toggle();
     $('.map-toggle').toggleClass('toggle-on-map');
     $('.map-track').toggleClass(['border-top', 'border-secondary']);
-    if ($('#map-directions').hasClass('show'))
-      $('#map-directions').removeClass('show').hide();
+    if ($('#map-panel').hasClass('show'))
+      $('#map-panel').removeClass('show').hide();
     if (Map_Obj.mapOpen) {
       Map_Obj.mapOpen = false;
     } else {
       Map_Obj.mapOpen = true;
       Map_Obj.mappyBoi.resize();
       if ($('div.map-routing .reset').hasClass('resetHorizontal'))
-        $('#map-directions').addClass('show').fadeIn();
+        $('#map-panel').addClass('show').fadeIn();
     }
   }
 
@@ -707,7 +707,7 @@ class ButtonsLogics {
       $('.walk').addClass('walkHorizontal');
       $('.bike').addClass('bikeHorizontal');
       $('div.reset').fadeIn().addClass('resetHorizontal');
-      $('#map-directions').addClass('show').fadeIn();
+      $('#map-panel').addClass('show').fadeIn();
     });
   }
 
@@ -736,7 +736,7 @@ class ButtonsLogics {
       .each(function () {
         $(this).toggle();
       });
-    $('#map-directions').toggleClass('directionsShow');
+    $('#map-panel').toggleClass('directionsShow');
     $('#directions-text').toggle();
   }
 
@@ -746,9 +746,9 @@ class ButtonsLogics {
       '.map-routing div.reset',
       function () {
         Map_Obj.clearRouting();
-        if ($('#map-directions').hasClass('directionsShow'))
+        if ($('#map-panel').hasClass('directionsShow'))
           this.toggleDirectionsDiv();
-        $('#map-directions').removeClass('show').fadeOut();
+        $('#map-panel').removeClass('show').fadeOut();
         $('.walk').removeClass('walkHorizontal');
         $('.bike').removeClass('bikeHorizontal');
         $('div.reset').fadeOut().removeClass('resetHorizontal');

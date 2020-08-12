@@ -118,7 +118,11 @@ class MapObj {
                     ${name}</span>`;
     if (this.restMarker) this.restMarker.remove();
     this.restMarker = this.addMarker(restCoords, html);
-    if (this.profile) this.showDirectionsAndLine();
+    if (this.profile) {
+      this.showDirectionsAndLine();
+      if ($('#map-panel').hasClass('directionsShow'))
+        ButtonsLogicsObj.toggleDirectionsDiv();
+    }
     this.fitBounds();
   }
 

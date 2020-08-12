@@ -318,7 +318,6 @@ a.first-letter.active {
 .directions-col {
   position: absolute;
   top: 65px;
-  /* margin-bottom: 35px; */
   max-height: calc(100% - 65px);
   overflow: hidden;
   left: 15px;
@@ -356,11 +355,10 @@ a.first-letter.active {
   transform: translate(180px, -165px);
 }
 
-#map-directions {
+#map-panel {
   font-size: 18px;
   width: 30px;
   height: 60px;
-  top: 65px;
   border-radius: 5px;
   color: #333333;
   overflow: hidden;
@@ -369,7 +367,7 @@ a.first-letter.active {
   background-color: rgba(255, 255, 255, 0.9);
 }
 
-#map-directions.directionsShow {
+#map-panel.directionsShow {
   width: 300px;
   height: 300px;
 }
