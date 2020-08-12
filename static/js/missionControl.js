@@ -797,6 +797,7 @@ class MissionControl {
         Map_Obj.latitude = coords[1];
         Map_Obj.addUserMarker();
         Map_Obj.userMarker.togglePopup();
+        navigator.geolocation.clearWatch(Geolocation_Obj.locationWatcher);
         $('#location').prop('placeholder', 'Starting Location');
       }
       if (Map_Obj.longitude) {
@@ -809,15 +810,20 @@ class MissionControl {
     const this_ = this;
     $('#location').on('keyup', async function () {
       const query = $(this).val();
+      // If the current query value is a suggestion that was just given return.
       if (this_.locationAutocompleteCache[query]) return;
+      // Autocomplete on querys 3 chars or longer.
       if (query.length < 3) return;
+      // Get suggestions.
       const features = await Map_Obj.geocode(query);
+      // Make html <option> for each suggesion and cache coords associated with each suggestion.
       let options = '';
       features.forEach(el => {
         options = `${options}<option value="${el.place_name}"></option>`;
         this_.locationAutocompleteCache[el.place_name] =
           el.geometry.coordinates;
       });
+      // Put suggestions in input list - datalist.
       $('#datalist').html(options);
     });
   }

@@ -73,13 +73,13 @@
     height: 29px;
   }
   .walkHorizontal {
-    transform: translate(50px, -45px);
+    transform: translate(35px, -46px);
   }
   .bikeHorizontal {
-    transform: translate(100px, -89px);
+    transform: translate(70px, -90px);
   }
   .resetHorizontal {
-    transform: translate(150px, -133px);
+    transform: translate(105px, -134px);
   }
   .directions-col {
     top: 45px;

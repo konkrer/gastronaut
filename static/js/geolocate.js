@@ -2,7 +2,7 @@
 
 class GeolocationObj {
   constructor() {
-    this.locationWatcher;
+    this.locationWatcher = null;
     this.options = {
       enableHighAccuracy: true,
       timeout: 20000,

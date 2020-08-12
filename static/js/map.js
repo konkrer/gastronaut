@@ -33,6 +33,9 @@ class MapObj {
     this.markerOptions = { color: '#3bdb53' };
     this.fitBoundsOptions = [
       {
+        padding: { top: 120, bottom: 10, left: 80, right: 80 },
+      },
+      {
         padding: { top: 80, bottom: 10, left: 80, right: 80 },
       },
       {
@@ -130,7 +133,12 @@ class MapObj {
   fitBounds(coords1, coords2) {
     coords1 = coords1 ? coords1 : [this.longitude, this.latitude];
     coords2 = coords2 ? coords2 : this.restCoords;
-    const optIdx = this.isMobileScreen() ? 0 : 1;
+
+    let optIdx;
+    if (this.isMobilePortrait()) optIdx = 0;
+    else if (this.isMobileScreen()) optIdx = 1;
+    else optIdx = 2;
+
     this.mappyBoi.fitBounds([coords1, coords2], this.fitBoundsOptions[optIdx]);
   }
 
