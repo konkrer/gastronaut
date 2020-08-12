@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "6745b58b5b932adf05306ae803f2df29ccf527c1933bf6f91aa4ad1593b6bdc9"
+            "sha256": "6ac9ac7c4a04ff89758ff8fdfee67af4c03e812a872446b71ed3e686c5fefee5"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -335,14 +335,6 @@
                 "sha256:81195de0ac94fbc8368abbaf9197b88c4f3ffd6c2719b5bf5fc9da744f3d829c"
             ],
             "version": "==2.3.3"
-        },
-        "yagmail": {
-            "hashes": [
-                "sha256:a055d78eca8846bee8329b1bd337599b0b09462d4d24471fba44db30dbfec03f",
-                "sha256:ca5ff7eee3c190eedd7cbdf05bff69c5c0ae357aef64f89dcc42e4872c6ebe7c"
-            ],
-            "index": "pypi",
-            "version": "==0.11.224"
         }
     },
     "develop": {
@@ -509,10 +501,10 @@
         },
         "prompt-toolkit": {
             "hashes": [
-                "sha256:563d1a4140b63ff9dd587bda9557cffb2fe73650205ab6f4383092fb882e7dc8",
-                "sha256:df7e9e63aea609b1da3a65641ceaf5bc7d05e0a04de5bd45d05dbeffbabf9e04"
+                "sha256:683397077a64cd1f750b71c05afcfc6612a7300cb6932666531e5a54f38ea564",
+                "sha256:7630ab85a23302839a0f26b31cc24f518e6155dea1ed395ea61b42c45941b6a6"
             ],
-            "version": "==3.0.5"
+            "version": "==3.0.6"
         },
         "pycodestyle": {
             "hashes": [

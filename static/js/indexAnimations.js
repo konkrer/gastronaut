@@ -233,4 +233,4 @@ class IndexAnimations {
   }
 }
 
-const Animations = new IndexAnimations();
+const Animations_Obj = new IndexAnimations();

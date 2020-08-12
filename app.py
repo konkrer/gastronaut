@@ -970,16 +970,16 @@ def submit_feedback():
     user = g.user.username if g.user else 'Anynomous'
 
     receiver = "richardiannucelli@gmail.com"
-    body = f"Feedback: {feedback} --From: {user} --Email: {email}"
+    body = f"<h5>Feedback:</h5>{feedback}<p>From: {user} --Email: {email}</p>"
 
     try:
         requests.post(
             f"https://api.mailgun.net/v3/{MAILGUN_DOMAIN}/messages",
             auth=("api", MAILGUN_API_KEY),
-            data={"from": f"Feedbak <mailgun@{MAILGUN_DOMAIN}>",
+            data={"from": f"Feedback <mailgun@{MAILGUN_DOMAIN}>",
                   "to": [receiver],
                   "subject": "Feedback",
-                  "text": body})
+                  "html": body})
     except Exception as e:
         error_logging(e)
         return jsonify({'error': 'Error sending message', 'color': 'warning'})

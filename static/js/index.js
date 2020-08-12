@@ -62,7 +62,7 @@ class IndexSearchLogic {
         return;
       }
       // Search in All category.
-      Animations.category = 'restaurants,bars,food';
+      Animations_Obj.category = 'restaurants,bars,food';
       $('.cat-display').text('All');
       FormFunctsObj.turnActiveOffCatBtns();
       $('#All').addClass('active');
@@ -155,7 +155,7 @@ class IndexSearchLogic {
     // Avoid repaint.
     if (this.transactionsNoChangeAndNoNewData(!!data)) return;
 
-    Animations.justSearchedYelp = true;
+    Animations_Obj.justSearchedYelp = true;
     // If no new data use last data.
     var data = data ? data.data : JSON.parse(lastData);
 
@@ -207,7 +207,7 @@ class IndexSearchLogic {
     this.userMarkAndYelpCoordsLogic(data);
 
     const cards = CardsModalsFactoryObj.getCardsHtml(data.businesses);
-    Animations.currCard = 0;
+    Animations_Obj.currCard = 0;
 
     // Scroll to first card and fade in.
     // There may not be results cards because of transaction post filtering.
@@ -226,9 +226,9 @@ class IndexSearchLogic {
       // No dummy card needed for one result.
       if (!this.resultsRemaining && data.total !== 1)
         CardsModalsFactoryObj.addDummyCard();
-      if (Animations.sidebarOpen)
+      if (Animations_Obj.sidebarOpen)
         $('.arrow-wrapper').addClass('pulse-outline-mobile');
-      Animations.setCardScrollTrackerMapper();
+      Animations_Obj.setCardScrollTrackerMapper();
       setTimeout(() => {
         this.addNextCardsListener();
       }, 1000);
@@ -309,7 +309,7 @@ class IndexSearchLogic {
     if (!this.resultsRemaining || this.offset === 20) {
       CardsModalsFactoryObj.addDummyCard();
       setTimeout(() => {
-        Animations.setCardScrollTrackerMapper();
+        Animations_Obj.setCardScrollTrackerMapper();
       }, 100);
       return;
     }
@@ -321,7 +321,7 @@ class IndexSearchLogic {
     $('.card-track-inner').append(
       CardsModalsFactoryObj.getCardsHtml(data.data.businesses)
     );
-    Animations.setCardScrollTrackerMapper();
+    Animations_Obj.setCardScrollTrackerMapper();
 
     if (this.resultsRemaining)
       setTimeout(() => {
@@ -336,7 +336,7 @@ class IndexSearchLogic {
   hideHeroAndSearch() {
     $('.hero-animation').hide();
     $('.alert').hide();
-    Animations.scrollCategoriesToCurrent();
+    Animations_Obj.scrollCategoriesToCurrent();
     // if there is given location request search
     if (FormFunctsObj.$locationInput.val()) this.searchYelp();
     // if no given location but allowing location sharing detect location
@@ -522,8 +522,8 @@ class ParamsChange {
     const prevCategory = localStorage.getItem('category');
 
     // category change warrants an API call
-    if (prevCategory !== Animations.category) {
-      localStorage.setItem('category', Animations.category);
+    if (prevCategory !== Animations_Obj.category) {
+      localStorage.setItem('category', Animations_Obj.category);
       return true;
     }
     return change;
@@ -598,7 +598,7 @@ class ButtonsLogics {
           $(this).toggleClass('d-none');
         });
       // make sure correct cards show.
-      Animations.setCardsScrollLeft();
+      Animations_Obj.setCardsScrollLeft();
     }
     // Toggle all map items.
     $('.card-map-zone').toggleClass('map-collapse');
@@ -639,7 +639,7 @@ class ButtonsLogics {
         $(this).toggleClass('d-none');
       });
     if (!$('.card-map-zone').hasClass('cards-collapse')) {
-      Animations.setCardsScrollLeft();
+      Animations_Obj.setCardsScrollLeft();
     }
   }
 
@@ -701,9 +701,11 @@ class ButtonsLogics {
   addDirectionsListener() {
     $('.map-track').on('click', '.directionsBtn', function () {
       Map_Obj.profile = $(this).data('profile');
+      Map_Obj.markerStyle = 1;
+      Map_Obj.userMarkerStyle = 1;
+      Map_Obj.addUserMarker();
       $('.profileDisplay').text(Map_Obj.profileDict[Map_Obj.profile]);
-      Map_Obj.showDirectionsAndLine();
-      Map_Obj.fitBounds();
+      Animations_Obj.mapCurrCard();
       $('.walk').addClass('walkHorizontal');
       $('.bike').addClass('bikeHorizontal');
       $('div.reset').fadeIn().addClass('resetHorizontal');
@@ -746,6 +748,10 @@ class ButtonsLogics {
       '.map-routing div.reset',
       function () {
         Map_Obj.clearRouting();
+        Map_Obj.markerStyle = 0;
+        Map_Obj.userMarkerStyle = 0;
+        Map_Obj.addUserMarker();
+        Animations_Obj.mapCurrCard();
         if ($('#map-panel').hasClass('directionsShow'))
           this.toggleDirectionsDiv();
         $('#map-panel').removeClass('show').fadeOut();

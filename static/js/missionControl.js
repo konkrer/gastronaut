@@ -9,6 +9,8 @@ class MissionControl {
     this.sidebarOpen = true;
     this.$infoCol = $('#info-col');
     this.locationAutocompleteCache = {};
+    this.lastRestMarkerIdx = 0;
+    this.lastRestMarkerHtml = null;
     this.addLoadMissionListener();
     this.addCreateMissionListener();
     this.addUpdateListener();
@@ -586,10 +588,13 @@ class MissionControl {
       Map_Obj.restCoords = [lng, lat];
       if (Map_Obj.profile) {
         Map_Obj.showDirectionsAndLine();
+        this_.changeMarkerColor(this_.lastRestMarkerIdx, null);
+        this_.changeMarkerColor(idx, $(this), 1);
         this_.postDirectionsMapAdjustments();
         $('#businesses-list').removeClass('show');
         $('#directions-text').removeClass('show');
       }
+      this_.lastRestMarkerIdx = idx;
     });
   }
 
@@ -668,6 +673,34 @@ class MissionControl {
         ApiFunctsObj.showToast(`<div>${success}</div><div>- ${name}</div>`);
       }
     });
+  }
+
+  changeMarkerColor(idx, $el, option = 0) {
+    let html;
+    if (option === 0) {
+      // If no last restMarker return.
+      if (this.lastRestMarkerHtml === null) return;
+      html = this.lastRestMarkerHtml;
+    } else {
+      const id = $el.children().data('id');
+      const name = $el.text();
+      html = `<span class="detailsBtn" data-id="${id}">
+                      ${name}</span>`;
+    }
+    // get marker for this business
+    const marker = Map_Obj.restMarkers[idx];
+    const { lng, lat } = marker._lngLat;
+    marker.remove();
+
+    Map_Obj.markerStyle = option;
+    const newMarker = Map_Obj.addMarker([lng, lat], html);
+    Map_Obj.markerStyle = 0;
+    if (option === 1) {
+      Map_Obj.restMarker = newMarker;
+      this.lastRestMarkerHtml = html;
+    }
+    // put new marker in restMarkers array in spot of old marker
+    Map_Obj.restMarkers.splice(idx, 1, newMarker);
   }
 
   addRemoveBusinessListener() {
@@ -758,7 +791,7 @@ class MissionControl {
     // Location entry or restart navigation.
     this.addNavStartListener();
     // clear directions routing
-    $('.map-routing .reset').click(this.endNavigation);
+    $('.map-routing .reset').click(this.endNavigation.bind(this));
   }
 
   /*
@@ -799,7 +832,6 @@ class MissionControl {
         Map_Obj.longitude = coords[0];
         Map_Obj.latitude = coords[1];
         Map_Obj.addUserMarker();
-        Map_Obj.userMarker.togglePopup();
         navigator.geolocation.clearWatch(Geolocation_Obj.locationWatcher);
         $('#location').prop('placeholder', 'Starting Location');
       }
@@ -833,6 +865,11 @@ class MissionControl {
 
   startLocationSuccess() {
     Map_Obj.showDirectionsAndLine();
+    this.changeMarkerColor(
+      this.lastRestMarkerIdx,
+      $('#businesses-list .list-group-item').eq(this.lastRestMarkerIdx),
+      1
+    );
     this.postDirectionsMapAdjustments();
     $('#navigationModal').modal('hide');
     $('#businesses-list').removeClass('show');
@@ -848,6 +885,7 @@ class MissionControl {
 
   endNavigation() {
     Map_Obj.clearRouting();
+    this.changeMarkerColor(this.lastRestMarkerIdx, null);
     $('#directions-panel').fadeOut();
     $('.map-routing .reset').fadeOut();
   }

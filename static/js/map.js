@@ -16,6 +16,7 @@ class MapObj {
     this.restCoords = null;
     this.userMarker = null;
     this.userMarkerStyle = 0;
+    this.markerStyle = 0;
     // restaurant marker for index page.
     this.restMarker = null;
     // restaurant markers for mission-control page.
@@ -26,11 +27,10 @@ class MapObj {
     this.directionsCache = {};
     this.profile = null;
     // options
-    this.userMarkerOptions = [
-      { color: '#3bdb53' },
+    this.markerOptions = [
+      { color: '#00ff26' },
       { color: 'var(--my-info-alt)' },
     ];
-    this.markerOptions = { color: '#3bdb53' };
     this.fitBoundsOptions = [
       {
         padding: { top: 120, bottom: 10, left: 80, right: 80 },
@@ -76,18 +76,19 @@ class MapObj {
     if (!this.longitude) return;
     if (this.userMarker) this.userMarker.remove();
     this.userMarker = new mapboxgl.Marker(
-      this.userMarkerOptions[this.userMarkerStyle]
+      this.markerOptions[this.userMarkerStyle]
     )
       .setLngLat([this.longitude, this.latitude])
       .setPopup(
         new mapboxgl.Popup().setHTML(`<div class="mr-2"><em>You</em></div>`)
       )
-      .addTo(this.mappyBoi);
+      .addTo(this.mappyBoi)
+      .togglePopup();
   }
 
   // Add a business map marker and open popup.
   addMarker(coords, html, openPopupMobile = true) {
-    const marker = new mapboxgl.Marker(this.markerOptions)
+    const marker = new mapboxgl.Marker(this.markerOptions[this.markerStyle])
       .setLngLat(coords)
       .setPopup(new mapboxgl.Popup().setHTML(html))
       .addTo(this.mappyBoi)

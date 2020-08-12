@@ -82,18 +82,18 @@ main {
 #scrl3::-webkit-scrollbar-thumb,
 #scrl4::-webkit-scrollbar-thumb {
   background-color: var(--secondary);
-  border-radius: 5px;
+  border-radius: 3px;
 }
 
 #directions-text::-webkit-scrollbar-thumb {
   background-color: var(--my-warning);
-  border-radius: 5px;
+  border-radius: 3px;
 }
 
 .my-card::-webkit-scrollbar-thumb {
-  background-color: #757575;
-  border-radius: 5px;
-  border: #422424 1px solid;
+  background-color: #693a3a;
+  border-radius: 2px;
+  border: black 1px solid;
 }
 
 #scrl1::-webkit-scrollbar-thumb:hover,
