@@ -3,7 +3,6 @@
 import requests
 import logging
 import os
-import yagmail
 from types import SimpleNamespace
 from sentry_sdk.integrations.flask import FlaskIntegration
 from sentry_sdk import (capture_message, capture_exception,
@@ -36,7 +35,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 if not os.environ.get('SECRET_KEY'):
     from flask_debugtoolbar import DebugToolbarExtension
     from development_local.local_settings import (
-        YELP_API_KEY, SECRET_KEY, GMAIL_PASSWORD)
+        YELP_API_KEY, SECRET_KEY, MAILGUN_API_KEY, MAILGUN_DOMAIN)
 
     app.config["SECRET_KEY"] = SECRET_KEY
     app.config['SQLALCHEMY_ECHO'] = True
@@ -53,7 +52,8 @@ else:
     )
     app.config["SECRET_KEY"] = os.environ.get('SECRET_KEY')
     YELP_API_KEY = os.environ.get('YELP_API_KEY')
-    GMAIL_PASSWORD = os.environ.get('GMAIL_PASSWORD')
+    MAILGUN_API_KEY = os.environ.get('MAILGUN_API_KEY')
+    MAILGUN_DOMAIN = os.environ.get('MAILGUN_DOMAIN')
     debug = False
 
 
@@ -973,15 +973,15 @@ def submit_feedback():
     body = f"Feedback: {feedback} --From: {user} --Email: {email}"
 
     try:
-        yag = yagmail.SMTP("developeroriented@gmail.com", GMAIL_PASSWORD)
-        yag.send(
-            to=receiver,
-            subject="Gastronaut Feedback",
-            contents=body,
-        )
+        requests.post(
+            f"https://api.mailgun.net/v3/{MAILGUN_DOMAIN}/messages",
+            auth=("api", MAILGUN_API_KEY),
+            data={"from": f"Feedbak <mailgun@{MAILGUN_DOMAIN}>",
+                  "to": [receiver],
+                  "subject": "Feedback",
+                  "text": body})
     except Exception as e:
         error_logging(e)
-        capture_message(GMAIL_PASSWORD)
         return jsonify({'error': 'Error sending message', 'color': 'warning'})
 
     return jsonify({'success': 'Feedback Received!', 'color': 'green'})
