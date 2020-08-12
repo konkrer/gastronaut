@@ -27,6 +27,8 @@ class MissionControl {
     setTimeout(() => {
       this.checkLocalStorage();
     }, 2000);
+    // Set user marker to be purple for better visual differentiation.
+    Map_Obj.userMarkerStyle = 1;
   }
 
   /*
@@ -557,7 +559,10 @@ class MissionControl {
     if (Map_Obj.isMobileScreen()) {
       $('#businesses-list').removeClass('show');
       $('#mission-select-form').removeClass('show');
+      $('#directions-text').removeClass('show');
     }
+    if (!Map_Obj.restMarker.getPopup().isOpen())
+      Map_Obj.restMarker.togglePopup();
   }
 
   // Toggle business marker popup and set restCoords
@@ -580,7 +585,8 @@ class MissionControl {
       Map_Obj.restCoords = [lng, lat];
       if (Map_Obj.profile) {
         Map_Obj.showDirectionsAndLine();
-        Map_Obj.fitBounds();
+        $('#businesses-list').removeClass('show');
+        $('#directions-text').removeClass('show');
       }
     });
   }
@@ -753,6 +759,7 @@ class MissionControl {
 
   /*
   /* Navigation Profile Buttons Listener (drive, walk, cycle). 
+  /* Opens modal. Sets Map_Obj profile.
   */
   addNavProfileBtnsListener() {
     const this_ = this;
@@ -787,7 +794,7 @@ class MissionControl {
         }
         Map_Obj.longitude = coords[0];
         Map_Obj.latitude = coords[1];
-        Map_Obj.addUserMarker(1);
+        Map_Obj.addUserMarker();
         Map_Obj.userMarker.togglePopup();
         $('#location').prop('placeholder', 'Starting Location');
       }
@@ -817,12 +824,8 @@ class MissionControl {
   startLocationSuccess() {
     Map_Obj.showDirectionsAndLine();
     $('#navigationModal').modal('hide');
-    Map_Obj.closePopupsArray();
-    Map_Obj.restMarker.togglePopup();
-    Map_Obj.fitBounds();
     $('#businesses-list').removeClass('show');
     $('#directions-panel').show();
-    $('#directions-text').addClass('show');
     $('.map-routing .reset').fadeIn();
   }
 

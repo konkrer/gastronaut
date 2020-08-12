@@ -15,6 +15,7 @@ class MapObj {
     this.latitude = null;
     this.restCoords = null;
     this.userMarker = null;
+    this.userMarkerStyle = 0;
     // restaurant marker for index page.
     this.restMarker = null;
     // restaurant markers for mission-control page.
@@ -68,10 +69,12 @@ class MapObj {
   }
 
   // Add a user marker and open popup.
-  addUserMarker(optionsFlag = 0) {
+  addUserMarker() {
     if (!this.longitude) return;
     if (this.userMarker) this.userMarker.remove();
-    this.userMarker = new mapboxgl.Marker(this.userMarkerOptions[optionsFlag])
+    this.userMarker = new mapboxgl.Marker(
+      this.userMarkerOptions[this.userMarkerStyle]
+    )
       .setLngLat([this.longitude, this.latitude])
       .setPopup(
         new mapboxgl.Popup().setHTML(`<div class="mr-2"><em>You</em></div>`)
@@ -214,35 +217,38 @@ class MapObj {
   async showDirectionsAndLine() {
     const t = this;
     const routeKey = `${t.longitude},${t.latitude};${t.restCoords[0]},${t.restCoords[1]};${t.profile}`;
-    if (this.routeCache.has(routeKey)) {
-      this.reloadRoute(routeKey);
-      return;
+    if (t.routeCache.has(routeKey)) {
+      t.reloadRoute(routeKey);
+    } else {
+      const resp = await t.mapboxClient.directions
+        .getDirections({
+          profile: t.profile,
+          steps: true,
+          geometries: 'geojson',
+          overview: 'full',
+          waypoints: [
+            {
+              coordinates: [t.longitude, t.latitude],
+              approach: 'unrestricted',
+            },
+            {
+              coordinates: t.restCoords,
+            },
+          ],
+        })
+        .send();
+
+      const route = resp.body.routes[0];
+      const {
+        geometry: { coordinates },
+        legs,
+      } = route;
+      t.addDirectionsText(legs, routeKey);
+      t.addGeoJsonLine(coordinates, routeKey);
     }
-
-    const resp = await this.mapboxClient.directions
-      .getDirections({
-        profile: this.profile,
-        steps: true,
-        geometries: 'geojson',
-        waypoints: [
-          {
-            coordinates: [this.longitude, this.latitude],
-            approach: 'unrestricted',
-          },
-          {
-            coordinates: this.restCoords,
-          },
-        ],
-      })
-      .send();
-
-    const route = resp.body.routes[0];
-    const {
-      geometry: { coordinates },
-      legs,
-    } = route;
-    this.addDirectionsText(legs, routeKey);
-    this.addGeoJsonLine(coordinates, routeKey);
+    t.closePopupsArray();
+    t.restMarker.togglePopup();
+    t.fitBounds();
   }
 
   reloadRoute(routeKey) {
@@ -262,7 +268,6 @@ class MapObj {
   addGeoJsonLine(coordinates, routeKey) {
     if (this.currentRoute) {
       this.mappyBoi.removeLayer(this.currentRoute);
-      // this.mappyBoi.removeSource(this.currentRoute);
     }
     this.mappyBoi.addSource(routeKey, {
       type: 'geojson',
