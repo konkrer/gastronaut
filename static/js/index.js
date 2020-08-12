@@ -702,8 +702,8 @@ class ButtonsLogics {
     $('.map-track').on('click', '.directionsBtn', function () {
       Map_Obj.profile = $(this).data('profile');
       $('.profileDisplay').text(Map_Obj.profileDict[Map_Obj.profile]);
-      Map_Obj.fitBounds();
       Map_Obj.showDirectionsAndLine();
+      Map_Obj.fitBounds();
       $('.walk').addClass('walkHorizontal');
       $('.bike').addClass('bikeHorizontal');
       $('div.reset').fadeIn().addClass('resetHorizontal');

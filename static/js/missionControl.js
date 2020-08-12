@@ -585,6 +585,7 @@ class MissionControl {
       Map_Obj.restCoords = [lng, lat];
       if (Map_Obj.profile) {
         Map_Obj.showDirectionsAndLine();
+        this_.postDirectionsMapAdjustments();
         $('#businesses-list').removeClass('show');
         $('#directions-text').removeClass('show');
       }
@@ -823,10 +824,17 @@ class MissionControl {
 
   startLocationSuccess() {
     Map_Obj.showDirectionsAndLine();
+    this.postDirectionsMapAdjustments();
     $('#navigationModal').modal('hide');
     $('#businesses-list').removeClass('show');
     $('#directions-panel').show();
     $('.map-routing .reset').fadeIn();
+  }
+
+  postDirectionsMapAdjustments() {
+    Map_Obj.closePopupsArray();
+    Map_Obj.restMarker.togglePopup();
+    Map_Obj.fitBounds();
   }
 
   endNavigation() {

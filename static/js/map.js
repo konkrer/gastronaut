@@ -118,8 +118,8 @@ class MapObj {
                     ${name}</span>`;
     if (this.restMarker) this.restMarker.remove();
     this.restMarker = this.addMarker(restCoords, html);
-    this.fitBounds();
     if (this.profile) this.showDirectionsAndLine();
+    this.fitBounds();
   }
 
   // Call fit bounds with proper options for screen size.
@@ -246,9 +246,6 @@ class MapObj {
       t.addDirectionsText(legs, routeKey);
       t.addGeoJsonLine(coordinates, routeKey);
     }
-    t.closePopupsArray();
-    t.restMarker.togglePopup();
-    t.fitBounds();
   }
 
   reloadRoute(routeKey) {
