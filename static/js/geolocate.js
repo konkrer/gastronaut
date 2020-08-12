@@ -96,6 +96,7 @@ class GeolocationObj {
       `lat: ${lat.toFixed(2)}, lng: ${lng.toFixed(2)}`
     );
     Map_Obj.addUserMarker();
+    if (Map_Obj.currentRoute) Map_Obj.flyToUser();
   }
 
   watchError(err) {

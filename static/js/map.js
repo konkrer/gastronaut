@@ -313,6 +313,15 @@ class MapObj {
     this.directionsCache[routeKey] = olContents;
   }
 
+  flyToUser() {
+    this.mappyBoi.flyTo({
+      center: [this.longitude, this.latitude],
+      essential: true,
+      zoom: 18,
+      speed: 1,
+    });
+  }
+
   clearRouting() {
     this.mappyBoi.removeLayer(this.currentRoute);
     this.currentRoute = null;
