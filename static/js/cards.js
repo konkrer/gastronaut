@@ -359,7 +359,6 @@ class CardTextHtmlFunctions {
       <table class="">
       <thead>
         <tr>
-          <th></th>
           <th>Mo</th>
           <th>Tu</th>
           <th>We</th>
@@ -371,7 +370,6 @@ class CardTextHtmlFunctions {
       </thead>
       <tbody>
         <tr>
-          <td><small>Open</small></td>
           <td>
             ${this.convertTime(mo ? mo.start : null)}
           </td>
@@ -395,7 +393,6 @@ class CardTextHtmlFunctions {
           </td>
         </tr>
         <tr>
-          <td><small>Close</small></td>
           <td>
             ${this.convertTime(mo ? mo.end : null)}
           </td>
@@ -665,13 +662,13 @@ class CardTextHtmlFunctions {
   /*
   /* Convert 24hr format time to AM/PM style time.
   */
-  convertTime(in_) {
-    if (in_ === null) return '-:-';
+  convertTime(time_in) {
+    if (time_in === null) return '-:-';
 
-    const am_pm = in_ / 1200 >= 1 ? 'PM' : 'AM';
-    let hour = Math.floor((in_ % 1200) / 100);
+    const am_pm = time_in / 1200 >= 1 ? 'PM' : 'AM';
+    let hour = Math.floor((time_in % 1200) / 100);
     hour = hour == 0 ? 12 : hour;
-    let minutes = in_ % 100;
+    let minutes = time_in % 100;
     minutes = minutes == 0 ? '00' : minutes;
 
     return `${hour}:${minutes} ${am_pm}`;

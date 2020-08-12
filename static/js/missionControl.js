@@ -549,8 +549,8 @@ class MissionControl {
       center: [lng, lat],
       essential: true,
       zoom: 16.01,
-      speed: 1.2,
-      curve: 1.42,
+      // speed: 1.2,
+      // curve: 1.42,
       easing(t) {
         return t;
       },
@@ -561,8 +561,9 @@ class MissionControl {
       $('#mission-select-form').removeClass('show');
       $('#directions-text').removeClass('show');
     }
-    if (!Map_Obj.restMarker.getPopup().isOpen())
-      Map_Obj.restMarker.togglePopup();
+    const idx = $el.parent().data('idx');
+    const marker = Map_Obj.restMarkers[idx];
+    if (!marker.getPopup().isOpen()) marker.togglePopup();
   }
 
   // Toggle business marker popup and set restCoords
@@ -605,8 +606,10 @@ class MissionControl {
     const this_ = this;
     this.$infoCol.on('dblclick', '.list-group-item', function () {
       const fake_e = { currentTarget: $(this).find('.detailsBtn').get()[0] };
-      ApiFunctsObj.getShowBusinessDetails(fake_e);
       this_.businessMapper($(this).find('.mapBtn'));
+      setTimeout(() => {
+        ApiFunctsObj.getShowBusinessDetails(fake_e);
+      }, 3000);
     });
   }
 
