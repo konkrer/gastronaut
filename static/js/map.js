@@ -326,6 +326,7 @@ class MapObj {
     this.mappyBoi.removeLayer(this.currentRoute);
     this.currentRoute = null;
     this.profile = null;
+    Geolocation_Obj.releaseWakeLock();
   }
 
   // check if screen size is mobile.

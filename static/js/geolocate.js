@@ -3,6 +3,7 @@
 class GeolocationObj {
   constructor() {
     this.locationWatcher = null;
+    this.wakeLock = null;
     this.options = [
       {
         enableHighAccuracy: true,
@@ -15,6 +16,7 @@ class GeolocationObj {
         maximumAge: 500,
       },
     ];
+    this.addVisibilityChangeWakeLocker();
   }
 
   /*
@@ -59,7 +61,7 @@ class GeolocationObj {
     // note user allowed geolocation
     localStorage.setItem('geoAllowed', true);
     this.locationWatcher = navigator.geolocation.watchPosition(
-      this.watchSuccess,
+      this.watchSuccess.bind(this),
       this.watchError,
       this.options[1]
     );
@@ -92,20 +94,44 @@ class GeolocationObj {
     if (typeof IndexSearchObj !== 'undefined') IndexSearchObj.searchYelp();
   }
 
-  watchSuccess(position) {
+  async watchSuccess(position) {
     const {
       coords: { latitude: lat, longitude: lng, heading },
     } = position;
     Map_Obj.latitude = +lat;
     Map_Obj.longitude = +lng;
-
-    // insert lng, lat as placeholder
+    debugger;
+    // insert lng, lat as placeholder in location input.
     $('#location').prop(
       'placeholder',
       `lat: ${lat.toFixed(2)}, lng: ${lng.toFixed(2)}`
     );
     Map_Obj.addUserMarker();
-    if (Map_Obj.currentRoute) Map_Obj.flyToUser(heading);
+    if (Map_Obj.currentRoute) {
+      Map_Obj.flyToUser(heading);
+      if ('wakeLock' in navigator) {
+        if (this.wakeLock === null) {
+          try {
+            this.wakeLock = await navigator.wakeLock.request('screen');
+          } catch (err) {
+            console.warn('ERROR(' + err.code + '): ' + err.message);
+          }
+        }
+      }
+    }
+  }
+
+  releaseWakeLock() {
+    if (this.wakeLock) this.wakeLock.release();
+    this.wakeLock = null;
+  }
+
+  addVisibilityChangeWakeLocker() {
+    $(document).on('visibilitychange', function () {
+      if (this.wakeLock !== null && document.visibilityState === 'visible') {
+        requestWakeLock();
+      }
+    });
   }
 
   watchError(err) {
