@@ -94,7 +94,7 @@ class GeolocationObj {
     if (typeof IndexSearchObj !== 'undefined') IndexSearchObj.searchYelp();
   }
 
-  async watchSuccess(position) {
+  watchSuccess(position) {
     const {
       coords: { latitude: lat, longitude: lng, heading },
     } = position;
@@ -109,34 +109,43 @@ class GeolocationObj {
     Map_Obj.addUserMarker();
     if (Map_Obj.currentRoute) {
       Map_Obj.flyToUser(heading);
-      if ('wakeLock' in navigator) {
-        if (this.wakeLock === null) {
-          try {
-            this.wakeLock = await navigator.wakeLock.request('screen');
-            Sentry.captureMessage(
-              `wakelock is object: ${typeof this.wakeLock === 'object'}`
-            );
-          } catch (err) {
-            Sentry.captureException(err);
-            Sentry.captureMessage(`wakelock error`);
-            console.warn('ERROR(' + err.code + '): ' + err.message);
-          }
-        }
-      } else Sentry.captureMessage('No wakelock in navigator!');
+      this.requestWakeLock();
     }
   }
 
+  async requestWakeLock() {
+    if ('wakeLock' in navigator) {
+      if (this.wakeLock === null) {
+        try {
+          this.wakeLock = await navigator.wakeLock.request('screen');
+          Sentry.captureMessage(
+            `wakelock is object: ${typeof this.wakeLock === 'object'}`
+          );
+        } catch (err) {
+          Sentry.captureException(err);
+          Sentry.captureMessage(`wakelock error`);
+          console.warn('ERROR(' + err.code + '): ' + err.message);
+        }
+      }
+    } else Sentry.captureMessage('No wakelock in navigator!');
+  }
+
   releaseWakeLock() {
-    if (this.wakeLock) this.wakeLock.release();
-    this.wakeLock = null;
+    if (this.wakeLock) {
+      this.wakeLock.release();
+      this.wakeLock = null;
+    }
   }
 
   addVisibilityChangeWakeLocker() {
-    $(document).on('visibilitychange', function () {
-      if (this.wakeLock !== null && document.visibilityState === 'visible') {
-        requestWakeLock();
-      }
-    });
+    $(document).on(
+      'visibilitychange',
+      function () {
+        if (this.wakeLock !== null && document.visibilityState === 'visible') {
+          this.requestWakeLock();
+        }
+      }.bind(this)
+    );
   }
 
   watchError(err) {

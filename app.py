@@ -5,6 +5,7 @@ import logging
 import os
 from types import SimpleNamespace
 from sentry_sdk.integrations.flask import FlaskIntegration
+from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
 from sentry_sdk import (capture_message, capture_exception,
                         init as sentry_init)
 from flask import (
@@ -321,7 +322,10 @@ def user_detail(user_id):
     # if user was logged out and clicked profile user_id
     # will be 0. Lookup their ID and use that.
     if user_id == '0':
-        user_id = g.user.id
+        if g.user:
+            user_id = g.user.id
+        else:
+            redirect(url_for('login', next='user_detail'))
 
     user = User.query.get_or_404(user_id)
 
