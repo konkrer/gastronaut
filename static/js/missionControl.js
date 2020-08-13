@@ -8,9 +8,6 @@ class MissionControl {
     this.missionCache = {};
     this.sidebarOpen = true;
     this.$infoCol = $('#info-col');
-    this.locationAutocompleteCache = {};
-    this.lastRestMarkerIdx = 0;
-    this.lastRestMarkerHtml = null;
     this.addLoadMissionListener();
     this.addCreateMissionListener();
     this.addUpdateListener();
@@ -24,7 +21,6 @@ class MissionControl {
     this.addRemoveBusinessListener();
     this.addSidebarListener();
     this.addMapAllListener();
-    this.addNavigationListeners();
     // Delay for map load.
     setTimeout(() => {
       this.checkLocalStorage();
@@ -588,13 +584,16 @@ class MissionControl {
       Map_Obj.restCoords = [lng, lat];
       if (Map_Obj.profile) {
         Map_Obj.showDirectionsAndLine();
-        this_.changeMarkerColor(this_.lastRestMarkerIdx, null);
+        this_.changeMarkerColor(
+          MissionControlNavigationObj.lastRestMarkerIdx,
+          null
+        );
         this_.changeMarkerColor(idx, $(this), 1);
-        this_.postDirectionsMapAdjustments();
+        MissionControlNavigationObj.postDirectionsMapAdjustments();
         $('#businesses-list').removeClass('show');
         $('#directions-text').removeClass('show');
       }
-      this_.lastRestMarkerIdx = idx;
+      MissionControlNavigationObj.lastRestMarkerIdx = idx;
     });
   }
 
@@ -675,12 +674,14 @@ class MissionControl {
     });
   }
 
+  // option 0 is green marker.
   changeMarkerColor(idx, $el, option = 0) {
     let html;
+    // option 0 is green marker return to original color.
     if (option === 0) {
       // If no last restMarker return.
-      if (this.lastRestMarkerHtml === null) return;
-      html = this.lastRestMarkerHtml;
+      if (MissionControlNavigationObj.lastRestMarkerHtml === null) return;
+      html = MissionControlNavigationObj.lastRestMarkerHtml;
     } else {
       const id = $el.children().data('id');
       const name = $el.text();
@@ -697,7 +698,7 @@ class MissionControl {
     Map_Obj.markerStyle = 0;
     if (option === 1) {
       Map_Obj.restMarker = newMarker;
-      this.lastRestMarkerHtml = html;
+      MissionControlNavigationObj.lastRestMarkerHtml = html;
     }
     // put new marker in restMarkers array in spot of old marker
     Map_Obj.restMarkers.splice(idx, 1, newMarker);
@@ -780,8 +781,13 @@ class MissionControl {
       }.bind(this)
     );
   }
+}
 
-  addNavigationListeners() {
+class MissionControlNavigation {
+  constructor() {
+    this.locationAutocompleteCache = {};
+    this.lastRestMarkerIdx = 0;
+    this.lastRestMarkerHtml = null;
     // nav buttons
     this.addNavProfileBtnsListener();
     this.addDetectLocationListener();
@@ -813,9 +819,12 @@ class MissionControl {
     // detect location
     $('#detect-location').click(function () {
       Geolocation_Obj.enableNoSleep();
-      Geolocation_Obj.detectLocation();
+      setTimeout(() => {
+        Geolocation_Obj.detectLocation();
+      }, 100);
     });
   }
+
   /*
   /* Start/Restart Navigation Listener.
   */
@@ -880,7 +889,7 @@ class MissionControl {
 
   startLocationSuccess() {
     Map_Obj.showDirectionsAndLine();
-    this.changeMarkerColor(
+    MissionControlObj.changeMarkerColor(
       this.lastRestMarkerIdx,
       $('#businesses-list .list-group-item').eq(this.lastRestMarkerIdx),
       1
@@ -900,10 +909,11 @@ class MissionControl {
 
   endNavigation() {
     Map_Obj.clearRouting();
-    this.changeMarkerColor(this.lastRestMarkerIdx, null);
+    MissionControlObj.changeMarkerColor(this.lastRestMarkerIdx, null);
     $('#directions-panel').fadeOut();
     $('.map-routing .reset').fadeOut();
   }
 }
 
+const MissionControlNavigationObj = new MissionControlNavigation();
 const MissionControlObj = new MissionControl();
