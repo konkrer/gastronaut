@@ -819,7 +819,7 @@ class MissionControlNavigation {
     // detect location
     $('#detect-location').click(function () {
       Geolocation_Obj.enableNoSleep();
-      // Geolocation_Obj.detectLocation();
+      Geolocation_Obj.detectLocation();
     });
   }
 
