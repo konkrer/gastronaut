@@ -28,6 +28,7 @@ class GeolocationObj {
     if ('geolocation' in navigator) {
       $('#detect-location').children().addClass('pulse');
       navigator.geolocation.clearWatch(this.locationWatcher);
+      this.locationWatcher = null;
       navigator.geolocation.getCurrentPosition(
         this.geoSuccess.bind(this),
         this.showError,
@@ -115,8 +116,10 @@ class GeolocationObj {
   }
 
   enableNoSleep() {
-    this.noSleep.enable();
-    this.noSleepActive = true;
+    if (!this.noSleepActive) {
+      this.noSleep.enable();
+      this.noSleepActive = true;
+    }
   }
 
   disableNoSleep() {

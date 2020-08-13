@@ -247,6 +247,8 @@ class IndexSearchLogic {
     // use coords Yelp returned for lng, lat.
     if (FormFunctsObj.$locationInput.val() && data) {
       navigator.geolocation.clearWatch(Geolocation_Obj.locationWatcher);
+      Geolocation_Obj.locationWatcher = null;
+      Geolocation_Obj.disableNoSleep();
       this.yelpSetLocation(data);
     }
     Map_Obj.addUserMarker();
@@ -707,7 +709,7 @@ class ButtonsLogics {
       Map_Obj.addUserMarker();
       $('.profileDisplay').text(Map_Obj.profileDict[Map_Obj.profile]);
       Animations_Obj.mapCurrCard();
-      if (!Geolocation_Obj.noSleepActive) Geolocation_Obj.enableNoSleep();
+      if (Geolocation_Obj.locationWatcher) Geolocation_Obj.enableNoSleep();
       $('.walk').addClass('walkHorizontal');
       $('.bike').addClass('bikeHorizontal');
       $('div.reset').fadeIn().addClass('resetHorizontal');
