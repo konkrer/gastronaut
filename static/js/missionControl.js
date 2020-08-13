@@ -817,12 +817,6 @@ class MissionControlNavigation {
 
   addDetectLocationListener() {
     // detect location
-    $('#detect-location').click(function () {
-      Geolocation_Obj.enableNoSleep();
-      setTimeout(() => {
-        Geolocation_Obj.detectLocation();
-      }, 100);
-    });
   }
 
   /*
@@ -917,3 +911,9 @@ class MissionControlNavigation {
 
 const MissionControlNavigationObj = new MissionControlNavigation();
 const MissionControlObj = new MissionControl();
+$('#detect-location').click(function () {
+  // Geolocation_Obj.enableNoSleep();
+  Geolocation_Obj.noSleep.enable();
+  Geolocation_Obj.noSleepActive = true;
+  Geolocation_Obj.detectLocation();
+});
