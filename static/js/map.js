@@ -318,7 +318,7 @@ class MapObj {
       center: [this.longitude, this.latitude],
       essential: true,
       zoom: 18,
-      speed: 0.1,
+      speed: 0.2,
     });
   }
 

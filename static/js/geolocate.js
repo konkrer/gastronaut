@@ -3,11 +3,18 @@
 class GeolocationObj {
   constructor() {
     this.locationWatcher = null;
-    this.options = {
-      enableHighAccuracy: true,
-      timeout: 20000,
-      maximumAge: 15000,
-    };
+    this.options = [
+      {
+        enableHighAccuracy: true,
+        timeout: 20000,
+        maximumAge: 15000,
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 1000,
+        maximumAge: 500,
+      },
+    ];
   }
 
   /*
@@ -21,7 +28,7 @@ class GeolocationObj {
       navigator.geolocation.getCurrentPosition(
         this.geoSuccess.bind(this),
         this.showError,
-        this.options
+        this.options[0]
       );
     } else {
       alert('Geolocation is not supported by this browser.');
@@ -53,7 +60,7 @@ class GeolocationObj {
     this.locationWatcher = navigator.geolocation.watchPosition(
       this.watchSuccess,
       this.watchError,
-      this.options
+      this.options[1]
     );
     if (typeof IndexSearchObj !== 'undefined') IndexSearchObj.searchYelp();
     else MissionControlObj.startLocationSuccess();
