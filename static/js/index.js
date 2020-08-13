@@ -250,6 +250,7 @@ class IndexSearchLogic {
       this.yelpSetLocation(data);
     }
     Map_Obj.addUserMarker();
+    Map_Obj.userMarker.togglePopup();
   }
 
   /*
@@ -751,6 +752,7 @@ class ButtonsLogics {
         Map_Obj.markerStyle = 0;
         Map_Obj.userMarkerStyle = 0;
         Map_Obj.addUserMarker();
+        Map_Obj.userMarker.togglePopup();
         Animations_Obj.mapCurrCard();
         if ($('#map-panel').hasClass('directionsShow'))
           this.toggleDirectionsDiv();

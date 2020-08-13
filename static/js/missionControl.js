@@ -832,6 +832,7 @@ class MissionControl {
         Map_Obj.longitude = coords[0];
         Map_Obj.latitude = coords[1];
         Map_Obj.addUserMarker();
+        Map_Obj.userMarker.togglePopup();
         navigator.geolocation.clearWatch(Geolocation_Obj.locationWatcher);
         $('#location').prop('placeholder', 'Starting Location');
       }

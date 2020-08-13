@@ -11,7 +11,7 @@ class GeolocationObj {
       },
       {
         enableHighAccuracy: true,
-        timeout: 1000,
+        timeout: 2000,
         maximumAge: 500,
       },
     ];
@@ -34,6 +34,7 @@ class GeolocationObj {
       alert('Geolocation is not supported by this browser.');
       if (Map_Obj.longitude) {
         Map_Obj.addUserMarker();
+        Map_Obj.userMarker.togglePopup();
       }
     }
   }
@@ -86,13 +87,14 @@ class GeolocationObj {
     $('.spinner-zone').hide();
     if (Map_Obj.longitude) {
       Map_Obj.addUserMarker();
+      Map_Obj.userMarker.togglePopup();
     }
     if (typeof IndexSearchObj !== 'undefined') IndexSearchObj.searchYelp();
   }
 
   watchSuccess(position) {
     const {
-      coords: { latitude: lat, longitude: lng },
+      coords: { latitude: lat, longitude: lng, heading },
     } = position;
     Map_Obj.latitude = +lat;
     Map_Obj.longitude = +lng;
@@ -103,7 +105,7 @@ class GeolocationObj {
       `lat: ${lat.toFixed(2)}, lng: ${lng.toFixed(2)}`
     );
     Map_Obj.addUserMarker();
-    if (Map_Obj.currentRoute) Map_Obj.flyToUser();
+    if (Map_Obj.currentRoute) Map_Obj.flyToUser(heading);
   }
 
   watchError(err) {

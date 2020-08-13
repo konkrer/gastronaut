@@ -82,8 +82,7 @@ class MapObj {
       .setPopup(
         new mapboxgl.Popup().setHTML(`<div class="mr-2"><em>You</em></div>`)
       )
-      .addTo(this.mappyBoi)
-      .togglePopup();
+      .addTo(this.mappyBoi);
   }
 
   // Add a business map marker and open popup.
@@ -313,12 +312,13 @@ class MapObj {
     this.directionsCache[routeKey] = olContents;
   }
 
-  flyToUser() {
+  flyToUser(heading) {
     this.mappyBoi.flyTo({
       center: [this.longitude, this.latitude],
       essential: true,
       zoom: 18,
-      speed: 0.2,
+      speed: 0.4,
+      bearing: heading,
     });
   }
 
