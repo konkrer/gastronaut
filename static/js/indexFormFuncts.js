@@ -244,7 +244,6 @@ class FormFuncts {
         if (query.length < 3) return;
 
         const features = await Map_Obj.geocode(query);
-        console.log(features);
         let options = '';
         features.forEach(el => {
           options = `${options}<option value="${el.place_name}"></option>`;

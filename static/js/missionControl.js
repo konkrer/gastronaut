@@ -785,11 +785,15 @@ class MissionControl {
     // nav buttons
     this.addNavProfileBtnsListener();
     // detect location
-    $('#detect-location').click(() => Geolocation_Obj.detectLocation());
+    $('#detect-location').click(() => {
+      Geolocation_Obj.enableNoSleep();
+      Geolocation_Obj.detectLocation();
+    });
     // Add location autocomplete.
     this.addAutocompleteListener();
     // Location entry or restart navigation.
     this.addNavStartListener();
+    this.addNavStartEnableNoSleepListener();
     // clear directions routing
     $('.map-routing .reset').click(this.endNavigation.bind(this));
   }
@@ -839,6 +843,13 @@ class MissionControl {
       if (Map_Obj.longitude) {
         this_.startLocationSuccess();
       } else alert('Enter a starting location or click the detect location button.');
+    });
+  }
+
+  addNavStartEnableNoSleepListener() {
+    $('#nav-start-form button').click(function () {
+      if (!$('#location').val() && Map_Obj.longitude)
+        Geolocation_Obj.enableNoSleep();
     });
   }
 

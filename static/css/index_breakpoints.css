@@ -37,7 +37,7 @@
   .directionsToggle.border-bottom .directionsCaret {
     width: 20px;
   }
-  #map-panel.directionsShow {
+  .map-track #directions-panel.directionsShow {
     width: 170px;
   }
   #business-detail-modal table {
@@ -84,11 +84,11 @@
   .directions-col {
     top: 45px;
   }
-  #map-panel.directionsShow {
+  .map-track #directions-panel.directionsShow {
     height: 200px;
     font-size: small;
   }
-  #map-panel.directionsShow .directionsToggle {
+  .map-track #directions-panel.directionsShow .directionsToggle {
     font-size: x-small;
   }
   #directions-text ol {
@@ -119,7 +119,7 @@
   .padtop-card-filter-d {
     padding-top: 0px !important;
   }
-  #map-panel.directionsShow {
+  .map-track #directions-panel.directionsShow {
     width: 225px;
   }
 }

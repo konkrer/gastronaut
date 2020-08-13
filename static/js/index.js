@@ -607,15 +607,15 @@ class ButtonsLogics {
     $('.mapBtns').toggle();
     $('.map-toggle').toggleClass('toggle-on-map');
     $('.map-track').toggleClass(['border-top', 'border-secondary']);
-    if ($('#map-panel').hasClass('show'))
-      $('#map-panel').removeClass('show').hide();
+    if ($('#directions-panel').hasClass('show'))
+      $('#directions-panel').removeClass('show').hide();
     if (Map_Obj.mapOpen) {
       Map_Obj.mapOpen = false;
     } else {
       Map_Obj.mapOpen = true;
       Map_Obj.mappyBoi.resize();
       if ($('div.map-routing .reset').hasClass('resetHorizontal'))
-        $('#map-panel').addClass('show').fadeIn();
+        $('#directions-panel').addClass('show').fadeIn();
     }
   }
 
@@ -707,10 +707,11 @@ class ButtonsLogics {
       Map_Obj.addUserMarker();
       $('.profileDisplay').text(Map_Obj.profileDict[Map_Obj.profile]);
       Animations_Obj.mapCurrCard();
+      if (!Geolocation_Obj.noSleepActive) Geolocation_Obj.enableNoSleep();
       $('.walk').addClass('walkHorizontal');
       $('.bike').addClass('bikeHorizontal');
       $('div.reset').fadeIn().addClass('resetHorizontal');
-      $('#map-panel').addClass('show').fadeIn();
+      $('#directions-panel').addClass('show').fadeIn();
     });
   }
 
@@ -739,7 +740,7 @@ class ButtonsLogics {
       .each(function () {
         $(this).toggle();
       });
-    $('#map-panel').toggleClass('directionsShow');
+    $('#directions-panel').toggleClass('directionsShow');
     $('#directions-text').toggle();
   }
 
@@ -754,9 +755,9 @@ class ButtonsLogics {
         Map_Obj.addUserMarker();
         Map_Obj.userMarker.togglePopup();
         Animations_Obj.mapCurrCard();
-        if ($('#map-panel').hasClass('directionsShow'))
+        if ($('#directions-panel').hasClass('directionsShow'))
           this.toggleDirectionsDiv();
-        $('#map-panel').removeClass('show').fadeOut();
+        $('#directions-panel').removeClass('show').fadeOut();
         $('.walk').removeClass('walkHorizontal');
         $('.bike').removeClass('bikeHorizontal');
         $('div.reset').fadeOut().removeClass('resetHorizontal');

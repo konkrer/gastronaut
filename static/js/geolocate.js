@@ -3,7 +3,8 @@
 class GeolocationObj {
   constructor() {
     this.locationWatcher = null;
-    this.wakeLock = null;
+    this.noSleep = new NoSleep();
+    this.noSleepActive = false;
     this.options = [
       {
         enableHighAccuracy: true,
@@ -16,7 +17,7 @@ class GeolocationObj {
         maximumAge: 500,
       },
     ];
-    this.addVisibilityChangeWakeLocker();
+    // this.addVisibilityChangeWakeLocker();
   }
 
   /*
@@ -24,7 +25,7 @@ class GeolocationObj {
   /* Set lat, lng. Set if user is sharing location.
   */
   detectLocation() {
-    if (navigator.geolocation) {
+    if ('geolocation' in navigator) {
       $('#detect-location').children().addClass('pulse');
       navigator.geolocation.clearWatch(this.locationWatcher);
       navigator.geolocation.getCurrentPosition(
@@ -92,6 +93,7 @@ class GeolocationObj {
       Map_Obj.userMarker.togglePopup();
     }
     if (typeof IndexSearchObj !== 'undefined') IndexSearchObj.searchYelp();
+    this.disableNoSleep();
   }
 
   watchSuccess(position) {
@@ -100,7 +102,6 @@ class GeolocationObj {
     } = position;
     Map_Obj.latitude = +lat;
     Map_Obj.longitude = +lng;
-    debugger;
     // insert lng, lat as placeholder in location input.
     $('#location').prop(
       'placeholder',
@@ -109,44 +110,56 @@ class GeolocationObj {
     Map_Obj.addUserMarker();
     if (Map_Obj.currentRoute) {
       Map_Obj.flyToUser(heading);
-      this.requestWakeLock();
+      // this.requestWakeLock();
     }
   }
 
-  async requestWakeLock() {
-    if ('wakeLock' in navigator) {
-      if (this.wakeLock === null) {
-        try {
-          this.wakeLock = await navigator.wakeLock.request('screen');
-          Sentry.captureMessage(
-            `wakelock is object: ${typeof this.wakeLock === 'object'}`
-          );
-        } catch (err) {
-          Sentry.captureException(err);
-          Sentry.captureMessage(`wakelock error`);
-          console.warn('ERROR(' + err.code + '): ' + err.message);
-        }
-      }
-    } else Sentry.captureMessage('No wakelock in navigator!');
+  enableNoSleep() {
+    this.noSleep.enable();
+    this.noSleepActive = true;
   }
 
-  releaseWakeLock() {
-    if (this.wakeLock) {
-      this.wakeLock.release();
-      this.wakeLock = null;
+  disableNoSleep() {
+    if (this.noSleepActive) {
+      this.noSleep.disable();
+      this.noSleepActive = false;
     }
   }
 
-  addVisibilityChangeWakeLocker() {
-    $(document).on(
-      'visibilitychange',
-      function () {
-        if (this.wakeLock !== null && document.visibilityState === 'visible') {
-          this.requestWakeLock();
-        }
-      }.bind(this)
-    );
-  }
+  // async requestWakeLock() {
+  //   if ('wakeLock' in navigator) {
+  //     if (this.wakeLock === null) {
+  //       try {
+  //         this.wakeLock = await navigator.wakeLock.request('screen');
+  //         Sentry.captureMessage(
+  //           `wakelock is object: ${typeof this.wakeLock === 'object'}`
+  //         );
+  //       } catch (err) {
+  //         Sentry.captureException(err);
+  //         Sentry.captureMessage(`wakelock error`);
+  //         console.warn('ERROR(' + err.code + '): ' + err.message);
+  //       }
+  //     }
+  //   } else Sentry.captureMessage('No wakelock in navigator!');
+  // }
+
+  // releaseWakeLock() {
+  //   if (this.wakeLock) {
+  //     this.wakeLock.release();
+  //     this.wakeLock = null;
+  //   }
+  // }
+
+  // addVisibilityChangeWakeLocker() {
+  //   $(document).on(
+  //     'visibilitychange',
+  //     function () {
+  //       if (this.wakeLock !== null && document.visibilityState === 'visible') {
+  //         this.requestWakeLock();
+  //       }
+  //     }.bind(this)
+  //   );
+  // }
 
   watchError(err) {
     console.warn('ERROR(' + err.code + '): ' + err.message);

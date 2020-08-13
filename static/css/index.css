@@ -354,7 +354,7 @@ a.first-letter.active {
   transform: translate(180px, -165px);
 }
 
-#map-panel {
+.map-track #directions-panel {
   font-size: 18px;
   width: 30px;
   height: 60px;
@@ -366,7 +366,7 @@ a.first-letter.active {
   background-color: rgba(255, 255, 255, 0.9);
 }
 
-#map-panel.directionsShow {
+.map-track #directions-panel.directionsShow {
   width: 300px;
   height: 300px;
 }

@@ -123,7 +123,7 @@ class MapObj {
     this.restMarker = this.addMarker(restCoords, html);
     if (this.profile) {
       this.showDirectionsAndLine();
-      if ($('#map-panel').hasClass('directionsShow'))
+      if ($('#directions-panel').hasClass('directionsShow'))
         ButtonsLogicsObj.toggleDirectionsDiv();
     }
     this.fitBounds();
@@ -326,7 +326,8 @@ class MapObj {
     this.mappyBoi.removeLayer(this.currentRoute);
     this.currentRoute = null;
     this.profile = null;
-    Geolocation_Obj.releaseWakeLock();
+    // Geolocation_Obj.releaseWakeLock();
+    Geolocation_Obj.disableNoSleep();
   }
 
   // check if screen size is mobile.
