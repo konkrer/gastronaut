@@ -311,7 +311,10 @@ a.first-letter.active {
   color: #333333;
   left: 15px;
   top: 10px;
-  /* height: 40px; */
+}
+
+.map-routing.horizontal {
+  height: 40px;
 }
 
 .directions-col {

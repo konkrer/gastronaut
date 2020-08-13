@@ -710,6 +710,7 @@ class ButtonsLogics {
       $('.profileDisplay').text(Map_Obj.profileDict[Map_Obj.profile]);
       Animations_Obj.mapCurrCard();
       if (Geolocation_Obj.locationWatcher) Geolocation_Obj.enableNoSleep();
+      $('.map-routing').addClass('horizontal');
       $('.walk').addClass('walkHorizontal');
       $('.bike').addClass('bikeHorizontal');
       $('div.reset').fadeIn().addClass('resetHorizontal');
@@ -760,6 +761,7 @@ class ButtonsLogics {
         if ($('#directions-panel').hasClass('directionsShow'))
           this.toggleDirectionsDiv();
         $('#directions-panel').removeClass('show').fadeOut();
+        $('.map-routing').addClass('horizontal');
         $('.walk').removeClass('walkHorizontal');
         $('.bike').removeClass('bikeHorizontal');
         $('div.reset').fadeOut().removeClass('resetHorizontal');
