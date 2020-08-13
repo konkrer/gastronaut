@@ -113,11 +113,16 @@ class GeolocationObj {
         if (this.wakeLock === null) {
           try {
             this.wakeLock = await navigator.wakeLock.request('screen');
+            Sentry.captureMessage(
+              `wakelock is object: ${typeof this.wakeLock === 'object'}`
+            );
           } catch (err) {
+            Sentry.captureException(err);
+            Sentry.captureMessage(`wakelock error`);
             console.warn('ERROR(' + err.code + '): ' + err.message);
           }
         }
-      }
+      } else Sentry.captureMessage('No wakelock in navigator!');
     }
   }
 
