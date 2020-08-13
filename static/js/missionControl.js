@@ -784,11 +784,7 @@ class MissionControl {
   addNavigationListeners() {
     // nav buttons
     this.addNavProfileBtnsListener();
-    // detect location
-    $('#detect-location').click(() => {
-      Geolocation_Obj.enableNoSleep();
-      Geolocation_Obj.detectLocation();
-    });
+    this.addDetectLocationListener();
     // Add location autocomplete.
     this.addAutocompleteListener();
     // Location entry or restart navigation.
@@ -813,6 +809,13 @@ class MissionControl {
     });
   }
 
+  addDetectLocationListener() {
+    // detect location
+    $('#detect-location').click(function () {
+      Geolocation_Obj.enableNoSleep();
+      Geolocation_Obj.detectLocation();
+    });
+  }
   /*
   /* Start/Restart Navigation Listener.
   */
