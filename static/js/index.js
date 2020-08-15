@@ -558,6 +558,7 @@ class ButtonsLogics {
     this.addMapToggleBtnListener();
     this.addCardsToggleBtnListener();
     this.addBusinessDetailsListeners();
+    this.addWriteReportListener();
     this.addDirectionsListener();
     this.addToggleDirectionsDivListener();
     this.addCancelDirectionsListener();
@@ -700,6 +701,33 @@ class ButtonsLogics {
     ApiFunctsObj.getShowBusinessDetails(fakeE);
   }
 
+  /*
+  /* Listen for the write report button click in the business detail modal
+  /* and call add_report with business information as parameters. This is
+  /* to be able to create a new business entry in Database if necessary.
+  */
+  addWriteReportListener() {
+    $('#business-detail-modal').on('click', '.writeReport', function (e) {
+      e.preventDefault();
+      const reportUrl = $(this).parent().prop('href');
+      const $missionBtn = $(this).parent().parent().prev().find('.mission-btn');
+
+      const params = {
+        city: $missionBtn.data('city'),
+        state: $missionBtn.data('state'),
+        country: $missionBtn.data('country'),
+        name: $missionBtn.data('name'),
+        lng: $missionBtn.data('lng'),
+        lat: $missionBtn.data('lat'),
+      };
+
+      // https://attacomsian.com/blog/javascript-convert-object-to-query-string-parameters
+      const queryString = new URLSearchParams(params);
+
+      window.location.href = `${reportUrl}&${queryString}`;
+    });
+  }
+
   // add directions buttons listener.
   addDirectionsListener() {
     $('.map-track').on('click', '.directionsBtn', function () {
@@ -761,7 +789,7 @@ class ButtonsLogics {
         if ($('#directions-panel').hasClass('directionsShow'))
           this.toggleDirectionsDiv();
         $('#directions-panel').removeClass('show').fadeOut();
-        $('.map-routing').addClass('horizontal');
+        $('.map-routing').removeClass('horizontal');
         $('.walk').removeClass('walkHorizontal');
         $('.bike').removeClass('bikeHorizontal');
         $('div.reset').fadeOut().removeClass('resetHorizontal');

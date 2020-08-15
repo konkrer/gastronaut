@@ -26,10 +26,13 @@ def login_required(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         """Wrap view functions."""
+
         if not g.user:
             next_page = request.endpoint
+            request_args = request.args.to_dict()
 
-            return redirect(url_for('signup', next=next_page))
+            return redirect(url_for(
+                'signup', next_=next_page, **request_args))
 
         return func(*args, **kwargs)
     return wrapper

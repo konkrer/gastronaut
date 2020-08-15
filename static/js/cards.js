@@ -431,9 +431,10 @@ class CardTextHtmlFunctions {
       location: { city, state, country },
     } = business;
 
-    // nextUrl for next page functionality. If user logs-in or
-    // signs-up allows navigating back to current page
-    const nextUrl = window.location.pathname;
+    // cancelUrl for next page functionality. If user cancels
+    // report writing/editing allows navigating back to current page.
+    const cancelUrl = window.location.pathname;
+    const searchString = window.location.search.replace(/&/g, ';');
 
     return `
   <div class="modal-footer">
@@ -462,11 +463,11 @@ class CardTextHtmlFunctions {
         </button>
       </span>
       <span data-toggle="tooltip" title="Write Report">
-        <button type="button"  class="btn btn-primary-alt2 mr-1">
-          <a href="/report?business_id=${id}&next_url=${nextUrl}">
+        <a href="/report?business_id=${id}&cancel_url=${cancelUrl}${searchString}">
+          <button type="button" class="btn btn-primary-alt2 mr-1 writeReport">      
             <i class="fas fa-pen-alt brand-outline txt-warning iconBtn fa-lg"></i>
-          </a>
-        </button>
+          </button>
+        </a>
       </span>
       <button
         type="button"

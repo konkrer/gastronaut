@@ -81,14 +81,14 @@
           <em>You must sign up or login to change preferences!</em>
         </p>
         <a
-          class="signup btn btn-lg btn-outline-primary"
-          href="/signup?next={{request.endpoint}}"
+          class="btn btn-lg btn-outline-primary"
+          href="/signup?next_url={{request.full_path}}"
           >Sign Up</a
         >
         <span class="px-4">- OR -</span>
         <a
-          class="login btn btn-lg btn-outline-primary"
-          href="/login?next={{request.endpoint}}"
+          class="btn btn-lg btn-outline-primary"
+          href="/login?next_url={{request.full_path}}"
           >Log in</a
         >
       </div>

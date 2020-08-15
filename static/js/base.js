@@ -10,6 +10,7 @@ class BaseLogic {
     this.addAlertCloseListener();
     this.addReportsDblclickListeners();
     this.addFeedbackListener();
+    this.addSignupLoginListener();
   }
 
   // Remove preloader overlay when page animations fully loaded.
@@ -112,6 +113,19 @@ class BaseLogic {
         $('#user-feedback-modal').modal('hide');
         $('#user-feedback-modal .feedback').html('');
       }, 3000);
+    });
+  }
+
+  /*
+  /* Listen for buttons that will open the signup/ login modal.
+  /* Populate the next data so user will be redirected properly after authenication.
+  */
+  addSignupLoginListener() {
+    $('body').on('click', '.signLogBtn', function () {
+      const next_url = $(this).data('next_url');
+
+      $('.signup').prop('href', `/signup?next_url=${next_url}`);
+      $('.login').prop('href', `/login?next_url=${next_url}`);
     });
   }
 

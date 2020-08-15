@@ -54,9 +54,10 @@
       {% if not g.user %}
       <button
         type="button"
-        class="like-button text-primary"
+        class="like-button text-primary signLogBtn"
         data-toggle="modal"
         data-target="#signupModal"
+        data-next_url="{{request.full_path}}"
       >
         <i class="far fa-thumbs-up fa-lg"></i>
       </button>
@@ -82,7 +83,7 @@
       </span>
       {% if report.user_id == g.user.id %}
       <a
-        href="/report/{{report.id}}/edit?next={{request.endpoint}}&next_view_args={{view_args}}"
+        href="/report/{{report.id}}/edit?cancel_url={{request.full_path}}"
         class="btn btn-sm btn-outline-primary float-right px-3 px-sm-2 px-md-3 ml-3 ml-md-4 mb-2"
         >Edit Report</a
       >
@@ -94,9 +95,9 @@
       {% endif %}
     </div>
   </div>
-  {% endfor %} {% else %}
+  {% endfor %} {% elif request.endpoint in ['user_detail'] %}
 
-  <div class="card d-inline-block my-2 mx-1 text-left mb-3 mb-lg-4 reportCard">
+  <div class="card d-inline-block my-2 mx-1 text-left mb-3 mb-lg-4">
     <div class="card-header pt-3">
       <h5 class="card-title font-weight-bold black-outline-1-2 mb-0">
         <span class="txt-white-k hover-primary">
@@ -133,7 +134,7 @@
       </span>
     </div>
   </div>
-  <div class="card d-inline-block my-2 mx-1 text-left mb-3 mb-lg-4 reportCard">
+  <div class="card d-inline-block my-2 mx-1 text-left mb-3 mb-lg-4">
     <div class="card-header pt-3">
       <h5 class="card-title font-weight-bold black-outline-1-2 mb-0">
         <span class="txt-white-k hover-primary">
@@ -170,6 +171,33 @@
       </span>
     </div>
   </div>
-
+  {% else %}
+  <div class="card d-inline-block my-2 mx-1 text-center mb-3 mb-lg-4">
+    <div class="card-header pt-3">
+      <h5 class="card-title font-weight-bold black-outline-1-2 mb-0">
+        <span class="txt-white-k hover-primary">
+          >_<
+        </span>
+      </h5>
+    </div>
+  </div>
+  <div class="card d-inline-block my-2 mx-1 text-center mb-3 mb-lg-4">
+    <div class="card-header pt-3">
+      <h5 class="card-title font-weight-bold black-outline-1-2 mb-0">
+        <span class="txt-white-k hover-primary">
+          Nothing Found!
+        </span>
+      </h5>
+    </div>
+  </div>
+  <div class="card d-inline-block my-2 mx-1 text-center mb-3 mb-lg-4">
+    <div class="card-header pt-3">
+      <h5 class="card-title font-weight-bold black-outline-1-2 mb-0">
+        <span class="txt-white-k hover-primary">
+          >_<
+        </span>
+      </h5>
+    </div>
+  </div>
   {% endif %}
 </section>

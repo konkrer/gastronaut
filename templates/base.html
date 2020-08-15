@@ -117,9 +117,12 @@
           <li class="nav-item {{ nav_link_active('mission_control') }}">
             {% if g.user %}
             <a class="nav-link" href="/mission-control">Mission Control</a>
-            {% set next_page = '' %} {% else %} {% set next_page =
-            'mission_control' %}
-            <a class="nav-link" href="#signupModal" data-toggle="modal"
+            {% else %}
+            <a
+              class="nav-link signLogBtn"
+              href="#signupModal"
+              data-toggle="modal"
+              data-next_url="/mission-control"
               >Mission Control</a
             >
             {% endif %}
@@ -146,7 +149,11 @@
                 >Profile</a
               >
               {% else %}
-              <a class="dropdown-item" href="/login?next=user_detail"
+              <a
+                class="dropdown-item signLogBtn"
+                data-toggle="modal"
+                href="#signupModal"
+                data-next_url="/user/profile/0"
                 >Profile</a
               >
               {% endif %}
@@ -155,7 +162,7 @@
                 data-toggle="modal"
                 data-target="#preferencesModal"
               >
-                Prefrences
+                Preferences
               </button>
               {% if request.endpoint in ['index', 'mission_control'] %}
               <a
@@ -216,8 +223,8 @@
             endif
             %}
           />
-          <input type="hidden" name="next" value="{{request.endpoint}}" />
-          <input type="hidden" name="next_view_args" value="{{view_args}}" />
+          <!-- include all possible data to get back to this page for user search fail -->
+          <input type="hidden" name="next_url" value="{{request.full_path}}" />
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
             Search
           </button>

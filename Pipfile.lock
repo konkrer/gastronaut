@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "6ac9ac7c4a04ff89758ff8fdfee67af4c03e812a872446b71ed3e686c5fefee5"
+            "sha256": "ae73c704691c063e79e30b69bec26cd6dacf43f9574d318124e4370a2a37e0f9"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -212,6 +212,13 @@
                 "sha256:e8313f01ba26fbbe36c7be1966a7b7424942f670f38e666995b88d012765b9be"
             ],
             "version": "==1.1.1"
+        },
+        "newrelic": {
+            "hashes": [
+                "sha256:5d45260693c0e4e098bcf20be8322a710009701076cd1d65ae4c8b4898bc29bc"
+            ],
+            "index": "pypi",
+            "version": "==5.16.0.145"
         },
         "psycopg2-binary": {
             "hashes": [

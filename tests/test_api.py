@@ -345,8 +345,6 @@ class MissionApiTestCase(TestCase):
                 sess['user_id'] = self.user2.id
 
             db.session.add(self.mission)  # ????
-            # import pdb
-            # pdb.set_trace()
 
             data = {'business_id': self.business_data['id']}
 

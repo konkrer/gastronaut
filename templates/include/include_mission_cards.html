@@ -36,9 +36,10 @@
       {% if not g.user %}
       <button
         type="button"
-        class="like-button text-primary"
+        class="like-button text-primary signLogBtn"
         data-toggle="modal"
         data-target="#signupModal"
+        data-next_url="{{request.full_path}}"
       >
         <i class="far fa-thumbs-up fa-lg"></i>
       </button>
@@ -67,9 +68,10 @@
       {% if not g.user %}
       <button
         type="button"
-        class="like-button text-primary float-right"
+        class="like-button text-primary float-right signLogBtn"
         data-toggle="modal"
         data-target="#signupModal"
+        data-next_url="{{request.full_path}}"
       >
         Add to Missions
       </button>
@@ -83,7 +85,7 @@
       {% endif %}
     </div>
   </div>
-  {% endfor %} {% else %}
+  {% endfor %} {% elif request.endpoint in ['user_detail'] %}
   <div class="card d-inline-block m-2 text-left">
     <div class="card-body">
       <h5 class="card-title font-weight-bold black-outline-1-2 mb-0">
@@ -170,6 +172,34 @@
       <span class="text-primary float-right">
         Add to Missions
       </span>
+    </div>
+  </div>
+  {% else %}
+  <div class="card d-inline-block my-2 mx-1 text-center mb-3 mb-lg-4">
+    <div class="card-header pt-3">
+      <h5 class="card-title font-weight-bold black-outline-1-2 mb-0">
+        <span class="txt-white-k hover-primary">
+          >_<
+        </span>
+      </h5>
+    </div>
+  </div>
+  <div class="card d-inline-block my-2 mx-1 text-center mb-3 mb-lg-4">
+    <div class="card-header pt-3">
+      <h5 class="card-title font-weight-bold black-outline-1-2 mb-0">
+        <span class="txt-white-k hover-primary">
+          Nothing Found!
+        </span>
+      </h5>
+    </div>
+  </div>
+  <div class="card d-inline-block my-2 mx-1 text-center mb-3 mb-lg-4">
+    <div class="card-header pt-3">
+      <h5 class="card-title font-weight-bold black-outline-1-2 mb-0">
+        <span class="txt-white-k hover-primary">
+          >_<
+        </span>
+      </h5>
     </div>
   </div>
   {% endif %}

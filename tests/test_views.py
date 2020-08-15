@@ -47,8 +47,6 @@ class FunctionTests(TestCase):
             'radius': '30352', 'categories': 'restaurants', 'limit': '50',
             'price': '1,3,4', 'attributes': 'hot_and_new,deals'
         }
-        # import pdb
-        # pdb.set_trace()
 
         self.assertEqual(parse_query_params(params),
                          converted_to_dict_for_yelp)
