@@ -21,7 +21,8 @@ main {
 }
 
 .bg-stars1 {
-  background: url('../images/stars2.jpg'), black;
+  background: url('https://d1mhc0bouqz8wk.cloudfront.net/static/images/stars2.jpg'),
+    black;
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;

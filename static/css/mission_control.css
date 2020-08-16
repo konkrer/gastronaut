@@ -99,7 +99,7 @@ a[href='#mission-select-form'] {
 }
 
 .flag-marker {
-  background-image: url('/static/images/flag_red_straight.png');
+  background-image: url('https://d1mhc0bouqz8wk.cloudfront.net/static/images/flag_red_straight.png');
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;

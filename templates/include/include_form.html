@@ -9,7 +9,7 @@
   'FileField' %}{% if field.object_data %}
   <div class="mb-1 txt-smlr">
     Current File:
-    <span class="text-info">{{field.object_data.split('\\')[-1]}}</span>
+    <span class="text-info">{{field.object_data[93:]}}</span>
   </div>
   {% endif %} {{field(class_="form-control") }} {% else %}
   {{field(class_="form-control") }} {% endif %}

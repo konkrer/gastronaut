@@ -3,6 +3,8 @@
 import requests
 import logging
 import os
+import boto3
+from uuid import uuid4
 from types import SimpleNamespace
 from sentry_sdk.integrations.flask import FlaskIntegration
 from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration  # noqa F401
@@ -29,6 +31,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
     'DATABASE_URL', 'postgresql:///gastronaut')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+S3_CLIENT = boto3.client('s3')
+S3_RESOURCE = boto3.resource('s3')
+
 
 # Dev / Production setup differentiation:
 #
@@ -36,7 +41,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 if not os.environ.get('SECRET_KEY'):
     from flask_debugtoolbar import DebugToolbarExtension
     from development_local.local_settings import (
-        YELP_API_KEY, SECRET_KEY, MAILGUN_API_KEY, MAILGUN_DOMAIN)
+        YELP_API_KEY, SECRET_KEY, MAILGUN_API_KEY, MAILGUN_DOMAIN,
+        S3_BUCKET_NAME, CLOUDFRONT_DOMAIN_NAME)
 
     app.config["SECRET_KEY"] = SECRET_KEY
     app.config['SQLALCHEMY_ECHO'] = True
@@ -55,6 +61,8 @@ else:
     YELP_API_KEY = os.environ.get('YELP_API_KEY')
     MAILGUN_API_KEY = os.environ.get('MAILGUN_API_KEY')
     MAILGUN_DOMAIN = os.environ.get('MAILGUN_DOMAIN')
+    S3_BUCKET_NAME = os.environ.get('S3_BUCKET_NAME')
+    CLOUDFRONT_DOMAIN_NAME = os.environ.get('CLOUDFRONT_DOMAIN_NAME')
     debug = False
 
 
@@ -323,13 +331,16 @@ def user_detail(user_id):
 
     # if user was logged out and clicked profile user_id
     # will be 0. Lookup their ID and use that.
-    if user_id == '0':
+    if user_id == '0' or user_id == '2':
         if g.user:
-            user_id = g.user.id
+            user = g.user
         else:
-            redirect(url_for('login', next_='user_detail'))
-
-    user = User.query.get_or_404(user_id)
+            return redirect(url_for('login', next_='user_detail', user_id='0'))
+    # If user looking at their own profile use g.user.
+    elif g.user and int(user_id) == g.user.id:
+        user = g.user
+    else:
+        user = User.query.get_or_404(user_id)
 
     shared_missions = [m for m in user.my_missions if m.is_public]
 
@@ -425,19 +436,21 @@ def add_report():
             for k, v in data.items() if k in Report.set_get()
         }
 
+        f, path = None, ''
         if form.photo_file.data:
             f = form.photo_file.data
+            unique_prefix = uuid4().hex
             filename = secure_filename(f.filename)
-            path = os.path.join('static\\uploads', filename)
-            f.save(path)
-
-            relevant_data['photo_file'] = f'\\{path}'
+            path = f'static/uploads/reports/{unique_prefix}_{filename}'
+            relevant_data['photo_file'] = f'{CLOUDFRONT_DOMAIN_NAME}/{path}'
 
         report = Report.create(user_id=g.user.id, mission_id=mission_id,
                                business_id=business_id, **relevant_data)
 
         try:
             db.session.commit()
+            if f:
+                S3_CLIENT.upload_fileobj(f, S3_BUCKET_NAME, path)
             flash("Report added!", 'success')
             return redirect(url_for('report_detail', report_id=report.id))
 
@@ -492,23 +505,41 @@ def edit_report(report_id):
     form = EditReportForm(obj=report)
 
     if form.validate_on_submit():
-
-        if form.photo_url.data:
-            form.photo_file.data = ''
+        f, path, old_file = None, '', ''
+        # If photo url given and photo file data remove photo file data.
+        if form.photo_url.data and form.photo_file.data:
+            # If photo file is string photo is in S3 bucket - delete.
+            if isinstance(form.photo_file.data, str):
+                old_file = form.photo_file.data
+            # If photo file was preveously uploaded delete.
+            elif form.photo_file.object_data:
+                old_file = form.photo_file.object_data
+            form.photo_file.data = None
         else:
+            # If photo file is a file object and not string url update
+            # form.photo_file.data to be S3 url string. Save file data as f.
             if form.photo_file.data and not isinstance(
                 form.photo_file.data, str
             ):
                 f = form.photo_file.data
+                unique_prefix = uuid4().hex
                 filename = secure_filename(f.filename)
-                path = os.path.join('static\\uploads', filename)
-                f.save(path)
-                form.photo_file.data = f'\\{path}'
+                path = f'static/uploads/reports/{unique_prefix}_{filename}'
+                form.photo_file.data = f'{CLOUDFRONT_DOMAIN_NAME}/{path}'
+
+                # If photo file was preveously uploaded
+                # set as old file to delete after db.session.commit.
+                if form.photo_file.object_data:
+                    old_file = form.photo_file.object_data
 
         form.populate_obj(report)
 
         try:
             db.session.commit()
+            if f:
+                S3_CLIENT.upload_fileobj(f, S3_BUCKET_NAME, path)
+            if old_file:
+                s3_delete(old_file)
             flash("Report Edited!", 'success')
             return redirect(url_for('report_detail', report_id=report.id))
 
@@ -543,15 +574,19 @@ def delete_report(report_id):
     if not report.user_id == g.user.id:
         return Unauthorized()
 
+    old_file = report.photo_file if report.photo_file else None
+
     db.session.delete(report)
 
     try:
         db.session.commit()
+        if old_file:
+            s3_delete(old_file)
         flash("Report Deleted!", 'success')
 
     except Exception as e:
         db.session.rollback()
-        flash("Error Editing Report!", 'danger')
+        flash("Error Deleting Report!", 'danger')
         error_logging(e)
 
     return redirect(url_for('user_detail', user_id=g.user.id))
@@ -1080,7 +1115,9 @@ def render_template(*args, **kwargs):
         'cancel_url', '/').replace(';', '&')
 
     global debug
-    return r_t(*args, debug=bool(debug), **kwargs, **request_args)
+    return r_t(
+        *args, debug=bool(debug),
+        cfdn=CLOUDFRONT_DOMAIN_NAME, **kwargs, **request_args)
 
 
 def next_page_logic(request):
@@ -1118,6 +1155,13 @@ def check_for_existing_report(mission_id, business_id):
             user_id=g.user.id, business_id=business_id).first()
 
     return existing_report
+
+
+def s3_delete(url):
+    """Delete resource at url location."""
+
+    s3_path = url.replace(f'{CLOUDFRONT_DOMAIN_NAME}/', '')
+    S3_RESOURCE.Object(S3_BUCKET_NAME, s3_path).delete()
 
 
 ############################

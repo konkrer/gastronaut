@@ -20,6 +20,7 @@ gunicorn = "*"
 requests = "*"
 sentry-sdk = {extras = ["flask"],version = "==0.16.0"}
 newrelic = "*"
+boto3 = "*"
 
 [requires]
 python_version = "3.8"

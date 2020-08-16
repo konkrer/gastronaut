@@ -39,6 +39,10 @@ body {
   color: white !important;
 }
 
+.navbar-signup:hover {
+  color: var(--my-green) !important;
+}
+
 .navbar-yelp-logo {
   height: 26px;
   transform: translateY(-4px);

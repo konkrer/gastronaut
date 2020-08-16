@@ -8,8 +8,8 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 bcrypt = Bcrypt()
 
-DEFAULT_USER_IMAGE = "/static/images/default_user_icon.jpg"
-DEFAULT_BANNER_IMAGE = "/static/images/horizon___widescreen_wallpaper_by_hameed.jpg"  # NOQA E501
+DEFAULT_USER_IMAGE = "https://d1mhc0bouqz8wk.cloudfront.net/static/images/default_user_icon.jpg"
+DEFAULT_BANNER_IMAGE = "https://d1mhc0bouqz8wk.cloudfront.net/static/images/horizon___widescreen_wallpaper_by_hameed.jpg"  # NOQA E501
 DEFAULT_PREFERENCES = SimpleNamespace(show_alcohol=True)
 
 

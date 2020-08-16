@@ -10,7 +10,7 @@
     name="description"
     content="Explore a gastronomical mission. Users create and share themed missions of local flavor to experience. Check it out!"
   />
-  <link rel="stylesheet" href="/static/css/reports.css" />
+  <link rel="stylesheet" href="/static/css/reports_missions.css" />
   <link rel="stylesheet" href="/static/css/common1.css" />
   <style>
     .card-columns {
@@ -42,8 +42,15 @@
   </div>
   <div class="container">
     <div class="row mb-5">
-      <div class="col-12 mt-md-1 mt-lg-5 px-0">
+      <div class="col-12 mt-md-1 mt-lg-5 px-0 mission">
         {% include "include/include_mission_cards.html" with context %}
+      </div>
+      <div class="col-12 text-center">
+        <img
+          src="{{cfdn}}/static/images/flag2.png"
+          alt="blue flag"
+          class="pl-3"
+        />
       </div>
     </div>
   </div>
