@@ -197,11 +197,11 @@
     top: 26vh;
   }
   .my-card {
-    width: 300px;
-    min-width: 300px;
+    width: 320px;
+    min-width: 310px;
   }
   .card-track-inner {
-    padding-left: calc(50% - 150px);
+    padding-left: calc(50% - 155px);
   }
   .sidebar-toggle-btn {
     font-size: 3.5vh;

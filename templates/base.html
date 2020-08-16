@@ -198,18 +198,18 @@
           </li>
         </ul>
         {% if g.user %}
-        <form action="/logout" method="post">
+        <form action="/logout?next_url={{request_full_path}}" method="post">
           <button class="navbar-logout mr-4 btn p-0 my-4 my-lg-0" type="submit">
             Logout
           </button>
         </form>
-        {% elif request.endpoint in ['user_detail'] %}
+        {% else %}
         <a
           class="navbar-signup mr-4 btn p-0 my-4 my-lg-0 signLogBtn"
           href="#signupModal"
           data-target="#signupModal"
           data-toggle="modal"
-          data-next_url="{{request.full_path}}"
+          data-next_url="{{request_full_path}}"
         >
           Signup / Login
         </a>
@@ -235,7 +235,7 @@
             %}
           />
           <!-- include all possible data to get back to this page for user search fail -->
-          <input type="hidden" name="next_url" value="{{request.full_path}}" />
+          <input type="hidden" name="next_url" value="{{request_full_path}}" />
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
             Search
           </button>

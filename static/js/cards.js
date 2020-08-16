@@ -192,6 +192,13 @@ class CardsModalsFactory {
 
     if (hours) var { open, is_open_now } = hours[0];
 
+    // fullPath for next page/cancel functionality. If user cancels
+    // report writing/editing allows navigating back to current page.
+    const pathname = window.location.pathname;
+    const searchString = window.location.search.replace(/&/g, ';');
+    const fullPath = `${pathname}${searchString}`;
+    const modalFooter = `${this.funct.makeModalFooter(business, fullPath)}`;
+
     return `
       <div class="modal-dialog modal-dialog-centered modal-lg text-center museo" role="document">
         <div class="modal-content">
@@ -257,10 +264,10 @@ class CardsModalsFactory {
               </li>
             </ul>
           </div>
-          ${this.funct.makeModalFooter(business)}       
-          <div>${this.funct.makeReportsForDetailModal(business)}</div>
+          ${modalFooter}       
+          <div>${this.funct.makeReportsForDetailModal(business, fullPath)}</div>
           <div>${this.funct.makeReviewsForDetailModal(business)}</div>
-          ${this.funct.makeModalFooter(business)}       
+          ${modalFooter}       
         </div>
       </div>`;
   }
@@ -422,7 +429,7 @@ class CardTextHtmlFunctions {
   /*
   /* Make footer for business detail modal.
   */
-  makeModalFooter(business) {
+  makeModalFooter(business, fullPath) {
     const {
       name,
       id,
@@ -430,11 +437,6 @@ class CardTextHtmlFunctions {
       coordinates: { latitude: lat, longitude: lng },
       location: { city, state, country },
     } = business;
-
-    // cancelUrl for next page functionality. If user cancels
-    // report writing/editing allows navigating back to current page.
-    const cancelUrl = window.location.pathname;
-    const searchString = window.location.search.replace(/&/g, ';');
 
     return `
   <div class="modal-footer">
@@ -463,7 +465,7 @@ class CardTextHtmlFunctions {
         </button>
       </span>
       <span data-toggle="tooltip" title="Write Report">
-        <a href="/report?business_id=${id}&cancel_url=${cancelUrl}${searchString}">
+        <a href="/report?business_id=${id}&cancel_url=${fullPath}">
           <button type="button" class="btn btn-primary-alt2 mr-1 writeReport">      
             <i class="fas fa-pen-alt brand-outline txt-warning iconBtn fa-lg"></i>
           </button>
@@ -483,7 +485,7 @@ class CardTextHtmlFunctions {
   /*
 /* Make Report cards that go inside business details modal.
 */
-  makeReportsForDetailModal(business) {
+  makeReportsForDetailModal(business, fullPath) {
     const reportCards = business.reports.reduce((acc, report) => {
       const {
         report_id,
@@ -527,7 +529,8 @@ class CardTextHtmlFunctions {
           allowLikes,
           report_id,
           business.id,
-          liked
+          liked,
+          fullPath
         )}
         <span class="pl-1 pl-md-3 text-dark likes">
           ${likes}
@@ -613,21 +616,30 @@ class CardTextHtmlFunctions {
       </div>`;
   }
 
-  addLikesButton(userLoggedIn, allowLikes, report_id, business_id, liked) {
+  addLikesButton(
+    userLoggedIn,
+    allowLikes,
+    report_id,
+    business_id,
+    liked,
+    fullPath
+  ) {
     if (!userLoggedIn)
       return `
       <button
         type="button"
-        class="like-button text-primary"
+        class="like-button text-primary signLogBtn"
         data-toggle="modal"
         data-target="#signupModal"
         data-dismiss="modal"
+        data-next_url="${fullPath}"
       >
         <i class="far fa-thumbs-up fa-lg"></i>
       </button>`;
     if (allowLikes)
       return `
-      <a href="#" class="card-link like-report" data-report_id="${report_id}" data-business_id="${business_id}">
+      <a href="#" class="card-link like-report likeModal" 
+      data-report_id="${report_id}" data-business_id="${business_id}">
         <span>
           ${
             liked

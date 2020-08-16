@@ -356,7 +356,7 @@ def logout():
 
     del session['user_id']
     flash(f"{g.user.username} logged out.", 'success')
-    return redirect(url_for('index'))
+    return next_page_logic(request)
 
 
 @app.route("/user/delete", methods=['POST'])
@@ -1110,7 +1110,12 @@ def render_template(*args, **kwargs):
 
     request_args = request.args.to_dict()
 
-    # Convert cancel_url back to string with &'s inline.
+    # Encode a request_full_path variable for next_url functionality.
+    # next_url must not contain &'s or all data will not be passed from the
+    # request paramerters query string.
+    request_args['request_full_path'] = request.full_path.replace('&', ';')
+
+    # Convert cancel_url back to string with &'s inline for href cancel btn.
     request_args['cancel_url'] = request_args.get(
         'cancel_url', '/').replace(';', '&')
 
@@ -1130,7 +1135,8 @@ def next_page_url(request):
     request_args = request.args.to_dict()
 
     if request_args.get('next_url'):
-        return request_args['next_url']
+        # Return deecoded next_url string.
+        return request_args['next_url'].replace(';', '&')
 
     next_page = request_args.get('next_')
     if next_page:

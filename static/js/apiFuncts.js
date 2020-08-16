@@ -83,22 +83,41 @@ class ApiFuncts {
         return;
       }
       if (resp.data.success) {
-        // toggle solid/outline thumbs up icons.
-        $(this)
-          .children()
-          .children()
-          .each(function (idx) {
-            $(this).toggle();
-          });
-        $(this).next().text(resp.data.likes);
-        // For modal like button.
-        // There will only be business_id data from modal like-button.
-        // If there's cache data update liked attribute.
+        // There will only be business_id data from business report like button.
+        // If there's cached business data for the detail modal.
         if (business_id && this_.business_results_cache[business_id]) {
+          //  Update the liked attribute for this report.
           this_.business_results_cache[business_id].reports.forEach(report => {
-            if (report_id === report.report_id) report.liked = !report.liked;
+            if (report_id === report.report_id) {
+              report.liked = !report.liked;
+              report.likes = resp.data.likes;
+            }
           });
         }
+        // Like buttons that will need their state updated.
+        const like_btns = [$(this)];
+
+        // If like button was in a business detail modal.
+        if ($(this).hasClass('likeModal')) {
+          // If there are any cards on the page for this report
+          //  we need to update their like button states as well.
+          $('.reportCard').each(function () {
+            if ($(this).data('id') === report_id) {
+              like_btns.push($(this).find('.like-report'));
+            }
+          });
+        }
+        like_btns.forEach($el => {
+          // toggle solid/outline thumbs up icons.
+          $el
+            .children()
+            .children()
+            .each(function (idx) {
+              $(this).toggle();
+            });
+          // Update number of likes.
+          $el.next().text(resp.data.likes);
+        });
       }
     });
   }

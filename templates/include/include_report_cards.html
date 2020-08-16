@@ -57,7 +57,7 @@
         class="like-button text-primary signLogBtn"
         data-toggle="modal"
         data-target="#signupModal"
-        data-next_url="{{request.full_path}}"
+        data-next_url="{{request_full_path}}"
       >
         <i class="far fa-thumbs-up fa-lg"></i>
       </button>
@@ -66,7 +66,12 @@
         <i class="fas fa-thumbs-up fa-lg text-primary"></i>
       </span>
       {% else %}
-      <a href="#" class="card-link like-report" data-report_id="{{report.id}}">
+      <a
+        href="#"
+        class="card-link like-report"
+        data-report_id="{{report.id}}"
+        data-business_id="{{report.business_id}}"
+      >
         <span class="">
           {% if g.user.id in report.likes %}
           <i class="fas fa-thumbs-up fa-lg"></i>
@@ -83,7 +88,7 @@
       </span>
       {% if report.user_id == g.user.id %}
       <a
-        href="/report/{{report.id}}/edit?cancel_url={{request.full_path}}"
+        href="/report/{{report.id}}/edit?cancel_url={{request_full_path}}"
         class="btn btn-sm btn-outline-primary float-right px-3 px-sm-2 px-md-3 ml-3 ml-md-4 mb-2"
         >Edit Report</a
       >

@@ -385,6 +385,13 @@ body::-webkit-scrollbar-thumb:hover {
   }
 }
 
+@media screen and (min-width: 991px) and (max-width: 1199px) {
+  .navbar-signup,
+  .navbar-logout {
+    font-size: small !important;
+  }
+}
+
 @media screen and (hover: hover) {
   .modal button:hover:not(.like-button) {
     background: var(--my-green) !important;
