@@ -23,7 +23,7 @@ class IndexSearchLogic {
   /*
   /* When navbar toggler is clicked (sandwich menu) make navbar have
   /* a display of flex !important so opening keyboard on mobile does 
-  /* not allow landscape mobile breakpoint change navbar to  display 
+  /* not allow landscape mobile breakpoint to change navbar to display 
   /* none.
   */
   addNavbarTogglerListener() {
@@ -681,7 +681,7 @@ class ButtonsLogics {
   }
 
   /*
-  /* Get the add-to-missions button which holds the business id and call 
+  /* Get the mission-btn (add to mission) button which holds the business id and call 
   /* getShowBusinessDetails.
   */
   getBtnAndShowDetails() {
@@ -690,10 +690,12 @@ class ButtonsLogics {
       ? $(this)
       : $(this).find('.detailsBtnCard');
 
+    const $addToMissionBtn = detailBtn.next().next().children();
+
     const fakeE = {
       currentTarget: {
         dataset: {
-          id: detailBtn.next().next().children().data('id'),
+          id: $addToMissionBtn.data('id'),
         },
       },
     };

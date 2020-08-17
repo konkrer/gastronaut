@@ -1010,6 +1010,32 @@ def like_report(report_id):
     return jsonify({'success': success, 'likes': len(report.likes)})
 
 
+@app.route('/v1/business', methods=['POST'])
+def add_business():
+    """Add business to database if it is not present."""
+
+    data = request.json
+
+    business = Business.query.get(data['id'])
+
+    if business:
+        return jsonify({'success': 'business already in database'})
+
+    business = Business.create(
+        id=data['id'], name=data['name'], city=data['city'],
+        state=data['state'], country=data['country'],
+        longitude=float(data['longitude'] or 0),
+        latitude=float(data['latitude'] or 0))
+
+    try:
+        db.session.commit()
+    except Exception as e:
+        error_logging(e)
+        return jsonify({'error': 'Error!'})
+
+    return jsonify({'success': 'Added!'})
+
+
 @app.route('/feedback', methods=['POST'])
 @add_user_to_g
 def submit_feedback():

@@ -64,7 +64,7 @@
         <div
           class="bg-trans-light border-bottom border-light rounded-top no-select"
         >
-          <div for="mission-select" class="flx-row-between txt-warning">
+          <div class="flx-row-between txt-warning">
             <a
               class="font-weight-bold panel-toggle"
               data-toggle="collapse"
@@ -110,8 +110,8 @@
           >
             <div class="form-group mb-1">
               <select
-                name="mission-select"
-                id="mission-select"
+                name="mission-load-select"
+                id="mission-load-select"
                 class="custom-select custom-select-sm museo fw-600"
               >
                 {% for mission in missions %} {% if mission.editor == g.user.id

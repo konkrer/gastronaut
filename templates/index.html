@@ -10,6 +10,7 @@
     name="description"
     content="Find restaurants, bars, and more. Plan an mission, eat the food, plant a flag! Lead a life of adventure, lead a gastronaut life!"
   />
+  <link rel=“canonical” href=“https://gastronaut.life” />
   <meta
     name="google-site-verification"
     content="YPEc32npJcPQVaehmJQNayHLdC8eXBWeOUzEuHGQyts"
@@ -82,11 +83,11 @@
           </div>
           <div class="col-1 bg-light p-0" id="scrl2">
             <div class="text-center list-group" id="first-list">
-              {% for let, id in first_letters %}
+              {% for letter, id in first_letters %}
               <a
                 class="list-group-item list-group-item-action first-letter dark-outline-1"
                 href="#{{id}}"
-                >{{let}}</a
+                >{{letter}}</a
               >
               {% endfor %}
             </div>

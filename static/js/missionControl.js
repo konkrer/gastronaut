@@ -10,10 +10,11 @@ class MissionControl {
     this.$infoCol = $('#info-col');
     this.addLoadMissionListener();
     this.addCreateMissionListener();
+    this.addCancelCreateMissionListener();
     this.addUpdateListener();
     this.addDeleteMissionListener();
     this.addRemoveMissionListener();
-    this.addDetailsListener();
+    this.addDetailsListenerBlocker();
     this.addBusinessMapListener();
     this.addBusinessClickListener();
     this.addBusinessDblclickListener();
@@ -34,7 +35,7 @@ class MissionControl {
   */
   checkLocalStorage() {
     // get list of user's missions ids from html <option> values.
-    const currMissions = $('#mission-select')
+    const currMissions = $('#mission-load-select')
       .children()
       .map(function () {
         return $(this).val();
@@ -44,9 +45,12 @@ class MissionControl {
     let lastMissionId = localStorage.getItem('currMissionId');
 
     if (currMissions.includes(lastMissionId)) {
-      // Select <option> that matches lastMissionId in mission-select input.
+      // Select <option> that matches lastMissionId in mission-load-select input.
       const currOption = currMissions.indexOf(lastMissionId);
-      $('#mission-select').children().eq(currOption).prop('selected', true);
+      $('#mission-load-select')
+        .children()
+        .eq(currOption)
+        .prop('selected', true);
       //
     } else if (currMissions.length == 0) {
       $('#write-mission-report').prop('href', '#');
@@ -57,10 +61,19 @@ class MissionControl {
     }
     this.loadMission(lastMissionId);
     if (!Map_Obj.isMobileScreen()) $('#businesses-list').addClass('show');
+    // If create_id passed in and not ignore create_id - open create form.
+    if (
+      window.location.search &&
+      /^\?create_id=.+[^&]$/.test(window.location.search)
+    )
+      // Wait for mission details to be populated then show create form.
+      setTimeout(() => {
+        this.showCreateForm();
+      }, 500);
   }
 
   addLoadMissionListener() {
-    $('#mission-select').change(
+    $('#mission-load-select').change(
       function (e) {
         localStorage.setItem('currMissionId', e.target.value);
         this.loadMission(e.target.value);
@@ -299,12 +312,12 @@ class MissionControl {
   }
 
   showCreateForm(e) {
-    e.preventDefault();
+    if (e) e.preventDefault();
     const html = `
-    <a class="text-success font-weight-bold " data-toggle="collapse" href="#create-form" 
+    <a class="font-weight-bold " data-toggle="collapse" href="#create-form" 
       role="button" aria-expanded="false" aria-controls="mission-form">
-      <div>
-        <span class="panel-toggle"
+      <div class="hoverOpaque txt-warning hoverBlue">
+        <span class="panel-toggle rounded-right"
           >Create Mission<i class="fas fa-caret-down fa-xs text-dark ml-2"></i
         ></span>
       </div>
@@ -335,9 +348,10 @@ class MissionControl {
           maxlength="2" name="country" id="country" placeholder="Country *"
           class="form-control form-control-sm" required>
       </div>
-      <div class="mt-4 btn-div">
-        <span class="feedback ml-5 font-weight-bold"></span>
-        <button type="submit" class="btn btn-sm btn-primary float-right"
+      <div class="mt-4 btn-div text-right">
+        <span class="feedback ml-5 font-weight-bold float-left"></span>
+        <button type="button" class="cancelCreate btn btn-sm btn-secondary">Cancel</button>
+        <button type="submit" class="btn btn-sm btn-primary"
         >Create Mission</button>
       </div>
     </form>
@@ -378,20 +392,69 @@ class MissionControl {
     if (resp.data.success) {
       $('#mission-detail-panel').html('');
       const mission = resp.data.mission;
-      // update mission-select with new <option>.
+      // update mission-load-select with new <option>.
+      $('#mission-load-select').append(
+        $(`<option value="${mission.id}">${mission.name}</option>`)
+      );
+      // update mission-select (add to mission) with new <option>.
       $('#mission-select').append(
         $(`<option value="${mission.id}">${mission.name}</option>`)
       );
       localStorage.setItem('currMissionId', mission.id);
+
+      // if create_id passed in as query parameter.
+      if (
+        window.location.search &&
+        /^\?create_id=.+[^&]$/.test(window.location.search)
+      ) {
+        // Add business to just created mission.
+        const business_id = window.location.search.replace('?create_id=', '');
+        try {
+          var resp2 = await axios.post(
+            `/v1/mission/add_business/${mission.id}`,
+            {
+              id: business_id,
+            }
+          );
+        } catch (err) {
+          Sentry.captureException(err);
+        }
+        if (!resp2 || resp2.data.error) {
+          Sentry.captureMessage(
+            'Something went wrong: missionControl.createMission'
+          );
+        }
+        if (resp.data.success) {
+          //https://www.aspsnippets.com/Articles/Change-Browser-URL-without-reloading-refreshing-page-using-HTML5-in-JavaScript-and-jQuery.aspx
+          if (typeof history.pushState != 'undefined') {
+            const obj = { Title: 'Mission Control', Url: '/mission-control' };
+            history.pushState(obj, obj.Title, obj.Url);
+          }
+        }
+      }
+
       Map_Obj.clearMapArray();
       this.checkLocalStorage();
       ApiFunctsObj.showToast(resp.data.success);
     }
   }
 
+  addCancelCreateMissionListener() {
+    $('main').on(
+      'click',
+      'button.cancelCreate',
+      function () {
+        const mission_id = localStorage.getItem('currMissionId');
+        const missionData = this.missionCache[mission_id];
+        this.fillForm(missionData.mission);
+      }.bind(this)
+    );
+  }
+
   // Listen for mission-form being submitted.
   // Call mission update endpoint.
-  // Provide feedback and update mission-select <option> text.
+  // Provide feedback and update mission-load-select
+  // and mission-select <option> text.
   addUpdateListener() {
     this.$infoCol.on(
       'submit',
@@ -428,8 +491,15 @@ class MissionControl {
             ${this.makeNote(resp.data.note)}`
           );
           this.missionCache[f_d.id].mission = resp.data.mission;
+          // update mission-load-select text.
+          $('#mission-select-form #mission-load-select option').each(
+            function () {
+              // if <option> is for edited mission update name text.
+              if ($(this).val() === f_d.id) $(this).text(f_d.name);
+            }
+          );
           // update mission-select text.
-          $('#mission-select-form #mission-select option').each(function () {
+          $('#mission-choices-form #mission-select option').each(function () {
             // if <option> is for edited mission update name text.
             if ($(this).val() === f_d.id) $(this).text(f_d.name);
           });
@@ -448,7 +518,7 @@ class MissionControl {
 
   // Listen for mission-form delete button being clicked.
   // Call mission delete endpoint.
-  // Update mission-select <option> text.
+  // Update mission-load-select and mission-select <option> text.
   addDeleteMissionListener() {
     $('#deleteMissionModal').on(
       'submit',
@@ -470,6 +540,11 @@ class MissionControl {
         }
         $('.toasts-zone').html('');
         if (resp.data.success) {
+          $('#mission-load-select')
+            .children()
+            .each(function () {
+              if ($(this).val() === mission_id) $(this).remove();
+            });
           $('#mission-select')
             .children()
             .each(function () {
@@ -487,7 +562,7 @@ class MissionControl {
   }
   // Listen for remove mission button being clicked.
   // Call mission remove endpoint.
-  // Update mission-select <option> text.
+  // Update mission-load-select and mission-select <option> text.
   addRemoveMissionListener() {
     $('#removeMissionModal').on(
       'submit',
@@ -509,6 +584,11 @@ class MissionControl {
         }
         $('.toasts-zone').html('');
         if (resp.data.success) {
+          $('#mission-load-select')
+            .children()
+            .each(function () {
+              if ($(this).val() === mission_id) $(this).remove();
+            });
           $('#mission-select')
             .children()
             .each(function () {
@@ -525,11 +605,10 @@ class MissionControl {
     );
   }
 
-  addDetailsListener() {
+  addDetailsListenerBlocker() {
     const this_ = this;
     $('#businesses-list').on('click', '.detailsBtn', function (e) {
       this_.setBusinessClickBlocker();
-      ApiFunctsObj.getShowBusinessDetails(e);
     });
   }
 

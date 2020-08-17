@@ -12,14 +12,15 @@ class ApiFuncts {
 
     // Current business data for adding business to mission.
     // This data gets updated with each press of add to mission button.
-    this.mission_btn_business_data = null;
+    this.missionBtnBusinessData = null;
 
     this.addLikeMissionListener();
     this.addLikeReportListener();
     this.addMissionListener();
     this.addDetailsListener();
+    this.addMissionBtnDataCacheListener();
     this.addBusinessToMisionListener();
-    this.missionBtnDataCacheListener();
+    this.addCreateNewMissionListener();
     // Turn on toasts.
     $('.toast').toast();
   }
@@ -99,13 +100,10 @@ class ApiFuncts {
 
         // If like button was in a business detail modal.
         if ($(this).hasClass('likeModal')) {
-          // If there are any cards on the page for this report
-          //  we need to update their like button states as well.
-          $('.reportCard').each(function () {
-            if ($(this).data('id') === report_id) {
-              like_btns.push($(this).find('.like-report'));
-            }
-          });
+          // If there are any cards on the page for this report we need
+          // to update their like button states as well. Add like button to like_btns.
+          const $reportCard = $(`div.reportCard[data-id="${report_id}"]`);
+          if ($reportCard) like_btns.push($reportCard.find('.like-report'));
         }
         like_btns.forEach($el => {
           // toggle solid/outline thumbs up icons.
@@ -154,7 +152,7 @@ class ApiFuncts {
   addDetailsListener() {
     $('main').on(
       'click',
-      '.detailsBtn:not(#businesses-list .detailsBtn)',
+      '.detailsBtn',
       this.getShowBusinessDetails.bind(this)
     );
   }
@@ -203,23 +201,28 @@ class ApiFuncts {
   }
 
   /*
-  /* Add-to-mission button sets card business_data to variable.
+  /* Add-to-mission button sets card business_data to obj which
+  /* may be needed to create a new business in the database.
   */
-  missionBtnDataCacheListener() {
+  addMissionBtnDataCacheListener() {
     const this_ = this;
-    $('main').on('click', '.mission-btn', function (e) {
-      let data = {};
-
-      data.id = $(this).data('id');
-      data.name = $(this).data('name');
-      data.city = $(this).data('city');
-      data.state = $(this).data('state');
-      data.country = $(this).data('country');
-      data.longitude = $(this).data('lng');
-      data.latitude = $(this).data('lat');
-
-      this_.mission_btn_business_data = data;
+    $('main').on('click', '.mission-btn', function () {
+      this_.cacheMissionBtnData($(this));
     });
+  }
+
+  cacheMissionBtnData(missionBtn) {
+    let data = {};
+
+    data.id = missionBtn.data('id');
+    data.name = missionBtn.data('name');
+    data.city = missionBtn.data('city');
+    data.state = missionBtn.data('state');
+    data.country = missionBtn.data('country');
+    data.longitude = missionBtn.data('lng');
+    data.latitude = missionBtn.data('lat');
+
+    this.missionBtnBusinessData = data;
   }
 
   /*
@@ -241,14 +244,13 @@ class ApiFuncts {
       try {
         var resp = await axios.post(
           `/v1/mission/add_business/${mission_id}`,
-          this_.mission_btn_business_data
+          this_.missionBtnBusinessData
         );
       } catch (err) {
         $('#mission-choices .feedback').html(
           '<p class="text-danger">Error</p>'
         );
         Sentry.captureException(err);
-        $('.spinner-zone').hide();
         return;
       }
       if (!resp || resp.data.error) {
@@ -258,7 +260,6 @@ class ApiFuncts {
         Sentry.captureMessage(
           'Something went wrong: api_functs.addBusinessToMisionListener'
         );
-        $('.spinner-zone').hide();
         return;
       }
       const {
@@ -277,6 +278,44 @@ class ApiFuncts {
           MissionControlObj.businessAddedToMission(mission_id);
       }
     });
+  }
+
+  /*
+  /* When user clicks create new mission in add to mission modal 
+  /* make a new business record in database if necesarry.
+  /* Then redirect to mission-control with create parameter to initiate
+  /* creating a new mission and adding current business to that mission.
+  */
+  addCreateNewMissionListener() {
+    $('.createMission').click(
+      async function (e) {
+        e.preventDefault();
+
+        try {
+          var resp = await axios.post(
+            `/v1/business`,
+            this.missionBtnBusinessData
+          );
+        } catch (err) {
+          $('#mission-choices .feedback').html(
+            '<p class="text-danger">Error</p>'
+          );
+          Sentry.captureException(err);
+          return;
+        }
+        if (!resp || resp.data.error) {
+          $('#mission-choices .feedback').html(
+            '<p class="txt-warning">Error</p>'
+          );
+          Sentry.captureMessage(
+            'Something went wrong: api_functs.addBusinessToMisionListener'
+          );
+          return;
+        }
+
+        window.location.href = `/mission-control?create_id=${this.missionBtnBusinessData.id}`;
+      }.bind(this)
+    );
   }
 
   // Show toast message fuctionality.

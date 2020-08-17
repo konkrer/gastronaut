@@ -28,9 +28,19 @@ a[href='#mission-select-form'] {
   border-radius: 0 0 5px 0;
 }
 
-#mission-select {
+#mission-load-select {
   font-size: xx-small;
   color: var(--my-info-alt);
+}
+
+#create-mission-btn {
+  font-size: 10px !important;
+  padding: 2px 8px;
+  margin-top: 1px;
+}
+
+#create-mission-btn:focus {
+  background-color: unset;
 }
 
 #mission-detail-panel form input,
@@ -54,16 +64,6 @@ a[href='#mission-select-form'] {
 #mission-form .btn-div,
 #create-form .btn-div {
   height: 28px;
-}
-
-#create-mission-btn {
-  font-size: 10px !important;
-  padding: 2px 8px;
-  margin-top: 1px;
-}
-
-#create-mission-btn:focus {
-  background-color: unset;
 }
 
 #businesses-list {
@@ -162,7 +162,7 @@ a[href='#mission-select-form'] {
 }
 
 @media screen and (min-width: 768px) {
-  #mission-select {
+  #mission-load-select {
     font-size: initial;
   }
 }
