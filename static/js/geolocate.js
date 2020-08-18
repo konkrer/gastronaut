@@ -111,7 +111,6 @@ class GeolocationObj {
     Map_Obj.addUserMarker();
     if (Map_Obj.currentRoute) {
       Map_Obj.flyToUser(heading);
-      // this.requestWakeLock();
     }
   }
 

@@ -324,7 +324,7 @@ class MapObj {
     this.mappyBoi.flyTo({
       center: [this.longitude, this.latitude],
       essential: true,
-      zoom: 18,
+      zoom: 19,
       speed: 0.4,
       bearing: heading,
     });
