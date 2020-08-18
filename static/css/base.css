@@ -53,7 +53,7 @@ body {
   left: 20px;
 }
 
-#preferences-form .help-text {
+#preferences-boolean .help-text {
   font-size: 10px;
   font-style: italic;
 }
@@ -376,6 +376,9 @@ body::-webkit-scrollbar-thumb:hover {
   transform: rotate(225deg);
 }
 
+.modal-body hr {
+  border-top-color: #333;
+}
 @media (orientation: portrait) {
   .display-1-k {
     font-size: 11vw;

@@ -24,10 +24,10 @@
       </div>
       <div class="modal-body">
         {% from '/macros/preferences_check.html' import preferences_check with
-        context %}
+        context %}{% set preferences = g.user.preferences %}
 
-        <form id="preferences-form" action="#">
-          <h5 class="txt-medium txt-white-k mb-4">
+        <form id="preferences-boolean" action="#" class="mb-4">
+          <h5 class="txt-medium text-dark mb-4">
             <strong>Gastronaut Search</strong>
           </h5>
           <div class="custom-control custom-switch">
@@ -37,7 +37,7 @@
               id="show_alcohol"
               class="custom-control-input"
               {{
-              preferences_check(g.user.preferences.show_alcohol)
+              preferences_check(preferences.show_alcohol)
               }}
             />
             <label
@@ -50,6 +50,46 @@
               >Takes effect on next home page load.</small
             >
           </div>
+          <input type="hidden" name="boolean" value="true" />
+        </form>
+        <hr />
+        <form id="preferences-text" action="#" class="mt-4">
+          <h5 class="txt-medium text-dark mb-3">
+            <strong>Navigation</strong>
+          </h5>
+          <div class="form-group border border-secondary rounded p-2">
+            <label for="home_address_official" class="txt-medium txt-white-k"
+              >Home Address</label
+            >
+            <input
+              type="text"
+              name="home_address_official"
+              id="home_address_official"
+              class="form-control mb-2"
+              readonly
+              placeholder="{{preferences.home_address}}"
+              value="{{preferences.home_address}}"
+            />
+            <label for="home_address"
+              >Enter address then select matching official address.</label
+            >
+            <input
+              type="text"
+              name="home_address"
+              id="home_address"
+              class="form-control"
+              placeholder="Enter home address"
+              autocomplete="off"
+              list="datalist-home_address"
+            />
+            <small class="form-text"
+              >Don't use road abbreviations, use whole word - street, avenue,
+              lane, etc.</small
+            >
+            <small class="form-text">Enter proper address with commas.</small>
+            <datalist id="datalist-home_address"></datalist>
+          </div>
+          <input type="hidden" name="home_coords" id="home_coords" />
         </form>
       </div>
       <div class="modal-footer" style="position: relative;">

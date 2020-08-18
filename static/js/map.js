@@ -209,13 +209,19 @@ class MapObj {
     this.restMarkers = [];
   }
 
+  // Use Mapbox geocoding.
   async geocode(query) {
+    // Get coords for proximity for geocoding. Use user coords or restCoords.
+    const proximityCoords = this.longitude
+      ? [this.longitude, this.latitude]
+      : this.restCoords;
+    // Cannot have ';' in query string for mapbox.
     query = query.replace(';', ',');
     try {
       var resp = await this.mapboxClient.geocoding
         .forwardGeocode({
           query,
-          proximity: this.restCoords,
+          proximity: proximityCoords,
         })
         .send();
     } catch (error) {

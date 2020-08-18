@@ -366,7 +366,7 @@ class MissionControl {
     e.preventDefault();
 
     const formData = $('#create-form').serializeArray();
-    const f_d = Base.convertDataArrayToObj(formData);
+    const f_d = Base_Obj.convertDataArrayToObj(formData);
 
     // Don't pass default textarea content 'Add a Description' to backend.
     f_d.description =
@@ -463,7 +463,7 @@ class MissionControl {
         e.preventDefault();
 
         const formData = $('#mission-form').serializeArray();
-        const f_d = Base.convertDataArrayToObj(formData);
+        const f_d = Base_Obj.convertDataArrayToObj(formData);
 
         // Don't pass default textarea content 'Add a Description' to backend.
         f_d.description =
@@ -864,16 +864,22 @@ class MissionControl {
   }
 }
 
+// MissionControlNavigation  //
+// MissionControlNavigation  //
+// MissionControlNavigation  //
+// MissionControlNavigation  //
+// MissionControlNavigation  //
+// MissionControlNavigation  //
+
 class MissionControlNavigation {
   constructor() {
-    this.locationAutocompleteCache = {};
     this.lastRestMarkerIdx = 0;
     this.lastRestMarkerHtml = null;
     // nav buttons
     this.addNavProfileBtnsListener();
     this.addDetectLocationListener();
     // Add location autocomplete.
-    this.addAutocompleteListener();
+    Base_Obj.addLocationAutocompleteListener();
     // Location entry or restart navigation.
     this.addNavStartListener();
     this.addNavStartEnableNoSleepListener();
@@ -915,7 +921,7 @@ class MissionControlNavigation {
       const location = $(this).find('#location').val();
 
       if (location) {
-        let coords = this_.locationAutocompleteCache[location];
+        let coords = Base_Obj.locationAutocompleteCache[location];
         if (!coords) {
           const features = await Map_Obj.geocode(location);
           if (features.length === 0) {
@@ -941,28 +947,6 @@ class MissionControlNavigation {
     $('#nav-start-form button').click(function () {
       if (!$('#location').val() && Map_Obj.longitude)
         Geolocation_Obj.enableNoSleep();
-    });
-  }
-
-  addAutocompleteListener() {
-    const this_ = this;
-    $('#location').on('keyup', async function () {
-      const query = $(this).val();
-      // If the current query value is a suggestion that was just given return.
-      if (this_.locationAutocompleteCache[query]) return;
-      // Autocomplete on querys 3 chars or longer.
-      if (query.length < 3) return;
-      // Get suggestions.
-      const features = await Map_Obj.geocode(query);
-      // Make html <option> for each suggesion and cache coords associated with each suggestion.
-      let options = '';
-      features.forEach(el => {
-        options = `${options}<option value="${el.place_name}"></option>`;
-        this_.locationAutocompleteCache[el.place_name] =
-          el.geometry.coordinates;
-      });
-      // Put suggestions in input list - datalist.
-      $('#datalist').html(options);
     });
   }
 

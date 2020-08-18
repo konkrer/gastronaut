@@ -24,8 +24,7 @@ class FormFuncts {
       { name: 'sort_by', value: 'best_match' },
     ];
 
-    this.addAutocompleteLocation();
-    this.addLocationSubmitListener();
+    Base_Obj.addLocationAutocompleteListener(this.locationSearch.bind(this));
     this.addDetectLocationListener();
     this.addKeywordKeyupListener();
     this.addFormChangeListener();
@@ -102,7 +101,7 @@ class FormFuncts {
   */
   setForm(data) {
     if (data === 'default') data = this.defaultFormState;
-    data = Base.convertDataArrayToObj(data);
+    data = Base_Obj.convertDataArrayToObj(data);
 
     // set location
     if (data.location) this.$locationInput.val(data.location);
@@ -227,47 +226,8 @@ class FormFuncts {
   }
 
   /*
-  /* Add autocomplete location suggestions.
-  */
-  addAutocompleteLocation() {
-    this.$locationInput.on(
-      'keyup',
-      async function (e) {
-        const key = e.which || e.keyCode;
-        if (key === 13) return;
-        // If location suggestion clicked search yelp.
-        if (key === undefined) {
-          this.locationSearch();
-          return;
-        }
-        const query = this.$locationInput.val();
-        if (query.length < 3) return;
-
-        const features = await Map_Obj.geocode(query);
-        let options = '';
-        features.forEach(el => {
-          options = `${options}<option value="${el.place_name}"></option>`;
-        });
-        $('#datalist-location').html(options);
-      }.bind(this)
-    );
-  }
-
-  /*
   /* When form is submitted check for location to make search.
   */
-  addLocationSubmitListener() {
-    this.$locationInput.on(
-      'keydown',
-      function (e) {
-        const key = e.which || e.keyCode;
-        if (key === 13) {
-          this.locationSearch();
-        }
-      }.bind(this)
-    );
-  }
-
   locationSearch() {
     if (this.$locationInput.val()) {
       $('.spinner-zone').show();
@@ -445,7 +405,7 @@ class FormFuncts {
     // Set location from storage if there was location previously given.
     if (data) {
       data = JSON.parse(data);
-      data = Base.convertDataArrayToObj(data);
+      data = Base_Obj.convertDataArrayToObj(data);
       if (data.location) this.$locationInput.val(data.location);
     } else {
       // Looks like new user without data show tips modal.

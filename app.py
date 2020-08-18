@@ -15,8 +15,9 @@ from flask import (
     redirect, jsonify, url_for, g, render_template as r_t)
 from werkzeug.utils import secure_filename
 from werkzeug.exceptions import Unauthorized, BadRequest
-from models import (db, connect_db, User, Mission, UserMission,  # noqa F401
-                    Business, Report, MissionBusiness, DEFAULT_PREFERENCES)  # noqa F401
+from models import (db, connect_db, User, Mission, UserMission,
+                    Business, Report, MissionBusiness, DEFAULT_PREFERENCES,
+                    BOOLEAN_PREFERENCES)
 from forms import (
     AddUserForm, LoginForm, EditUserForm, AddReportForm, EditReportForm)
 from static.py_modules.decorators import add_user_to_g, login_required
@@ -652,18 +653,27 @@ def business_detail_yelp(business_id):
 @app.route('/v1/preferences', methods=['POST'])
 @add_user_to_g
 def set_prefrences():
-    """Endpoint to change user preferences."""
+    """Endpoint to change user preferences. This is called by two 
+       different forms in two different ways. One with onChange with
+       JavaScript and the other with a form submit button."""
 
     if not g.user:
         return Unauthorized()
 
     data = request.json
 
-    preferences = dict()
+    preferences = g.user.preferences.__dict__.copy()
 
-    # set each setting to true if data is present else False
-    for key in DEFAULT_PREFERENCES.__dict__:
-        preferences[key] = bool(data.get(key, False))
+    # If onChange update of boolean preferences
+    if data.get('boolean'):
+        # set each setting to true if data is present else False
+        for key in BOOLEAN_PREFERENCES:
+            preferences[key] = bool(data.get(key, False))
+    else:
+        preferences['home_address'] = data.get('home_address_official')
+        if data.get('home_coords'):
+            preferences['home_coords'] = [
+                float(x) for x in data['home_coords'].split(',')]
 
     g.user.preferences = SimpleNamespace(**preferences)
 

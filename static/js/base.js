@@ -5,8 +5,11 @@ class BaseLogic {
   constructor() {
     this.preferencesTimer;
     this.feedbackClearTimer;
+    this.locationsOptionsHtmlCache = {};
+    this.locationAutocompleteCache = {};
     this.addPreloaderRemover();
-    this.addPreferencesListener();
+    this.addPreferencesListeners();
+    this.addHomeAddressListerners();
     this.addAlertCloseListener();
     this.addReportsDblclickListeners();
     this.addFeedbackListener();
@@ -20,23 +23,25 @@ class BaseLogic {
     };
   }
 
-  // User Preferences listener
-  addPreferencesListener() {
-    $('#preferences-form').on('change', 'input', () => {
+  // User Preferences listeners
+  addPreferencesListeners() {
+    // User Boolean Preferences listener
+    $('#preferences-boolean').on('change', 'input', () => {
       clearTimeout(this.preferencesTimer);
-      this.preferencesTimer = setTimeout(
-        this.updatePreferences.bind(this),
-        400
-      );
+      this.preferencesTimer = setTimeout(() => {
+        this.updatePreferences(0);
+      }, 400);
+    });
+    // User Text Preferences listener
+    $('#preferences-text').on('submit', e => {
+      e.preventDefault();
     });
   }
 
   // Call API set_preferences endpoint.
-
-  async updatePreferences() {
-    const data = this.convertDataArrayToObj(
-      $('#preferences-form').serializeArray()
-    );
+  async updatePreferences(formIdx) {
+    const form = ['#preferences-boolean', '#preferences-text'][formIdx];
+    const data = this.convertDataArrayToObj($(form).serializeArray());
     try {
       var resp = await axios.post('/v1/preferences', data);
     } catch (err) {
@@ -53,6 +58,45 @@ class BaseLogic {
     this.feedbackClearTimer = setTimeout(() => {
       $('#preferencesModal .feedback').text('');
     }, 2000);
+  }
+
+  /*
+  /* Add Home Address Listeners.
+  */
+  addHomeAddressListerners() {
+    const this_ = this;
+    //
+    // Add autocomplete listener.
+    //
+    $('#home_address').on('keyup', async function (e) {
+      const key = e.which || e.keyCode;
+      // If a location suggestion was clicked or
+      // if user presses enter.
+      if (key === undefined || key === 13) {
+        return;
+      }
+      const query = $(this).val();
+      const options = await this_.autocompleteLocation(query);
+
+      $('#datalist-home_address').html(options);
+    });
+    //
+    // Add offical address selection listener.
+    //
+    $('#home_address').on('keyup', function (e) {
+      const key = e.which || e.keyCode;
+      // If a location suggestion was clicked or
+      // if user presses enter.
+      if (key === undefined) {
+        const offical_address = $(this).val();
+        $('#home_address_official')
+          .val(offical_address)
+          .prop('placeholder', offical_address);
+        $('#home_address').val('');
+        $('#home_coords').val(this_.locationAutocompleteCache[offical_address]);
+        this_.updatePreferences(1);
+      }
+    });
   }
 
   /*
@@ -129,6 +173,46 @@ class BaseLogic {
     });
   }
 
+  /*
+  /* Autocomplete location functionality for pages that call this function.
+  */
+  addLocationAutocompleteListener(callback) {
+    const this_ = this;
+    $('#location').on('keyup', async function (e) {
+      const key = e.which || e.keyCode;
+      // If a location suggestion was clicked or
+      // if user presses enter locationSearch.
+      if (key === undefined || key === 13) {
+        if (callback) callback();
+        return;
+      }
+      const query = $(this).val();
+      const options = await this_.autocompleteLocation(query);
+      // Put suggestions in input list - datalist-location.
+      $('#datalist-location').html(options);
+    });
+  }
+
+  /*
+  /* Autocomplete location functionality
+  */
+  async autocompleteLocation(query) {
+    // Autocomplete on querys 3 chars or longer.
+    if (query.length < 3) return '';
+    // If the current query value is was previously given return cached data.
+    if (this.locationsOptionsHtmlCache[query])
+      return this.locationsOptionsHtmlCache[query];
+    // Get suggestions.
+    const features = await Map_Obj.geocode(query);
+    // Make html <option> for each suggesion and cache coords associated with each suggestion.
+    let options = features.reduce((acc, el) => {
+      this.locationAutocompleteCache[el.place_name] = el.geometry.coordinates;
+      return `${acc}<option value="${el.place_name}"></option>`;
+    }, '');
+    this.locationsOptionsHtmlCache[query] = options;
+    return options;
+  }
+
   // Enable service worker for PWA.
   // Pulled from Google docs about service workers.
   enableServiceWorker() {
@@ -164,4 +248,4 @@ class BaseLogic {
   }
 }
 
-const Base = new BaseLogic();
+const Base_Obj = new BaseLogic();
