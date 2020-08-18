@@ -765,8 +765,13 @@ class MissionControl {
       if (MissionControlNavigationObj.lastRestMarkerHtml === null) return;
       html = MissionControlNavigationObj.lastRestMarkerHtml;
     } else {
-      // Turn purple. Make new html for new marker
+      const mission_id = localStorage.getItem('currMissionId');
+      if (this.missionCache[mission_id].businesses[idx].completed) {
+        MissionControlNavigationObj.lastRestMarkerHtml = null;
+        return;
+      }
       const id = $el.children().data('id');
+      // Turn purple. Make new html for new marker
       const name = $el.text();
       html = `<span class="detailsBtn" data-id="${id}">
                       ${name}</span>`;

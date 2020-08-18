@@ -337,7 +337,6 @@ class MapObj {
       if ($(this).data('lng')) {
         this_.restCoords = [$(this).data('lng'), $(this).data('lat')];
         this_.markerStyle = 1;
-        debugger;
         this_.addHomeMarkerAndFitBounds();
         // If on index page hide directions panel.
         if (

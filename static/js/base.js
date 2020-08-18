@@ -108,7 +108,6 @@ class BaseLogic {
       e
     ) {
       e.preventDefault();
-      debugger;
       $('#home_address_official').val('').prop('placeholder', '');
       $('#home_coords').val('');
       // Make home button open preferences modal and clear coords.
