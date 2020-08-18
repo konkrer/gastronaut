@@ -755,7 +755,8 @@ class MissionControl {
     });
   }
 
-  // option 0 is green marker.
+  // Change marker color to purple when marker is a  navigation endpoint
+  // and back to green when marker is not a navigation endpoint.
   changeMarkerColor(idx, $el, option = 0) {
     let html;
     // option 0 is green marker return to original color.
@@ -764,6 +765,7 @@ class MissionControl {
       if (MissionControlNavigationObj.lastRestMarkerHtml === null) return;
       html = MissionControlNavigationObj.lastRestMarkerHtml;
     } else {
+      // Turn purple. Make new html for new marker
       const id = $el.children().data('id');
       const name = $el.text();
       html = `<span class="detailsBtn" data-id="${id}">
@@ -777,6 +779,7 @@ class MissionControl {
     Map_Obj.markerStyle = option;
     const newMarker = Map_Obj.addMarker([lng, lat], html);
     Map_Obj.markerStyle = 0;
+    // If marker changed to purple note marker and html.
     if (option === 1) {
       Map_Obj.restMarker = newMarker;
       MissionControlNavigationObj.lastRestMarkerHtml = html;

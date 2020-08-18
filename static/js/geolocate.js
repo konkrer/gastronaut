@@ -31,7 +31,7 @@ class GeolocationObj {
       this.locationWatcher = null;
       navigator.geolocation.getCurrentPosition(
         this.geoSuccess.bind(this),
-        this.showError,
+        this.showError.bind(this),
         this.options[0]
       );
     } else {

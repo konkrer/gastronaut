@@ -336,9 +336,9 @@ class MapObj {
       // If home button has home coords data begin navigation home.
       if ($(this).data('lng')) {
         this_.restCoords = [$(this).data('lng'), $(this).data('lat')];
-        Map_Obj.markerStyle = 1;
+        this_.markerStyle = 1;
+        debugger;
         this_.addHomeMarkerAndFitBounds();
-        Map_Obj.markerStyle = 0;
         // If on index page hide directions panel.
         if (
           typeof ButtonsLogicsObj !== 'undefined' &&
@@ -346,6 +346,7 @@ class MapObj {
         )
           ButtonsLogicsObj.toggleDirectionsDiv();
       } else {
+        // If no home address show preferences modal to enter home address.
         $('#preferencesModal').modal('show');
       }
     });
@@ -354,7 +355,6 @@ class MapObj {
   // Add a restaurant marker and fit bounds to user position and restaurant location.
   addHomeMarkerAndFitBounds() {
     if (this.homeMarker) this.homeMarker.remove();
-    const html = `<span class="mr-2 homeMarker">Home</span>`;
     // If on index page remove previous restMarker
     if (typeof IndexSearchObj !== 'undefined' && this.restMarker)
       this.restMarker.remove();
@@ -367,8 +367,8 @@ class MapObj {
     }
     // Add marker for home.
     this.markerStyle = 1;
+    const html = `<span class="mr-2 homeMarker">Home</span>`;
     this.restMarker = this.addMarker(this.restCoords, html);
-    this.markerStyle = 0;
     this.homeMarker = this.restMarker;
     this.showDirectionsAndLine();
     if ($('#directions-panel').hasClass('directionsShow'))
