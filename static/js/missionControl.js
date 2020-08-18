@@ -961,6 +961,7 @@ class MissionControlNavigation {
     $('#navigationModal').modal('hide');
     $('#businesses-list').removeClass('show');
     $('#directions-panel').show();
+    $('.map-routing .home').fadeIn();
     $('.map-routing .reset').fadeIn();
   }
 
@@ -974,6 +975,7 @@ class MissionControlNavigation {
     Map_Obj.clearRouting();
     MissionControlObj.changeMarkerColor(this.lastRestMarkerIdx, null);
     $('#directions-panel').fadeOut();
+    $('.map-routing .home').fadeOut();
     $('.map-routing .reset').fadeOut();
   }
 }

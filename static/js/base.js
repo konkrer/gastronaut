@@ -93,9 +93,27 @@ class BaseLogic {
           .val(offical_address)
           .prop('placeholder', offical_address);
         $('#home_address').val('');
-        $('#home_coords').val(this_.locationAutocompleteCache[offical_address]);
+        const locationCoords = this_.locationAutocompleteCache[offical_address];
+        $('#home_coords').val(locationCoords);
+        $('.map-routing .home')
+          .data('lng', locationCoords[0])
+          .data('lat', locationCoords[1]);
         this_.updatePreferences(1);
       }
+    });
+    //
+    // Add clear home address listener.
+    //
+    $('#preferencesModal label[for="home_address_official"] a').click(function (
+      e
+    ) {
+      e.preventDefault();
+      debugger;
+      $('#home_address_official').val('').prop('placeholder', '');
+      $('#home_coords').val('');
+      // Make home button open preferences modal and clear coords.
+      $('.map-routing .home').data('lng', '').data('lat', '');
+      this_.updatePreferences(1);
     });
   }
 

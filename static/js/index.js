@@ -743,6 +743,7 @@ class ButtonsLogics {
       $('.map-routing').addClass('horizontal');
       $('.walk').addClass('walkHorizontal');
       $('.bike').addClass('bikeHorizontal');
+      $('div.home').fadeIn().addClass('homeHorizontal');
       $('div.reset').fadeIn().addClass('resetHorizontal');
       $('#directions-panel').addClass('show').fadeIn();
     });
@@ -794,6 +795,7 @@ class ButtonsLogics {
         $('.map-routing').removeClass('horizontal');
         $('.walk').removeClass('walkHorizontal');
         $('.bike').removeClass('bikeHorizontal');
+        $('div.home').fadeOut().removeClass('homeHorizontal');
         $('div.reset').fadeOut().removeClass('resetHorizontal');
       }.bind(this)
     );

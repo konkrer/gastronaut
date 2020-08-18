@@ -65,10 +65,11 @@
   .map-routing div i {
     font-size: 1.5em;
   }
-  .drive,
-  .bike,
-  .walk,
-  .reset {
+  .map-routing .drive,
+  .map-routing .bike,
+  .map-routing .walk,
+  .map-routing .home,
+  .map-routing .reset {
     width: 29px;
     height: 29px;
   }
@@ -78,8 +79,11 @@
   .bikeHorizontal {
     transform: translate(70px, -90px);
   }
-  .resetHorizontal {
+  .homeHorizontal {
     transform: translate(105px, -134px);
+  }
+  .resetHorizontal {
+    transform: translate(140px, -178px);
   }
   .directions-col {
     top: 45px;
@@ -329,10 +333,11 @@
   .my-card li a:hover {
     color: white;
   }
-  .drive:hover,
-  .walk:hover,
-  .bike:hover,
-  .reset:hover,
+  .map-routing .drive:hover,
+  .map-routing .walk:hover,
+  .map-routing .bike:hover,
+  .map-routing .home:hover,
+  .map-routing .reset:hover,
   .map-info:hover,
   .hover-orange:hover {
     color: var(--my-warning);

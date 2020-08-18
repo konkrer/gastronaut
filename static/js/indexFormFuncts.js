@@ -77,7 +77,7 @@ class FormFuncts {
     if (!data) {
       this.setTransactions([]);
       // Looks like new user without data show tips modal.
-      setTimeout(() => $('#tips-modal').modal(), 10000);
+      setTimeout(() => $('#tipsModal').modal(), 10000);
       return;
     }
     this.setForm(JSON.parse(data));
@@ -409,7 +409,7 @@ class FormFuncts {
       if (data.location) this.$locationInput.val(data.location);
     } else {
       // Looks like new user without data show tips modal.
-      setTimeout(() => $('#tips-modal').modal(), 10000);
+      setTimeout(() => $('#tipsModal').modal(), 10000);
     }
   }
 

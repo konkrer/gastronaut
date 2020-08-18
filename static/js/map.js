@@ -15,6 +15,7 @@ class MapObj {
     this.latitude = null;
     this.restCoords = null;
     this.userMarker = null;
+    this.homeMarker = null;
     this.userMarkerStyle = 0;
     this.markerStyle = 0;
     // restaurant marker for index page.
@@ -55,6 +56,7 @@ class MapObj {
       'line-color': '#26ff00',
       'line-width': 8,
     };
+    this.addHomeButtonListener();
   }
 
   // Render Map.
@@ -326,6 +328,52 @@ class MapObj {
       speed: 0.4,
       bearing: heading,
     });
+  }
+
+  addHomeButtonListener() {
+    const this_ = this;
+    $('main').on('click', '.map-routing .home.loggedIn', function () {
+      // If home button has home coords data begin navigation home.
+      if ($(this).data('lng')) {
+        this_.restCoords = [$(this).data('lng'), $(this).data('lat')];
+        Map_Obj.markerStyle = 1;
+        this_.addHomeMarkerAndFitBounds();
+        Map_Obj.markerStyle = 0;
+        // If on index page hide directions panel.
+        if (
+          typeof ButtonsLogicsObj !== 'undefined' &&
+          $('#directions-panel').hasClass('directionsShow')
+        )
+          ButtonsLogicsObj.toggleDirectionsDiv();
+      } else {
+        $('#preferencesModal').modal('show');
+      }
+    });
+  }
+
+  // Add a restaurant marker and fit bounds to user position and restaurant location.
+  addHomeMarkerAndFitBounds() {
+    if (this.homeMarker) this.homeMarker.remove();
+    const html = `<span class="mr-2 homeMarker">Home</span>`;
+    // If on index page remove previous restMarker
+    if (typeof IndexSearchObj !== 'undefined' && this.restMarker)
+      this.restMarker.remove();
+    // If on mission control page turn last restMarker green again.
+    if (typeof MissionControlNavigationObj !== 'undefined') {
+      MissionControlObj.changeMarkerColor(
+        MissionControlNavigationObj.lastRestMarkerIdx,
+        null
+      );
+    }
+    // Add marker for home.
+    this.markerStyle = 1;
+    this.restMarker = this.addMarker(this.restCoords, html);
+    this.markerStyle = 0;
+    this.homeMarker = this.restMarker;
+    this.showDirectionsAndLine();
+    if ($('#directions-panel').hasClass('directionsShow'))
+      ButtonsLogicsObj.toggleDirectionsDiv();
+    this.fitBounds();
   }
 
   clearRouting() {

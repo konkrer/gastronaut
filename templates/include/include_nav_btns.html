@@ -24,6 +24,37 @@
     <i class="fas fa-bicycle fa-2x"></i>
   </div>
   <div
+    style="display: none;"
+    {%
+    if
+    g.user
+    and
+    g.user.preferences.home_address
+    %}
+    class="home loggedIn flx-std"
+    data-lng="{{g.user.preferences.home_coords[0]}}"
+    data-lat="{{g.user.preferences.home_coords[1]}}"
+    {%
+    elif
+    g.user
+    %}
+    class="home loggedIn flx-std"
+    {%
+    else
+    %}
+    class="home flx-std signLogBtn"
+    data-toggle="modal"
+    data-target="#signupModal"
+    data-next_url="/"
+    {%
+    endif
+    %}
+  >
+    <div data-toggle="tooltip" title="Go Home">
+      <i class="fas fa-home fa-2x"></i>
+    </div>
+  </div>
+  <div
     class="reset flx-std"
     style="display: none;"
     data-toggle="tooltip"

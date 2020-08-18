@@ -327,10 +327,11 @@ a.first-letter.active {
   z-index: 10;
 }
 
-.drive,
-.walk,
-.bike,
-.reset {
+.map-routing .drive,
+.map-routing .walk,
+.map-routing .bike,
+.map-routing .home,
+.map-routing .reset {
   height: 40px;
   width: 40px;
   background-color: rgba(255, 255, 255, 0.9);
@@ -338,24 +339,30 @@ a.first-letter.active {
   transition: transform 0.6s;
 }
 
-.drive,
-.walk {
+.map-routing .drive,
+.map-routing .walk {
   margin-bottom: 16px;
 }
 
-.reset {
+.map-routing .reset,
+.map-routing .home {
   margin-top: 15px;
 }
 
 .walkHorizontal {
-  transform: translate(60px, -55px);
+  transform: translate(60px, -56px);
 }
 
 .bikeHorizontal {
-  transform: translate(120px, -110px);
+  transform: translate(120px, -112px);
 }
+
+.homeHorizontal {
+  transform: translate(180px, -167px);
+}
+
 .resetHorizontal {
-  transform: translate(180px, -165px);
+  transform: translate(240px, -222px);
 }
 
 .map-track #directions-panel {
