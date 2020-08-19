@@ -35,12 +35,15 @@ class MapObj {
     this.fitBoundsOptions = [
       {
         padding: { top: 120, bottom: 10, left: 80, right: 80 },
+        maxZoom: 18,
       },
       {
         padding: { top: 80, bottom: 10, left: 80, right: 80 },
+        maxZoom: 18,
       },
       {
         padding: { top: 80, bottom: 40, left: 200, right: 200 },
+        maxZoom: 18,
       },
     ];
     this.profileDict = {
@@ -324,7 +327,7 @@ class MapObj {
     this.mappyBoi.flyTo({
       center: [this.longitude, this.latitude],
       essential: true,
-      zoom: 19,
+      zoom: 16,
       speed: 0.4,
       bearing: heading,
     });
