@@ -9,7 +9,8 @@
   'FileField' %}{% if field.object_data %}
   <div class="mb-1 txt-smlr">
     Current File:
-    <span class="text-info">{{field.object_data[93:]}}</span>
+    <span class="text-info currFile">{{field.object_data[94:]}}</span
+    ><a href="#" class="float-right fileClear mr-2">clear</a>
   </div>
   {% endif %} {{field(class_="form-control") }} {% else %}
   {{field(class_="form-control") }} {% endif %}

@@ -12,7 +12,7 @@ class IndexAnimations {
     this.justSearchedYelp = false;
     this.category = null;
     this.windowResizeCardScrollResetTimer;
-    this.sidebarToggleListener();
+    this.sidebarToggleListeners();
     this.addWindowResizeListener();
     this.initMiscAnimtions();
   }
@@ -79,9 +79,10 @@ class IndexAnimations {
       Map_Obj.addRestMarkerAndFitBounds([+lng, +lat], name, id);
   }
 
-  // Listen for sidebar button click and toggle sidbar.
-  sidebarToggleListener() {
+  // Listen for sidebar button click or drag and toggle sidbar.
+  sidebarToggleListeners() {
     $('.sidebar-toggle-btn').on('click', this.sidebarToggle.bind(this));
+    $('.sidebar-toggle-btn').on('dragstart', this.sidebarToggle.bind(this));
   }
 
   // Sidebar toggle logic.

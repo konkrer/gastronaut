@@ -440,10 +440,19 @@ def add_report():
         f, path = None, ''
         if form.photo_file.data:
             f = form.photo_file.data
-            unique_prefix = uuid4().hex
-            filename = secure_filename(f.filename)
-            path = f'static/uploads/reports/{unique_prefix}_{filename}'
-            relevant_data['photo_file'] = f'{CLOUDFRONT_DOMAIN_NAME}/{path}'
+
+            size_mb = f.seek(0, os.SEEK_END) / 1024 / 1024
+
+            if size_mb > 4:
+                relevant_data['photo_file'] = None
+                f = None
+                flash("Image upload aborted file too large!", "danger")
+            else:
+                unique_prefix = uuid4().hex
+                filename = secure_filename(f.filename)
+                path = f'static/uploads/reports/{unique_prefix}_{filename}'
+                relevant_data['photo_file'] = \
+                    f'{CLOUDFRONT_DOMAIN_NAME}/{path}'
 
         report = Report.create(user_id=g.user.id, mission_id=mission_id,
                                business_id=business_id, **relevant_data)
@@ -489,7 +498,7 @@ def add_report():
                 return BadRequest
 
     if request.method == 'POST':
-        flash("Please fix all form errors.", "danger")
+        flash("Please fix all form errors.", "warning")
 
     return render_template(
         "add_report.html", form=form, model=model,
@@ -505,31 +514,38 @@ def edit_report(report_id):
     report = Report.query.get_or_404(report_id)
     form = EditReportForm(obj=report)
 
+    # # In case user hit clear file button photo_file will be None.
+    # # Clear any old data and note any old file for deletion.
+    if form.cleared_file.data == 'true':
+        old_file = form.photo_file.object_data
+        form.photo_file.data = None
+        form.photo_file.object_data = None
+
     if form.validate_on_submit():
         f, path, old_file = None, '', ''
-        # If photo url given and photo file data remove photo file data.
-        if form.photo_url.data and form.photo_file.data:
-            # If photo file is string photo is in S3 bucket - delete.
-            if isinstance(form.photo_file.data, str):
-                old_file = form.photo_file.data
-            # If photo file was preveously uploaded delete.
-            elif form.photo_file.object_data:
-                old_file = form.photo_file.object_data
-            form.photo_file.data = None
-        else:
-            # If photo file is a file object and not string url update
-            # form.photo_file.data to be S3 url string. Save file data as f.
-            if form.photo_file.data and not isinstance(
-                form.photo_file.data, str
-            ):
-                f = form.photo_file.data
+
+        # If photo file is a file object and not string url update
+        # form.photo_file.data to be S3 url string. Save file object as f.
+        if form.photo_file.data and not isinstance(
+            form.photo_file.data, str
+        ):
+            f = form.photo_file.data
+            # Get size in MB
+            size_mb = f.seek(0, os.SEEK_END) / 1024 / 1024
+            # Limit size to 4MB
+            if size_mb > 4:
+                form.photo_file.data = None
+                f = None
+                flash("Image upload aborted file too large!", "danger")
+            else:
                 unique_prefix = uuid4().hex
                 filename = secure_filename(f.filename)
                 path = f'static/uploads/reports/{unique_prefix}_{filename}'
                 form.photo_file.data = f'{CLOUDFRONT_DOMAIN_NAME}/{path}'
+                f.seek(0)
 
                 # If photo file was preveously uploaded
-                # set as old file to delete after db.session.commit.
+                # note as old file to delete after db.session.commit.
                 if form.photo_file.object_data:
                     old_file = form.photo_file.object_data
 
@@ -557,7 +573,7 @@ def edit_report(report_id):
         kind = 'Business'
 
     if request.method == 'POST':
-        flash("Please fix all form errors.", "danger")
+        flash("Please fix all form errors.", "warning")
 
     return render_template(
         "edit_report.html", form=form, model=model,

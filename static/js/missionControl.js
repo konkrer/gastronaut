@@ -20,7 +20,7 @@ class MissionControl {
     this.addBusinessDblclickListener();
     this.addGoalCompletedListener();
     this.addRemoveBusinessListener();
-    this.addSidebarListener();
+    this.addSidebarListeners();
     this.addMapAllListener();
     // Delay for map load.
     setTimeout(() => {
@@ -100,6 +100,7 @@ class MissionControl {
       `/report?mission_id=${mission_id}&cancel_url=${window.location.pathname}`
     );
     if (Map_Obj.isMobileScreen()) $('#businesses-list').removeClass('show');
+    MissionControlNavigationObj.lastRestMarkerIdx = 0;
   }
 
   fillForm(missionData) {
@@ -830,27 +831,27 @@ class MissionControl {
     });
   }
 
-  addSidebarListener() {
-    $('.sidebar-toggle-btn').click(
-      function () {
-        // Toggle sidebar.
-        // Note: Sidebar does not start with sidebarExpand class to avoid animation on load.
-        if (this.sidebarOpen === true) {
-          this.$infoCol
-            .addClass('sidebarCollapse')
-            .removeClass('sidebarExpand');
-        } else {
-          this.$infoCol.toggleClass(['sidebarExpand', 'sidebarCollapse']);
-        }
-        this.sidebarOpen = !this.sidebarOpen;
-        // Flip left/right arrows.
-        $('.arrow-wrapper')
-          .children()
-          .each(function () {
-            $(this).toggleClass('d-none');
-          });
-      }.bind(this)
-    );
+  addSidebarListeners() {
+    $('.sidebar-toggle-btn').click(this.toggleSidebar.bind(this));
+    $('.sidebar-toggle-btn').on('dragstart', this.toggleSidebar.bind(this));
+    this.$infoCol.on('dragstart', this.toggleSidebar.bind(this));
+  }
+
+  toggleSidebar() {
+    // Toggle sidebar.
+    // Note: Sidebar does not start with sidebarExpand class to avoid animation on load.
+    if (this.sidebarOpen === true) {
+      this.$infoCol.addClass('sidebarCollapse').removeClass('sidebarExpand');
+    } else {
+      this.$infoCol.toggleClass(['sidebarExpand', 'sidebarCollapse']);
+    }
+    this.sidebarOpen = !this.sidebarOpen;
+    // Flip left/right arrows.
+    $('.arrow-wrapper')
+      .children()
+      .each(function () {
+        $(this).toggleClass('d-none');
+      });
   }
 
   businessAddedToMission(mission_id) {

@@ -17,8 +17,8 @@ class navbarRocketAnimation {
       this.navbarRocketAnimation();
       this.navRocketTimer = setInterval(() => {
         this.navbarRocketAnimation();
-      }, 300000);
-    }, 60000);
+      }, 500000);
+    }, 120000);
   }
 
   rocketStop() {

@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import (
-    StringField, TextAreaField, PasswordField)
+    StringField, TextAreaField, PasswordField, HiddenField)
 from wtforms.fields.html5 import URLField, EmailField
 from flask_wtf.file import FileField
 from wtforms.validators import (
@@ -121,11 +121,7 @@ class ReportBaseForm(FlaskForm):
         "Upload Photo", validators=[Optional()],
         description="""
             Either enter a photo URL or
-            choose an image file to include an image.""")
-
-
-class AddReportForm(ReportBaseForm):
-    """Form for adding new report."""
+            choose an image file to include an image. 4MB max.""")
 
     def validate(self):
         if not super().validate():
@@ -138,15 +134,13 @@ class AddReportForm(ReportBaseForm):
         return True
 
 
+class AddReportForm(ReportBaseForm):
+    """Form for adding new report."""
+
+    pass
+
+
 class EditReportForm(ReportBaseForm):
     """Form for editing a report."""
 
-    # def validate(self):
-    #     if not super().validate():
-    #         return False
-    #     if self.photo_url.data and self.photo_file.data:
-    #         msg = 'Please specify Photo URL or upload a photo, not both'
-    #         self.photo_url.errors.append(msg)
-    #         self.photo_file.errors.append(msg)
-    #         return False
-    #     return True
+    cleared_file = HiddenField('cleared_file')
