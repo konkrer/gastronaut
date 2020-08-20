@@ -1,3 +1,4 @@
+// <!-- <script defer src="../static/js/DragDropTouch.js"></script> -->
 var DragDropTouch;
 (function (DragDropTouch_1) {
   'use strict';

@@ -834,9 +834,11 @@ class MissionControl {
   }
 
   addSidebarListeners() {
-    $('.sidebar-toggle-btn').click(this.toggleSidebar.bind(this));
-    $('.sidebar-toggle-btn').on('dragstart', this.toggleSidebar.bind(this));
-    this.$infoCol.on('dragstart', this.toggleSidebar.bind(this));
+    const boundToggleSidebar = this.toggleSidebar.bind(this);
+    $('.sidebar-toggle-btn').click(boundToggleSidebar);
+    $('.sidebar-toggle-btn').on('dragstart', boundToggleSidebar);
+    this.$infoCol.on('dragstart', boundToggleSidebar);
+    $('.sidebar-toggle-btn').on('touchstart', boundToggleSidebar);
   }
 
   toggleSidebar() {

@@ -12,7 +12,7 @@ class IndexAnimations {
     this.justSearchedYelp = false;
     this.category = null;
     this.windowResizeCardScrollResetTimer;
-    this.sidebarToggleListeners();
+    this.toggleSidebarListeners();
     this.addWindowResizeListener();
     this.initMiscAnimtions();
   }
@@ -80,13 +80,15 @@ class IndexAnimations {
   }
 
   // Listen for sidebar button click or drag and toggle sidbar.
-  sidebarToggleListeners() {
-    $('.sidebar-toggle-btn').on('click', this.sidebarToggle.bind(this));
-    $('.sidebar-toggle-btn').on('dragstart', this.sidebarToggle.bind(this));
+  toggleSidebarListeners() {
+    const boundToggleSidebar = this.toggleSidebar.bind(this);
+    $('.sidebar-toggle-btn').on('click', boundToggleSidebar);
+    $('.sidebar-toggle-btn').on('dragstart', boundToggleSidebar);
+    $('.sidebar-toggle-btn').on('touchstart', boundToggleSidebar);
   }
 
   // Sidebar toggle logic.
-  async sidebarToggle() {
+  async toggleSidebar() {
     // Prevent unnecessary scroll mapping events.
     if (this.cardScrollTrackerAndMapper) this.cardScrollTrackerAndMapper.off();
 
