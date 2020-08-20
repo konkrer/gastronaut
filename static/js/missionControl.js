@@ -838,7 +838,10 @@ class MissionControl {
     $('.sidebar-toggle-btn').click(boundToggleSidebar);
     $('.sidebar-toggle-btn').on('dragstart', boundToggleSidebar);
     this.$infoCol.on('dragstart', boundToggleSidebar);
-    $('.sidebar-toggle-btn').on('touchstart', boundToggleSidebar);
+    $('.sidebar-toggle-btn').on('touchstart', function (e) {
+      e.preventDefault();
+      boundToggleSidebar();
+    });
   }
 
   toggleSidebar() {
