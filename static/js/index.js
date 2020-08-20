@@ -584,11 +584,12 @@ class ButtonsLogics {
   /* Toggle map listener.
   */
   addMapToggleBtnListener() {
+    const this_ = this;
     $('.showMap').on('click', this.toggleMap);
     $('.showMap').on('dragstart', this.toggleMap);
     $('.showMap').on('touchstart', function (e) {
       e.preventDefault();
-      this.toggleMap;
+      this_.toggleMap();
     });
   }
 
@@ -631,11 +632,12 @@ class ButtonsLogics {
   /* Cards toggle listener.
   */
   addCardsToggleBtnListener() {
+    const this_ = this;
     $('.toggleCards').on('click', this.toggleCards);
     $('.toggleCards').on('dragstart', this.toggleCards);
     $('.toggleCards').on('touchstart', function (e) {
       e.preventDefault();
-      this.toggleCards;
+      this_.toggleCards();
     });
   }
 
