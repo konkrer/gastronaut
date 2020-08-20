@@ -8,12 +8,10 @@ class MapObj {
     this.accessToken =
       'pk.eyJ1Ijoia29ua3JlciIsImEiOiJja2NiNnI3bjgyMjVnMnJvNmJ6dTF0enlmIn0.AH_5N70IYIX4_tslm49Kmw';
     this.mapOpen = true;
-    // rendered map object
-    this.mappyBoi = null;
-    // user data
-    this.longitude = null;
-    this.latitude = null;
-    this.restCoords = null;
+    this.mappyBoi = null; // rendered map object
+    this.longitude = null; // user longitude data
+    this.latitude = null; // user latitude data
+    this.restCoords = null; // used to store current business coords or home coords
     this.userMarker = null;
     this.homeMarker = null;
     this.userMarkerStyle = 0;
@@ -157,7 +155,17 @@ class MapObj {
   // determine least and most lng/lat combo and fit bounds.
   // If only one coordinate set in list fly to location.
   fitBoundsArray(array) {
-    if (array.length > 1) {
+    // If there are two or more points to map.
+    if (this.longitude || array.length > 1) {
+      // Add user coords is user coords.
+      if (this.longitude)
+        array.push({ longitude: this.longitude, latitude: this.latitude });
+      // Add home coores if home coords.
+      if (this.restCoords)
+        array.push({
+          longitude: this.restCoords[0],
+          latitude: this.restCoords[1],
+        });
       const least = [Infinity, Infinity];
       const most = [-Infinity, -Infinity];
       array.forEach(el => {

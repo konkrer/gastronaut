@@ -628,7 +628,7 @@ class MissionControl {
     Map_Obj.mappyBoi.flyTo({
       center: [lng, lat],
       essential: true,
-      zoom: 16.01,
+      zoom: 16.5,
       // speed: 1.2,
       // curve: 1.42,
       easing(t) {
@@ -672,7 +672,9 @@ class MissionControl {
         );
         this_.changeMarkerColor(idx, $(this), 1);
         MissionControlNavigationObj.postDirectionsMapAdjustments();
-        $('#businesses-list').removeClass('show');
+        setTimeout(() => {
+          $('#businesses-list').removeClass('show');
+        }, 500);
         $('#directions-text').removeClass('show');
       }
       MissionControlNavigationObj.lastRestMarkerIdx = idx;
@@ -695,7 +697,7 @@ class MissionControl {
       this_.businessMapper($(this).find('.mapBtn'));
       setTimeout(() => {
         ApiFunctsObj.getShowBusinessDetails(fake_e);
-      }, 3000);
+      }, 2000);
     });
   }
 
