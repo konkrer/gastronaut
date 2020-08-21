@@ -2,13 +2,15 @@
 from datetime import datetime
 from flask import g
 from flask_bcrypt import Bcrypt
+from flask_migrate import Migrate
 from types import SimpleNamespace
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()
+migrate = Migrate()
 
-DEFAULT_USER_IMAGE = "https://d1mhc0bouqz8wk.cloudfront.net/static/images/default_user_icon.jpg"
+DEFAULT_USER_IMAGE = "https://d1mhc0bouqz8wk.cloudfront.net/static/images/default_user_icon.jpg"  # NOQA E501
 DEFAULT_BANNER_IMAGE = "https://d1mhc0bouqz8wk.cloudfront.net/static/images/horizon___widescreen_wallpaper_by_hameed.jpg"  # NOQA E501
 DEFAULT_PREFERENCES = SimpleNamespace(
     show_alcohol=True, home_address='', home_coords=None)
@@ -18,6 +20,7 @@ BOOLEAN_PREFERENCES = ['show_alcohol']
 def connect_db(app):
     db.app = app
     db.init_app(app)
+    migrate.init_app(app, db)
 
 
 class User(db.Model):

@@ -16,8 +16,7 @@ from flask import (
 from werkzeug.utils import secure_filename
 from werkzeug.exceptions import Unauthorized, BadRequest
 from models import (db, connect_db, User, Mission, UserMission,
-                    Business, Report, MissionBusiness, DEFAULT_PREFERENCES,
-                    BOOLEAN_PREFERENCES)
+                    Business, Report, BOOLEAN_PREFERENCES)
 from forms import (
     AddUserForm, LoginForm, EditUserForm, AddReportForm, EditReportForm)
 from static.py_modules.decorators import add_user_to_g, login_required
@@ -669,9 +668,10 @@ def business_detail_yelp(business_id):
 @app.route('/v1/preferences', methods=['POST'])
 @add_user_to_g
 def set_prefrences():
-    """Endpoint to change user preferences. This is called by two 
-       different forms in two different ways. One with onChange with
-       JavaScript and the other with a form submit button."""
+    """Endpoint to change user preferences. This is called by two different
+       forms by two different event handlers. The boolean form has checkbox
+       data and updates prefrences on onChange events. The preferences-text
+       form updates when user selects offical address."""
 
     if not g.user:
         return Unauthorized()
