@@ -33,72 +33,77 @@
   <div class="container">
     <div class="row justify-content-end mb-5">
       <div class="col-12 col-sm-3 avatar-col text-center">
-        <div
-          style="background: url('{{ user.get_avatar }}'); background-position: center;
+        <div class="sticky-profile">
+          <div
+            style="background: url('{{ user.get_avatar }}'); background-position: center;
               background-size: cover;"
-          id="profile-avatar"
-        ></div>
-        <div class="">
-          <h4
-            id="sidebar-username"
-            class="txt-warning brand-outline font-italic"
-          >
-            @{{ user.username }}
-          </h4>
-          <p class="txt-green byline pl-3 pl-sm-0">
-            {{user.byline or 'A short snippet about you'}}
-          </p>
+            id="profile-avatar"
+          ></div>
+          <div class="">
+            <h4
+              id="sidebar-username"
+              class="txt-warning brand-outline font-italic"
+            >
+              @{{ user.username }}
+            </h4>
+            <p class="txt-green byline pl-3 pl-sm-0">
+              {{user.byline or 'A short snippet about you'}}
+            </p>
 
-          <div class="user-location text-left d-inline-block mt-1 mt-sm-0">
-            <div class="fa fa-map-marker fa-2x txt-green d-inline-block"></div>
-            <div class="location text-dark d-inline-block">
-              {{user.city or 'Someplace'}}, {{user.state or 'Somewhere'}}
-            </div>
-            <br />
-            <div class="location text-dark">
-              {{user.country or 'Some Country'}}
+            <div class="user-location text-left d-inline-block mt-1 mt-sm-0">
+              <div
+                class="fa fa-map-marker fa-2x txt-green d-inline-block"
+              ></div>
+              <div class="location text-dark d-inline-block">
+                {{user.city or 'Someplace'}}, {{user.state or 'Somewhere'}}
+              </div>
+              <br />
+              <div class="location text-dark">
+                {{user.country or 'Some Country'}}
+              </div>
             </div>
           </div>
-        </div>
-        <div
-          class="nav flex-column nav-pills px-5 p-sm-0 mt-3 text-left"
-          id="pills-tab"
-          role="tablist"
-          aria-orientation="vertical"
-        >
-          <a
-            class="nav-link active museo txt-lg"
-            id="pills-missions-tab"
-            data-toggle="pill"
-            href="#missions-tab"
-            role="tab"
-            aria-controls="missions-tab"
-            aria-selected="true"
+          <div
+            class="nav flex-column nav-pills px-5 p-sm-0 mt-3 text-left"
+            id="pills-tab"
+            role="tablist"
+            aria-orientation="vertical"
           >
-            <div class="no-wrap">
-              Missions {% if missions %}<i
-                class="far fa-check-square fa-xs ml-2"
-              ></i
-              >{% endif %}
-            </div>
-          </a>
-          <a
-            class="nav-link museo txt-lg"
-            id="pills-reports-tab"
-            data-toggle="pill"
-            href="#reports-tab"
-            role="tab"
-            aria-controls="reports-tab"
-            aria-selected="false"
-            >Mission
-            <div class="d-inline-block">
-              Reports {% if user.reports %}<i
-                class="far fa-check-square fa-xs ml-2"
-              ></i
-              >{% endif %}
-            </div>
-          </a>
+            <a
+              class="nav-link active museo txt-lg"
+              id="pills-missions-tab"
+              data-toggle="pill"
+              href="#missions-tab"
+              role="tab"
+              aria-controls="missions-tab"
+              aria-selected="true"
+            >
+              <div class="no-wrap">
+                Missions {% if missions %}<i
+                  class="far fa-check-square fa-xs ml-2"
+                ></i
+                >{% endif %}
+              </div>
+            </a>
+            <a
+              class="nav-link museo txt-lg"
+              id="pills-reports-tab"
+              data-toggle="pill"
+              href="#reports-tab"
+              role="tab"
+              aria-controls="reports-tab"
+              aria-selected="false"
+              >Mission
+              <div class="d-inline-block">
+                Reports {% if user.reports %}<i
+                  class="far fa-check-square fa-xs ml-2"
+                ></i
+                >{% endif %}
+              </div>
+            </a>
+          </div>
         </div>
+        <div class="sticky-sibling"></div>
       </div>
       <div class="col-12 col-sm-9 text-right">
         <ul class="user-stats nav">

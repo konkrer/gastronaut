@@ -263,7 +263,7 @@ class MapObj {
             coordinates: [t.longitude, t.latitude],
             approach: 'unrestricted',
             bearing: t.bearing ? [t.bearing, 45] : null,
-            radius: 'unlimited',
+            radius: 40,
           },
           {
             coordinates: t.restCoords,

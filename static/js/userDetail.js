@@ -43,36 +43,34 @@ class StickyScroll {
   }
 
   /*
-  /* Add sroll listener to adjust profile section top padding.
+  /* Add sroll listener to set profile section top offset.
   */
   addScrollListener() {
     $(window).scroll(this.adjustProfilePosition.bind(this));
   }
 
   /*
-  /* Adjust profile section top padding.
+  /* Adjust profile section top offset.
   */
   adjustProfilePosition() {
-    // Set amount that when top scroll is greater than
-    // avatar-col padding adjustment begins to happen.
-    this.setAdjustedACO();
-
-    // If mobile portrait oreintation no padding ajustment needed.
+    // If mobile portrait oreintation no position fixing needed.
     if (this.isMobilePortrait()) {
-      // remove top padding.
-      this.avatarCol.setAttribute('style', '');
+      // remove position fixed.
+      $('.sticky-profile').removeClass('p-fixed');
       return;
     }
+    // Set amount that when top scroll is greater than
+    // avatar-col fixing begins to happen.
+    this.setAdjustedACO();
 
     // If user scrolled greater amount than our adjusted offset.
     if (window.pageYOffset > this.adjustedACO) {
-      // Adjust top padding.
-      this.avatarCol.setAttribute(
-        'style',
-        `padding-top: ${window.pageYOffset - this.adjustedACO}px;`
-      );
+      // Make sticky-profile fixed and set top offset.
+      $('.sticky-profile')
+        .addClass('p-fixed')
+        .css('top', `${this.avatarColOffset - this.adjustedACO}px`);
       // If not user scrolled greater amount than our adjusted offset.
-    } else this.avatarCol.setAttribute('style', '');
+    } else $('.sticky-profile').removeClass('p-fixed');
   }
 
   /*
@@ -83,6 +81,7 @@ class StickyScroll {
       function () {
         setTimeout(() => {
           window.location.href = '#pills-tabContent';
+          // Scroll down a bit.
           $(window).scrollTop($(window).scrollTop() - 60);
         }, 100);
       }.bind(this)
