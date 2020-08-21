@@ -7,10 +7,12 @@ class MapObj {
   constructor() {
     this.accessToken =
       'pk.eyJ1Ijoia29ua3JlciIsImEiOiJja2NiNnI3bjgyMjVnMnJvNmJ6dTF0enlmIn0.AH_5N70IYIX4_tslm49Kmw';
+    this.mapboxClient = mapboxSdk({ accessToken: this.accessToken });
     this.mapOpen = true;
     this.mappyBoi = null; // rendered map object
     this.longitude = null; // user longitude data
     this.latitude = null; // user latitude data
+    this.heading = null; // user heading
     this.restCoords = null; // used to store current business coords or home coords
     this.userMarker = null;
     this.homeMarker = null;
@@ -20,7 +22,6 @@ class MapObj {
     this.restMarker = null;
     // restaurant markers for mission-control page.
     this.restMarkers = [];
-    this.mapboxClient = mapboxSdk({ accessToken: this.accessToken });
     this.currentRoute = null;
     this.routeCache = new Set();
     this.directionsCache = {};
@@ -245,28 +246,33 @@ class MapObj {
     return resp.body.features;
   }
 
+  // Call mapbox directions API and show geoJson line for route and show directions text.
   async showDirectionsAndLine() {
     const t = this;
     const routeKey = `${t.longitude},${t.latitude};${t.restCoords[0]},${t.restCoords[1]};${t.profile}`;
     if (t.routeCache.has(routeKey)) {
       t.reloadRoute(routeKey);
     } else {
+      const options = {
+        profile: t.profile,
+        steps: true,
+        geometries: 'geojson',
+        overview: 'full',
+        waypoints: [
+          {
+            coordinates: [t.longitude, t.latitude],
+            approach: 'unrestricted',
+            bearing: t.bearing ? [t.bearing, 45] : null,
+            radius: 'unlimited',
+          },
+          {
+            coordinates: t.restCoords,
+          },
+        ],
+      };
+
       const resp = await t.mapboxClient.directions
-        .getDirections({
-          profile: t.profile,
-          steps: true,
-          geometries: 'geojson',
-          overview: 'full',
-          waypoints: [
-            {
-              coordinates: [t.longitude, t.latitude],
-              approach: 'unrestricted',
-            },
-            {
-              coordinates: t.restCoords,
-            },
-          ],
-        })
+        .getDirections(options)
         .send();
 
       const route = resp.body.routes[0];

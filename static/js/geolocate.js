@@ -29,6 +29,7 @@ class GeolocationObj {
       $('#detect-location').children().addClass('pulse');
       navigator.geolocation.clearWatch(this.locationWatcher);
       this.locationWatcher = null;
+      Map_Obj.heading = null;
       navigator.geolocation.getCurrentPosition(
         this.geoSuccess.bind(this),
         this.showError.bind(this),
@@ -49,10 +50,11 @@ class GeolocationObj {
     if (typeof FormFunctsObj !== 'undefined')
       clearTimeout(FormFunctsObj.keyupTimer);
     const {
-      coords: { latitude: lat, longitude: lng },
+      coords: { latitude: lat, longitude: lng, heading },
     } = position;
-    Map_Obj.latitude = +lat;
-    Map_Obj.longitude = +lng;
+    Map_Obj.latitude = lat;
+    Map_Obj.longitude = lng;
+    Map_Obj.heading = heading;
     // clear location text
     $('#location').val(``);
     // insert lng, lat as placeholder
@@ -62,11 +64,13 @@ class GeolocationObj {
     );
     // note user allowed geolocation
     localStorage.setItem('geoAllowed', true);
+    // Watch location.
     this.locationWatcher = navigator.geolocation.watchPosition(
       this.watchSuccess.bind(this),
       this.watchError,
       this.options[1]
     );
+    // Post gelocation actions.
     if (typeof IndexSearchObj !== 'undefined') IndexSearchObj.searchYelp();
     else MissionControlNavigationObj.startLocationSuccess();
   }
@@ -101,8 +105,9 @@ class GeolocationObj {
     const {
       coords: { latitude: lat, longitude: lng, heading },
     } = position;
-    Map_Obj.latitude = +lat;
-    Map_Obj.longitude = +lng;
+    Map_Obj.latitude = lat;
+    Map_Obj.longitude = lng;
+    Map_Obj.heading = heading;
     // insert lng, lat as placeholder in location input.
     $('#location').prop(
       'placeholder',

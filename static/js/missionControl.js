@@ -951,6 +951,7 @@ class MissionControlNavigation {
         Map_Obj.addUserMarker();
         Map_Obj.userMarker.togglePopup();
         navigator.geolocation.clearWatch(Geolocation_Obj.locationWatcher);
+        Map_Obj.heading = null;
         $('#location').prop('placeholder', 'Starting Location');
       }
       if (Map_Obj.longitude) {
