@@ -14,12 +14,14 @@ class StickyScroll {
   // check if screen size is mobile.
   isMobileScreen() {
     if (window.innerWidth < 768) return true;
+    if (window.innerHeight < 400) return true;
     return false;
   }
 
   // check if screen size is mobile.
   isLgMobileScreen() {
     if (window.innerWidth <= 992) return true;
+    if (window.innerHeight < 600) return true;
     return false;
   }
 
@@ -39,7 +41,7 @@ class StickyScroll {
     if (this.isMobileScreen()) this.adjustedACO = this.avatarColOffset - 91;
     else if (this.isLgMobileScreen())
       this.adjustedACO = this.avatarColOffset - 105;
-    else this.adjustedACO = this.avatarColOffset - 350;
+    else this.adjustedACO = this.avatarColOffset - 250;
   }
 
   /*
@@ -68,6 +70,7 @@ class StickyScroll {
       // Make sticky-profile fixed and set top offset.
       $('.sticky-profile')
         .addClass('p-fixed')
+        .css('min-width', `${this.avatarCol.offsetWidth}px`)
         .css('top', `${this.avatarColOffset - this.adjustedACO}px`);
       // If not user scrolled greater amount than our adjusted offset.
     } else $('.sticky-profile').removeClass('p-fixed');
