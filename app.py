@@ -47,7 +47,7 @@ if not os.environ.get('SECRET_KEY'):
     app.config["SECRET_KEY"] = SECRET_KEY
     app.config['SQLALCHEMY_ECHO'] = True
     app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
-    debug = DebugToolbarExtension(app)
+    DEBUG = DebugToolbarExtension(app)
     logging.basicConfig(filename='gastronaut.log', level=logging.WARNING,
                         format='%(levelname)s:%(asctime)s:%(message)s')
 #
@@ -63,7 +63,7 @@ else:
     MAILGUN_DOMAIN = os.environ.get('MAILGUN_DOMAIN')
     S3_BUCKET_NAME = os.environ.get('S3_BUCKET_NAME')
     CLOUDFRONT_DOMAIN_NAME = os.environ.get('CLOUDFRONT_DOMAIN_NAME')
-    debug = False
+    DEBUG = False
 
 
 connect_db(app)
@@ -1101,6 +1101,21 @@ def submit_feedback():
 """ Helper Functions"""
 
 
+@app.before_request
+def before_request():
+    """Force Https on Heroku.
+
+    https://stackoverflow.com/a/29026676/11164558"""
+
+    if (
+        not DEBUG
+        and not request.headers.get("HTTP_X_FORWARDED_PROTO") == 'https'
+        and request.url.startswith('http://')
+    ):
+        secure_url = request.url.replace("http://", "https://", 1)
+        return redirect(secure_url)
+
+
 def get_coords_from_IP_address(request):
     """Call API and geolocate IP address."""
 
@@ -1139,7 +1154,7 @@ def get_yelp_categories():
 
 def error_logging(e):
     """Log error when dev environment, sentry capture when production."""
-    if debug:
+    if DEBUG:
         logging.error(repr(e))
     else:
         capture_exception(e)
@@ -1147,7 +1162,7 @@ def error_logging(e):
 
 def message_logging(message):
     """Log message when dev environment, sentry capture when production."""
-    if debug:
+    if DEBUG:
         logging.warning(message)
     else:
         capture_message(message)
@@ -1171,9 +1186,9 @@ def render_template(*args, **kwargs):
     request_args['cancel_url'] = request_args.get(
         'cancel_url', '/').replace(';', '&')
 
-    global debug
+    global DEBUG
     return r_t(
-        *args, debug=bool(debug),
+        *args, debug=bool(DEBUG),
         cfdn=CLOUDFRONT_DOMAIN_NAME, **kwargs, **request_args)
 
 
