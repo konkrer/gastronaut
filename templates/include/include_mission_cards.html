@@ -7,11 +7,17 @@
       </h5>
       <h5 class="lead text-info black-outline-1"><small>Mission</small></h5>
       <div class="card-text ssp">
-        <a href="/user/profile/{{mission.user.id}}">
+        {% if mission.author.username != "Former User" %}
+        <a href="/user/profile/{{mission.author.username}}">
           <em class="txt-warning black-outline-1 font-weight-bold">
             by @{{mission.author.username}}</em
           >
         </a>
+        {% else %}
+        <em class="txt-warning black-outline-1 font-weight-bold">
+          by @{{mission.author.username}}</em
+        >
+        {% endif %}
         <div class="txt-smlr">
           {{mission.date_shared.strftime('%a %b %d, %Y')}}
         </div>

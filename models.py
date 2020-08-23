@@ -519,7 +519,7 @@ class Report(db.Model):
 
     @classmethod
     def get_business_reports_users(self, business_id):
-        """Function to return all reports, and their relevant user data,
+        """Function to return 3 reports, and their relevant user data,
         associated with a particular business. Also set flags for JavaScript
         use to determine like button actions for each report."""
         query_results = db.session.query(
@@ -532,14 +532,14 @@ class Report(db.Model):
         ).order_by(
             Report.submitted_on.desc()
         ).limit(
-            10
+            4
         ).all()
-        out = []
+
+        user_logged_in, out = bool(g.user), []
         # for report_id, submitted_on, text, photo_file,
-        # photo_url, likes, id, username in query_results list tuples.
+        # photo_url, likes, user_id, username in query_results list tuples.
         for ri, so, tx, pf, pu, lk, ui, un in query_results:
             allow_likes, liked = False, False
-            user_logged_in = bool(g.user)
             if user_logged_in:
                 # if user_id (ui) of report is not current user allow liking.
                 allow_likes = ui != g.user.id

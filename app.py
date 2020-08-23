@@ -186,11 +186,12 @@ def mission_reports():
 def business_reports_detail(business_id):
     """Business reports detail view.
        All reports for a particular business.
-       Accessed through business detail modal 'See Reports' Button"""
+       Accessed through business detail modal 'See More Reports' Button"""
 
     business = Business.query.get(business_id)
     reports = business.reports
 
+    # Fill in form on page with business data by supplying query parameters.
     query_params = {'keywords': business.name, 'city': business.city,
                     'state': business.state, 'coutnry': business.country,
                     'sort_by': 'recent'}
@@ -258,7 +259,8 @@ def signup():
     if request.method == 'POST':
         flash("Please fix all form errors.", "warning")
 
-    login_url = request.full_path.replace('signup', 'login')
+    # Create URL for login button that passes all URL data.
+    login_url = request.full_path.replace('/signup', '/login')
     return render_template('user/signup.html', form=form, login_url=login_url)
 
 
@@ -291,6 +293,7 @@ def login():
     if request.method == 'POST':
         flash("Please fix all form errors.", "warning")
 
+    # Create URL for signin button that passes all URL data.
     signup_url = request.full_path.replace('login', 'signup')
     return render_template('user/login.html', form=form,
                            signup_url=signup_url)
@@ -300,7 +303,7 @@ def login():
 @add_user_to_g
 @login_required
 def user_edit():
-    """User detail view."""
+    """User edit profile view."""
 
     form = EditUserForm(obj=g.user)
 
@@ -324,23 +327,27 @@ def user_edit():
     return render_template('user/edit_user.html', form=form)
 
 
-@app.route("/user/profile/<user_id>")
+@app.route("/user/profile/<username>")
 @add_user_to_g
-def user_detail(user_id):
+def user_detail(username):
     """User detail view."""
 
-    # if user was logged out and clicked profile user_id
-    # will be 0. Lookup their ID and use that.
-    if user_id == '0' or user_id == '2':
+    # If user was logged out and clicked "Profile" username will be 0.
+    # Lookup their ID and use that.
+    # Don't show Former User's profile - #2. Lookup their ID and use that.
+    if username == '0' or username == 'Former User':
         if g.user:
             user = g.user
         else:
-            return redirect(url_for('login', next_='user_detail', user_id='0'))
+            return redirect(url_for(
+                'login', next_='user_detail', username='0'))
     # If user looking at their own profile use g.user.
-    elif g.user and int(user_id) == g.user.id:
+    elif g.user and username == g.user.username:
         user = g.user
     else:
-        user = User.query.get_or_404(user_id)
+        user = User.query.filter_by(username=username).first()
+        if not user:
+            return render_template('404.html')
 
     shared_missions = [m for m in user.my_missions if m.is_public]
 
@@ -365,22 +372,28 @@ def logout():
 def delete_user():
     """Delete User view"""
 
-    missions = g.user.missions
+    # delete user_missions related to this user
+    g.user.user_missions = []
+    db.session.commit()
+
+    missions = g.user.my_missions
     to_delete = [m for m in missions if not m.date_shared]
     to_sort = [m for m in missions if m.date_shared]
     to_keep = []
 
-    # if no one is linked to mission ok to delete.
-    [to_delete.append(m) if len(m.user_missions) ==
-     1 else to_keep.append(m) for m in to_sort]
+    # If no one else is linked to mission ok to delete.
+    [to_delete.append(m) if len(m.user_missions) == 0
+     and len([r for r in m.reports if r.user_id != g.user.id]) == 0
+     else to_keep.append(m) for m in to_sort]
 
-    g.user.user_missions = []
-    db.session.commit()
-
+    # Add user reports to be deleted.
+    to_delete.extend(g.user.reports)
+    # Delete
     [db.session.delete(d) for d in to_delete]
-    db.session.commit()
 
+    # set to keep missions to no longer be public.
     [k.__setattr__('is_public', False) for k in to_keep]
+
     db.session.commit()
 
     db.session.delete(g.user)
@@ -658,7 +671,10 @@ def business_detail_yelp(business_id):
     business = Business.query.get(business_id)
 
     if business:
-        data['reports'] = Report.get_business_reports_users(business.id)
+        reports = Report.get_business_reports_users(business.id)
+        # Max 3 reports. If there are more than 3 set 'more_results' to True.
+        data['reports'] = reports[:3]
+        data['more_results'] = len(reports) > 3
     else:
         data['reports'] = []
 

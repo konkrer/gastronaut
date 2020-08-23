@@ -35,11 +35,17 @@
     <h1 class="display-1-k museo orange-outline">Explore Mission</h1>
   </div>
   <div class="middle-gap py-3 px-5 py-sm-1 p-lg-0 flx-std">
-    <a href="/user/profile/{{user.id}}">
+    {% if user.username != 'Former User' %}
+    <a href="/user/profile/{{user.username}}">
       <h4 class="txt-warning brand-outline mr-5">
         <em>@{{user.username}}</em>
       </h4>
     </a>
+    {% else %}
+    <h4 class="txt-warning brand-outline mr-5">
+      <em>@{{user.username}}</em>
+    </h4>
+    {% endif %}
   </div>
   <div class="container">
     <div class="row mb-5">
@@ -50,7 +56,7 @@
         <img
           src="{{cfdn}}/static/images/flag2.png"
           alt="blue flag"
-          class="pl-3"
+          class="pl-5"
         />
       </div>
     </div>

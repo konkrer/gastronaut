@@ -494,7 +494,6 @@ class CardTextHtmlFunctions {
         photo_file,
         photo_url,
         likes,
-        user_id,
         username,
         allowLikes,
         userLoggedIn,
@@ -510,7 +509,7 @@ class CardTextHtmlFunctions {
         </h5>
         <h5 class="lead txt-green black-outline-1"><small>Business Report</small></h5>
         <div class="card-text">
-          <a href="/user/profile/${user_id}">
+          <a href="/user/profile/${username}">
             <em class="txt-warning black-outline-1"> by @${username}</em>
           </a>
           <div class="txt-smlr">
@@ -541,9 +540,12 @@ class CardTextHtmlFunctions {
 
       return `${acc}${html}`;
     }, '');
-    // If there are report cards prepend with Reports header.
+    const seeMoreBtn = business.more_results
+      ? `<a href="/reports/business/${business.id}"><button class="btn btn-primary">See More Reports</button></a>`
+      : '';
+    // If there are report cards prepend with Reports header and add see more reports button.
     return reportCards
-      ? `<h4 class="text-left text-info ml-3 ml-lg-5 mt-4 mb-4">Reports</h4>${reportCards}`
+      ? `<h4 class="text-left text-info ml-3 ml-lg-5 mt-4 mb-4">Reports</h4>${reportCards}${seeMoreBtn}`
       : '';
   }
 
