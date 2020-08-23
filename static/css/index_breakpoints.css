@@ -302,7 +302,7 @@
   }
 }
 
-@media screen and (hover: hover) {
+@media screen and (hover: hover) and (pointer: fine) {
   #detect-location:hover,
   #clear-filters:hover {
     color: rgb(98, 98, 255);

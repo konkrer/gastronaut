@@ -350,11 +350,11 @@ a.first-letter.active {
 }
 
 .map-routing .active {
-  color: var(--my-info-alt);
+  color: var(--warning);
 }
 
 .map-routing .homeActive {
-  color: var(--blue);
+  color: var(--warning);
 }
 
 .walkHorizontal {
