@@ -76,6 +76,7 @@ class MissionControl {
     $('#mission-load-select').change(
       function (e) {
         localStorage.setItem('currMissionId', e.target.value);
+        $('.map-routing .home').removeClass('homeActive');
         this.loadMission(e.target.value);
       }.bind(this)
     );
@@ -672,12 +673,15 @@ class MissionControl {
         );
         this_.changeMarkerColor(idx, $(this), 1);
         MissionControlNavigationObj.postDirectionsMapAdjustments();
+        MissionControlNavigationObj.lastRestMarkerIdx = idx;
+        $('.map-routing .home').removeClass('homeActive');
+        $('#directions-text').removeClass('show');
+        // Set timer to hide businesses list. Allows time for double clicking event
+        // to register before hiding.
         setTimeout(() => {
           $('#businesses-list').removeClass('show');
         }, 500);
-        $('#directions-text').removeClass('show');
       }
-      MissionControlNavigationObj.lastRestMarkerIdx = idx;
     });
   }
 
@@ -898,7 +902,6 @@ class MissionControlNavigation {
     Base_Obj.addLocationAutocompleteListener();
     // Location entry or restart navigation.
     this.addNavStartListener();
-    this.addNavStartEnableNoSleepListener();
     // clear directions routing
     $('.map-routing .reset').click(this.endNavigation.bind(this));
   }
@@ -956,14 +959,8 @@ class MissionControlNavigation {
       }
       if (Map_Obj.longitude) {
         this_.startLocationSuccess();
+        if (!location) Geolocation_Obj.enableNoSleep();
       } else alert('Enter a starting location or click the detect location button.');
-    });
-  }
-
-  addNavStartEnableNoSleepListener() {
-    $('#nav-start-form button').click(function () {
-      if (!$('#location').val() && Map_Obj.longitude)
-        Geolocation_Obj.enableNoSleep();
     });
   }
 
@@ -980,6 +977,8 @@ class MissionControlNavigation {
     $('#directions-panel').show();
     $('.map-routing .home').fadeIn();
     $('.map-routing .reset').fadeIn();
+    Map_Obj.clearNavBtnsActive();
+    $(`.map-routing div[data-profile="${Map_Obj.profile}"]`).addClass('active');
   }
 
   postDirectionsMapAdjustments() {
@@ -989,8 +988,9 @@ class MissionControlNavigation {
   }
 
   endNavigation() {
-    Map_Obj.clearRouting();
     MissionControlObj.changeMarkerColor(this.lastRestMarkerIdx, null);
+    Map_Obj.clearRouting();
+    Map_Obj.clearNavBtnsActive();
     $('#directions-panel').fadeOut();
     $('.map-routing .home').fadeOut();
     $('.map-routing .reset').fadeOut();

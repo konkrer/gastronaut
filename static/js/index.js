@@ -560,7 +560,7 @@ class ButtonsLogics {
     this.addCardsToggleBtnListener();
     this.addBusinessDetailsListeners();
     this.addWriteReportListener();
-    this.addDirectionsListener();
+    this.addNavigationListener();
     this.addToggleDirectionsDivListener();
     this.addCancelDirectionsListener();
   }
@@ -744,15 +744,21 @@ class ButtonsLogics {
   }
 
   // add directions buttons listener.
-  addDirectionsListener() {
+  addNavigationListener() {
     $('.map-track').on('click', '.directionsBtn', function () {
       Map_Obj.profile = $(this).data('profile');
       Map_Obj.markerStyle = 1;
       Map_Obj.userMarkerStyle = 1;
       Map_Obj.addUserMarker();
       $('.profileDisplay').text(Map_Obj.profileDict[Map_Obj.profile]);
-      Animations_Obj.mapCurrCard();
+      if ($('.map-routing .home').hasClass('homeActive')) {
+        Map_Obj.showDirectionsAndLine();
+        Map_Obj.fitBounds();
+      } else Animations_Obj.mapCurrCard();
+      // If active navigation following user, keep screen on.
       if (Geolocation_Obj.locationWatcher) Geolocation_Obj.enableNoSleep();
+      Map_Obj.clearNavBtnsActive();
+      $(this).addClass('active');
       $('.map-routing').addClass('horizontal');
       $('.walk').addClass('walkHorizontal');
       $('.bike').addClass('bikeHorizontal');
@@ -810,6 +816,8 @@ class ButtonsLogics {
         $('.bike').removeClass('bikeHorizontal');
         $('div.home').fadeOut().removeClass('homeHorizontal');
         $('div.reset').fadeOut().removeClass('resetHorizontal');
+        Map_Obj.clearNavBtnsActive();
+        $('.map-routing .home').removeClass('homeActive');
       }.bind(this)
     );
   }

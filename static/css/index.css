@@ -349,6 +349,14 @@ a.first-letter.active {
   margin-top: 15px;
 }
 
+.map-routing .active {
+  color: var(--my-info-alt);
+}
+
+.map-routing .homeActive {
+  color: var(--blue);
+}
+
 .walkHorizontal {
   transform: translate(60px, -56px);
 }
@@ -418,7 +426,7 @@ a.first-letter.active {
   font-size: 10px;
 }
 
-.map-hide-cards {
+.toggleCards {
   position: absolute;
   top: 55px;
   right: 10px;
@@ -428,15 +436,6 @@ a.first-letter.active {
   height: 29px;
   width: 29px;
   font-size: 1.2em;
-}
-
-.map-info {
-  display: none;
-  position: absolute;
-  color: #333;
-  bottom: 11.3px;
-  right: 14.5px;
-  z-index: 100;
 }
 
 #map {

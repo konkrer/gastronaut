@@ -126,6 +126,7 @@ class MapObj {
     if (this.restMarker) this.restMarker.remove();
     this.restMarker = this.addMarker(restCoords, html);
     if (this.profile) {
+      $('.map-routing .home').removeClass('homeActive');
       this.showDirectionsAndLine();
       if ($('#directions-panel').hasClass('directionsShow'))
         ButtonsLogicsObj.toggleDirectionsDiv();
@@ -158,18 +159,19 @@ class MapObj {
   fitBoundsArray(array) {
     // If there are two or more points to map.
     if (this.longitude || array.length > 1) {
+      const cpArray = [...array];
       // Add user coords is user coords.
       if (this.longitude)
-        array.push({ longitude: this.longitude, latitude: this.latitude });
+        cpArray.push({ longitude: this.longitude, latitude: this.latitude });
       // Add home coores if home coords.
       if (this.restCoords)
-        array.push({
+        cpArray.push({
           longitude: this.restCoords[0],
           latitude: this.restCoords[1],
         });
       const least = [Infinity, Infinity];
       const most = [-Infinity, -Infinity];
-      array.forEach(el => {
+      cpArray.forEach(el => {
         least[0] = Math.min(el.longitude, least[0]);
         least[1] = Math.min(el.latitude, least[1]);
         most[0] = Math.max(el.longitude, most[0]);
@@ -352,6 +354,7 @@ class MapObj {
     $('main').on('click', '.map-routing .home.loggedIn', function () {
       // If home button has home coords data begin navigation home.
       if ($(this).data('lng')) {
+        $(this).addClass('homeActive');
         this_.restCoords = [$(this).data('lng'), $(this).data('lat')];
         this_.markerStyle = 1;
         this_.addHomeMarkerAndFitBounds();
@@ -370,6 +373,7 @@ class MapObj {
 
   // Add a restaurant marker and fit bounds to user position and restaurant location.
   addHomeMarkerAndFitBounds() {
+    // Replace home marker incase home location has moved.
     if (this.homeMarker) this.homeMarker.remove();
     // If on index page remove previous restMarker
     if (typeof IndexSearchObj !== 'undefined' && this.restMarker)
@@ -410,6 +414,15 @@ class MapObj {
   isMobilePortrait() {
     if (window.innerWidth <= 450) return true;
     return false;
+  }
+
+  // Clear the active class flag from the map navigation buttons.
+  clearNavBtnsActive() {
+    $('.map-routing')
+      .children()
+      .each(function () {
+        $(this).removeClass('active');
+      });
   }
 }
 

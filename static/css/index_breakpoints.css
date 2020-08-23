@@ -338,21 +338,17 @@
   .map-routing .bike:hover,
   .map-routing .home:hover,
   .map-routing .reset:hover,
-  .map-info:hover,
   .hover-orange:hover {
-    color: var(--my-warning);
+    color: var(--warning);
     transition: 0.4s;
   }
   .map-toggle:hover,
-  .map-hide-cards:hover,
+  .toggleCards:hover,
   button.mapboxgl-ctrl-fullscreen:hover {
     background-color: var(--my-warning) !important;
     transition: 0.4s;
     transform: scale(1.1);
     border-radius: 5px;
-  }
-  .map-info {
-    display: block;
   }
   .hoverOpaque:hover {
     background-color: black;
