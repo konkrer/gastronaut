@@ -90,19 +90,18 @@ class MapObj {
   }
 
   // Add a business map marker and open popup.
-  addMarker(coords, html, openPopupMobile = true) {
+  addMarker(coords, html, openPopup = true) {
     const marker = new mapboxgl.Marker(this.markerOptions[this.markerStyle])
       .setLngLat(coords)
       .setPopup(new mapboxgl.Popup().setHTML(html))
-      .addTo(this.mappyBoi)
-      .togglePopup();
-    // Close popup if not openPopupMobile and screen size is mobile size screen.
-    if (!openPopupMobile && this.isMobileScreen()) marker.togglePopup();
+      .addTo(this.mappyBoi);
+
+    if (openPopup) marker.togglePopup();
     return marker;
   }
 
   // Add a flag map marker and open popup.
-  addFlagMarker(coords, html, openPopupMobile = true) {
+  addFlagMarker(coords, html, openPopup = true) {
     const options = {
       element: $('<div class="marker flag-marker">').get()[0],
       anchor: 'center',
@@ -111,10 +110,9 @@ class MapObj {
     const marker = new mapboxgl.Marker(options)
       .setLngLat(coords)
       .setPopup(new mapboxgl.Popup({ offset: [0, -61] }).setHTML(html))
-      .addTo(this.mappyBoi)
-      .togglePopup();
-    // Close popup if not openPopupMobile and screen size is mobile size screen.
-    if (!openPopupMobile && this.isMobileScreen()) marker.togglePopup();
+      .addTo(this.mappyBoi);
+
+    if (openPopup) marker.togglePopup();
     return marker;
   }
 
@@ -197,8 +195,10 @@ class MapObj {
       const html = `<span class="detailsBtn mr-2" data-id="${el.id}">
       ${el.name}</span>`;
 
-      if (el.completed) var marker = this.addFlagMarker(coords, html, false);
-      else var marker = this.addMarker(coords, html, false);
+      const openPopup = this.isMobileScreen() ? false : true;
+      if (el.completed)
+        var marker = this.addFlagMarker(coords, html, openPopup);
+      else var marker = this.addMarker(coords, html, openPopup);
       acc.push(marker);
 
       if (idx === 0) {
@@ -251,7 +251,10 @@ class MapObj {
   // Call mapbox directions API and show geoJson line for route and show directions text.
   async showDirectionsAndLine() {
     const t = this;
-    const routeKey = `${t.longitude},${t.latitude};${t.restCoords[0]},${t.restCoords[1]};${t.profile}`;
+    const lng = t.longitude.toFixed(5);
+    const lat = t.latitude.toFixed(5);
+    const routeKey = `${lng},${lat};${t.restCoords[0]},${t.restCoords[1]};${t.profile}`;
+
     if (t.routeCache.has(routeKey)) {
       t.reloadRoute(routeKey);
     } else {
@@ -264,11 +267,14 @@ class MapObj {
           {
             coordinates: [t.longitude, t.latitude],
             approach: 'unrestricted',
-            bearing: t.bearing ? [t.bearing, 45] : null,
-            radius: 40,
+            bearing: t.heading ? [t.heading, 45] : null,
+            radius: 20,
           },
           {
             coordinates: t.restCoords,
+            approach: 'unrestricted',
+            bearing: null,
+            radius: 20,
           },
         ],
       };
@@ -277,6 +283,10 @@ class MapObj {
         .getDirections(options)
         .send();
 
+      if (!resp || !resp.body || !resp.body.routes) {
+        alert('Navigation Error. Please try again.');
+        return;
+      }
       const route = resp.body.routes[0];
       const {
         geometry: { coordinates },
@@ -302,9 +312,8 @@ class MapObj {
   }
 
   addGeoJsonLine(coordinates, routeKey) {
-    if (this.currentRoute) {
-      this.mappyBoi.removeLayer(this.currentRoute);
-    }
+    if (this.currentRoute) this.mappyBoi.removeLayer(this.currentRoute);
+
     this.mappyBoi.addSource(routeKey, {
       type: 'geojson',
       data: {
@@ -397,7 +406,7 @@ class MapObj {
   }
 
   clearRouting() {
-    this.mappyBoi.removeLayer(this.currentRoute);
+    if (this.currentRoute) this.mappyBoi.removeLayer(this.currentRoute);
     this.currentRoute = null;
     this.profile = null;
     // Geolocation_Obj.releaseWakeLock();

@@ -570,10 +570,6 @@ class ButtonsLogics {
   */
   addMapBusinessBtnListeners() {
     const this_ = this;
-    // $('.card-track-inner').on('touchstart', '.cardMapButton', function (e) {
-    //   e.preventDefault();
-    //   this_.mapBusiness($(this));
-    // });
     $('.card-track-inner').on('click', '.cardMapButton', function () {
       this_.mapBusiness($(this));
     });
@@ -689,10 +685,6 @@ class ButtonsLogics {
   */
   addBusinessDetailsListeners() {
     const this_ = this;
-    // $('.card-track-inner').on('touchstart', '.detailsBtnCard', function (e) {
-    //   e.preventDefault();
-    //   this_.getBtnAndShowDetails.bind($(this))();
-    // });
     $('.card-track-inner').on(
       'click',
       '.detailsBtnCard',
@@ -758,10 +750,6 @@ class ButtonsLogics {
   // add directions buttons listener.
   addNavigationListener() {
     const this_ = this;
-    // $('.map-track').on('touchstart', '.directionsBtn', function (e) {
-    //   e.preventDefault();
-    //   this_.startNavigation.bind($(this))();
-    // });
     $('.map-track').on('click', '.directionsBtn', this.startNavigation);
   }
 
@@ -792,10 +780,6 @@ class ButtonsLogics {
   */
   addToggleDirectionsDivListener() {
     const this_ = this;
-    // $('.map-track').on('touchstart', '.directionsToggle', function (e) {
-    //   e.preventDefault();
-    //   this_.toggleDirectionsDiv();
-    // });
     $('.map-track').on('click', '.directionsToggle', this.toggleDirectionsDiv);
   }
 

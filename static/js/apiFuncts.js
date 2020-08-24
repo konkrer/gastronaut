@@ -177,7 +177,9 @@ class ApiFuncts {
       }
       if (!resp || resp.data.error) {
         Sentry.captureMessage(
-          'Something went wrong: api_functs.getShowBusinessDetails'
+          `Something went wrong: api_functs.getShowBusinessDetails. ${
+            resp ? resp.data.error : ''
+          }`
         );
         $('.spinner-zone').hide();
         return;
