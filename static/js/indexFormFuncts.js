@@ -232,8 +232,7 @@ class FormFuncts {
     if (this.$locationInput.val()) {
       $('.spinner-zone').show();
       IndexSearchObj.searchYelp();
-      this.$searchTerm.focus();
-      this.$searchTerm.blur();
+      this.focusBlur();
     }
   }
 

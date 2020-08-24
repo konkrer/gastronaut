@@ -128,7 +128,7 @@
   }
 }
 
-@media screen and (hover: hover) {
+@media (hover: hover) {
   .hover-primary:hover {
     color: #2a9fd6 !important;
   }

@@ -18,7 +18,7 @@ class ApiFuncts {
     this.addLikeReportListener();
     this.addMissionListener();
     this.addDetailsListener();
-    this.addMissionBtnDataCacheListener();
+    this.addMissionBtnDataCacheListeners();
     this.addBusinessToMisionListener();
     this.addCreateNewMissionListener();
     // Turn on toasts.
@@ -204,8 +204,12 @@ class ApiFuncts {
   /* Add-to-mission button sets card business_data to obj which
   /* may be needed to create a new business in the database.
   */
-  addMissionBtnDataCacheListener() {
+  addMissionBtnDataCacheListeners() {
     const this_ = this;
+    $('main').on('touchstart', '.mission-btn', function (e) {
+      e.preventDefault();
+      this_.cacheMissionBtnData($(this));
+    });
     $('main').on('click', '.mission-btn', function () {
       this_.cacheMissionBtnData($(this));
     });

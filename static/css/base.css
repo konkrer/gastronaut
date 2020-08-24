@@ -399,7 +399,7 @@ body::-webkit-scrollbar-thumb:hover {
   }
 }
 
-@media screen and (hover: hover) {
+@media (hover: hover) {
   .modal button:hover:not(.like-button) {
     background: var(--my-green) !important;
     color: var(--my-info) !important;

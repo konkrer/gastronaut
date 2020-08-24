@@ -555,7 +555,7 @@ class ParamsChange {
 
 class ButtonsLogics {
   constructor() {
-    this.addMapBusinessBtnListener();
+    this.addMapBusinessBtnListeners();
     this.addMapToggleBtnListener();
     this.addCardsToggleBtnListener();
     this.addBusinessDetailsListeners();
@@ -568,17 +568,24 @@ class ButtonsLogics {
   /*
   /* Show restaurant marker and fit bounds when card map button is clicked.
   */
-  addMapBusinessBtnListener() {
+  addMapBusinessBtnListeners() {
     const this_ = this;
-    $('.card-track-inner').on('click', '.cardMapButton', function (e) {
+    $('.card-track-inner').on('touchstart', '.cardMapButton', function (e) {
       e.preventDefault();
-      const lng = $(this).next().children().data('lng');
-      const lat = $(this).next().children().data('lat');
-      const name = $(this).next().children().data('name');
-      const id = $(this).next().children().data('id');
-      if (!Map_Obj.mapOpen) this_.toggleMap();
-      Map_Obj.addRestMarkerAndFitBounds([+lng, +lat], name, id);
+      this_.mapBusiness($(this));
     });
+    $('.card-track-inner').on('click', '.cardMapButton', function () {
+      this_.mapBusiness($(this));
+    });
+  }
+
+  mapBusiness($el) {
+    const lng = $el.next().children().data('lng');
+    const lat = $el.next().children().data('lat');
+    const name = $el.next().children().data('name');
+    const id = $el.next().children().data('id');
+    if (!Map_Obj.mapOpen) this.toggleMap();
+    Map_Obj.addRestMarkerAndFitBounds([+lng, +lat], name, id);
   }
 
   /*
@@ -681,6 +688,12 @@ class ButtonsLogics {
   /* Card business detail listeners.
   */
   addBusinessDetailsListeners() {
+    const this_ = this;
+    $('.card-track-inner').on('touchstart', '.detailsBtnCard', function (e) {
+      e.preventDefault();
+      this_.getBtnAndShowDetails.bind($(this));
+      this_.getBtnAndShowDetails();
+    });
     $('.card-track-inner').on(
       'click',
       '.detailsBtnCard',
@@ -745,33 +758,47 @@ class ButtonsLogics {
 
   // add directions buttons listener.
   addNavigationListener() {
-    $('.map-track').on('click', '.directionsBtn', function () {
-      Map_Obj.profile = $(this).data('profile');
-      Map_Obj.markerStyle = 1;
-      Map_Obj.userMarkerStyle = 1;
-      Map_Obj.addUserMarker();
-      $('.profileDisplay').text(Map_Obj.profileDict[Map_Obj.profile]);
-      if ($('.map-routing .home').hasClass('homeActive')) {
-        Map_Obj.showDirectionsAndLine();
-        Map_Obj.fitBounds();
-      } else Animations_Obj.mapCurrCard();
-      // If active navigation following user, keep screen on.
-      if (Geolocation_Obj.locationWatcher) Geolocation_Obj.enableNoSleep();
-      Map_Obj.clearNavBtnsActive();
-      $(this).addClass('active');
-      $('.map-routing').addClass('horizontal');
-      $('.walk').addClass('walkHorizontal');
-      $('.bike').addClass('bikeHorizontal');
-      $('div.home').fadeIn().addClass('homeHorizontal');
-      $('div.reset').fadeIn().addClass('resetHorizontal');
-      $('#directions-panel').addClass('show').fadeIn();
+    const this_ = this;
+    $('.map-track').on('touchstart', '.directionsBtn', function (e) {
+      e.preventDefault();
+      this_.startNavigation.bind($(this));
+      this_.startNavigation();
     });
+    $('.map-track').on('click', '.directionsBtn', this.startNavigation);
+  }
+
+  startNavigation() {
+    Map_Obj.profile = $(this).data('profile');
+    Map_Obj.markerStyle = 1;
+    Map_Obj.userMarkerStyle = 1;
+    Map_Obj.addUserMarker();
+    $('.profileDisplay').text(Map_Obj.profileDict[Map_Obj.profile]);
+    if ($('.map-routing .home').hasClass('homeActive')) {
+      Map_Obj.showDirectionsAndLine();
+      Map_Obj.fitBounds();
+    } else Animations_Obj.mapCurrCard();
+    // If active navigation following user, keep screen on.
+    if (Geolocation_Obj.locationWatcher) Geolocation_Obj.enableNoSleep();
+    Map_Obj.clearNavBtnsActive();
+    $(this).addClass('active');
+    $('.map-routing').addClass('horizontal');
+    $('.walk').addClass('walkHorizontal');
+    $('.bike').addClass('bikeHorizontal');
+    $('div.home').fadeIn().addClass('homeHorizontal');
+    $('div.reset').fadeIn().addClass('resetHorizontal');
+    $('#directions-panel').addClass('show').fadeIn();
   }
 
   /*
   /* Add listener to show text directions. 
   */
   addToggleDirectionsDivListener() {
+    const this_ = this;
+    $('.map-track').on('touchstart', '.directionsToggle', function (e) {
+      e.preventDefault();
+      this_.toggleDirectionsDiv.bind($(this));
+      this_.toggleDirectionsDiv();
+    });
     $('.map-track').on('click', '.directionsToggle', this.toggleDirectionsDiv);
   }
 
