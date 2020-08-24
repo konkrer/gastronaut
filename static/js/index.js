@@ -691,8 +691,7 @@ class ButtonsLogics {
     const this_ = this;
     $('.card-track-inner').on('touchstart', '.detailsBtnCard', function (e) {
       e.preventDefault();
-      this_.getBtnAndShowDetails.bind($(this));
-      this_.getBtnAndShowDetails();
+      this_.getBtnAndShowDetails.bind($(this))();
     });
     $('.card-track-inner').on(
       'click',
@@ -761,8 +760,7 @@ class ButtonsLogics {
     const this_ = this;
     $('.map-track').on('touchstart', '.directionsBtn', function (e) {
       e.preventDefault();
-      this_.startNavigation.bind($(this));
-      this_.startNavigation();
+      this_.startNavigation.bind($(this))();
     });
     $('.map-track').on('click', '.directionsBtn', this.startNavigation);
   }
@@ -796,7 +794,6 @@ class ButtonsLogics {
     const this_ = this;
     $('.map-track').on('touchstart', '.directionsToggle', function (e) {
       e.preventDefault();
-      this_.toggleDirectionsDiv.bind($(this));
       this_.toggleDirectionsDiv();
     });
     $('.map-track').on('click', '.directionsToggle', this.toggleDirectionsDiv);
