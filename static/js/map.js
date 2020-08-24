@@ -256,8 +256,10 @@ class MapObj {
     const routeKey = `${lng},${lat};${t.restCoords[0]},${t.restCoords[1]};${t.profile}`;
 
     if (t.routeCache.has(routeKey)) {
+      alert('route reload');
       t.reloadRoute(routeKey);
     } else {
+      alert('new route');
       const options = {
         profile: t.profile,
         steps: true,
@@ -367,12 +369,6 @@ class MapObj {
         this_.restCoords = [$(this).data('lng'), $(this).data('lat')];
         this_.markerStyle = 1;
         this_.addHomeMarkerAndFitBounds();
-        // If on index page hide directions panel.
-        if (
-          typeof ButtonsLogicsObj !== 'undefined' &&
-          $('#directions-panel').hasClass('directionsShow')
-        )
-          ButtonsLogicsObj.toggleDirectionsDiv();
       } else {
         // If no home address show preferences modal to enter home address.
         $('#preferencesModal').modal('show');
@@ -382,7 +378,7 @@ class MapObj {
 
   // Add a restaurant marker and fit bounds to user position and restaurant location.
   addHomeMarkerAndFitBounds() {
-    // Replace home marker incase home location has moved.
+    // Replace home marker in case home location has changed.
     if (this.homeMarker) this.homeMarker.remove();
     // If on index page remove previous restMarker
     if (typeof IndexSearchObj !== 'undefined' && this.restMarker)
