@@ -128,7 +128,7 @@
   }
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .hover-primary:hover {
     color: #2a9fd6 !important;
   }

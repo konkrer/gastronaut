@@ -111,7 +111,7 @@ a[href='#mission-select-form'] {
   bottom: 25px;
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   main button:hover {
     background-color: var(--my-green) !important;
     color: var(--my-purp) !important;
