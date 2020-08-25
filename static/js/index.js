@@ -62,7 +62,7 @@ class IndexSearchLogic {
         return;
       }
       // Search in All category.
-      Animations_Obj.category = 'restaurants,bars,food';
+      IndexAnimationsObj.category = 'restaurants,bars,food';
       $('.cat-display').text('All');
       FormFunctsObj.turnActiveOffCatBtns();
       $('#All').addClass('active');
@@ -155,7 +155,7 @@ class IndexSearchLogic {
     // Avoid repaint.
     if (this.transactionsNoChangeAndNoNewData(!!data)) return;
 
-    Animations_Obj.justSearchedYelp = true;
+    IndexAnimationsObj.justSearchedYelp = true;
     // If no new data use last data.
     var data = data ? data.data : JSON.parse(lastData);
 
@@ -207,7 +207,7 @@ class IndexSearchLogic {
     this.userMarkAndYelpCoordsLogic(data);
 
     const cards = CardsModalsFactoryObj.getCardsHtml(data.businesses);
-    Animations_Obj.currCard = 0;
+    IndexAnimationsObj.currCard = 0;
 
     // Scroll to first card and fade in.
     // There may not be results cards because of transaction post filtering.
@@ -226,9 +226,9 @@ class IndexSearchLogic {
       // No dummy card needed for one result.
       if (!this.resultsRemaining && data.total !== 1)
         CardsModalsFactoryObj.addDummyCard();
-      if (Animations_Obj.sidebarOpen)
+      if (IndexAnimationsObj.sidebarOpen)
         $('.arrow-wrapper').addClass('pulse-outline-mobile');
-      Animations_Obj.setCardScrollTrackerMapper();
+      IndexAnimationsObj.setCardScrollTrackerMapper();
       setTimeout(() => {
         this.addNextCardsListener();
       }, 1000);
@@ -313,7 +313,7 @@ class IndexSearchLogic {
     if (!this.resultsRemaining || this.offset === 20) {
       CardsModalsFactoryObj.addDummyCard();
       setTimeout(() => {
-        Animations_Obj.setCardScrollTrackerMapper();
+        IndexAnimationsObj.setCardScrollTrackerMapper();
       }, 100);
       return;
     }
@@ -325,7 +325,7 @@ class IndexSearchLogic {
     $('.card-track-inner').append(
       CardsModalsFactoryObj.getCardsHtml(data.data.businesses)
     );
-    Animations_Obj.setCardScrollTrackerMapper();
+    IndexAnimationsObj.setCardScrollTrackerMapper();
 
     if (this.resultsRemaining)
       setTimeout(() => {
@@ -340,7 +340,7 @@ class IndexSearchLogic {
   hideHeroAndSearch() {
     $('.hero-animation').hide();
     $('.alert').hide();
-    Animations_Obj.scrollCategoriesToCurrent();
+    IndexAnimationsObj.scrollCategoriesToCurrent();
     // if there is given location request search
     if (FormFunctsObj.$locationInput.val()) this.searchYelp();
     // if no given location but allowing location sharing detect location
@@ -526,8 +526,8 @@ class ParamsChange {
     const prevCategory = localStorage.getItem('category');
 
     // category change warrants an API call
-    if (prevCategory !== Animations_Obj.category) {
-      localStorage.setItem('category', Animations_Obj.category);
+    if (prevCategory !== IndexAnimationsObj.category) {
+      localStorage.setItem('category', IndexAnimationsObj.category);
       return true;
     }
     return change;
@@ -562,7 +562,7 @@ class ButtonsLogics {
     this.addWriteReportListener();
     this.addNavigationListener();
     this.addToggleDirectionsDivListener();
-    this.addCancelDirectionsListener();
+    this.addCancelNavigationListener();
   }
 
   /*
@@ -612,7 +612,7 @@ class ButtonsLogics {
           $(this).toggleClass('d-none');
         });
       // make sure correct cards show.
-      Animations_Obj.setCardsScrollLeft();
+      IndexAnimationsObj.setCardsScrollLeft();
     }
     // Toggle all map items.
     $('.card-map-zone').toggleClass('map-collapse');
@@ -659,7 +659,7 @@ class ButtonsLogics {
         $(this).toggleClass('d-none');
       });
     if (!$('.card-map-zone').hasClass('cards-collapse')) {
-      Animations_Obj.setCardsScrollLeft();
+      IndexAnimationsObj.setCardsScrollLeft();
     }
   }
 
@@ -747,31 +747,59 @@ class ButtonsLogics {
     });
   }
 
-  // add directions buttons listener.
+  /*
+  /* Add navigation start buttons listener. 
+  */
   addNavigationListener() {
-    const this_ = this;
-    $('.map-track').on('click', '.directionsBtn', this.startNavigation);
+    $('.map-track').on(
+      'click',
+      '.directionsBtn',
+      this.startNavigation.bind(this)
+    );
   }
 
-  startNavigation() {
-    Map_Obj.profile = $(this).data('profile');
+  /*
+  /* Start navigation. Update Map_Obj state, add alternate colored user marker,
+  /* get route for appropriate destination.
+  */
+  startNavigation(e) {
+    const $el = $(e.currentTarget);
+    Map_Obj.profile = $el.data('profile');
     Map_Obj.markerStyle = 1;
     Map_Obj.userMarkerStyle = 1;
     Map_Obj.addUserMarker();
-    $('.profileDisplay').text(Map_Obj.profileDict[Map_Obj.profile]);
+    // If currently navigating home show route for newly selected navigation profile.
     if ($('.map-routing .home').hasClass('homeActive')) {
       Map_Obj.showDirectionsAndLine();
       Map_Obj.fitBounds();
-    } else Animations_Obj.mapCurrCard();
-    // If active navigation following user, keep screen on.
-    if (Geolocation_Obj.locationWatcher) Geolocation_Obj.enableNoSleep();
+      // Else use IndexAnimationsObj to map current (center) card's business and route.
+    } else IndexAnimationsObj.mapCurrCard();
+    // If active navigation following user:
+    if (Geolocation_Obj.locationWatcher) {
+      // Keep screen on.
+      Geolocation_Obj.enableNoSleep();
+      // If on phone size screen close sidebar and card track for full-screen navigation.
+      if (Map_Obj.isMobileScreen()) {
+        if (IndexAnimationsObj.sidebarOpen) IndexAnimationsObj.toggleSidebar();
+        if (!$('.card-map-zone').hasClass('cards-collapse')) this.toggleCards();
+      }
+    }
+
+    this.navStartDOMAdjustments($el);
+  }
+
+  /*
+  /* Make adjustments to DOM elements for visual change of navigation start.
+  */
+  navStartDOMAdjustments($el) {
     Map_Obj.clearNavBtnsActive();
-    $(this).addClass('active');
+    $el.addClass('active');
     $('.map-routing').addClass('horizontal');
     $('.walk').addClass('walkHorizontal');
     $('.bike').addClass('bikeHorizontal');
     $('div.home').fadeIn().addClass('homeHorizontal');
     $('div.reset').fadeIn().addClass('resetHorizontal');
+    $('.profileDisplay').text(Map_Obj.profileDict[Map_Obj.profile]);
     $('#directions-panel').addClass('show').fadeIn();
   }
 
@@ -805,7 +833,10 @@ class ButtonsLogics {
     $('#directions-text').toggle();
   }
 
-  addCancelDirectionsListener() {
+  /*
+  /* Cancel navigation listener.
+  */
+  addCancelNavigationListener() {
     $('.map-track').on(
       'click',
       '.map-routing div.reset',
@@ -815,19 +846,25 @@ class ButtonsLogics {
         Map_Obj.userMarkerStyle = 0;
         Map_Obj.addUserMarker();
         Map_Obj.userMarker.togglePopup();
-        Animations_Obj.mapCurrCard();
+        IndexAnimationsObj.mapCurrCard();
         if ($('#directions-panel').hasClass('directionsShow'))
           this.toggleDirectionsDiv();
-        $('#directions-panel').removeClass('show').fadeOut();
-        $('.map-routing').removeClass('horizontal');
-        $('.walk').removeClass('walkHorizontal');
-        $('.bike').removeClass('bikeHorizontal');
-        $('div.home').fadeOut().removeClass('homeHorizontal');
-        $('div.reset').fadeOut().removeClass('resetHorizontal');
-        Map_Obj.clearNavBtnsActive();
-        $('.map-routing .home').removeClass('homeActive');
+        this.navEndDOMAdjustments();
       }.bind(this)
     );
+  }
+
+  /*
+  /* Make adjustments to DOM elements for visual change of navigation end.
+  */
+  navEndDOMAdjustments() {
+    $('#directions-panel').removeClass('show').fadeOut();
+    $('.map-routing').removeClass('horizontal');
+    $('.walk').removeClass('walkHorizontal');
+    $('.bike').removeClass('bikeHorizontal');
+    $('div.home').fadeOut().removeClass('homeHorizontal');
+    $('div.reset').fadeOut().removeClass('resetHorizontal');
+    $('.map-routing .home').removeClass('homeActive');
   }
 }
 

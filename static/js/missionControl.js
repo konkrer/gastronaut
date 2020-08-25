@@ -22,12 +22,12 @@ class MissionControl {
     this.addRemoveBusinessListener();
     this.addSidebarListeners();
     this.addMapAllListener();
-    // Delay for map load.
+    // Set user marker to be purple for better visual differentiation.
+    Map_Obj.userMarkerStyle = 1;
+    // Delay mission loading to allow time for map to load.
     setTimeout(() => {
       this.checkLocalStorage();
     }, 2000);
-    // Set user marker to be purple for better visual differentiation.
-    Map_Obj.userMarkerStyle = 1;
   }
 
   /*
@@ -44,6 +44,7 @@ class MissionControl {
 
     let lastMissionId = localStorage.getItem('currMissionId');
 
+    // If the last mission loaded is still in user missions.
     if (currMissions.includes(lastMissionId)) {
       // Select <option> that matches lastMissionId in mission-load-select input.
       const currOption = currMissions.indexOf(lastMissionId);
@@ -51,17 +52,24 @@ class MissionControl {
         .children()
         .eq(currOption)
         .prop('selected', true);
-      //
+      // If no missions make mission report button point nowhere and return.
     } else if (currMissions.length == 0) {
       $('#write-mission-report').prop('href', '#');
+      // If in navigation mode end navigation mode.
+      if (Map_Obj.profile) MissionControlNavigationObj.endNavigation();
+      // Reset mission cache in case all missions just got deleted.
+      this.missionCache = {};
       return;
     } else {
+      // Make lastMissionId the first option of current missions.
       lastMissionId = currMissions[0];
       localStorage.setItem('currMissionId', lastMissionId);
     }
+    // Load last mission loaded or the first mission in missions options.
     this.loadMission(lastMissionId);
+    // Show businesses list for non phone screen sizes.
     if (!Map_Obj.isMobileScreen()) $('#businesses-list').addClass('show');
-    // If create_id passed in and not ignore create_id - open create form.
+    // If create_id passed in open create form.
     if (
       window.location.search &&
       /^\?create_id=.+[^&]$/.test(window.location.search)
@@ -72,6 +80,9 @@ class MissionControl {
       }, 500);
   }
 
+  //
+  // Add load new mission listener.
+  //
   addLoadMissionListener() {
     $('#mission-load-select').change(
       function (e) {
@@ -82,8 +93,12 @@ class MissionControl {
     );
   }
 
+  //
+  // Load new mission.
+  //
   async loadMission(mission_id) {
     let missionData;
+    // Reload cached data if cached data.
     if (this.missionCache[mission_id])
       missionData = this.missionCache[mission_id];
     else {
@@ -100,8 +115,16 @@ class MissionControl {
       'href',
       `/report?mission_id=${mission_id}&cancel_url=${window.location.pathname}`
     );
+    // Don't show business list on phones.
     if (Map_Obj.isMobileScreen()) $('#businesses-list').removeClass('show');
+    // Set lastRestMarkerIdx to be first marker.
     MissionControlNavigationObj.lastRestMarkerIdx = 0;
+    // If navigation mode was active but there are no businesses in this mission end navigation.
+    if (
+      Map_Obj.profile &&
+      this.missionCache[mission_id].businesses.length === 0
+    )
+      MissionControlNavigationObj.endNavigation();
   }
 
   fillForm(missionData) {
@@ -562,9 +585,12 @@ class MissionControl {
       }.bind(this)
     );
   }
+
+  //
   // Listen for remove mission button being clicked.
   // Call mission remove endpoint.
   // Update mission-load-select and mission-select <option> text.
+  //
   addRemoveMissionListener() {
     $('#removeMissionModal').on(
       'submit',
@@ -609,16 +635,21 @@ class MissionControl {
 
   addDetailsListenerBlocker() {
     const this_ = this;
-    $('#businesses-list').on('click', '.detailsBtn', function (e) {
-      this_.setBusinessClickBlocker();
+    $('#businesses-list').on('click', '.detailsBtn', function () {
+      if (this_.businessClickBlocker) return;
     });
   }
 
   addBusinessMapListener() {
     const this_ = this;
     this.$infoCol.on('click', '.mapBtn', function () {
-      this_.businessMapper($(this));
+      if (this_.businessClickBlocker) return;
+      // Make sure zoom into business works when passive navigation is active
+      // by blocking business click which would negate zoom in with a fit bounds call.
       this_.setBusinessClickBlocker();
+      // Set current marker/data so if navigation starts it will begin with this business.
+      this_.setCurrentMarkerCoords($(this).parent().parent());
+      this_.businessMapper($(this));
     });
   }
 
@@ -642,9 +673,6 @@ class MissionControl {
       $('#mission-select-form').removeClass('show');
       $('#directions-text').removeClass('show');
     }
-    const idx = $el.parent().data('idx');
-    const marker = Map_Obj.restMarkers[idx];
-    if (!marker.getPopup().isOpen()) marker.togglePopup();
   }
 
   // Toggle business marker popup and set restCoords
@@ -655,16 +683,9 @@ class MissionControl {
       if (this_.businessClickBlocker) return;
       this_.setBusinessClickBlocker();
       Map_Obj.closePopupsArray();
-      // toggle popup
-      const idx = $(this).children().data('idx');
-      const marker = Map_Obj.restMarkers[idx];
-      if (!marker.getPopup().isOpen()) marker.togglePopup();
-      Map_Obj.restMarker = marker;
-      // set restcoords
-      const $mapBtn = $(this).find('.mapBtn');
-      const lng = $mapBtn.data('lng');
-      const lat = $mapBtn.data('lat');
-      Map_Obj.restCoords = [lng, lat];
+      // Set marker for this business as restMarker, set coords as restCoords, togglePopup.
+      const idx = this_.setCurrentMarkerCoords($(this));
+      // If navigation mode active.
       if (Map_Obj.profile) {
         Map_Obj.showDirectionsAndLine();
         this_.changeMarkerColor(
@@ -694,6 +715,24 @@ class MissionControl {
     }, 1000);
   }
 
+  //
+  // Set current marker, restCoords, toggle popup.
+  //
+  setCurrentMarkerCoords($el) {
+    const idx = $el.children().data('idx');
+    // If no businesses in mission there will be no index - return.
+    if (idx === undefined) return;
+    const marker = Map_Obj.restMarkers[idx];
+    Map_Obj.restMarker = marker;
+    // set restcoords
+    const $mapBtn = $el.find('.mapBtn');
+    const lng = $mapBtn.data('lng');
+    const lat = $mapBtn.data('lat');
+    Map_Obj.restCoords = [lng, lat];
+    if (!marker.getPopup().isOpen()) marker.togglePopup();
+    return idx;
+  }
+
   addBusinessDblclickListener() {
     const this_ = this;
     this.$infoCol.on('dblclick', '.list-group-item', function () {
@@ -708,6 +747,7 @@ class MissionControl {
   addGoalCompletedListener() {
     const this_ = this;
     this.$infoCol.on('click', '.flagBtn', async function () {
+      if (this_.businessClickBlocker) return;
       this_.setBusinessClickBlocker();
       const data = { business_id: $(this).parent().data('id') };
       const mission_id = localStorage.getItem('currMissionId');
@@ -751,9 +791,10 @@ class MissionControl {
           newMarker = Map_Obj.addMarker([lng, lat], html);
           completed = false;
         }
-        // newMarker.togglePopup();
         // put new marker in restMarkers array in spot of old marker
         Map_Obj.restMarkers.splice(idx, 1, newMarker);
+        Map_Obj.restMarker = newMarker;
+        Map_Obj.restCoords = [lng, lat];
         // update mission cache that this business was/wasn't completed
         this_.missionCache[mission_id].businesses[idx].completed = completed;
 
@@ -826,8 +867,15 @@ class MissionControl {
       if (resp.data.success) {
         const idx = $(this).parent().data('idx');
         const name = $(this).prevAll('.flagBtn').data('name');
-        // remove business from cache and reload mission.
+        // remove business from cache.
         this_.missionCache[mission_id].businesses.splice(idx, 1);
+        // If user deleted all businesses and in navigation mode end navigation.
+        if (
+          this_.missionCache[mission_id].businesses.length === 0 &&
+          Map_Obj.profile
+        ) {
+          MissionControlNavigationObj.endNavigation();
+        }
         this_.loadMission(mission_id);
 
         ApiFunctsObj.showToast(
@@ -913,10 +961,20 @@ class MissionControlNavigation {
   addNavProfileBtnsListener() {
     const this_ = this;
     $('.map-routing').on('click', '.directionsBtn', function () {
+      // If no cache for mission or no businesses in mission return.
+      const currMissionId = localStorage.getItem('currMissionId');
+      if (
+        MissionControlObj.missionCache[currMissionId] === undefined ||
+        MissionControlObj.missionCache[currMissionId].businesses.length === 0
+      )
+        return;
+      // Navigation profile.
       const profile = $(this).data('profile');
       Map_Obj.profile = profile;
       $('.profileDisplay').text(Map_Obj.profileDict[profile]);
+      // If navigation active call startLocationSuccess.
       if (Map_Obj.currentRoute) this_.startLocationSuccess();
+      // Else have user pick starting location.
       else $('#navigationModal').modal('show');
     });
   }
@@ -988,11 +1046,11 @@ class MissionControlNavigation {
   }
 
   endNavigation() {
-    MissionControlObj.changeMarkerColor(this.lastRestMarkerIdx, null);
+    if (Map_Obj.restMarkers.length > 0)
+      MissionControlObj.changeMarkerColor(this.lastRestMarkerIdx, null);
     Map_Obj.clearRouting();
-    Map_Obj.clearNavBtnsActive();
     $('#directions-panel').fadeOut();
-    $('.map-routing .home').fadeOut();
+    $('.map-routing .home').fadeOut().removeClass('homeActive');
     $('.map-routing .reset').fadeOut();
   }
 }

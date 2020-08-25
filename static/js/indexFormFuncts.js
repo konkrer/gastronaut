@@ -57,7 +57,7 @@ class FormFuncts {
       localStorage.setItem('category', 'restaurants');
       currCat = 'restaurants';
     }
-    Animations_Obj.category = currCat;
+    IndexAnimationsObj.category = currCat;
     // set list-group button to active for current category
     this.$categoryButtons.children().each(function (index) {
       if ($(this).val() === currCat) {
@@ -295,7 +295,7 @@ class FormFuncts {
     this.$categoryButtons.on('click', 'button', function (e) {
       clearTimeout(this_.keyupTimer);
       $('.spinner-zone').show();
-      Animations_Obj.category = e.target.value;
+      IndexAnimationsObj.category = e.target.value;
       $('.cat-display').text(e.target.textContent);
       this_.turnActiveOffCatBtns();
       $(this).addClass('active');
@@ -495,7 +495,7 @@ class FormFuncts {
   */
   getFormData() {
     let data = this.$mainForm.serialize();
-    data = `${data}&categories=${Animations_Obj.category}&limit=50`;
+    data = `${data}&categories=${IndexAnimationsObj.category}&limit=50`;
     if (Map_Obj.latitude)
       data += `&latitude=${Map_Obj.latitude.toFixed(
         3

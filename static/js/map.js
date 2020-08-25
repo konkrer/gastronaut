@@ -1,7 +1,7 @@
 'use strict';
 
 //
-// Class to hold map objects and functions.
+// Class to hold map, map data, and functions.
 //
 class MapObj {
   constructor() {
@@ -45,11 +45,13 @@ class MapObj {
         maxZoom: 18,
       },
     ];
+    // Convert directions profile to string for display.
     this.profileDict = {
       'driving-traffic': '- Driving',
       walking: '- Walking',
       cycling: '- Cycling',
     };
+    // Options for creating GeoJson line.
     this.layout = {
       'line-join': 'round',
       'line-cap': 'round',
@@ -61,7 +63,9 @@ class MapObj {
     this.addHomeButtonListener();
   }
 
+  //
   // Render Map.
+  //
   renderMiniMap(mapCenter = [-85, 26.8], zoom = 1.3, navControl = false) {
     mapboxgl.accessToken = this.accessToken;
     this.mappyBoi = new mapboxgl.Map({
@@ -75,7 +79,9 @@ class MapObj {
     if (navControl) this.mappyBoi.addControl(new mapboxgl.NavigationControl());
   }
 
-  // Add a user marker and open popup.
+  //
+  // Add a user marker.
+  //
   addUserMarker() {
     if (!this.longitude) return;
     if (this.userMarker) this.userMarker.remove();
@@ -89,7 +95,9 @@ class MapObj {
       .addTo(this.mappyBoi);
   }
 
+  //
   // Add a business map marker and open popup.
+  //
   addMarker(coords, html, openPopup = true) {
     const marker = new mapboxgl.Marker(this.markerOptions[this.markerStyle])
       .setLngLat(coords)
@@ -100,7 +108,9 @@ class MapObj {
     return marker;
   }
 
+  //
   // Add a flag map marker and open popup.
+  //
   addFlagMarker(coords, html, openPopup = true) {
     const options = {
       element: $('<div class="marker flag-marker">').get()[0],
@@ -116,13 +126,17 @@ class MapObj {
     return marker;
   }
 
+  //
   // Add a restaurant marker and fit bounds to user position and restaurant location.
+  // Called only from index page.
+  //
   addRestMarkerAndFitBounds(restCoords, name, id) {
     this.restCoords = restCoords;
     const html = `<span class="detailsBtn mr-2" data-id="${id}">
                     ${name}</span>`;
     if (this.restMarker) this.restMarker.remove();
     this.restMarker = this.addMarker(restCoords, html);
+    // If navigation active map route to this location.
     if (this.profile) {
       $('.map-routing .home').removeClass('homeActive');
       this.showDirectionsAndLine();
@@ -132,7 +146,9 @@ class MapObj {
     this.fitBounds();
   }
 
+  //
   // Call fit bounds with proper options for screen size.
+  //
   fitBounds(coords1, coords2) {
     coords1 = coords1 ? coords1 : [this.longitude, this.latitude];
     coords2 = coords2 ? coords2 : this.restCoords;
@@ -145,31 +161,36 @@ class MapObj {
     this.mappyBoi.fitBounds([coords1, coords2], this.fitBoundsOptions[optIdx]);
   }
 
+  //
   // Map list of bussiness and fit bounds for outliers.
+  //
   mapArrayAndFitBounds(array) {
     this.fitBoundsArray(array);
     this.mapArray(array);
   }
 
+  //
   // For list of businesses with lng/lat data
   // determine least and most lng/lat combo and fit bounds.
-  // If only one coordinate set in list fly to location.
+  // If only one coordinate pair in list fly to location.
+  // Called only from mission-control page.
+  //
   fitBoundsArray(array) {
     // If there are two or more points to map.
     if (this.longitude || array.length > 1) {
-      const cpArray = [...array];
+      const newArray = [...array];
       // Add user coords is user coords.
       if (this.longitude)
-        cpArray.push({ longitude: this.longitude, latitude: this.latitude });
-      // Add home coores if home coords.
+        newArray.push({ longitude: this.longitude, latitude: this.latitude });
+      // Add home coords if home coords.
       if (this.restCoords)
-        cpArray.push({
+        newArray.push({
           longitude: this.restCoords[0],
           latitude: this.restCoords[1],
         });
       const least = [Infinity, Infinity];
       const most = [-Infinity, -Infinity];
-      cpArray.forEach(el => {
+      newArray.forEach(el => {
         least[0] = Math.min(el.longitude, least[0]);
         least[1] = Math.min(el.latitude, least[1]);
         most[0] = Math.max(el.longitude, most[0]);
@@ -185,9 +206,10 @@ class MapObj {
       });
   }
 
+  //
   // Map a list of businesses for mission-control.
   // Add a regular or flag marker depending if the goal is/isn't completed.
-  // Return array of the marker objects.
+  //
   mapArray(array) {
     this.restMarkers = array.reduce((acc, el, idx) => {
       const coords = [el.longitude, el.latitude];
@@ -207,11 +229,13 @@ class MapObj {
       }
       return acc;
     }, []);
-
+    // If navigation active show directions and line on map.
     if (this.profile) this.showDirectionsAndLine();
   }
 
+  //
   // Close all popups in marker array
+  //
   closePopupsArray(array) {
     array = array ? array : this.restMarkers;
     array.forEach(marker => {
@@ -219,13 +243,18 @@ class MapObj {
     });
   }
 
+  //
   // clear map of a list of points for mission-control.
+  //
   clearMapArray() {
     this.restMarkers.forEach(el => el.remove());
     this.restMarkers = [];
   }
 
-  // Use Mapbox geocoding.
+  //
+  // Use Mapbox geocoding to find address and coords for address.
+  // Return feature list of locations with coords.
+  //
   async geocode(query) {
     // Get coords for proximity for geocoding. Use user coords or restCoords.
     const proximityCoords = this.longitude
@@ -241,6 +270,7 @@ class MapObj {
         })
         .send();
     } catch (error) {
+      Sentry.captureException(error);
       return [];
     }
 
@@ -248,54 +278,28 @@ class MapObj {
     return resp.body.features;
   }
 
+  //
   // Call mapbox directions API and show geoJson line for route and show directions text.
+  //
   async showDirectionsAndLine() {
-    const t = this;
-    const lng = t.longitude.toFixed(5);
-    const lat = t.latitude.toFixed(5);
-    const routeKey = `${lng},${lat};${t.restCoords[0]},${t.restCoords[1]};${t.profile}`;
+    // Make route key based on start and end location and navigation profile.
+    const routeKey = this.makeRouteKey();
 
-    if (t.routeCache.has(routeKey)) t.reloadRoute(routeKey);
+    if (this.routeCache.has(routeKey)) this.reloadRoute(routeKey);
     else {
-      const options = {
-        profile: t.profile,
-        steps: true,
-        geometries: 'geojson',
-        overview: 'full',
-        waypoints: [
-          {
-            coordinates: [t.longitude, t.latitude],
-            approach: 'unrestricted',
-            bearing: t.heading ? [t.heading, 45] : null,
-            radius: 20,
-          },
-          {
-            coordinates: t.restCoords,
-            approach: 'unrestricted',
-            bearing: null,
-            radius: 20,
-          },
-        ],
-      };
+      const directionsData = await this.getDirections();
 
-      const resp = await t.mapboxClient.directions
-        .getDirections(options)
-        .send();
-
-      if (!resp || !resp.body || !resp.body.routes || !resp.body.routes[0]) {
-        alert('Navigation Error. Please try again.');
-        return;
+      if (directionsData) {
+        const [legs, coordinates] = directionsData;
+        this.addDirectionsText(legs, routeKey);
+        this.addGeoJsonLine(coordinates, routeKey);
       }
-      const route = resp.body.routes[0];
-      const {
-        geometry: { coordinates },
-        legs,
-      } = route;
-      t.addDirectionsText(legs, routeKey);
-      t.addGeoJsonLine(coordinates, routeKey);
     }
   }
 
+  //
+  // Reload route (map source) to new layer.
+  //
   reloadRoute(routeKey) {
     if (this.currentRoute === routeKey) return;
     if (this.currentRoute) this.mappyBoi.removeLayer(this.currentRoute);
@@ -307,9 +311,13 @@ class MapObj {
       layout: this.layout,
       paint: this.paint,
     });
+    // Reload directions text for this route.
     $('#directions-text ol').html(this.directionsCache[routeKey]);
   }
 
+  //
+  // Add geoJson line to map for new route.
+  //
   addGeoJsonLine(coordinates, routeKey) {
     if (this.currentRoute) this.mappyBoi.removeLayer(this.currentRoute);
 
@@ -335,6 +343,9 @@ class MapObj {
     this.routeCache.add(routeKey);
   }
 
+  //
+  // Add directions text to directions list.
+  //
   addDirectionsText(legs, routeKey) {
     const olContents = legs[0].steps.reduce((acc, step) => {
       const {
@@ -347,6 +358,9 @@ class MapObj {
     this.directionsCache[routeKey] = olContents;
   }
 
+  //
+  // Fly to User used for following user during navigation.
+  //
   flyToUser(heading) {
     this.mappyBoi.flyTo({
       center: [this.longitude, this.latitude],
@@ -357,6 +371,9 @@ class MapObj {
     });
   }
 
+  //
+  // Add listener for home navigation button click.
+  //
   addHomeButtonListener() {
     const this_ = this;
     $('main').on('click', '.map-routing .home.loggedIn', function () {
@@ -373,7 +390,9 @@ class MapObj {
     });
   }
 
-  // Add a restaurant marker and fit bounds to user position and restaurant location.
+  //
+  // Add a home marker, show directions, and fit bounds to user position and home location.
+  //
   addHomeMarkerAndFitBounds() {
     // Replace home marker in case home location has changed.
     if (this.homeMarker) this.homeMarker.remove();
@@ -390,41 +409,108 @@ class MapObj {
     // Add marker for home.
     this.markerStyle = 1;
     const html = `<span class="mr-2 homeMarker">Home</span>`;
+    // We may want to remove the last restMarker(now homeMarker) or the homeMarker
+    // specifically so have both point to same marker
     this.restMarker = this.addMarker(this.restCoords, html);
     this.homeMarker = this.restMarker;
+    this.fitBounds();
     this.showDirectionsAndLine();
     if ($('#directions-panel').hasClass('directionsShow'))
       ButtonsLogicsObj.toggleDirectionsDiv();
-    this.fitBounds();
   }
 
+  //
+  // Clear navigation mode. Remove route from map, reset variables,
+  // disable noSleep.
   clearRouting() {
     if (this.currentRoute) this.mappyBoi.removeLayer(this.currentRoute);
     this.currentRoute = null;
     this.profile = null;
-    // Geolocation_Obj.releaseWakeLock();
+    this.clearNavBtnsActive();
     Geolocation_Obj.disableNoSleep();
   }
 
+  //
   // check if screen size is mobile.
+  //
   isMobileScreen() {
     if (window.innerWidth <= 880) return true;
     return false;
   }
 
+  //
   // check if screen size is mobile in portrait.
+  //
   isMobilePortrait() {
     if (window.innerWidth <= 450) return true;
     return false;
   }
 
+  //
   // Clear the active class flag from the map navigation buttons.
+  //
   clearNavBtnsActive() {
     $('.map-routing')
       .children()
       .each(function () {
         $(this).removeClass('active');
       });
+  }
+
+  //
+  // Make route key for caching routes.
+  //
+  makeRouteKey() {
+    const t = this;
+    const lng = t.longitude.toFixed(5);
+    const lat = t.latitude.toFixed(5);
+    return `${lng},${lat};${t.restCoords[0]},${t.restCoords[1]};${t.profile}`;
+  }
+
+  //
+  // Get directions from Mapbox
+  //
+  async getDirections() {
+    const options = this.makeDirectionsOptions();
+    const resp = await this.mapboxClient.directions
+      .getDirections(options)
+      .send();
+
+    if (!resp || !resp.body || !resp.body.routes || !resp.body.routes[0]) {
+      alert('Navigation Error. Please try again.');
+      return false;
+    }
+    const {
+      geometry: { coordinates },
+      legs,
+    } = resp.body.routes[0];
+    return [legs, coordinates];
+  }
+
+  //
+  // Make directions options.
+  //
+  makeDirectionsOptions() {
+    return {
+      profile: this.profile,
+      steps: true,
+      geometries: 'geojson',
+      overview: 'full',
+      waypoints: [
+        {
+          coordinates: [this.longitude, this.latitude],
+          approach: 'unrestricted',
+          bearing: this.heading ? [this.heading, 45] : null,
+          radius: 'unlimited',
+        },
+        {
+          coordinates: this.restCoords,
+          approach: 'unrestricted',
+          bearing: null,
+          radius: 'unlimited',
+        },
+      ],
+    };
   }
 }
 
