@@ -255,11 +255,8 @@ class MapObj {
     const lat = t.latitude.toFixed(5);
     const routeKey = `${lng},${lat};${t.restCoords[0]},${t.restCoords[1]};${t.profile}`;
 
-    if (t.routeCache.has(routeKey)) {
-      alert('route reload');
-      t.reloadRoute(routeKey);
-    } else {
-      alert('new route');
+    if (t.routeCache.has(routeKey)) t.reloadRoute(routeKey);
+    else {
       const options = {
         profile: t.profile,
         steps: true,
@@ -285,7 +282,7 @@ class MapObj {
         .getDirections(options)
         .send();
 
-      if (!resp || !resp.body || !resp.body.routes) {
+      if (!resp || !resp.body || !resp.body.routes || !resp.body.routes[0]) {
         alert('Navigation Error. Please try again.');
         return;
       }
