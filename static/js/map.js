@@ -377,12 +377,20 @@ class MapObj {
   addHomeButtonListener() {
     const this_ = this;
     $('main').on('click', '.map-routing .home.loggedIn', function () {
+      const lng = $(this).data('lng');
       // If home button has home coords data begin navigation home.
-      if ($(this).data('lng')) {
+      if (lng) {
+        const lat = $(this).data('lat');
+        // If hame coords equal rest coords alrealdy navigating there.
+        if ((this_.restCoords[0] === lng) & (this_.restCoords[1] === lat))
+          return;
+        this_.restCoords = [lng, lat];
         $(this).addClass('homeActive');
-        this_.restCoords = [$(this).data('lng'), $(this).data('lat')];
         this_.markerStyle = 1;
-        this_.addHomeMarkerAndFitBounds();
+        // If on mission-control page set currentRestMarkerIdx to -1 to indicate home destination active.
+        if (typeof MissionControlNavigationObj !== 'undefined')
+          MissionControlNavigationObj.currentRestMarkerIdx = -1;
+        this_.addHomeMarkerRouteFitBounds();
       } else {
         // If no home address show preferences modal to enter home address.
         $('#preferencesModal').modal('show');
@@ -393,7 +401,7 @@ class MapObj {
   //
   // Add a home marker, show directions, and fit bounds to user position and home location.
   //
-  addHomeMarkerAndFitBounds() {
+  addHomeMarkerRouteFitBounds() {
     // Replace home marker in case home location has changed.
     if (this.homeMarker) this.homeMarker.remove();
     // If on index page remove previous restMarker

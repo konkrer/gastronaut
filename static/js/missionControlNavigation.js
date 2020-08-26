@@ -6,7 +6,7 @@
 class MissionControlNavigation {
   constructor() {
     this.currentRestMarkerIdx = 0;
-    this.lastRestMarkerIdx = 0;
+    this.lastRestMarkerIdx = null;
     this.lastRestMarkerHtml = null;
     // nav buttons
     this.addNavProfileBtnsListener();
@@ -35,6 +35,12 @@ class MissionControlNavigation {
         return;
       // Navigation profile.
       const profile = $(this).data('profile');
+      // If same destination as last destination and profile the same return.
+      if (
+        this.lastRestMarkerIdx === this.currentRestMarkerIdx &&
+        Map_Obj.profile === profile
+      )
+        return;
       Map_Obj.profile = profile;
       $('.profileDisplay').text(Map_Obj.profileDict[profile]);
       // If navigation active call startLocationSuccess.
@@ -120,12 +126,16 @@ class MissionControlNavigation {
   //
   startLocationSuccess() {
     Map_Obj.showDirectionsAndLine();
-    // Change marker that was routed to to alternate color.
-    MissionControlObj.changeMarkerColor(
-      this.currentRestMarkerIdx,
-      $('#businesses-list .list-group-item').eq(this.currentRestMarkerIdx),
-      1
-    );
+    // If not routing to home.
+    if (this.currentRestMarkerIdx !== -1)
+      // Change marker that was routed to to alternate color.
+      MissionControlObj.changeMarkerColor(
+        this.currentRestMarkerIdx,
+        $('#businesses-list .list-group-item').eq(this.currentRestMarkerIdx),
+        1
+      );
+    // If routing to home make home button active.
+    else $('.map-routing .home').addClass('homeActive');
     // Set lastRestMarker to know what to turn back to original color marker.
     this.lastRestMarkerIdx = this.currentRestMarkerIdx;
     this.postDirectionsMapAdjustments();
@@ -162,6 +172,7 @@ class MissionControlNavigation {
     // back to default color.
     if (Map_Obj.restMarkers.length > 0)
       MissionControlObj.changeMarkerColor(this.lastRestMarkerIdx, null);
+    this.lastRestMarkerIdx = null;
     Map_Obj.clearRouting();
     $('#directions-panel').fadeOut();
     $('.map-routing .home').fadeOut().removeClass('homeActive');

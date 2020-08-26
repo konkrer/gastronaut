@@ -686,6 +686,8 @@ class MissionControl {
   // $el is business list list-group-item.
   //
   changeMarkerColor(idx, $el, option = 0) {
+    // If last restMarker was homeMarker return.
+    if (idx === -1) return;
     let html;
     // option 0 is green marker return to original color.
     if (option === 0) {

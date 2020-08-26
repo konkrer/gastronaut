@@ -441,7 +441,7 @@ class CardTextHtmlFunctions {
     return `
   <div class="modal-footer">
     <div>
-      <a href="${url}" class="txt-yelp-red">
+      <a href="${url}" class="txt-yelp-red" target="_blank">
         <i class="fab fa-yelp fa-lg" ></i>
       </a>
     </div>
@@ -483,8 +483,8 @@ class CardTextHtmlFunctions {
   }
 
   /*
-/* Make Report cards that go inside business details modal.
-*/
+  /* Make Report cards that go inside business details modal.
+  */
   makeReportsForDetailModal(business, fullPath) {
     const reportCards = business.reports.reduce((acc, report) => {
       const {
@@ -550,8 +550,8 @@ class CardTextHtmlFunctions {
   }
 
   /*
-/* Make Yelp review cards that go inside business details modal.
-*/
+  /* Make Yelp review cards that go inside business details modal.
+  */
   makeReviewsForDetailModal(business) {
     const reportCards = business.reviews.reduce((acc, review) => {
       const {
