@@ -57,7 +57,7 @@ class MapObj {
       'line-cap': 'round',
     };
     this.paint = {
-      'line-color': '#26ff00',
+      'line-color': '#51ff00',
       'line-width': 8,
     };
     this.addHomeButtonListener();

@@ -57,7 +57,7 @@ class BaseLogic {
     clearTimeout(this.feedbackClearTimer);
     this.feedbackClearTimer = setTimeout(() => {
       $('#preferencesModal .feedback').text('');
-    }, 2000);
+    }, 5000);
   }
 
   /*
@@ -110,7 +110,7 @@ class BaseLogic {
       e.preventDefault();
       $('#home_address_official').val('').prop('placeholder', '');
       $('#home_coords').val('');
-      // Make home button open preferences modal and clear coords.
+      // Make home button open preferences modal by clearing coords.
       $('.map-routing .home').data('lng', '').data('lat', '');
       this_.updatePreferences(1);
     });

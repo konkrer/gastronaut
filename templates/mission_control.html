@@ -23,11 +23,12 @@
     href="https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.css"
     rel="stylesheet"
   />
-  <!-- <script defer src="../static/js/DragDropTouch.js"></script> -->
   <script defer src="../static/js/NoSleep.min.js"></script>
   <script defer src="../static/js/geolocate.js"></script>
   <script defer src="../static/js/cards.js"></script>
   <script defer src="../static/js/apiFuncts.js"></script>
+  <script defer src="../static/js/missionControlHtmlFactory.js"></script>
+  <script defer src="../static/js/missionControlNavigation.js"></script>
   <script defer src="../static/js/missionControl.js"></script>
   <script src="https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.js"></script>
   <script src="https://unpkg.com/@mapbox/mapbox-sdk/umd/mapbox-sdk.min.js"></script>
@@ -381,11 +382,11 @@
         </div>
         <div class="modal-body bg-dark txt-black pt-4">
           <form id="nav-start-form">
-            <label class="mb-3 no-hover" for="location">
+            <label class="no-hover txt-medium mt-2" for="location">
               Enter a starting location or click the detect location button
-              below. <i class="fas fa-street-view ml-2"></i>
+              <i class="fas fa-street-view mx-1"></i>
             </label>
-            <div class="input-group mb-4">
+            <div class="input-group mb-2 mt-3">
               <div class="input-group-prepend">
                 <div
                   class="input-group-text jsPulser"
@@ -399,7 +400,7 @@
               </div>
               <input
                 type="text"
-                class="form-control form-control-sm font-weight-bold"
+                class="form-control font-weight-bold rounded-right"
                 id="location"
                 name="location"
                 placeholder="Starting Location"
@@ -407,10 +408,30 @@
                 list="datalist-location"
               />
               <datalist id="datalist-location"></datalist>
+              <small class="mt-1 font-italic"
+                >NOTE: You must click detect location to have navigation follow
+                you as you commute.</small
+              >
             </div>
-            <p class="pb-3">
+            {% if g.user.preferences.home_address %}
+            <div class="startFromHomeDiv">
+              <div
+                for="start-from-home"
+                class="text-center font-weight-bold txt-medium mb-2"
+              >
+                - OR -
+              </div>
+              <button
+                type="button"
+                class="btn btn-outline-light form-control mb-2 startFromHomeBtn"
+              >
+                <b>Start From Home</b>
+              </button>
+            </div>
+            {% else %} {% endif %}
+            <p class="pb-3 mt-3 ssp font-weight-bold">
               The navigation destination will change as Mission Goals are
-              selected.
+              selected from the Mission Goals drop-down menu.
             </p>
             <button class="btn btn-primary form-control" type="submit">
               Go
