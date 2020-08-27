@@ -143,6 +143,7 @@ class MissionControl {
     );
     // Don't show business list on phones.
     if (Map_Obj.isMobileScreen()) $('#businesses-list').removeClass('show');
+    else $('#businesses-list').addClass('show');
     // Set currentRestMarkerIdx to be index for first business in list marker.
     MissionControlNavigationObj.currentRestMarkerIdx = 0;
     // If navigation mode active.
@@ -709,6 +710,13 @@ class MissionControl {
     }
     // Get marker for this business and extract coords, then remove.
     const marker = Map_Obj.restMarkers[idx];
+    // Bug hunt!!
+    if (!marker) {
+      const msg = `No marker to change color (changeMarkerColor). idx=${idx}, lastR.M=${MissionControlNavigationObj.lastRestMarkerIdx}, currR.M.=${MissionControlNavigationObj.currentRestMarkerIdx} `;
+      Sentry.captureMessage(msg);
+      console.error(msg);
+      return;
+    }
     const { lng, lat } = marker._lngLat;
     marker.remove();
     // Create new marker in appropriate style. Then revert to default.
