@@ -757,7 +757,6 @@ def load_mission(mission_id):
     else:
         mission_dict['editor'] = False
         mission_dict['username'] = mission.author.username
-        mission_dict['author_id'] = mission.author.id
 
     return jsonify({'mission': mission_dict, 'businesses': businesses})
 

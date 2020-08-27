@@ -13,7 +13,6 @@ class MissionControlHtmFactory {
       editor,
       name,
       username,
-      author_id,
       description,
       is_public,
       city,
@@ -33,7 +32,7 @@ class MissionControlHtmFactory {
       </a>
       <form id="mission-form" class="collapse bg-dark p-4 m-2">
         <input type="hidden" value="${id}" name="id" >
-        ${this.makeName(editor, name, username, author_id)}          
+        ${this.makeName(editor, name, username)}          
         ${this.makeDescription(editor, description)}
         ${this.makePublic(editor, is_public)}
         ${this.makeCity(editor, city)}
@@ -47,8 +46,9 @@ class MissionControlHtmFactory {
 
   //
   // Make Html for mission name for use in form or info panel.
+  // Html for info panel also includes username link to profile.
   //
-  makeName(editor, name, username, author_id) {
+  makeName(editor, name, username) {
     if (editor)
       return `<div class="form-group">
                   <input type="text" value="${name}" minlength="2"
@@ -58,7 +58,7 @@ class MissionControlHtmFactory {
     return `
         <div class="txt-xl text-light font-weight-bold underline">${name}</div>
         <p class="text-light font-italic">
-          <a href="/user/profile/${author_id}" class="txt-medium text-light orange-outline font-weight-bold">
+          <a href="/user/profile/${username}" class="txt-medium text-light orange-outline font-weight-bold">
             by @${username}
           </a>
         </p>`;
