@@ -120,7 +120,7 @@ class User(db.Model):
         return ['username', 'email', 'avatar_url', 'city', 'state']
 
     def serialize(self):
-        """Serialize model set_get properties data to a dictonary."""
+        """Serialize model set_get properties data to a dictionary."""
         # update model from database so serialization works by calling self.id
         id = self.id
         out = {k: v for k, v in self.__dict__.items() if k in self.set_get()}
@@ -199,7 +199,7 @@ class Mission(db.Model):
     )
 
     def share(self):
-        """Make mission public and add current datime."""
+        """Make mission public and add current dateime."""
 
         self.is_public = True
         if not self.date_shared:
@@ -207,13 +207,13 @@ class Mission(db.Model):
 
     @classmethod
     def get_by_recent(cls):
-        """Return misions by most recent"""
+        """Return missions by most recent"""
         return cls.query.filter(cls.is_public == True).order_by(  # NOQA E712
             cls.date_shared.desc()).limit(50).all()
 
     @classmethod
     def search(cls, params):
-        """Return misions by search criteria."""
+        """Return missions by search criteria."""
 
         order_by_dict = {
             'recent': Mission.date_shared.desc(),
@@ -277,7 +277,7 @@ class Mission(db.Model):
         return ['name', 'description', 'is_public', 'city', 'state', 'country']
 
     def serialize(self):
-        """Serialize model set_get properties data to a dictonary."""
+        """Serialize model set_get properties data to a dictionary."""
         # update model from database so serialization works by calling self.id
         id = self.id
         out = {k: v for k, v in self.__dict__.items() if k in self.set_get()}
@@ -415,7 +415,7 @@ class Business(db.Model):
                 'city', 'state', 'country']
 
     def serialize(self):
-        """Serialize model set_get properties data to a dictonary."""
+        """Serialize model set_get properties data to a dictionary."""
         # update model from database so serialization works by calling self.id
         id = self.id
         out = {k: v for k, v in self.__dict__.items() if k in self.set_get()}
@@ -579,7 +579,7 @@ class Report(db.Model):
                 'photo_url', 'photo_url']
 
     def serialize(self):
-        """Serialize model set_get properties data to a dictonary."""
+        """Serialize model set_get properties data to a dictionary."""
         # update model from database so serialization works by calling self.id
         id = self.id
         out = {k: v for k, v in self.__dict__.items() if k in self.set_get()}
@@ -612,16 +612,3 @@ class MissionBusiness(db.Model):
 
         db.session.add(m_b)
         return m_b
-
-
-# @property
-    # def roles(self):
-    #     """Return active roles, names, emails for project."""
-    #     # With multiple querys
-    #     # return [(pe.role, pe.employees.name, pe.employees.email, self.name)
-    #     #         for pe in self.prod_employ]
-
-    #     # With single query.
-    #     return db.session.query(
-    #         ProductEmployee.role, Employee.name, Employee.email, Product.name
-    #     ).filter_by(product_id=self.id).join(Employee).join(Product).all()

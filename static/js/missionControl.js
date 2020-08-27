@@ -1,7 +1,7 @@
 'use strict';
 
 //
-// Misson Control View interactive logic.
+// Mission Control View interactive logic.
 //
 class MissionControl {
   constructor() {
@@ -85,7 +85,7 @@ class MissionControl {
   }
 
   //
-  // Check if a create_id parameter was pased in.
+  // Check if a create_id parameter was passed in.
   //
   checkForCreateIdOnLoad() {
     if (
@@ -163,7 +163,7 @@ class MissionControl {
   }
 
   //
-  // Map all businesses on mission and filt bounds for all.
+  // Map all businesses on mission and fit bounds for all.
   //
   mapBusinesses(businesses) {
     Map_Obj.clearMapArray();
@@ -565,7 +565,7 @@ class MissionControl {
   }
 
   //
-  // Block double clicks from activating businessClickListerner a second time.
+  // Block double clicks from activating businessClickListener a second time.
   //
   setBusinessClickBlocker() {
     clearTimeout(this.businessClickBlockerTimer);
@@ -586,7 +586,7 @@ class MissionControl {
     MissionControlNavigationObj.currentRestMarkerIdx = idx;
     const marker = Map_Obj.restMarkers[idx];
     Map_Obj.restMarker = marker;
-    // set restcoords
+    // set restCoords
     const $mapBtn = $el.find('.mapBtn');
     const lng = $mapBtn.data('lng');
     const lat = $mapBtn.data('lat');
@@ -595,7 +595,7 @@ class MissionControl {
   }
 
   //
-  // Allow double clicks to zoom into businees then show
+  // Allow double clicks to zoom into bussines then show
   // business detail modal after short delay.
   //
   addBusinessDblclickListener() {
@@ -698,7 +698,7 @@ class MissionControl {
       html = MissionControlNavigationObj.lastRestMarkerHtml;
     } else {
       const mission_id = localStorage.getItem('currMissionId');
-      // If goal was completed no need to chage marker or color.
+      // If goal was completed no need to change marker or color.
       if (this.missionCache[mission_id].businesses[idx].completed) {
         MissionControlNavigationObj.lastRestMarkerHtml = null;
         return;
@@ -766,7 +766,7 @@ class MissionControl {
   }
 
   //
-  // Remove business sucess actions. Remove from mission cache. Reload mission.
+  // Remove business success actions. Remove from mission cache. Reload mission.
   //
   removeBusinessSuccess($el, mission_id, success) {
     const idx = $el.parent().data('idx');

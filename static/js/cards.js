@@ -24,11 +24,11 @@ class CardsModalsFactory {
   // Post filtering for Yelp results for transaction type.
   //
   filterForTransactions(transactions, business) {
-    // if no transactrions selected no filtering
+    // if no transactions selected no filtering
     if (transactions.length === 0) return this.makeCard(business);
     // filter for transactions
     else if (
-      // if transactions specified and business has one of specifed
+      // if transactions specified and business has one of specified
       // transactions make card.
       transactions.length > 0 &&
       business.transactions.some(str => transactions.includes(str))
@@ -167,7 +167,7 @@ class CardsModalsFactory {
   }
 
   //
-  // Make business deatils modal html.
+  // Make business details modal html.
   //
   makeDetailModal(business) {
     // unpack data items for card display
@@ -617,7 +617,7 @@ class CardModalTextHtmlFunctions {
 
   //
   // Make report text paragraphs. Put each paragraph into a
-  // seperate <p> element for cards and modals.
+  // separate <p> element for cards and modals.
   //
   makeParagraphs(text) {
     // Only show first 500 chars.

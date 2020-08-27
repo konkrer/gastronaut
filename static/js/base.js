@@ -82,7 +82,7 @@ class BaseLogic {
   }
 
   //
-  // Add offical home address selection listener.
+  // Add official home address selection listener.
   //
   addOfficalHomeAddressListener() {
     $('#home_address').on('keyup', function (e) {
@@ -184,7 +184,7 @@ class BaseLogic {
 
   //
   // Listen for buttons that will open the signup/ login modal.
-  // Populate the next data so user will be redirected properly after authenication.
+  // Populate the next data so user will be redirected properly after authentication.
   //
   addSignupLoginListener() {
     $('body').on('click', '.signLogBtn', function () {
@@ -219,14 +219,14 @@ class BaseLogic {
   // Autocomplete location functionality
   //
   async autocompleteLocation(query) {
-    // Autocomplete on querys 3 chars or longer.
+    // Autocomplete on queries 3 chars or longer.
     if (query.length < 3) return '';
     // If the current query value is was previously given return cached data.
     if (this.locationsOptionsHtmlCache[query])
       return this.locationsOptionsHtmlCache[query];
     // Get suggestions.
     const features = await Map_Obj.geocode(query);
-    // Make html <option> for each suggesion and cache coords associated with each suggestion.
+    // Make html <option> for each suggestion and cache coords associated with each suggestion.
     let options = features.reduce((acc, el) => {
       this.locationAutocompleteCache[el.place_name] = el.geometry.coordinates;
       return `${acc}<option value="${el.place_name}"></option>`;

@@ -71,7 +71,7 @@ class EditUserForm(UserBaseForm):
 
     def validate_email(form, field):
         """Make sure email is not in use
-           unless it's the currnt user's email.
+           unless it's the current user's email.
         """
 
         user = User.query.filter_by(email=form.email.data).first()
@@ -82,7 +82,7 @@ class EditUserForm(UserBaseForm):
 
     def validate_username(form, field):
         """Make sure username is not in use
-           unless it's the currnt user's username.
+           unless it's the current user's username.
         """
 
         user = User.query.filter_by(username=form.username.data).first()

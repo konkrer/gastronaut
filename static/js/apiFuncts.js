@@ -320,7 +320,7 @@ class ApiFuncts {
     );
   }
 
-  // Show toast message fuctionality.
+  // Show toast message functionality.
   showToast(message) {
     $('.toasts-zone').prepend(
       `<div class="toast bg-dark text-light" role="alert" aria-live="assertive" aria-atomic="true"

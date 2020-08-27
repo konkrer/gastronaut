@@ -170,9 +170,9 @@ class MissionControlHtmFactory {
       : '<i class="far fa-thumbs-up fa-lg mr-1"></i><i class="fas fa-thumbs-up fa-lg mr-1" style="display: none;"></i>';
     $('#likes-zone').html(`<span>${icon}</span>`);
     $('#likes-zone').next().text(data.likes);
-    // if user is not editor allow liking/unliking.
+    // if user is not editor allow liking/un-liking.
     if (!data.editor) {
-      // if not editor add data-mission_id to liks-zone with user id.
+      // if not editor add data-mission_id to likes-zone with user id.
       $('#likes-zone').data('mission_id', data.id);
       $('#likes-zone').addClass('like-mission');
       $('#likes-zone').addClass('hover-primary-alt2');

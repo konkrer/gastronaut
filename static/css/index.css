@@ -400,42 +400,46 @@ a.first-letter.active {
   overflow-y: auto;
 }
 
+/* map fullscreen btn */
+.mapboxgl-ctrl-group button {
+  width: 40px !important;
+  height: 40px !important;
+}
+.mapboxgl-ctrl button .mapboxgl-ctrl-icon {
+  transform: scale(1.3);
+}
+
 .map-toggle {
   position: absolute;
-  top: -40px;
+  top: -55px;
   right: 20px;
   background-color: rgba(0, 0, 0, 0.589);
   border: 1px solid var(--secondary);
   border-radius: 5px;
   color: white;
-  border-radius: 5px;
-  height: 30px;
-  width: 30px;
-  font-size: 10px;
+  height: 40px;
+  width: 40px;
+  font-size: 12px;
 }
 
 .toggle-on-map {
-  top: 100px;
+  top: 120px;
   right: 10px;
   background-color: white;
   color: #333;
   border: none;
-  text-shadow: none;
-  height: 29px;
-  width: 29px;
-  font-size: 10px;
 }
 
 .toggleCards {
   position: absolute;
-  top: 55px;
+  top: 66px;
   right: 10px;
   background-color: white;
   border-radius: 5px;
   color: #333333;
-  height: 29px;
-  width: 29px;
-  font-size: 1.2em;
+  height: 40px;
+  width: 40px;
+  font-size: 14px;
 }
 
 #map {

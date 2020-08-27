@@ -98,12 +98,12 @@ class IndexSearchLogic {
   }
 
   //
-  // Make a requst to /v1/search endpoint.
+  // Make a request to /v1/search endpoint.
   //
   async searchApiCall(useOffset) {
     let queryData = FormFunctsObj.getFormData();
     if (useOffset) queryData += `&offset=${this.offset * 50}`;
-    // axios get search endpoint with query data
+    // Axios get search endpoint with query data
     try {
       var data = await axios.get(`/v1/search?${queryData}`);
     } catch (error) {
@@ -143,7 +143,7 @@ class IndexSearchLogic {
       }
       // Check if new data is different from last data.
       // If not, set data to null so card repaint is avoided
-      // usless transactions have changed.
+      // unless transactions have changed.
       // NOTE: ["delivery", "pickup"] text changes places in
       // JSON from Yelp. Equality test only effective sometimes.
       const jsonData = JSON.stringify(data.data);
@@ -172,7 +172,7 @@ class IndexSearchLogic {
   }
 
   //
-  // Returen bool representing if no new data and transactions
+  // Return bool representing if no new data and transactions
   // haven't changed. If so nothing new to display.
   // But if first cards not added yet return false.
   //
@@ -218,7 +218,7 @@ class IndexSearchLogic {
       .html(cards ? cards : CardsModalsFactoryObj.getNoResultsCard())
       .removeClass('opaque');
 
-    // If cards map first bussiness, watch scroll position for mapping,
+    // If cards map first business, watch scroll position for mapping,
     // watch scroll position for adding more cards. Filtering for transactions
     // (interface) may result in no cards.
     if (cards) {
@@ -442,10 +442,10 @@ class ParamsChange {
   // Called functions update local storage if they detect changes.
   //
   checkParameterChange(lastData, currFormState) {
-    // set change to true if a new API call is waranted.
+    // set change to true if a new API call is warranted.
     let change = false;
-    // Cooridnate percision used to look for lng/lat changes
-    // which would warant new Yelp API call for fresh data.
+    // Coordinate precision used to look for lng/lat changes
+    // which would warrant new Yelp API call for fresh data.
     this.coordsPercision = 3;
 
     change = this.checkFormChanges(change, currFormState);
@@ -487,22 +487,22 @@ class ParamsChange {
   checkCoordsChange(change) {
     const prevCoords = JSON.parse(localStorage.getItem('coords'));
 
-    // if there is lng/lat data but no previous stored coords data
+    // if there is lng/lat data but no previous stored coordinates data
     if (Map_Obj.longitude && !prevCoords) {
       localStorage.setItem(
         'coords',
         JSON.stringify([Map_Obj.longitude, Map_Obj.latitude])
       );
-      // if there is not a location given having coords warrants an API call
+      // if there is not a location given having coordinates warrants an API call
       if (!FormFunctsObj.$locationInput.val()) return true;
-      // if no location given and new ond old coords to compare:
+      // if no location given and new and old coordinates to compare:
     } else if (
       !FormFunctsObj.$locationInput.val() &&
       Map_Obj.longitude &&
       prevCoords
     ) {
       const [prevLng, prevLat] = prevCoords;
-      // if coords have changed:
+      // if coordinates have changed beyond precision threshold:
       if (
         Map_Obj.longitude.toFixed(this.coordsPercision) !==
           prevLng.toFixed(this.coordsPercision) ||
@@ -534,7 +534,7 @@ class ParamsChange {
   }
 
   //
-  // Check if ther is previous data stored in local storage.
+  // Check if their is previous data stored in local storage.
   //
   checkLastData(lastData) {
     // if there is no stored yelp data must make api call
@@ -598,7 +598,7 @@ class ButtonsLogics {
   }
 
   //
-  // Toggle map button fuctionality. Open and close map.
+  // Toggle map button functionality. Open and close map.
   //
   toggleMap() {
     // If map is open and cards are hidden show cards.
@@ -646,7 +646,7 @@ class ButtonsLogics {
   }
 
   //
-  // Show/hide cards fuctionality. Big/small map.
+  // Show/hide cards functionality. Big/small map.
   //
   toggleCards() {
     $('.card-map-zone').toggleClass('cards-collapse');
@@ -664,7 +664,7 @@ class ButtonsLogics {
   }
 
   //
-  // Show cards fuctionality for search Yelp. If cards are hidden
+  // Show cards functionality for search Yelp. If cards are hidden
   // they will be shown after search Yelp.
   //
   showCardTrack() {

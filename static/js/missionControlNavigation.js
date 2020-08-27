@@ -43,7 +43,7 @@ class MissionControlNavigation {
         return;
       Map_Obj.profile = profile;
       $('.profileDisplay').text(Map_Obj.profileDict[profile]);
-      // If navigation active change lastRestMarker to defualt color and call startLocationSuccess.
+      // If navigation active change lastRestMarker to default color and call startLocationSuccess.
       if (Map_Obj.currentRoute) {
         MissionControlObj.changeMarkerColor(this_.lastRestMarkerIdx, null);
         this_.startLocationSuccess();
@@ -114,7 +114,7 @@ class MissionControlNavigation {
         Map_Obj.userMarker.togglePopup();
         navigator.geolocation.clearWatch(Geolocation_Obj.locationWatcher);
         Map_Obj.heading = null;
-        // Remove any lat/lng placholder if user had detected location.
+        // Remove any lat/lng placeholder if user had detected location.
         $('#location').prop('placeholder', 'Starting Location');
       }
       if (Map_Obj.longitude) {

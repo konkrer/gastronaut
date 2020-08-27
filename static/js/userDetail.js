@@ -1,7 +1,7 @@
 'use strict';
 
 //
-// Class for keeping user profile image and infomation from
+// Class for keeping user profile image and information from
 // scrolling offscreen. Position that profile sticks at
 // changes based on screen size.
 //
@@ -56,7 +56,7 @@ class StickyScroll {
   }
 
   //
-  // Add sroll listener to set profile section top offset.
+  // Add scroll listener to set profile section top offset.
   //
   addScrollListener() {
     $(window).scroll(this.adjustProfilePosition.bind(this));
@@ -66,7 +66,7 @@ class StickyScroll {
   // Adjust profile section top offset.
   //
   adjustProfilePosition() {
-    // If mobile portrait oreintation no position fixing needed.
+    // If mobile portrait orientation no position fixing needed.
     if (this.isMobilePortrait()) {
       // remove position fixed.
       $('.sticky-profile').removeClass('p-fixed');

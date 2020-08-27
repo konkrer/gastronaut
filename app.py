@@ -194,7 +194,7 @@ def business_reports_detail(business_id):
 
     # Fill in form on page with business data by supplying query parameters.
     query_params = {'keywords': business.name, 'city': business.city,
-                    'state': business.state, 'coutnry': business.country,
+                    'state': business.state, 'country': business.country,
                     'sort_by': 'recent'}
 
     return render_template('reports.html', reports=reports,
@@ -557,7 +557,7 @@ def edit_report(report_id):
                 form.photo_file.data = f'{CLOUDFRONT_DOMAIN_NAME}/{path}'
                 f.seek(0)
 
-                # If photo file was preveously uploaded
+                # If photo file was previously uploaded
                 # note as old file to delete after db.session.commit.
                 if form.photo_file.object_data:
                     old_file = form.photo_file.object_data
@@ -692,9 +692,9 @@ def business_detail_yelp(business_id):
 @add_user_to_g
 def set_prefrences():
     """Endpoint to change user preferences. This is called by two different
-       forms by two different event handlers. The boolean form has checkbox
-       data and updates prefrences on onChange events. The preferences-text
-       form updates when user selects offical address."""
+       forms by two different event handlers. The Boolean form has checkbox
+       data and updates preferences on onChange events. The preferences-text
+       form updates when user selects official address."""
 
     if not g.user:
         return Unauthorized()
@@ -703,8 +703,8 @@ def set_prefrences():
 
     preferences = g.user.preferences.__dict__.copy()
 
-    # If onChange update of boolean preferences
-    if data.get('boolean'):
+    # If onChange update of Boolean preferences
+    if data.get('Boolean'):
         # set each setting to true if data is present else False
         for key in BOOLEAN_PREFERENCES:
             preferences[key] = bool(data.get(key, False))
@@ -1093,7 +1093,7 @@ def submit_feedback():
     feedback = data['feedback']
     email = data.get('email', '')
 
-    user = g.user.username if g.user else 'Anynomous'
+    user = g.user.username if g.user else 'Anonymous'
 
     receiver = "richardiannucelli@gmail.com"
     body = f"<h5>Feedback:</h5>{feedback}<p>From: {user} --Email: {email}</p>"
@@ -1192,7 +1192,7 @@ def message_logging(message):
 
 def render_template(*args, **kwargs):
     """Wrap render_template and add debug flag to allow JS Sentry
-       initalizatin only when debug is False (Production Environment).
+       initalizating only when debug is False (Production Environment).
 
        Add view args string for next functionality.
     """
@@ -1201,7 +1201,7 @@ def render_template(*args, **kwargs):
 
     # Encode a request_full_path variable for next_url functionality.
     # next_url must not contain &'s or all data will not be passed from the
-    # request paramerters query string.
+    # request parameters query string.
     request_args['request_full_path'] = request.full_path.replace('&', ';')
 
     # Convert cancel_url back to string with &'s inline for href cancel btn.
@@ -1224,7 +1224,7 @@ def next_page_url(request):
     request_args = request.args.to_dict()
 
     if request_args.get('next_url'):
-        # Return deecoded next_url string.
+        # Return decoded next_url string.
         return request_args['next_url'].replace(';', '&')
 
     next_page = request_args.get('next_')

@@ -1,7 +1,7 @@
 'use strict';
 
 //
-// Class to hold geolocation and watch location fuctionality
+// Class to hold geolocation and watch location functionality
 // and related functionality.
 //
 class GeolocationObj {
@@ -51,7 +51,7 @@ class GeolocationObj {
   }
 
   //
-  // If geolocation suceeeds.
+  // If geolocation succeeds.
   //
   geoSuccess(position) {
     // stop detect location button from pulsing.
@@ -79,7 +79,7 @@ class GeolocationObj {
       this.watchError,
       this.options[1]
     );
-    // Post gelocation actions.
+    // Post geolocation actions.
     if (typeof IndexSearchObj !== 'undefined') IndexSearchObj.searchYelp();
     else MissionControlNavigationObj.startLocationSuccess();
   }
@@ -88,7 +88,7 @@ class GeolocationObj {
   // If geolocation fails.
   //
   showError(error) {
-    // Error hadling from S.O.
+    // Error handling from S.O.
     switch (error.code) {
       case error.PERMISSION_DENIED:
         alert('User denied the request for Geolocation.');
@@ -118,7 +118,7 @@ class GeolocationObj {
   }
 
   //
-  // If location watcher suceedes.
+  // If location watcher succeeds.
   //
   watchSuccess(position) {
     const {

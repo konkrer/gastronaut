@@ -2,7 +2,7 @@
 
 //
 // Class to hold navbar rocket animation logic.
-// Rocket flys across navbar every few minutes.
+// Rocket flies across navbar every few minutes.
 //
 class navbarRocketAnimation {
   constructor() {

@@ -5,7 +5,7 @@ main {
 .map-routing {
   left: unset;
   right: 10px;
-  top: 56px;
+  top: 65px;
   height: 40px;
 }
 
@@ -171,5 +171,11 @@ a[href='#mission-select-form'] {
   #create-mission-btn {
     padding-left: 8px !important;
     padding-right: 8px !important;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .map-routing {
+    top: 55px;
   }
 }

@@ -162,7 +162,7 @@ class MapObj {
   }
 
   //
-  // Map list of bussiness and fit bounds for outliers.
+  // Map list of business and fit bounds for outliers.
   //
   mapArrayAndFitBounds(array) {
     this.fitBoundsArray(array);
@@ -360,7 +360,7 @@ class MapObj {
 
   //
   // Follow user during active follow navigation with heading alignment.
-  // Only update on lng or lat change larger than percision to prevent heading
+  // Only update on lng or lat change larger than precision to prevent heading
   // and coords jitter.
   //
   flyToUser(lng, lat, heading) {
@@ -376,11 +376,11 @@ class MapObj {
   }
 
   //
-  // Check if user has moved enough to warrant new zoom in
-  // and heading adjust for flyToUser.
+  // Check if user has moved enough to warrant camera zoom
+  // and heading adjust for flyToUser method.
   //
   warrantsNewHeading(lng, lat) {
-    const percision = 0.000005;
+    const precision = 0.000005;
     if (
       Math.abs(this.longitude - lng) >= percision ||
       Math.abs(this.latitude - lat) >= percision
@@ -399,7 +399,7 @@ class MapObj {
       // If home button has home coords data begin navigation home.
       if (lng) {
         const lat = $(this).data('lat');
-        // If hame coords equal rest coords alrealdy navigating there.
+        // If home coords equal rest coords display already navigating there.
         if ((this_.restCoords[0] === lng) & (this_.restCoords[1] === lat))
           return;
         this_.restCoords = [lng, lat];

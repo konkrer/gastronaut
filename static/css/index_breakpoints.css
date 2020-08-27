@@ -113,6 +113,33 @@
   .clipboardHorizontal {
     transform: translate(50px, -45px);
   }
+  /* map fullscreen btn */
+  .mapboxgl-ctrl-group button {
+    width: 29px !important;
+    height: 29px !important;
+  }
+  .mapboxgl-ctrl button .mapboxgl-ctrl-icon {
+    transform: scale(1);
+  }
+
+  .map-toggle {
+    top: -36px;
+    height: 29px;
+    width: 29px;
+    font-size: 10px;
+  }
+
+  .toggle-on-map {
+    top: 100px;
+    right: 10px;
+  }
+
+  .toggleCards {
+    top: 55px;
+    height: 29px;
+    width: 29px;
+    font-size: 12px;
+  }
 }
 
 @media screen and (min-width: 576px) and (max-width: 991px) {

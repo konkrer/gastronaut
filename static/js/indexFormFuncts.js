@@ -47,7 +47,7 @@ class FormFuncts {
   }
 
   /*
-  /* Check localStorage for last choosen category and set active
+  /* Check localStorage for last chosen category and set active
   */
   setCategoryFromStorage() {
     // check for category. if none set to all.
@@ -237,7 +237,7 @@ class FormFuncts {
   }
 
   /*
-  /* Detect location button fuctionality. Call detectLocation.
+  /* Detect location button functionality. Call detectLocation.
   */
   addDetectLocationListener() {
     $('#detect-location').on('click', function (e) {
@@ -316,7 +316,7 @@ class FormFuncts {
       $('#open_at').prop('disabled', true);
     });
     // When "open at" checked uncheck "open now".
-    // Additionaly, "open at" needs a datetime input enabled
+    // Additionally, "open at" needs a datetime input enabled
     // and disabled when it is checked and unchecked.
     $('#open-at-checkbox').on('click', function (e) {
       // uncheck "open now"
@@ -331,7 +331,7 @@ class FormFuncts {
   }
 
   /*
-  /* Clear All Filters button fuctionality.
+  /* Clear All Filters button functionality.
   */
   addClearFiltersListener() {
     const this_ = this;
@@ -394,10 +394,10 @@ class FormFuncts {
   }
 
   /*
-  /* Set locaton value if there is a data object
-  /* and there is locaton attribute on that object.
+  /* Set location value if there is a data object
+  /* and there is location attribute on that object.
   /* Used by page-load navbar search to show results
-  /* at last enterd location.
+  /* at last entered location.
   */
   setLocationValue() {
     let data = localStorage.getItem('formData');
@@ -423,7 +423,7 @@ class FormFuncts {
     const withoutPrices = formArray.filter(
       obj => obj.name.substring(0, 5) !== 'price'
     );
-    // number of price options slected
+    // number of price options selected
     const numPrices = initLength - withoutPrices.length;
     if (
       // if prices filters in use

@@ -52,7 +52,7 @@ def parse_query_params(multi_dict):
     if attributes:
         out['attributes'] = attributes.strip(',')
 
-    # if location given remove lng/lat for explict location use
+    # if location given remove lng/lat for explicit location use
     if out.get('location'):
         if out.get('latitude'):
             del out['latitude']
@@ -75,7 +75,6 @@ def get_timestamp(multi_dict, value):
         return
 
     # Return integer as required by yelp.
-    # ????? need str??????
     return str(int(date_time.replace(tzinfo=tz).timestamp()))
 
 
@@ -84,7 +83,7 @@ def get_tz(multi_dict, timestamp):
        Return timzone class object."""
 
     if multi_dict.get('location'):
-        # geocode locaion
+        # geocode location
         geo_results = geocode(multi_dict['location'])
 
         if not geo_results or not geo_results.get('status') == 'OK':

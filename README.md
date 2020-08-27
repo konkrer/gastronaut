@@ -28,7 +28,7 @@ _Why Gastronaut?_
 
 ## Stack
 
-JavaScript, Python/Flask, Flask-SQLAlchemy, Postgres, jQuery, API integration (internal and external), Mabox, HTML, CSS, Flask-Bcrypt, WTForms, Heroku, Jinja, Bootstrap, Sentry, Modernizr, Unittest, Jasmine.
+JavaScript, Python/Flask, Flask-SQLAlchemy, Postgres, jQuery, API integration (internal and external), Mapbox, HTML, CSS, Flask-Bcrypt, WTForms, Heroku, Jinja, Bootstrap, Sentry, Modernizr, Unittest, Jasmine.
 
 ## APIs
 

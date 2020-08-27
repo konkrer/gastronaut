@@ -24,7 +24,7 @@ class IndexAnimations {
       let margin = window.innerWidth >= 1200 ? 62.6 : 52.8;
       let cardWidth = $('.my-card').width() + margin;
       let $sL = this.$cardTrack.scrollLeft();
-      // Count cards by mesuring scrollLeft
+      // Count cards by measuring scrollLeft
       // divided by card widths.
       this.cardsLeftGlobal = $sL / cardWidth;
     }
@@ -40,7 +40,7 @@ class IndexAnimations {
     }
   }
 
-  // Scroll listerner and current card mapper for card track.
+  // Scroll listener and current card mapper for card track.
   setCardScrollTrackerMapper() {
     this.cardScrollTrackerAndMapper = this.$cardTrack.on(
       'scroll',
@@ -79,7 +79,7 @@ class IndexAnimations {
       Map_Obj.addRestMarkerAndFitBounds([+lng, +lat], name, id);
   }
 
-  // Listen for sidebar button click or drag and toggle sidbar.
+  // Listen for sidebar button click or drag and toggle sidebar.
   toggleSidebarListeners() {
     const boundToggleSidebar = this.toggleSidebar.bind(this);
     $('.sidebar-toggle-btn').on('click', boundToggleSidebar);
@@ -153,7 +153,7 @@ class IndexAnimations {
   }
 
   /*
-  /* Restaurant categories auto scroll to last choosen category.
+  /* Restaurant categories auto scroll to last chosen category.
   /* Function to scroll last selected category into view.
   */
   scrollCategoriesToCurrent() {
