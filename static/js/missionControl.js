@@ -531,7 +531,8 @@ class MissionControl {
       if (this_.businessClickBlocker) return;
       this_.setBusinessClickBlocker();
       Map_Obj.closePopupsArray();
-      // Set marker for this business as restMarker, set coords as restCoords, togglePopup.
+      // Set marker for this business as restMarker, set coords as restCoords,
+      // set currentRestMarkerIdx, togglePopup.
       this_.setCurrentMarkerCoords($(this));
       // If navigation mode active show route to this business.
       if (Map_Obj.profile) {

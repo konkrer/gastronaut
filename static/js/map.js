@@ -359,16 +359,34 @@ class MapObj {
   }
 
   //
-  // Fly to User used for following user during navigation.
+  // Follow user during active follow navigation with heading alignment.
+  // Only update on lng or lat change larger than percision to prevent heading
+  // and coords jitter.
   //
-  flyToUser(heading) {
-    this.mappyBoi.flyTo({
-      center: [this.longitude, this.latitude],
-      essential: true,
-      zoom: 16.5,
-      speed: 0.4,
-      bearing: heading,
-    });
+  flyToUser(lng, lat, heading) {
+    if (this.warrantsNewHeading(lng, lat)) {
+      this.mappyBoi.flyTo({
+        center: [this.longitude, this.latitude],
+        essential: true,
+        zoom: 16.5,
+        speed: 0.4,
+        bearing: heading,
+      });
+    }
+  }
+
+  //
+  // Check if user has moved enough to warrant new zoom in
+  // and heading adjust for flyToUser.
+  //
+  warrantsNewHeading(lng, lat) {
+    const percision = 0.00001;
+    if (
+      Math.abs(this.longitude - lng) >= percision ||
+      Math.abs(this.latitude - lat) >= percision
+    )
+      return true;
+    return false;
   }
 
   //

@@ -37,14 +37,17 @@ class MissionControlNavigation {
       const profile = $(this).data('profile');
       // If same destination as last destination and profile the same return.
       if (
-        this.lastRestMarkerIdx === this.currentRestMarkerIdx &&
+        this_.lastRestMarkerIdx === this_.currentRestMarkerIdx &&
         Map_Obj.profile === profile
       )
         return;
       Map_Obj.profile = profile;
       $('.profileDisplay').text(Map_Obj.profileDict[profile]);
-      // If navigation active call startLocationSuccess.
-      if (Map_Obj.currentRoute) this_.startLocationSuccess();
+      // If navigation active change lastRestMarker to defualt color and call startLocationSuccess.
+      if (Map_Obj.currentRoute) {
+        MissionControlObj.changeMarkerColor(this_.lastRestMarkerIdx, null);
+        this_.startLocationSuccess();
+      }
       // Else have user pick starting location.
       else $('#navigationModal').modal('show');
     });

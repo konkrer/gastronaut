@@ -124,6 +124,10 @@ class GeolocationObj {
     const {
       coords: { latitude: lat, longitude: lng, heading },
     } = position;
+
+    // If in navigation mode zoom in to user and align for user heading.
+    if (Map_Obj.currentRoute) Map_Obj.flyToUser(lng, lat, heading);
+
     Map_Obj.latitude = lat;
     Map_Obj.longitude = lng;
     Map_Obj.heading = heading;
@@ -133,8 +137,6 @@ class GeolocationObj {
       `lat: ${lat.toFixed(2)}, lng: ${lng.toFixed(2)}`
     );
     Map_Obj.addUserMarker();
-    // If in navigation mode zoom in to user and align for user heading.
-    if (Map_Obj.currentRoute) Map_Obj.flyToUser(heading);
   }
 
   //
