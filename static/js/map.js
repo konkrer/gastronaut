@@ -380,7 +380,7 @@ class MapObj {
   // and heading adjust for flyToUser.
   //
   warrantsNewHeading(lng, lat) {
-    const percision = 0.00001;
+    const percision = 0.000005;
     if (
       Math.abs(this.longitude - lng) >= percision ||
       Math.abs(this.latitude - lat) >= percision
