@@ -111,7 +111,8 @@ def navbar_search():
             search_user = User.query.filter(
                 User.username.ilike(f'%{search_term[1:]}%')).first()
         if search_user:
-            return redirect(url_for('user_detail', user_id=search_user.id))
+            return redirect(
+                url_for('user_detail', username=search_user.username))
 
         flash(f'Gastronaut {search_term} not found', 'warning')
 
@@ -232,7 +233,7 @@ def signup():
     """Sign up view."""
 
     if g.user:
-        return redirect(url_for('user_detail', user_id=g.user.id))
+        return redirect(url_for('user_detail', username=g.user.username))
 
     form = AddUserForm()
 
@@ -270,7 +271,7 @@ def login():
     """Login view."""
 
     if g.user:
-        return redirect(url_for('user_detail', user_id=g.user.id))
+        return redirect(url_for('user_detail', username=g.user.username))
 
     form = LoginForm()
 
@@ -314,7 +315,7 @@ def user_edit():
         try:
             db.session.commit()
             flash("Profile Updated!", "success")
-            return redirect(url_for('user_detail', user_id=g.user.id))
+            return redirect(url_for('user_detail', username=g.user.username))
 
         except Exception as e:
             db.session.rollback()
@@ -618,7 +619,7 @@ def delete_report(report_id):
         flash("Error Deleting Report!", 'danger')
         error_logging(e)
 
-    return redirect(url_for('user_detail', user_id=g.user.id))
+    return redirect(url_for('user_detail', username=g.user.username))
 
 
 #        $$      $$$$$$    $$

@@ -1,5 +1,8 @@
 'use strict';
 
+//
+// Class to hold methods for file uploading.
+//
 class FileUploadFunctions {
   constructor() {
     this.addFileUploadSizeCheck();

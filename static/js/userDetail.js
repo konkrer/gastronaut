@@ -1,5 +1,10 @@
 'use strict';
 
+//
+// Class for keeping user profile image and infomation from
+// scrolling offscreen. Position that profile sticks at
+// changes based on screen size.
+//
 class StickyScroll {
   constructor() {
     this.avatarCol = document.querySelector('.avatar-col');
@@ -11,31 +16,37 @@ class StickyScroll {
     this.addResizeListener();
   }
 
+  //
   // check if screen size is mobile.
+  //
   isMobileScreen() {
     if (window.innerWidth < 768) return true;
     if (window.innerHeight < 400) return true;
     return false;
   }
 
+  //
   // check if screen size is mobile.
+  //
   isLgMobileScreen() {
     if (window.innerWidth <= 992) return true;
     if (window.innerHeight < 600) return true;
     return false;
   }
 
+  //
   // check if screen size is mobile in portrait.
+  //
   isMobilePortrait() {
     if (window.innerWidth < 576) return true;
     return false;
   }
 
-  /*
-  /* Set adjusted avatar column offset. We don't want avatar col to 
-  /* stop scrolling all the way at the top of screen. We want different
-  /* offsets depending on the screen size.
-  */
+  //
+  // Set adjusted avatar column offset. We don't want avatar col to
+  // stop scrolling all the way at the top of screen. We want different
+  // offsets depending on the screen size.
+  //
   setAdjustedACO() {
     this.avatarColOffset = this.avatarCol.offsetTop;
     if (this.isMobileScreen()) this.adjustedACO = this.avatarColOffset - 91;
@@ -44,16 +55,16 @@ class StickyScroll {
     else this.adjustedACO = this.avatarColOffset - 250;
   }
 
-  /*
-  /* Add sroll listener to set profile section top offset.
-  */
+  //
+  // Add sroll listener to set profile section top offset.
+  //
   addScrollListener() {
     $(window).scroll(this.adjustProfilePosition.bind(this));
   }
 
-  /*
-  /* Adjust profile section top offset.
-  */
+  //
+  // Adjust profile section top offset.
+  //
   adjustProfilePosition() {
     // If mobile portrait oreintation no position fixing needed.
     if (this.isMobilePortrait()) {
@@ -76,9 +87,9 @@ class StickyScroll {
     } else $('.sticky-profile').removeClass('p-fixed');
   }
 
-  /*
-  /* When tabs button clicked go to top of tabs content div.
-  */
+  //
+  // When tabs button clicked go to top of tabs content div.
+  //
   addTabslistListener() {
     $('div[role="tablist"] a').click(
       function () {
@@ -91,9 +102,9 @@ class StickyScroll {
     );
   }
 
-  /*
-  /* When phone orientation changes update profile position.
-  */
+  //
+  // When phone orientation changes update profile position.
+  //
   addResizeListener() {
     window.addEventListener('resize', this.adjustProfilePosition.bind(this));
   }

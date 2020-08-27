@@ -207,9 +207,9 @@ class MissionControlHtmFactory {
                 <i class="fas fa-flag brand-outline txt-warning iconBtn"></i>
               </span>
               <span data-toggle="tooltip" title="Write Report">
-                <a href="/report?business_id=${el.id}&cancel_url=${
-        window.location.pathname
-      }">
+                <a target="_blank" href="/report?business_id=${
+                  el.id
+                }&cancel_url=javascript:Base_Obj.close_current_tab()">
                   <i class="fas fa-pen-alt brand-outline txt-warning iconBtn"></i>
                 </a>
               </span>

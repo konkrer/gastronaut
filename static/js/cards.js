@@ -1,16 +1,16 @@
 'use strict';
 
-/*
-/* Cards and Modals cards factory class.
-*/
+//
+// Cards and Modals cards factory class.
+//
 class CardsModalsFactory {
   constructor() {
-    this.funct = new CardTextHtmlFunctions();
+    this.funct = new CardModalTextHtmlFunctions();
   }
 
-  /*
-  /* Get cards for index page dragscroll card track. Filter for transactions.
-  */
+  //
+  // Get cards for index page dragscroll card track. Filter for transactions.
+  //
   getCardsHtml(businesses) {
     let cards = '';
     const transactions = FormFunctsObj.getTransactions();
@@ -20,9 +20,9 @@ class CardsModalsFactory {
     return cards;
   }
 
-  /*
-  /* Post filtering for Yelp results for transaction type.
-  */
+  //
+  // Post filtering for Yelp results for transaction type.
+  //
   filterForTransactions(transactions, business) {
     // if no transactrions selected no filtering
     if (transactions.length === 0) return this.makeCard(business);
@@ -38,9 +38,9 @@ class CardsModalsFactory {
     return '';
   }
 
-  /*
-  /* Get card showing no results were found.
-  */
+  //
+  // Get card showing no results were found.
+  //
   getNoResultsCard() {
     return `
     <div class="my-card flx-std no-results"
@@ -52,9 +52,9 @@ class CardsModalsFactory {
     `;
   }
 
-  /*
-  /* Get hidden card for spacing. Put in card track after last card.
-  */
+  //
+  // Get hidden card for spacing. Put in card track after last card.
+  //
   addDummyCard() {
     const html = `
     <div class="my-card dummy-card d-inline-block">
@@ -64,18 +64,17 @@ class CardsModalsFactory {
     $('.card-track-inner').append(html);
   }
 
-  /*
-  /* Report error of api call to user.
-  */
+  //
+  // Report error of api call to user.
+  //
   errorCard(data) {
     alert(`${data.error.code}, ${data.error.description}`);
   }
 
-  /*
-  /* Make card html for index page dragscroll card track.
-  */
+  //
+  // Make card html for index page dragscroll card track.
+  //
   makeCard(business) {
-    // unpack data items for card display
     const {
       name,
       rating,
@@ -167,9 +166,9 @@ class CardsModalsFactory {
     </div>`;
   }
 
-  /*
-  /* Make business deatils modal html.
-  */
+  //
+  // Make business deatils modal html.
+  //
   makeDetailModal(business) {
     // unpack data items for card display
     const {
@@ -192,12 +191,7 @@ class CardsModalsFactory {
 
     if (hours) var { open, is_open_now } = hours[0];
 
-    // fullPath for next page/cancel functionality. If user cancels
-    // report writing/editing allows navigating back to current page.
-    const pathname = window.location.pathname;
-    const searchString = window.location.search.replace(/&/g, ';');
-    const fullPath = `${pathname}${searchString}`;
-    const modalFooter = `${this.funct.makeModalFooter(business, fullPath)}`;
+    const modalFooter = `${this.funct.makeModalFooter(business)}`;
 
     return `
       <div class="modal-dialog modal-dialog-centered modal-lg text-center museo" role="document">
@@ -250,7 +244,7 @@ class CardsModalsFactory {
               ${this.funct.makeTransactionsHtml(transactions)}
               ${this.funct.makePhoneHtml(phone, display_phone)}
               <li class="list-group-item bg-transparent">
-              <a target="blank"
+              <a target="_blank"
                  href="https://www.google.com/maps/dir/?api=1&origin=${this.funct.makeOriginString()}&destination=${lat},${lng}&dir_action=navigate"
                 >
                   <div>${street ? street : ''}</div>
@@ -265,7 +259,7 @@ class CardsModalsFactory {
             </ul>
           </div>
           ${modalFooter}       
-          <div>${this.funct.makeReportsForDetailModal(business, fullPath)}</div>
+          <div>${this.funct.makeReportsForDetailModal(business)}</div>
           <div>${this.funct.makeReviewsForDetailModal(business)}</div>
           ${modalFooter}       
         </div>
@@ -273,9 +267,16 @@ class CardsModalsFactory {
   }
 }
 
-class CardTextHtmlFunctions {
+//
+// Class to create text for business cards and modals. Some methods
+// return html with text.
+//
+class CardModalTextHtmlFunctions {
   constructor() {}
 
+  //
+  // Make business categories text for cards and modals.
+  //
   makeCategoriesText(categories) {
     return categories.reduce((acc, obj, i) => {
       if (i === 0) return `${acc}${obj.title}`;
@@ -283,6 +284,9 @@ class CardTextHtmlFunctions {
     }, '');
   }
 
+  //
+  // Make price dollar text for cards and modals.
+  //
   makePriceDollars(price) {
     if (!price) return 'UNKNOWN';
     let dollars = '';
@@ -293,6 +297,9 @@ class CardTextHtmlFunctions {
     return dollars;
   }
 
+  //
+  // Make review stars text for cards and modals.
+  //
   makeReviewStars(rating) {
     let stars = '';
     for (let idx = 0; idx < rating; idx++) {
@@ -301,6 +308,9 @@ class CardTextHtmlFunctions {
     return stars;
   }
 
+  //
+  // Make reviews stars text for cards and modals. Show half stars.
+  //
   makeReviewStarsWithHalves(rating) {
     let stars = '';
     for (let idx = 0; idx < parseInt(rating); idx++) {
@@ -311,6 +321,9 @@ class CardTextHtmlFunctions {
     return stars;
   }
 
+  //
+  // Make transactions html for cards and modals.
+  //
   makeTransactionsHtml(transactions) {
     if (transactions.length === 0) return '';
     const trans_text = transactions.reduce((acc, str, i) => {
@@ -322,6 +335,9 @@ class CardTextHtmlFunctions {
     return `<li class="list-group-item bg-transparent card-text-noHover">${trans_text}</li>`;
   }
 
+  //
+  // Make phone number html for cards and modals.
+  //
   makePhoneHtml(phone, display_phone) {
     return phone
       ? `
@@ -331,15 +347,18 @@ class CardTextHtmlFunctions {
       : '';
   }
 
-  /*
-  /* If there is user location data make origin string for google directions.
-  */
+  //
+  // If there is user location data make origin string for google directions.
+  //
   makeOriginString() {
     return typeof Map_Obj !== 'undefined' && Map_Obj.longitude
       ? `${Map_Obj.latitude},${Map_Obj.longitude}`
       : '';
   }
 
+  //
+  // Make image carousel html for cards and modals.
+  //
   makeCarouselItemsHtml(photos) {
     return photos.reduce((acc, photo, idx) => {
       const html = `
@@ -358,6 +377,9 @@ class CardTextHtmlFunctions {
     }, '');
   }
 
+  //
+  // Make business hours html table for cards and modals.
+  //
   makeHoursTable(open) {
     if (!open) return '';
 
@@ -426,10 +448,10 @@ class CardTextHtmlFunctions {
     </table>`;
   }
 
-  /*
-  /* Make footer for business detail modal.
-  */
-  makeModalFooter(business, fullPath) {
+  //
+  // Make footer for business detail modal.
+  //
+  makeModalFooter(business) {
     const {
       name,
       id,
@@ -465,7 +487,7 @@ class CardTextHtmlFunctions {
         </button>
       </span>
       <span data-toggle="tooltip" title="Write Report">
-        <a href="/report?business_id=${id}&cancel_url=${fullPath}">
+        <a href="/report?business_id=${id}&cancel_url=javascript:Base_Obj.close_current_tab()" target="_blank">
           <button type="button" class="btn btn-primary-alt2 mr-1 writeReport">      
             <i class="fas fa-pen-alt brand-outline txt-warning iconBtn fa-lg"></i>
           </button>
@@ -482,10 +504,10 @@ class CardTextHtmlFunctions {
   </div>`;
   }
 
-  /*
-  /* Make Report cards that go inside business details modal.
-  */
-  makeReportsForDetailModal(business, fullPath) {
+  //
+  // Make Report cards that go inside business details modal.
+  //
+  makeReportsForDetailModal(business) {
     const reportCards = business.reports.reduce((acc, report) => {
       const {
         report_id,
@@ -509,7 +531,7 @@ class CardTextHtmlFunctions {
         </h5>
         <h5 class="lead txt-green black-outline-1"><small>Business Report</small></h5>
         <div class="card-text">
-          <a href="/user/profile/${username}">
+          <a href="/user/profile/${username}" target="_blank">
             <em class="txt-warning black-outline-1"> by @${username}</em>
           </a>
           <div class="txt-smlr">
@@ -528,8 +550,7 @@ class CardTextHtmlFunctions {
           allowLikes,
           report_id,
           business.id,
-          liked,
-          fullPath
+          liked
         )}
         <span class="pl-1 pl-md-3 text-dark likes">
           ${likes}
@@ -541,7 +562,8 @@ class CardTextHtmlFunctions {
       return `${acc}${html}`;
     }, '');
     const seeMoreBtn = business.more_results
-      ? `<a href="/reports/business/${business.id}"><button class="btn btn-primary">See More Reports</button></a>`
+      ? `<a href="/reports/business/${business.id}" target="_blank">
+         <button class="btn btn-primary">See More Reports</button></a>`
       : '';
     // If there are report cards prepend with Reports header and add see more reports button.
     return reportCards
@@ -549,9 +571,9 @@ class CardTextHtmlFunctions {
       : '';
   }
 
-  /*
-  /* Make Yelp review cards that go inside business details modal.
-  */
+  //
+  // Make Yelp review cards that go inside business details modal.
+  //
   makeReviewsForDetailModal(business) {
     const reportCards = business.reviews.reduce((acc, review) => {
       const {
@@ -580,7 +602,7 @@ class CardTextHtmlFunctions {
         ${text}
       </div>
       <div class="card-footer text-right">
-        <a href="${url}">Read More</a>
+        <a href="${url}" target="_blank">Read More</a>
       </div>
     </div>`;
 
@@ -593,12 +615,18 @@ class CardTextHtmlFunctions {
       : '';
   }
 
+  //
+  // Make report text paragraphs. Put each paragraph into a
+  // seperate <p> element for cards and modals.
+  //
   makeParagraphs(text) {
+    // Only show first 500 chars.
     if (text.length > 500) {
       text = text.slice(0, 499);
       var sliced = true;
     }
     let paragraphs = text.split('\n');
+    // Return the html string with the <p> elements and text.
     return paragraphs.reduce((acc, str, idx) => {
       if (!str) return acc;
       if (sliced && idx + 1 === paragraphs.length) str += '...';
@@ -608,6 +636,9 @@ class CardTextHtmlFunctions {
     }, '');
   }
 
+  //
+  // Make html for image for business.
+  //
   reportImageUrl(photo_file, photo_url) {
     if (!photo_file && !photo_url) return '';
     return `
@@ -618,15 +649,15 @@ class CardTextHtmlFunctions {
       </div>`;
   }
 
-  addLikesButton(
-    userLoggedIn,
-    allowLikes,
-    report_id,
-    business_id,
-    liked,
-    fullPath
-  ) {
-    if (!userLoggedIn)
+  //
+  // Make html for like buttons on cards.
+  //
+  addLikesButton(userLoggedIn, allowLikes, report_id, business_id, liked) {
+    if (!userLoggedIn) {
+      // fullPath for next page functionality.
+      const pathname = window.location.pathname;
+      const searchString = window.location.search.replace(/&/g, ';');
+      const fullPath = `${pathname}${searchString}`;
       return `
       <button
         type="button"
@@ -638,6 +669,7 @@ class CardTextHtmlFunctions {
       >
         <i class="far fa-thumbs-up fa-lg"></i>
       </button>`;
+    }
     if (allowLikes)
       return `
       <a href="#" class="card-link like-report likeModal" 
@@ -659,31 +691,39 @@ class CardTextHtmlFunctions {
       </span>`;
   }
 
+  //
+  // Make html for read more link when report is longer than 500 chars.
+  //
   addReadMoreText(text, report_id) {
     if (text.length > 500)
       return `
-      <a href="/report/${report_id}" class="float-right"
+      <a href="/report/${report_id}" class="float-right" target="_blank"
       >Read More</a>`;
     return '';
   }
 
-  /*
-  /* Convert meters to miles to one decimal place.
-  */
+  //
+  // Convert meters to miles to one decimal place.
+  //
   metersToMiles(num) {
     return (num * 0.00062137).toFixed(1);
   }
 
-  /*
-  /* Convert 24hr format time to AM/PM style time.
-  */
+  //
+  // Convert 24hr format time to AM/PM style time.
+  //
   convertTime(time_in) {
     if (time_in === null) return '-:-';
 
+    // If before 1200 (noon) it is AM.
     const am_pm = time_in / 1200 >= 1 ? 'PM' : 'AM';
+    // Calculate hour.
     let hour = Math.floor((time_in % 1200) / 100);
+    // If hour is 0 make it 12.
     hour = hour == 0 ? 12 : hour;
+    // Calculate minutes.
     let minutes = time_in % 100;
+    // Change 0 minutes to 00.
     minutes = minutes == 0 ? '00' : minutes;
 
     return `${hour}:${minutes} ${am_pm}`;

@@ -20,21 +20,21 @@ class IndexSearchLogic {
     this.lockOnScrollBottom(makeSearch);
   }
 
-  /*
-  /* When navbar toggler is clicked (sandwich menu) make navbar have
-  /* a display of flex !important so opening keyboard on mobile does 
-  /* not allow landscape mobile breakpoint to change navbar to display 
-  /* none.
-  */
+  //
+  // When navbar toggler is clicked (sandwich menu) make navbar have
+  // a display of flex !important so opening keyboard on mobile does
+  // not allow landscape mobile breakpoint to change navbar to display
+  // none.
+  //
   addNavbarTogglerListener() {
     $('.navbar-toggler').click(function () {
       $('nav.navbar').toggleClass('display-flex-important');
     });
   }
 
-  /*
-  /* Navbar search listener.
-  */
+  //
+  // Navbar search listener.
+  //
   addNavbarSearchListener() {
     $('.navbar form.searchForm').submit(
       function (e) {
@@ -44,9 +44,9 @@ class IndexSearchLogic {
     );
   }
 
-  /*
-  /* Navbar search function.
-  */
+  //
+  // Navbar search function.
+  //
   navbarSearch() {
     $('.spinner-zone').show();
     $('.navbar-collapse').removeClass('open');
@@ -97,9 +97,9 @@ class IndexSearchLogic {
     );
   }
 
-  /*
-  /* Make a requst to /v1/search endpoint. 
-  */
+  //
+  // Make a requst to /v1/search endpoint.
+  //
   async searchApiCall(useOffset) {
     let queryData = FormFunctsObj.getFormData();
     if (useOffset) queryData += `&offset=${this.offset * 50}`;
@@ -117,9 +117,9 @@ class IndexSearchLogic {
     return data;
   }
 
-  /*
-  /* Search request handler. Needs location.
-  */
+  //
+  // Search request handler. Needs location.
+  //
   async searchYelp() {
     // Make sure there is a location to search.
     if (!Map_Obj.latitude && FormFunctsObj.$locationInput.val() === '') {
@@ -162,20 +162,20 @@ class IndexSearchLogic {
     this.mapAndAddCardsForNewApiCall(data);
   }
 
-  /* 
-  /* Post search DOM manipulation. 
-  */
+  //
+  // Post search DOM manipulation.
+  //
   postSearchDomManipulation(currFormState) {
     $('.spinner-zone').hide();
     ButtonsLogicsObj.showCardTrack();
     FormFunctsObj.filterIndicatorCheck(currFormState);
   }
 
-  /*
-  /* Returen bool representing if no new data and transactions
-  /* haven't changed. If so nothing new to display.
-  /* But if first cards not added yet return false.
-  */
+  //
+  // Returen bool representing if no new data and transactions
+  // haven't changed. If so nothing new to display.
+  // But if first cards not added yet return false.
+  //
   transactionsNoChangeAndNoNewData(newData) {
     if (!this.firstCardsAdded) {
       this.firstCardsAdded = true;
@@ -188,9 +188,9 @@ class IndexSearchLogic {
     return false;
   }
 
-  /*
-  /* Map first business and add cards for business results.. 
-  */
+  //
+  // Map first business and add cards for business results..
+  //
   mapAndAddCardsForNewApiCall(data) {
     if (this.paginationListener) this.paginationListener.off();
     $('.resultsCount').text(data.total);
@@ -238,10 +238,10 @@ class IndexSearchLogic {
     }
   }
 
-  /*
-  /* Set lng/lat from Yelp data if user entered location.
-  /* Mark user. 
-  */
+  //
+  // Set lng/lat from Yelp data if user entered location.
+  // Mark user.
+  //
   userMarkAndYelpCoordsLogic(data) {
     // if text location given and new Yelp data
     // use coords Yelp returned for lng, lat.
@@ -256,9 +256,9 @@ class IndexSearchLogic {
     Map_Obj.userMarker.togglePopup();
   }
 
-  /*
-  /* Set lng/lat from Yelp data if it has changed. 
-  */
+  //
+  // Set lng/lat from Yelp data if it has changed.
+  //
   yelpSetLocation(data) {
     // extract lng/lat from new yelp data
     const {
@@ -277,9 +277,9 @@ class IndexSearchLogic {
     }
   }
 
-  /*
-  /* Map first business. 
-  */
+  //
+  // Map first business.
+  //
   mapFirstBusiness(data) {
     const {
       businesses: [first, ...rest],
@@ -288,9 +288,9 @@ class IndexSearchLogic {
     Map_Obj.addRestMarkerAndFitBounds([lng, lat], first.name, first.id);
   }
 
-  /*
-  /* When cards scrolled almost to end add next cards.
-  */
+  //
+  // When cards scrolled almost to end add next cards.
+  //
   addNextCardsListener() {
     const this_ = this;
     if (this.resultsRemaining === 0) return;
@@ -305,10 +305,10 @@ class IndexSearchLogic {
     });
   }
 
-  /*
-  /* Add more cards for "infinite" scroll.
-  /* If more results remain, call API, make cards. 
-  */
+  //
+  // Add more cards for "infinite" scroll.
+  // If more results remain, call API, make cards.
+  //
   async addNextCards() {
     if (!this.resultsRemaining || this.offset === 20) {
       CardsModalsFactoryObj.addDummyCard();
@@ -334,9 +334,9 @@ class IndexSearchLogic {
     else CardsModalsFactoryObj.addDummyCard();
   }
 
-  /*
-  /* Hide hero animation and make yelp search.
-  */
+  //
+  // Hide hero animation and make yelp search.
+  //
   hideHeroAndSearch() {
     $('.hero-animation').hide();
     $('.alert').hide();
@@ -355,10 +355,10 @@ class IndexSearchLogic {
     else if (Map_Obj.longitude) this.searchYelp();
   }
 
-  /*
-  /* When user scrolls to bottom of page call hideHeroAndSearch()
-  /* if makeSearch is true. Else hide hero animation.
-  */
+  //
+  // When user scrolls to bottom of page call hideHeroAndSearch()
+  // if makeSearch is true. Else hide hero animation.
+  //
   lockOnScrollBottom(makeSearch = true) {
     this.$scrollListener = $(window).on(
       'scroll',
@@ -376,19 +376,19 @@ class IndexSearchLogic {
     );
   }
 
-  /*
-  /* Set Lng/lat data from hidden inputs then remove hidden inputs.
-  /* If no data in hidden inputs use last location data.
-  */
+  //
+  // Set Lng/lat data from hidden inputs then remove hidden inputs.
+  // If no data in hidden inputs use last location data.
+  //
   setLngLatInit() {
     FormFunctsObj.setLngLatFromHiddenInputs();
     if (!Map_Obj.latitude) setCoordsFromStorage();
   }
 
-  /*
-  /* Check localStorage for coordinate data.
-  /* Set script lng/lat. Return coords.
-  */
+  //
+  // Check localStorage for coordinate data.
+  // Set script lng/lat. Return coords.
+  //
   setCoordsFromStorage() {
     const coords = localStorage.getItem('coords');
     if (coords) {
@@ -398,12 +398,12 @@ class IndexSearchLogic {
     }
   }
 
-  /*
-  /* If there is navbar search term value on page load then
-  /* execute navbarSearch function on the passed in value.
-  /* Otherwise check local storage for form data to load.
-  /* Return true or false if a further Yelp search is needed.
-  */
+  //
+  // If there is navbar search term value on page load then
+  // execute navbarSearch function on the passed in value.
+  // Otherwise check local storage for form data to load.
+  // Return true or false if a further Yelp search is needed.
+  //
   checkSearchInputOrCheckLocalStorage() {
     if ($('.navbar form.searchForm input').val()) {
       // Set location then search using navbarSearch function.
@@ -417,30 +417,30 @@ class IndexSearchLogic {
     }
   }
 
-  /*
-  /* Check localStorage for data to bring form to last known
-  /* state set last category active, and search.
-  */
+  //
+  // Check localStorage for data to bring form to last known
+  // state set last category active, and search.
+  //
   checkLocalStorage() {
     FormFunctsObj.setCategoryFromStorage();
     FormFunctsObj.updateFormFromStorage();
   }
 }
 
-/* ParamsChange -----------------------------------------------------------  */
-/* ParamsChange -----------------------------------------------------------  */
-/* ParamsChange -----------------------------------------------------------  */
-/* ParamsChange -----------------------------------------------------------  */
-/* ParamsChange -----------------------------------------------------------  */
-/* ParamsChange -----------------------------------------------------------  */
+// ParamsChange -----------------------------------------------------------  //
+// ParamsChange -----------------------------------------------------------  //
+// ParamsChange -----------------------------------------------------------  //
+// ParamsChange -----------------------------------------------------------  //
+// ParamsChange -----------------------------------------------------------  //
+// ParamsChange -----------------------------------------------------------  //
 
 class ParamsChange {
   constructor() {}
-  /*
-  /* Check for changes that warrant a new Yelp API call.
-  /* Form, category, significant GPS change, or no stored data warrant API call.
-  /* Called functions update local storage if they detect changes.
-  */
+  //
+  // Check for changes that warrant a new Yelp API call.
+  // Form, category, significant GPS change, or no stored data warrant API call.
+  // Called functions update local storage if they detect changes.
+  //
   checkParameterChange(lastData, currFormState) {
     // set change to true if a new API call is waranted.
     let change = false;
@@ -459,9 +459,9 @@ class ParamsChange {
     return change;
   }
 
-  /*
-  /* Check if control panel form data has changed.
-  */
+  //
+  // Check if control panel form data has changed.
+  //
   checkFormChanges(change, currFormState) {
     const prevFormState = localStorage.getItem('formData');
 
@@ -481,9 +481,9 @@ class ParamsChange {
     return change;
   }
 
-  /*
-  /* Check if user coordinates have changed.
-  */
+  //
+  // Check if user coordinates have changed.
+  //
   checkCoordsChange(change) {
     const prevCoords = JSON.parse(localStorage.getItem('coords'));
 
@@ -519,9 +519,9 @@ class ParamsChange {
     return change;
   }
 
-  /*
-  /* Check if the category has changed.
-  */
+  //
+  // Check if the category has changed.
+  //
   checkCategoryChange(change) {
     const prevCategory = localStorage.getItem('category');
 
@@ -533,9 +533,9 @@ class ParamsChange {
     return change;
   }
 
-  /*
-  /* Check if ther is previous data stored in local storage.
-  */
+  //
+  // Check if ther is previous data stored in local storage.
+  //
   checkLastData(lastData) {
     // if there is no stored yelp data must make api call
     if (!lastData || ['undefined', 'false'].includes(lastData)) {
@@ -545,13 +545,13 @@ class ParamsChange {
   }
 }
 
-/* Buttons Logic ---------------------------------------------------------- */
-/* Buttons Logic ---------------------------------------------------------- */
-/* Buttons Logic ---------------------------------------------------------- */
-/* Buttons Logic ---------------------------------------------------------- */
-/* Buttons Logic ---------------------------------------------------------- */
-/* Buttons Logic ---------------------------------------------------------- */
-/* Buttons Logic ---------------------------------------------------------- */
+// Buttons Logic ---------------------------------------------------------- //
+// Buttons Logic ---------------------------------------------------------- //
+// Buttons Logic ---------------------------------------------------------- //
+// Buttons Logic ---------------------------------------------------------- //
+// Buttons Logic ---------------------------------------------------------- //
+// Buttons Logic ---------------------------------------------------------- //
+// Buttons Logic ---------------------------------------------------------- //
 
 class ButtonsLogics {
   constructor() {
@@ -565,9 +565,9 @@ class ButtonsLogics {
     this.addCancelNavigationListener();
   }
 
-  /*
-  /* Show restaurant marker and fit bounds when card map button is clicked.
-  */
+  //
+  // Show restaurant marker and fit bounds when card map button is clicked.
+  //
   addMapBusinessBtnListeners() {
     const this_ = this;
     $('.card-track-inner').on('click', '.cardMapButton', function () {
@@ -584,9 +584,9 @@ class ButtonsLogics {
     Map_Obj.addRestMarkerAndFitBounds([+lng, +lat], name, id);
   }
 
-  /*
-  /* Toggle map listener.
-  */
+  //
+  // Toggle map listener.
+  //
   addMapToggleBtnListener() {
     const this_ = this;
     $('.showMap').on('click', this.toggleMap);
@@ -597,9 +597,9 @@ class ButtonsLogics {
     });
   }
 
-  /*
-  /* Toggle map button fuctionality. Open and close map.
-  */
+  //
+  // Toggle map button fuctionality. Open and close map.
+  //
   toggleMap() {
     // If map is open and cards are hidden show cards.
     if (Map_Obj.mapOpen && $('.card-map-zone').hasClass('cards-collapse')) {
@@ -632,9 +632,9 @@ class ButtonsLogics {
     }
   }
 
-  /*
-  /* Cards toggle listener.
-  */
+  //
+  // Cards toggle listener.
+  //
   addCardsToggleBtnListener() {
     const this_ = this;
     $('.toggleCards').on('click', this.toggleCards);
@@ -645,9 +645,9 @@ class ButtonsLogics {
     });
   }
 
-  /*
-  /* Show/hide cards fuctionality. Big/small map.
-  */
+  //
+  // Show/hide cards fuctionality. Big/small map.
+  //
   toggleCards() {
     $('.card-map-zone').toggleClass('cards-collapse');
     $('.card-track').toggle();
@@ -663,10 +663,10 @@ class ButtonsLogics {
     }
   }
 
-  /*
-  /* Show cards fuctionality for search Yelp. If cards are hidden
-  /* they will be shown after search Yelp.
-  */
+  //
+  // Show cards fuctionality for search Yelp. If cards are hidden
+  // they will be shown after search Yelp.
+  //
   showCardTrack() {
     if ($('.card-map-zone').hasClass('cards-collapse')) {
       $('.card-map-zone').removeClass('cards-collapse');
@@ -680,9 +680,9 @@ class ButtonsLogics {
     }
   }
 
-  /*
-  /* Card business detail listeners.
-  */
+  //
+  // Card business detail listeners.
+  //
   addBusinessDetailsListeners() {
     const this_ = this;
     $('.card-track-inner').on(
@@ -697,10 +697,10 @@ class ButtonsLogics {
     );
   }
 
-  /*
-  /* Get the mission-btn (add to mission) button which holds the business id and call 
-  /* getShowBusinessDetails.
-  */
+  //
+  // Get the mission-btn (add to mission) button which holds the business id and call
+  // getShowBusinessDetails.
+  //
   getBtnAndShowDetails() {
     // Get the details button.
     const detailBtn = $(this).hasClass('detailsBtnCard')
@@ -720,11 +720,11 @@ class ButtonsLogics {
     ApiFunctsObj.getShowBusinessDetails(fakeE);
   }
 
-  /*
-  /* Listen for the write report button click in the business detail modal
-  /* and call add_report with business information as parameters. This is
-  /* to be able to create a new business entry in Database if necessary.
-  */
+  //
+  // Listen for the write report button click in the business detail modal
+  // and call add_report with business information as parameters. This is
+  // to be able to create a new business entry in Database if necessary.
+  //
   addWriteReportListener() {
     $('#business-detail-modal').on('click', '.writeReport', function (e) {
       e.preventDefault();
@@ -743,13 +743,13 @@ class ButtonsLogics {
       // https://attacomsian.com/blog/javascript-convert-object-to-query-string-parameters
       const queryString = new URLSearchParams(params);
 
-      window.location.href = `${reportUrl}&${queryString}`;
+      window.open(`${reportUrl}&${queryString}`);
     });
   }
 
-  /*
-  /* Add navigation start buttons listener. 
-  */
+  //
+  // Add navigation start buttons listener.
+  //
   addNavigationListener() {
     $('.map-track').on(
       'click',
@@ -758,10 +758,10 @@ class ButtonsLogics {
     );
   }
 
-  /*
-  /* Start navigation. Update Map_Obj state, add alternate colored user marker,
-  /* get route for appropriate destination.
-  */
+  //
+  // Start navigation. Update Map_Obj state, add alternate colored user marker,
+  // get route for appropriate destination.
+  //
   startNavigation(e) {
     const $el = $(e.currentTarget);
     Map_Obj.profile = $el.data('profile');
@@ -788,9 +788,9 @@ class ButtonsLogics {
     this.navStartDOMAdjustments($el);
   }
 
-  /*
-  /* Make adjustments to DOM elements for visual change of navigation start.
-  */
+  //
+  // Make adjustments to DOM elements for visual change of navigation start.
+  //
   navStartDOMAdjustments($el) {
     Map_Obj.clearNavBtnsActive();
     $el.addClass('active');
@@ -803,17 +803,17 @@ class ButtonsLogics {
     $('#directions-panel').addClass('show').fadeIn();
   }
 
-  /*
-  /* Add listener to show text directions. 
-  */
+  //
+  // Add listener to show text directions.
+  //
   addToggleDirectionsDivListener() {
     const this_ = this;
     $('.map-track').on('click', '.directionsToggle', this.toggleDirectionsDiv);
   }
 
-  /*
-  /* Show directions text and alter directionsToggle alignment (vertical to horizontal).
-  */
+  //
+  // Show directions text and alter directionsToggle alignment (vertical to horizontal).
+  //
   toggleDirectionsDiv() {
     $('.directionsToggle')
       .toggleClass(['h-100', 'border-bottom', 'border-dark', 'bg-trans-b0'])
@@ -833,9 +833,9 @@ class ButtonsLogics {
     $('#directions-text').toggle();
   }
 
-  /*
-  /* Cancel navigation listener.
-  */
+  //
+  // Cancel navigation listener.
+  //
   addCancelNavigationListener() {
     $('.map-track').on(
       'click',
@@ -854,9 +854,9 @@ class ButtonsLogics {
     );
   }
 
-  /*
-  /* Make adjustments to DOM elements for visual change of navigation end.
-  */
+  //
+  // Make adjustments to DOM elements for visual change of navigation end.
+  //
   navEndDOMAdjustments() {
     $('#directions-panel').removeClass('show').fadeOut();
     $('.map-routing').removeClass('horizontal');

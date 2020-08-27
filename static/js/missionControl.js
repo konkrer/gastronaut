@@ -139,7 +139,7 @@ class MissionControl {
     // make mission report <a> element point to report with current mission id.
     $('#write-mission-report').prop(
       'href',
-      `/report?mission_id=${mission_id}&cancel_url=${window.location.pathname}`
+      `/report?mission_id=${mission_id}&cancel_url=javascript:Base_Obj.close_current_tab()`
     );
     // Don't show business list on phones.
     if (Map_Obj.isMobileScreen()) $('#businesses-list').removeClass('show');

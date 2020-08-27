@@ -4,6 +4,17 @@
 /* Breakpoints */
 /* Breakpoints */
 
+/* Special card sizing for extra narrow screens */
+@media screen and (max-width: 315px) {
+  .my-card {
+    width: 265px !important;
+    min-width: 265px !important;
+  }
+  .card-track-inner {
+    padding-left: calc(50% - 132px) !important;
+  }
+}
+
 @media screen and (max-width: 350px) {
   h5 {
     font-size: 1.3rem !important;
@@ -12,6 +23,7 @@
     font-size: x-small !important;
   }
 }
+
 @media screen and (max-width: 575px) {
   #detect-location,
   #clear-filters {
@@ -202,10 +214,10 @@
   }
   .my-card {
     width: 320px;
-    min-width: 310px;
+    min-width: 320px;
   }
   .card-track-inner {
-    padding-left: calc(50% - 155px);
+    padding-left: calc(50% - 160px);
   }
   .sidebar-toggle-btn {
     font-size: 3.5vh;

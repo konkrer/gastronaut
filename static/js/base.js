@@ -9,7 +9,9 @@ class BaseLogic {
     this.locationAutocompleteCache = {};
     this.addPreloaderRemover();
     this.addPreferencesListeners();
-    this.addHomeAddressListerners();
+    this.addHomeAddressAutocompleteListerner();
+    this.addOfficalHomeAddressListener();
+    this.addClearHomeAddressListener();
     this.addAlertCloseListener();
     this.addReportsDblclickListeners();
     this.addFeedbackListener();
@@ -60,14 +62,11 @@ class BaseLogic {
     }, 5000);
   }
 
-  /*
-  /* Add Home Address Listeners.
-  */
-  addHomeAddressListerners() {
+  //
+  // Add Home Address autocomplete listener.
+  //
+  addHomeAddressAutocompleteListerner() {
     const this_ = this;
-    //
-    // Add autocomplete listener.
-    //
     $('#home_address').on('keyup', async function (e) {
       const key = e.which || e.keyCode;
       // If a location suggestion was clicked or
@@ -80,9 +79,12 @@ class BaseLogic {
 
       $('#datalist-home_address').html(options);
     });
-    //
-    // Add offical address selection listener.
-    //
+  }
+
+  //
+  // Add offical home address selection listener.
+  //
+  addOfficalHomeAddressListener() {
     $('#home_address').on('keyup', function (e) {
       const key = e.which || e.keyCode;
       // If a location suggestion was clicked or
@@ -101,33 +103,36 @@ class BaseLogic {
         this_.updatePreferences(1);
       }
     });
-    //
-    // Add clear home address listener.
-    //
+  }
+
+  //
+  // Add clear home address listener.
+  //
+  addClearHomeAddressListener() {
     $('#preferencesModal label[for="home_address_official"] a').click(function (
       e
     ) {
       e.preventDefault();
       $('#home_address_official').val('').prop('placeholder', '');
       $('#home_coords').val('');
+      this_.updatePreferences(1);
       // Make home button open preferences modal by clearing coords.
       $('.map-routing .home').data('lng', '').data('lat', '');
-      this_.updatePreferences(1);
     });
   }
 
-  /*
-  /* Close Alert (flash) function.
-  */
+  //
+  // Close Alert (flash) function.
+  //
   addAlertCloseListener() {
     $('.alert-close').click(() => {
       $('.alert').remove();
     });
   }
 
-  /*
-  /* Allow double clicking reports cards to open report detail page.
-  */
+  //
+  // Allow double clicking reports cards to open report detail page.
+  //
   addReportsDblclickListeners() {
     // Double clicking regular report card opens report detail page.
     $('.card.reportCard').dblclick(function () {
@@ -143,9 +148,9 @@ class BaseLogic {
     );
   }
 
-  /*
-  /* Call /feedback endpoint when user submits feedback.
-  */
+  //
+  // Call /feedback endpoint when user submits feedback.
+  //
   addFeedbackListener() {
     $('#user-feedback').submit(async function (e) {
       e.preventDefault();
@@ -177,10 +182,10 @@ class BaseLogic {
     });
   }
 
-  /*
-  /* Listen for buttons that will open the signup/ login modal.
-  /* Populate the next data so user will be redirected properly after authenication.
-  */
+  //
+  // Listen for buttons that will open the signup/ login modal.
+  // Populate the next data so user will be redirected properly after authenication.
+  //
   addSignupLoginListener() {
     $('body').on('click', '.signLogBtn', function () {
       const next_url = $(this).data('next_url');
@@ -190,9 +195,9 @@ class BaseLogic {
     });
   }
 
-  /*
-  /* Autocomplete location functionality for pages that call this function.
-  */
+  //
+  // Autocomplete location functionality for pages that call this function.
+  //
   addLocationAutocompleteListener(callback) {
     const this_ = this;
     $('#location').on('keyup', async function (e) {
@@ -210,9 +215,9 @@ class BaseLogic {
     });
   }
 
-  /*
-  /* Autocomplete location functionality
-  */
+  //
+  // Autocomplete location functionality
+  //
   async autocompleteLocation(query) {
     // Autocomplete on querys 3 chars or longer.
     if (query.length < 3) return '';
@@ -230,8 +235,33 @@ class BaseLogic {
     return options;
   }
 
+  //
+  // Convert the array of objects that jQuery returns from serializeArray
+  // to a single object with key value pairs for all data.
+  //
+  convertDataArrayToObj(data) {
+    // reduce data from array of objects to obj.
+    return data.reduce((acc, curr) => {
+      acc[curr.name] = curr.value;
+      return acc;
+    }, {});
+  }
+
+  //
+  // Method to close current browser tab. Used by
+  // report cancel button.
+  // https://stackoverflow.com/a/2076307/11164558
+  //
+  close_current_tab() {
+    if (confirm('Close this browser tab?')) {
+      close();
+    }
+  }
+
+  //
   // Enable service worker for PWA.
   // Pulled from Google docs about service workers.
+  //
   enableServiceWorker() {
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {
@@ -250,18 +280,6 @@ class BaseLogic {
         );
       });
     }
-  }
-
-  /*
-  /* Convert the array of objects that jQuery returns from serializeArray
-  /* to a single object with key value pairs for all data.
-  */
-  convertDataArrayToObj(data) {
-    // reduce data from array of objects to obj.
-    return data.reduce((acc, curr) => {
-      acc[curr.name] = curr.value;
-      return acc;
-    }, {});
   }
 }
 
