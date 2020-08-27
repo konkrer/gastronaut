@@ -8,7 +8,7 @@
   --my-purp: #1c0536;
   --my-secondary: #757575;
   --primary: #03109b !important;
-  --primary-alt: #1b3044;
+  --primary-alt: #213a52;
   --primary-alt2: #0b105a;
 }
 
@@ -396,6 +396,16 @@ body::-webkit-scrollbar-thumb:hover {
   .navbar-signup,
   .navbar-logout {
     font-size: small !important;
+  }
+}
+
+@media screen and (min-width: 2000px) {
+  .container,
+  .container-sm,
+  .container-md,
+  .container-lg,
+  .container-xl {
+    max-width: 1500px !important;
   }
 }
 

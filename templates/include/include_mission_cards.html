@@ -1,6 +1,8 @@
 <section class="text-center txt-white-k card-columns museo">
   {% if missions %} {% for mission in missions %}
-  <div class="card d-inline-block m-2 text-left mb-3 mb-lg-4">
+  <div
+    class="card d-inline-block m-2 text-left mb-3 mb-lg-4 card-shadow-slight"
+  >
     <div class="card-body">
       <h5 class="card-title font-weight-bold black-outline-1-2 mb-0">
         {{mission.name}}
@@ -92,7 +94,7 @@
     </div>
   </div>
   {% endfor %} {% elif request.endpoint in ['user_detail'] %}
-  <div class="card d-inline-block m-2 text-left">
+  <div class="card d-inline-block m-2 text-left card-shadow-slight">
     <div class="card-body">
       <h5 class="card-title font-weight-bold black-outline-1-2 mb-0">
         Missions you create and share will appear here
@@ -136,7 +138,7 @@
       </span>
     </div>
   </div>
-  <div class="card d-inline-block m-2 text-left">
+  <div class="card d-inline-block m-2 text-left card-shadow-slight">
     <div class="card-body">
       <h5 class="card-title font-weight-bold black-outline-1-2 mb-0">
         I'm another shared mission!
@@ -181,7 +183,9 @@
     </div>
   </div>
   {% else %}
-  <div class="card d-inline-block my-2 mx-1 text-center mb-3 mb-lg-4">
+  <div
+    class="card d-inline-block my-2 mx-1 text-center mb-3 mb-lg-4 card-shadow-slight"
+  >
     <div class="card-header pt-3">
       <h5 class="card-title font-weight-bold black-outline-1-2 mb-0">
         <span class="txt-white-k hover-primary">
@@ -190,7 +194,9 @@
       </h5>
     </div>
   </div>
-  <div class="card d-inline-block my-2 mx-1 text-center mb-3 mb-lg-4">
+  <div
+    class="card d-inline-block my-2 mx-1 text-center mb-3 mb-lg-4 card-shadow-slight"
+  >
     <div class="card-header pt-3">
       <h5 class="card-title font-weight-bold black-outline-1-2 mb-0">
         <span class="text-info hover-primary">
@@ -199,7 +205,9 @@
       </h5>
     </div>
   </div>
-  <div class="card d-inline-block my-2 mx-1 text-center mb-3 mb-lg-4">
+  <div
+    class="card d-inline-block my-2 mx-1 text-center mb-3 mb-lg-4 card-shadow-slight"
+  >
     <div class="card-header pt-3">
       <h5 class="card-title font-weight-bold black-outline-1-2 mb-0">
         <span class="txt-white-k hover-primary">

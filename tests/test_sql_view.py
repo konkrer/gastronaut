@@ -92,7 +92,7 @@ class UserViewsTestCase(TestCase):
                 sess['user_id'] = self.user.id
 
             resp = c.get(
-                f'/user/profile/{self.user.id}', follow_redirects=True)
+                f'/user/profile/{self.user.username}', follow_redirects=True)
 
         html = resp.get_data(as_text=True)
 
@@ -104,11 +104,13 @@ class UserViewsTestCase(TestCase):
 
         with self.client as c:
             resp = c.get(
-                f'/user/profile/{self.user.id}', follow_redirects=True)
+                f'/user/profile/{self.user.username}', follow_redirects=True)
 
         html = resp.get_data(as_text=True)
 
         self.assertEqual(resp.status_code, 200)
+        self.assertIn('Missions', html)
+        self.assertIn('Mission Reports', html)
         self.assertNotIn('Edit Profile', html)
 
     def test_delete_view(self):

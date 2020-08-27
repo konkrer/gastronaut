@@ -87,7 +87,11 @@
   line-height: 1.3;
 }
 
-.card-shadow {
+.card-shadow-slight {
+  box-shadow: #0000003d 0px 0px 3px;
+}
+
+.card-shadow-10 {
   box-shadow: #0000003d 0px 0px 10px;
 }
 

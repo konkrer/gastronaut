@@ -105,7 +105,8 @@ class APIViewTests(TestCase):
         with app.test_client() as c:
             with c.session_transaction() as sess:
                 sess['user_id'] = u1.id
-            c.post('/v1/preferences', json={'show_alcohol': False})
+            c.post('/v1/preferences',
+                   json={'boolean': True, 'show_alcohol': False})
 
         u1 = User.query.get(u1.id)
 

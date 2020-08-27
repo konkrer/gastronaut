@@ -523,7 +523,7 @@ class CardModalTextHtmlFunctions {
       } = report;
 
       const html = `
-    <div class="card d-inline-block my-2 mx-1 text-left mb-4 mb-lg-5 detailReport card-shadow"
+    <div class="card d-inline-block my-2 mx-1 text-left mb-4 mb-lg-5 detailReport card-shadow-10"
     data-id="${report_id}">
       <div class="card-header pt-3">
         <h5 class="mb-0">
@@ -585,7 +585,7 @@ class CardModalTextHtmlFunctions {
       } = review;
 
       const html = `
-    <div class="card d-inline-block my-2 mx-1 text-left mb-4 mb-lg-5 card-shadow">
+    <div class="card d-inline-block my-2 mx-1 text-left mb-4 mb-lg-5 card-shadow-10">
       <div class="card-header pt-3">
         <h5 class="mb-0">
           ${business.name}
