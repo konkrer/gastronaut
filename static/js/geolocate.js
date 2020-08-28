@@ -85,7 +85,7 @@ class GeolocationObj {
         this.watchError,
         this.options[1]
       );
-    }, 1000);
+    }, 2000);
   }
 
   //

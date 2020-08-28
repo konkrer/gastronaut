@@ -780,7 +780,7 @@ class ButtonsLogics {
         if (IndexAnimationsObj.sidebarOpen) IndexAnimationsObj.toggleSidebar();
         if (!$('.card-map-zone').hasClass('cards-collapse')) this.toggleCards();
       }
-      // Make camera zoom into user on next location update from location watcher.
+      // Make camera zoom into user on location update from location watcher after brief delay.
       setTimeout(() => {
         Geolocation_Obj.madeFirstUpdate = false;
       }, 2000);

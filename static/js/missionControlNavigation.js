@@ -115,13 +115,16 @@ class MissionControlNavigation {
         $('#location').prop('placeholder', 'Starting Location');
       }
       if (Map_Obj.longitude) {
-        // If watching location enable noSleep.
-        if (Geolocation_Obj.locationWatcher) {
-          // Make camera zoom into user.
-          Geolocation_Obj.madeFirstUpdate = false;
-          Geolocation_Obj.enableNoSleep();
-        }
         this_.startLocationSuccess();
+        // If watching location.
+        if (Geolocation_Obj.locationWatcher) {
+          // Don't allow display to sleep.
+          Geolocation_Obj.enableNoSleep();
+          // Make camera zoom into user on location update from location watcher after brief delay.
+          setTimeout(() => {
+            Geolocation_Obj.madeFirstUpdate = false;
+          }, 2000);
+        }
       } else alert('Enter a starting location or click the detect location button.');
     });
   }
