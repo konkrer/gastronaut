@@ -16,7 +16,6 @@ class BaseLogic {
     this.addReportsDblclickListeners();
     this.addFeedbackListener();
     this.addSignupLoginListener();
-    this.addSearchBusinessListener();
   }
 
   // Remove preloader overlay when page animations fully loaded.
@@ -257,17 +256,6 @@ class BaseLogic {
     if (confirm('Close this browser tab?')) {
       close();
     }
-  }
-
-  //
-  // Open new tab to search business name in business detail modal.
-  //
-  addSearchBusinessListener() {
-    $('#business-detail-modal').on('click', '.searchBusinessBtn', function (e) {
-      e.preventDefault();
-      const name = $(this).data('name');
-      window.open(`https://google.com/search?q=${name}`);
-    });
   }
 
   //
