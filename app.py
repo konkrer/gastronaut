@@ -444,29 +444,13 @@ def add_report():
 
     if form.validate_on_submit():
 
-        data = form.data
         relevant_data = {
             k: v
-            for k, v in data.items() if k in Report.set_get()
+            for k, v in form.data.items() if k in Report.set_get()
         }
 
-        f, path = None, ''
-        if form.photo_file.data:
-            f = form.photo_file.data
-
-            size_mb = f.seek(0, os.SEEK_END) / 1024 / 1024
-
-            if size_mb > 4:
-                relevant_data['photo_file'] = None
-                f = None
-                flash("Image upload aborted file too large!", "danger")
-            else:
-                unique_prefix = uuid4().hex
-                filename = secure_filename(f.filename)
-                path = f'static/uploads/reports/{unique_prefix}_{filename}'
-                relevant_data['photo_file'] = \
-                    f'{CLOUDFRONT_DOMAIN_NAME}/{path}'
-                f.seek(0)
+        form, relevant_data, f, path = check_file_upload_logic(
+            form, relevant_data)
 
         report = Report.create(user_id=g.user.id, mission_id=mission_id,
                                business_id=business_id, **relevant_data)
@@ -498,17 +482,8 @@ def add_report():
         kind = 'Business'
         model = Business.query.get(business_id)
         if not model:
-            data = request.args
-            # Index page adds new businesses to DB as necessary..
-            model = Business.create(
-                id=business_id, name=data['name'], city=data['city'],
-                state=data['state'], country=data['country'],
-                longitude=float(data['lng'] or 0),
-                latitude=float(data['lat'] or 0))
-            try:
-                db.session.commit()
-            except Exception as e:
-                error_logging(e)
+            model = add_new_business(business_id, request.args)
+            if model is False:
                 return BadRequest
 
     if request.method == 'POST':
@@ -530,7 +505,7 @@ def edit_report(report_id):
 
     if form.validate_on_submit():
 
-        form, f, path, old_file = checkFileUploadLogic(form)
+        form, f, path, old_file = check_file_upload_logic_w_clear(form)
 
         form.populate_obj(report)
 
@@ -1222,8 +1197,50 @@ def check_for_existing_report(mission_id, business_id):
     return existing_report
 
 
-def checkFileUploadLogic(form):
-    """Upload logic for report images with clear image functionality."""
+def add_new_business(business_id, data):
+    """Add new business logic for add report."""
+
+    model = Business.create(
+        id=business_id, name=data['name'], city=data['city'],
+        state=data['state'], country=data['country'],
+        longitude=float(data['lng'] or 0),
+        latitude=float(data['lat'] or 0))
+    try:
+        db.session.commit()
+    except Exception as e:
+        error_logging(e)
+        return False
+
+    return model
+
+
+def check_file_upload_logic(form, relevant_data):
+    """File upload logic for storing files on S3."""
+
+    f, path = None, ''
+    if form.photo_file.data:
+        f = form.photo_file.data
+
+        size_mb = f.seek(0, os.SEEK_END) / 1024 / 1024
+
+        if size_mb > 4:
+            relevant_data['photo_file'] = None
+            f = None
+            flash("Image upload aborted file too large!", "danger")
+        else:
+            unique_prefix = uuid4().hex
+            filename = secure_filename(f.filename)
+            path = f'static/uploads/reports/{unique_prefix}_{filename}'
+            relevant_data['photo_file'] = \
+                f'{CLOUDFRONT_DOMAIN_NAME}/{path}'
+            f.seek(0)
+
+    return form, relevant_data, f, path
+
+
+def check_file_upload_logic_w_clear(form):
+    """File upload logic for storing files on S3
+       with clear image functionality."""
 
     f, path, old_file = None, '', ''
 
