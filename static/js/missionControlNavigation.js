@@ -59,7 +59,7 @@ class MissionControlNavigation {
   addDetectLocationListener() {
     // detect location
     $('#detect-location').click(function () {
-      Geolocation_Obj.enableNoSleep();
+      // Geolocation_Obj.enableNoSleep();
       Geolocation_Obj.detectLocation();
     });
   }
@@ -116,8 +116,10 @@ class MissionControlNavigation {
         $('#location').prop('placeholder', 'Starting Location');
       }
       if (Map_Obj.longitude) {
+        // If no location entered and watching location enable noSleep.
+        if (!location && GeolocationObj.locationWatcher)
+          Geolocation_Obj.enableNoSleep();
         this_.startLocationSuccess();
-        if (!location) Geolocation_Obj.enableNoSleep();
       } else alert('Enter a starting location or click the detect location button.');
     });
   }

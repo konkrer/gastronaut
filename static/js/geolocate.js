@@ -78,6 +78,8 @@ class GeolocationObj {
       this.watchError,
       this.options[1]
     );
+    // If in active following navigation mode enable noSleep.
+    if (Map_Obj.profile) this.enableNoSleep();
     // Post geolocation actions.
     if (typeof IndexSearchObj !== 'undefined') IndexSearchObj.searchYelp();
     else MissionControlNavigationObj.startLocationSuccess();

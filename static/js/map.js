@@ -454,6 +454,7 @@ class MapObj {
     this.currentRoute = null;
     this.profile = null;
     this.clearNavBtnsActive();
+    Geolocation_Obj.madeFirstUpdate = false;
     Geolocation_Obj.disableNoSleep();
   }
 
