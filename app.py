@@ -55,7 +55,7 @@ if not os.environ.get('SECRET_KEY'):
 else:
     sentry_init(
         dsn="https://1faae11aaacf4e749bf6d9cc1ae5286a@o415488.ingest.sentry.io/5319947",  # NOQA E 501
-        integrations=[FlaskIntegration()]
+        integrations=[FlaskIntegration(), SqlalchemyIntegration()]
     )
     app.config["SECRET_KEY"] = os.environ.get('SECRET_KEY')
     YELP_API_KEY = os.environ.get('YELP_API_KEY')
