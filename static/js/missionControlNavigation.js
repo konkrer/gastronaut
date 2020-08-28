@@ -78,7 +78,7 @@ class MissionControlNavigation {
           Map_Obj.latitude = lat;
           Map_Obj.addUserMarker();
           Map_Obj.userMarker.togglePopup();
-          Map_Obj.clearLocationWatching();
+          Geolocation_Obj.clearLocationWatching();
           this.startLocationSuccess();
         }
       }.bind(this)
@@ -111,7 +111,7 @@ class MissionControlNavigation {
         Map_Obj.latitude = coords[1];
         Map_Obj.addUserMarker();
         Map_Obj.userMarker.togglePopup();
-        Map_Obj.clearLocationWatching();
+        Geolocation_Obj.clearLocationWatching();
         // Remove any lat/lng placeholder if user had detected location.
         $('#location').prop('placeholder', 'Starting Location');
       }
