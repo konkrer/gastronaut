@@ -77,7 +77,8 @@ class GeolocationObj {
     // Post geolocation actions.
     if (typeof IndexSearchObj !== 'undefined') IndexSearchObj.searchYelp();
     else MissionControlNavigationObj.startLocationSuccess();
-    // Watch location. Pause to ensure zoom in to user when in navigation mode.
+    // Watch location. Pause to ensure when in navigation mode the first location
+    // update causes camera to zoom in to user and is not negated by subsequent fit bounds call.
     setTimeout(() => {
       this.locationWatcher = navigator.geolocation.watchPosition(
         this.watchSuccess.bind(this),
