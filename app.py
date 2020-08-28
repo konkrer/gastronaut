@@ -466,6 +466,7 @@ def add_report():
                 path = f'static/uploads/reports/{unique_prefix}_{filename}'
                 relevant_data['photo_file'] = \
                     f'{CLOUDFRONT_DOMAIN_NAME}/{path}'
+                f.seek(0)
 
         report = Report.create(user_id=g.user.id, mission_id=mission_id,
                                business_id=business_id, **relevant_data)
