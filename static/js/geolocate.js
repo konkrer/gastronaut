@@ -72,17 +72,19 @@ class GeolocationObj {
     );
     // note user allowed geolocation
     localStorage.setItem('geoAllowed', true);
-    // Watch location.
-    this.locationWatcher = navigator.geolocation.watchPosition(
-      this.watchSuccess.bind(this),
-      this.watchError,
-      this.options[1]
-    );
-    // If in active following navigation mode enable noSleep.
+    // If in navigation mode enable noSleep.
     if (Map_Obj.profile) this.enableNoSleep();
     // Post geolocation actions.
     if (typeof IndexSearchObj !== 'undefined') IndexSearchObj.searchYelp();
     else MissionControlNavigationObj.startLocationSuccess();
+    // Watch location. Pause to ensure zoom in to user when in navigation mode.
+    setTimeout(() => {
+      this.locationWatcher = navigator.geolocation.watchPosition(
+        this.watchSuccess.bind(this),
+        this.watchError,
+        this.options[1]
+      );
+    }, 1000);
   }
 
   //
@@ -115,7 +117,6 @@ class GeolocationObj {
     }
     // If on index page search yelp.
     if (typeof IndexSearchObj !== 'undefined') IndexSearchObj.searchYelp();
-    this.disableNoSleep();
   }
 
   //
@@ -129,16 +130,16 @@ class GeolocationObj {
     // If in navigation mode zoom in to user and align for user heading.
     if (Map_Obj.currentRoute) Map_Obj.flyToUser(lng, lat, heading);
 
+    this.madeFirstUpdate = true;
     Map_Obj.latitude = lat;
     Map_Obj.longitude = lng;
     Map_Obj.heading = heading;
+    Map_Obj.addUserMarker();
     // insert lng, lat as placeholder in location input.
     $('#location').prop(
       'placeholder',
       `lat: ${lat.toFixed(2)}, lng: ${lng.toFixed(2)}`
     );
-    Map_Obj.addUserMarker();
-    this.madeFirstUpdate = true;
   }
 
   //

@@ -22,8 +22,8 @@
 }
 
 @media screen and (max-width: 575px) {
-  #detect-location,
-  #clear-filters {
+  #main-form #detect-location,
+  #main-form #clear-filters {
     padding: 6px 5px;
   }
 
@@ -137,8 +137,8 @@
 }
 
 @media screen and (min-width: 576px) and (max-width: 991px) {
-  #detect-location,
-  #clear-filters {
+  #main-form #detect-location,
+  #main-form #clear-filters {
     padding: 6px 8px;
   }
   .cat-btn {

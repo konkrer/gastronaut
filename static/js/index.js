@@ -773,6 +773,8 @@ class ButtonsLogics {
     } else IndexAnimationsObj.mapCurrCard();
     // If active navigation following user:
     if (Geolocation_Obj.locationWatcher) {
+      // Make camera zoom into user.
+      Geolocation_Obj.madeFirstUpdate = false;
       // Keep screen on.
       Geolocation_Obj.enableNoSleep();
       // If on phone size screen close sidebar and card track for full-screen navigation.

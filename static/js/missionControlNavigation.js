@@ -59,7 +59,6 @@ class MissionControlNavigation {
   addDetectLocationListener() {
     // detect location
     $('#detect-location').click(function () {
-      // Geolocation_Obj.enableNoSleep();
       Geolocation_Obj.detectLocation();
     });
   }
@@ -116,9 +115,12 @@ class MissionControlNavigation {
         $('#location').prop('placeholder', 'Starting Location');
       }
       if (Map_Obj.longitude) {
-        // If no location entered and watching location enable noSleep.
-        if (!location && GeolocationObj.locationWatcher)
+        // If watching location enable noSleep.
+        if (Geolocation_Obj.locationWatcher) {
+          // Make camera zoom into user.
+          Geolocation_Obj.madeFirstUpdate = false;
           Geolocation_Obj.enableNoSleep();
+        }
         this_.startLocationSuccess();
       } else alert('Enter a starting location or click the detect location button.');
     });

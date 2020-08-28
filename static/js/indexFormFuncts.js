@@ -242,7 +242,6 @@ class FormFuncts {
   addDetectLocationListener() {
     $('#detect-location').on('click', function (e) {
       $(this).children().removeClass('pulse-5');
-      // if (Map_Obj.profile) Geolocation_Obj.enableNoSleep();
       Geolocation_Obj.detectLocation(e);
     });
   }
