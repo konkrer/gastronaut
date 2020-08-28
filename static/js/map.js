@@ -383,8 +383,8 @@ class MapObj {
   warrantsNewHeading(lng, lat) {
     const precision = 0.000007;
     if (
-      Math.abs(this.longitude - lng) >= percision ||
-      Math.abs(this.latitude - lat) >= percision
+      Math.abs(this.longitude - lng) >= precision ||
+      Math.abs(this.latitude - lat) >= precision
     )
       return true;
     return false;
