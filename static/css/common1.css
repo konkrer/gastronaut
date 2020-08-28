@@ -68,7 +68,7 @@
 
 #business-detail-modal table {
   color: #adafae;
-  font-size: smaller;
+  font-size: small;
 }
 
 #business-detail-modal th {
@@ -100,6 +100,22 @@
   bottom: 0;
   right: 10px;
   min-height: 100px;
+}
+
+@media screen and (max-width: 315px) {
+  #business-detail-modal .modal-footer a,
+  #business-detail-modal .modal-footer button {
+    font-size: 8px !important;
+  }
+}
+@media screen and (max-width: 350px) {
+  #business-detail-modal table {
+    font-size: x-small !important;
+  }
+  #business-detail-modal .modal-footer a,
+  #business-detail-modal .modal-footer button {
+    font-size: 12px;
+  }
 }
 
 @media screen and (min-width: 576px) {

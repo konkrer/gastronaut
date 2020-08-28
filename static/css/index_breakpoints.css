@@ -19,9 +19,6 @@
   h5 {
     font-size: 1.3rem !important;
   }
-  #business-detail-modal table {
-    font-size: x-small !important;
-  }
 }
 
 @media screen and (max-width: 575px) {
@@ -51,9 +48,6 @@
   }
   .map-track #directions-panel.directionsShow {
     width: 170px;
-  }
-  #business-detail-modal table {
-    font-size: small;
   }
 }
 

@@ -466,7 +466,7 @@ class CardModalTextHtmlFunctions {
       <a href="${url}" class="txt-yelp-red" target="_blank" data-toggle="tooltip" title="See on Yelp">
         <i class="fab fa-yelp fa-2x grow-1_2-hover" ></i>
       </a>
-      <a type="button" class="ml-3 searchBusinessBtn" data-name="${name} ${city} ${state} ${country}" 
+      <a class="ml-3 searchBusinessBtn" data-name="${name} ${city} ${state} ${country}" 
       href="https://google.com" data-toggle="tooltip" title="Google &quot;${name}&quot;">
         <i class="fab fa-searchengin fa-2x grow-1_2-hover"></i>
       </a>
