@@ -780,10 +780,12 @@ class ButtonsLogics {
         if (IndexAnimationsObj.sidebarOpen) IndexAnimationsObj.toggleSidebar();
         if (!$('.card-map-zone').hasClass('cards-collapse')) this.toggleCards();
       }
+      // Make camera zoom into user on next location update from location watcher.
+      setTimeout(() => {
+        Geolocation_Obj.madeFirstUpdate = false;
+      }, 2000);
     }
     this.navStartDOMAdjustments($el);
-    // Make camera zoom into user on next location update from location watcher.
-    Geolocation_Obj.madeFirstUpdate = false;
   }
 
   //
