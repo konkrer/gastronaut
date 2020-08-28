@@ -266,7 +266,7 @@ class BaseLogic {
     $('#business-detail-modal').on('click', '.searchBusinessBtn', function (e) {
       e.preventDefault();
       const name = $(this).data('name');
-      window.open(`https://google.com/?q=${name}`);
+      window.open(`https://google.com/search?q=${name}`);
     });
   }
 
