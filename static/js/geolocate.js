@@ -7,6 +7,7 @@
 class GeolocationObj {
   constructor() {
     this.locationWatcher = null;
+    this.madeFirstUpdate = null; // Set true after locationWatcher makes first update.
     this.noSleep = new NoSleep();
     this.noSleepActive = false;
     this.options = [
@@ -32,9 +33,7 @@ class GeolocationObj {
       // Make detect location button pulse while geolocation is happening.
       $('#detect-location').children().addClass('pulse');
       // Reset
-      navigator.geolocation.clearWatch(this.locationWatcher);
-      this.locationWatcher = null;
-      Map_Obj.heading = null;
+      this.clearLocationWatching();
       // Get current position.
       navigator.geolocation.getCurrentPosition(
         this.geoSuccess.bind(this),
@@ -137,6 +136,7 @@ class GeolocationObj {
       `lat: ${lat.toFixed(2)}, lng: ${lng.toFixed(2)}`
     );
     Map_Obj.addUserMarker();
+    this.madeFirstUpdate = true;
   }
 
   //
@@ -164,6 +164,16 @@ class GeolocationObj {
   //
   watchError(err) {
     console.warn('ERROR(' + err.code + '): ' + err.message);
+  }
+
+  //
+  // Clear location watcher and reset related variables.
+  clearLocationWatching() {
+    navigator.geolocation.clearWatch(this.locationWatcher);
+    this.locationWatcher = null;
+    this.madeFirstUpdate = false;
+    this.disableNoSleep();
+    Map_Obj.heading = null;
   }
 }
 

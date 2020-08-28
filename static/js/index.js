@@ -246,10 +246,7 @@ class IndexSearchLogic {
     // if text location given and new Yelp data
     // use coords Yelp returned for lng, lat.
     if (FormFunctsObj.$locationInput.val() && data) {
-      navigator.geolocation.clearWatch(Geolocation_Obj.locationWatcher);
-      Geolocation_Obj.locationWatcher = null;
-      Geolocation_Obj.disableNoSleep();
-      Map_Obj.heading = null;
+      Geolocation_Obj.clearLocationWatching();
       this.yelpSetLocation(data);
     }
     Map_Obj.addUserMarker();

@@ -463,8 +463,12 @@ class CardModalTextHtmlFunctions {
     return `
   <div class="modal-footer">
     <div>
-      <a href="${url}" class="txt-yelp-red" target="_blank">
-        <i class="fab fa-yelp fa-lg" ></i>
+      <a href="${url}" class="txt-yelp-red" target="_blank" data-toggle="tooltip" title="See on Yelp">
+        <i class="fab fa-yelp fa-2x grow-1_2-hover" ></i>
+      </a>
+      <a type="button" class="ml-3 searchBusinessBtn" data-name="${name} ${city} ${state} ${country}" 
+      href="https://google.com" data-toggle="tooltip" title="Google &quot;${name}&quot;">
+        <i class="fab fa-searchengin fa-2x grow-1_2-hover"></i>
       </a>
     </div>
     <div>
@@ -567,7 +571,7 @@ class CardModalTextHtmlFunctions {
       : '';
     // If there are report cards prepend with Reports header and add see more reports button.
     return reportCards
-      ? `<h4 class="text-left text-info ml-3 ml-lg-5 mt-4 mb-4">Reports</h4>${reportCards}${seeMoreBtn}`
+      ? `<h4 class="text-left text-info ml-3 ml-lg-5 mt-4 mb-4">Mission Reports</h4>${reportCards}${seeMoreBtn}`
       : '';
   }
 

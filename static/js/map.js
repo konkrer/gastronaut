@@ -364,7 +364,8 @@ class MapObj {
   // and coords jitter.
   //
   flyToUser(lng, lat, heading) {
-    if (this.warrantsNewHeading(lng, lat)) {
+    // Make first update right away to zoom into user at active following navigation start.
+    if (!Geolocation_Obj.madeFirstUpdate || this.warrantsNewHeading(lng, lat)) {
       this.mappyBoi.flyTo({
         center: [this.longitude, this.latitude],
         essential: true,
@@ -380,7 +381,7 @@ class MapObj {
   // and heading adjust for flyToUser method.
   //
   warrantsNewHeading(lng, lat) {
-    const precision = 0.000005;
+    const precision = 0.000007;
     if (
       Math.abs(this.longitude - lng) >= percision ||
       Math.abs(this.latitude - lat) >= percision
@@ -525,7 +526,7 @@ class MapObj {
       waypoints: [
         {
           coordinates: [this.longitude, this.latitude],
-          approach: 'unrestricted',
+          approach: 'curb',
           bearing: this.heading ? [this.heading, 45] : null,
           radius: 'unlimited',
         },

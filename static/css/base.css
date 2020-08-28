@@ -417,6 +417,10 @@ body::-webkit-scrollbar-thumb:hover {
   .modal label:hover:not(.no-hover) {
     color: var(--blue) !important;
   }
+  .grow-1_2-hover:hover {
+    transform: scale(1.2);
+    transition: 0.4s;
+  }
 }
 
 /* preloader */
