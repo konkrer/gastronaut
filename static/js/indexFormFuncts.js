@@ -503,8 +503,8 @@ class FormFuncts {
   }
 
   focusBlur() {
-    this.$locationInput.focus();
-    this.$locationInput.blur();
+    $('#open_now').focus();
+    $('#open_now').blur();
   }
 }
 
