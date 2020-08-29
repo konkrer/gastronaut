@@ -18,10 +18,8 @@ class MapObj {
     this.homeMarker = null;
     this.userMarkerStyle = 0;
     this.markerStyle = 0;
-    // restaurant marker for index page.
-    this.restMarker = null;
-    // restaurant markers for mission-control page.
-    this.restMarkers = [];
+    this.restMarker = null; // restaurant marker for index page. Also used for navigation dest.
+    this.restMarkers = []; // restaurant markers for mission-control page.
     this.currentRoute = null;
     this.routeCache = new Set();
     this.directionsCache = {};
@@ -135,6 +133,7 @@ class MapObj {
     const html = `<span class="detailsBtn mr-2" data-id="${id}">
                     ${name}</span>`;
     if (this.restMarker) this.restMarker.remove();
+    if (this.homeMarker) this.homeMarker.remove();
     this.restMarker = this.addMarker(restCoords, html);
     // If navigation active map route to this location.
     if (this.profile) {
@@ -401,16 +400,13 @@ class MapObj {
       // If home button has home coords data begin navigation home.
       if (lng) {
         const lat = $(this).data('lat');
-        // If home coords equal rest coords display already navigating there.
-        if ((this_.restCoords[0] === lng) & (this_.restCoords[1] === lat))
-          return;
         this_.restCoords = [lng, lat];
         $(this).addClass('homeActive');
         this_.markerStyle = 1;
+        this_.addHomeMarkerRouteFitBounds();
         // If on mission-control page set currentRestMarkerIdx to -1 to indicate home destination active.
         if (typeof MissionControlNavigationObj !== 'undefined')
           MissionControlNavigationObj.currentRestMarkerIdx = -1;
-        this_.addHomeMarkerRouteFitBounds();
       } else {
         // If no home address show preferences modal to enter home address.
         $('#preferencesModal').modal('show');
@@ -455,14 +451,13 @@ class MapObj {
     this.currentRoute = null;
     this.profile = null;
     this.clearNavBtnsActive();
+    if (this.homeMarker) this.homeMarker = null;
     if (Geolocation_Obj.locationWatcher) {
       // Disable frequent location updates.
       Geolocation_Obj.clearLocationWatching();
       // Re-enable location watching with infrequent updates.
       Geolocation_Obj.enableLocationWatcher(0);
     }
-    Geolocation_Obj.madeFirstUpdate = false;
-    Geolocation_Obj.disableNoSleep();
   }
 
   //

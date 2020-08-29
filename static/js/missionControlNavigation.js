@@ -190,5 +190,6 @@ class MissionControlNavigation {
     $('#directions-panel').fadeOut();
     $('.map-routing .home').fadeOut().removeClass('homeActive');
     $('.map-routing .reset').fadeOut();
+    MissionControlObj.mapAllBusinesses();
   }
 }

@@ -759,19 +759,25 @@ class ButtonsLogics {
   // Start navigation. Update Map_Obj state, add alternate colored user marker,
   // get route for appropriate destination.
   //
-  startNavigation(e) {
+  async startNavigation(e) {
     const $el = $(e.currentTarget);
     Map_Obj.profile = $el.data('profile');
     Map_Obj.markerStyle = 1;
     Map_Obj.userMarkerStyle = 1;
     Map_Obj.addUserMarker();
+    this.navStartDOMAdjustments($el);
     // If currently navigating home show route for newly selected navigation profile.
     if ($('.map-routing .home').hasClass('homeActive')) {
       Map_Obj.showDirectionsAndLine();
       Map_Obj.fitBounds();
       // Else use IndexAnimationsObj to map current (center) card's business and route.
-    } else IndexAnimationsObj.mapCurrCard();
-    // If enabling active navigation following user:
+    } else {
+      // Pause to allow user to click home btn before mapping restaurant.
+      if (!Map_Obj.currentRoute) await Base_Obj.sleep(1500);
+      // If user didn't click home btn map current card.
+      if (!Map_Obj.homeMarker) IndexAnimationsObj.mapCurrCard();
+    }
+    // If active navigation following user:
     if (Geolocation_Obj.locationWatcher) {
       // Disable location watcher.
       Geolocation_Obj.clearLocationWatching();
@@ -788,7 +794,6 @@ class ButtonsLogics {
         if (!$('.card-map-zone').hasClass('cards-collapse')) this.toggleCards();
       }
     }
-    this.navStartDOMAdjustments($el);
   }
 
   //

@@ -535,7 +535,7 @@ class MissionControl {
       // set currentRestMarkerIdx, togglePopup.
       this_.setCurrentMarkerCoords($(this));
       // If navigation mode active show route to this business.
-      if (Map_Obj.profile) {
+      if (Map_Obj.currentRoute) {
         Map_Obj.showDirectionsAndLine();
         // Change last restMarker back to main color.
         this_.changeMarkerColor(
@@ -833,14 +833,17 @@ class MissionControl {
   // Map all businesses on mission listener.
   //
   addMapAllListener() {
-    $('.mapAll').click(
-      function () {
-        const missionId = localStorage.getItem('currMissionId');
-        const businesses = this.missionCache[missionId].businesses;
-        if (businesses) Map_Obj.fitBoundsArray(businesses);
-        $('#businesses-list').removeClass('show');
-      }.bind(this)
-    );
+    $('.mapAll').click(this.mapAllBusinesses.bind(this));
+  }
+
+  //
+  // Map all businesses.
+  //
+  mapAllBusinesses() {
+    const missionId = localStorage.getItem('currMissionId');
+    const businesses = this.missionCache[missionId].businesses;
+    if (businesses) Map_Obj.fitBoundsArray(businesses);
+    $('#businesses-list').removeClass('show');
   }
 }
 

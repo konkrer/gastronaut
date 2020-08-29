@@ -259,6 +259,15 @@ class BaseLogic {
   }
 
   //
+  // Inline sleep timer function. Dealay in ms.
+  //
+  sleep(delay) {
+    return new Promise(resolve => {
+      setTimeout(resolve, delay);
+    });
+  }
+
+  //
   // Enable service worker for PWA.
   // Pulled from Google docs about service workers.
   //

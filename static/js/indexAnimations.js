@@ -100,7 +100,7 @@ class IndexAnimations {
     const onMobile = Map_Obj.isMobileScreen();
     if (!onMobile) {
       $('.card-track-inner').addClass('opaque');
-      await this.sleep(200);
+      await Base_Obj.sleep(200);
       $('.card-track-inner').hide();
     }
 
@@ -226,15 +226,6 @@ class IndexAnimations {
     });
     $('.jsGrow').on('mouseout', function (e) {
       $(this).children().removeClass('grow-1_3');
-    });
-  }
-
-  /*
-  /* Inline sleep timer function.
-  */
-  sleep(delay) {
-    return new Promise(resolve => {
-      setTimeout(resolve, delay);
     });
   }
 }
