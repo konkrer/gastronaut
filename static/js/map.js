@@ -455,6 +455,12 @@ class MapObj {
     this.currentRoute = null;
     this.profile = null;
     this.clearNavBtnsActive();
+    if (Geolocation_Obj.locationWatcher) {
+      // Disable frequent location updates.
+      Geolocation_Obj.clearLocationWatching();
+      // Re-enable location watching with infrequent updates.
+      Geolocation_Obj.enableLocationWatcher(0);
+    }
     Geolocation_Obj.madeFirstUpdate = false;
     Geolocation_Obj.disableNoSleep();
   }

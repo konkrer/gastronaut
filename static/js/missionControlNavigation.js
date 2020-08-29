@@ -79,6 +79,8 @@ class MissionControlNavigation {
           Map_Obj.userMarker.togglePopup();
           Geolocation_Obj.clearLocationWatching();
           this.startLocationSuccess();
+          // Remove any lat/lng placeholder if user had detected location.
+          $('#location').prop('placeholder', 'Starting Location');
         }
       }.bind(this)
     );
@@ -118,11 +120,14 @@ class MissionControlNavigation {
         this_.startLocationSuccess();
         // If watching location.
         if (Geolocation_Obj.locationWatcher) {
-          // Don't allow display to sleep.
-          Geolocation_Obj.enableNoSleep();
+          // Disable location watcher.
+          Geolocation_Obj.clearLocationWatching();
           // Make camera zoom into user on location update from location watcher after brief delay.
           setTimeout(() => {
-            Geolocation_Obj.madeFirstUpdate = false;
+            // Enable frequent updates with location watcher.
+            Geolocation_Obj.enableLocationWatcher(1);
+            // Don't allow display to sleep.
+            Geolocation_Obj.enableNoSleep();
           }, 2000);
         }
       } else alert('Enter a starting location or click the detect location button.');

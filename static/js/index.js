@@ -773,17 +773,20 @@ class ButtonsLogics {
     } else IndexAnimationsObj.mapCurrCard();
     // If active navigation following user:
     if (Geolocation_Obj.locationWatcher) {
-      // Keep screen on.
-      Geolocation_Obj.enableNoSleep();
+      // Disable location watcher.
+      Geolocation_Obj.clearLocationWatching();
+      // Make camera zoom into user on location update from location watcher after brief delay.
+      setTimeout(() => {
+        // Enable frequent updates with location watcher.
+        Geolocation_Obj.enableLocationWatcher(1);
+        // Keep screen on.
+        Geolocation_Obj.enableNoSleep();
+      }, 2000);
       // If on phone size screen close sidebar and card track for full-screen navigation.
       if (Map_Obj.isMobileScreen()) {
         if (IndexAnimationsObj.sidebarOpen) IndexAnimationsObj.toggleSidebar();
         if (!$('.card-map-zone').hasClass('cards-collapse')) this.toggleCards();
       }
-      // Make camera zoom into user on location update from location watcher after brief delay.
-      setTimeout(() => {
-        Geolocation_Obj.madeFirstUpdate = false;
-      }, 2000);
     }
     this.navStartDOMAdjustments($el);
   }

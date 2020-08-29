@@ -14,7 +14,7 @@ class GeolocationObj {
       {
         enableHighAccuracy: true,
         timeout: 20000,
-        maximumAge: 15000,
+        maximumAge: 30000,
       },
       {
         enableHighAccuracy: true,
@@ -80,11 +80,10 @@ class GeolocationObj {
     // Watch location. Pause to ensure when in navigation mode the first location
     // update causes camera to zoom in to user and is not negated by subsequent fit bounds call.
     setTimeout(() => {
-      this.locationWatcher = navigator.geolocation.watchPosition(
-        this.watchSuccess.bind(this),
-        this.watchError,
-        this.options[1]
-      );
+      // If active navigation update frequently.
+      if (Map_Obj.profile) this.enableLocationWatcher(1);
+      // Update infrequently.
+      else this.enableLocationWatcher(0);
     }, 2000);
   }
 
@@ -171,7 +170,19 @@ class GeolocationObj {
   }
 
   //
+  // Enable location watcher with given option choice.
+  //
+  enableLocationWatcher(option = 0) {
+    this.locationWatcher = navigator.geolocation.watchPosition(
+      this.watchSuccess.bind(this),
+      this.watchError,
+      this.options[option]
+    );
+  }
+
+  //
   // Clear location watcher and reset related variables.
+  //
   clearLocationWatching() {
     navigator.geolocation.clearWatch(this.locationWatcher);
     this.locationWatcher = null;
