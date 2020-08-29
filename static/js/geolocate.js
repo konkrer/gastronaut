@@ -72,16 +72,21 @@ class GeolocationObj {
     );
     // note user allowed geolocation
     localStorage.setItem('geoAllowed', true);
-    // If in navigation mode enable noSleep.
-    if (Map_Obj.profile) this.enableNoSleep();
-    // Post geolocation actions.
+    // Post geolocation actions depending on page.
+    // If index page.
     if (typeof IndexSearchObj !== 'undefined') IndexSearchObj.searchYelp();
+    // Else mission-control page.
     else MissionControlNavigationObj.startLocationSuccess();
+
     // Watch location. Pause to ensure when in navigation mode the first location
     // update causes camera to zoom in to user and is not negated by subsequent fit bounds call.
     setTimeout(() => {
       // If active navigation update frequently.
-      if (Map_Obj.profile) this.enableLocationWatcher(1);
+      if (Map_Obj.profile) {
+        alert('Frequent Updates');
+        this.enableLocationWatcher(1);
+        this.enableNoSleep();
+      }
       // Update infrequently.
       else this.enableLocationWatcher(0);
     }, 2000);

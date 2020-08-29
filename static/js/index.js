@@ -771,7 +771,7 @@ class ButtonsLogics {
       Map_Obj.fitBounds();
       // Else use IndexAnimationsObj to map current (center) card's business and route.
     } else IndexAnimationsObj.mapCurrCard();
-    // If active navigation following user:
+    // If enabling active navigation following user:
     if (Geolocation_Obj.locationWatcher) {
       // Disable location watcher.
       Geolocation_Obj.clearLocationWatching();
