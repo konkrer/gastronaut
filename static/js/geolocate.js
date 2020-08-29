@@ -83,7 +83,6 @@ class GeolocationObj {
     setTimeout(() => {
       // If active navigation update frequently.
       if (Map_Obj.profile) {
-        alert('Frequent Updates');
         this.enableLocationWatcher(1);
         this.enableNoSleep();
       }
@@ -178,6 +177,7 @@ class GeolocationObj {
   // Enable location watcher with given option choice.
   //
   enableLocationWatcher(option = 0) {
+    if (option === 1) alert('Frequent Updates');
     this.locationWatcher = navigator.geolocation.watchPosition(
       this.watchSuccess.bind(this),
       this.watchError,
