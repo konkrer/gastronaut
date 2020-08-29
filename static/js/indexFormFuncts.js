@@ -1,8 +1,8 @@
 'use strict';
 
-/*
-/* Gastronaut home page main search form related functions.
-*/
+//
+// Gastronaut home page main search form related functions.
+//
 class FormFuncts {
   constructor() {
     this.$locationInput = $('#location');
@@ -36,9 +36,9 @@ class FormFuncts {
     this.initRadiusDisplayLogic();
   }
 
-  /*
-  /* Set Lng/lat data from hidden inputs then remove hidden inputs.
-  */
+  //
+  // Set Lng/lat data from hidden inputs then remove hidden inputs.
+  //
   setLngLatFromHiddenInputs() {
     Map_Obj.latitude = +$('#main-form input[name=lat]').val();
     Map_Obj.longitude = +$('#main-form input[name=lng]').val();
@@ -46,9 +46,9 @@ class FormFuncts {
     $('#main-form input[name=lng]').remove();
   }
 
-  /*
-  /* Check localStorage for last chosen category and set active
-  */
+  //
+  // Check localStorage for last chosen category and set active
+  //
   setCategoryFromStorage() {
     // check for category. if none set to all.
     let currCat = localStorage.getItem('category');
@@ -68,9 +68,9 @@ class FormFuncts {
     });
   }
 
-  /*
-  /* Check localStorage for data to bring form to last state.
-  */
+  //
+  // Check localStorage for data to bring form to last state.
+  //
   updateFormFromStorage() {
     // check for data if none return
     let data = localStorage.getItem('formData');
@@ -85,9 +85,9 @@ class FormFuncts {
     this.setFormTransactions(JSON.parse(localStorage.getItem('transactions')));
   }
 
-  /*
-  /* Set form interface (transactions) checkboxes.
-  */
+  //
+  // Set form interface (transactions) checkboxes.
+  //
   setFormTransactions(transactions) {
     if (!transactions) return;
     ['delivery', 'pickup', 'restaurant_reservation'].forEach(id => {
@@ -96,9 +96,9 @@ class FormFuncts {
     });
   }
 
-  /*
-  /* Set form data for yelp parameters from local storage or reset to default.
-  */
+  //
+  // Set form data for yelp parameters from local storage or reset to default.
+  //
   setForm(data) {
     if (data === 'default') data = this.defaultFormState;
     data = Base_Obj.convertDataArrayToObj(data);
@@ -113,10 +113,10 @@ class FormFuncts {
     this.setRadius(data.radius);
   }
 
-  /*
-  /* Turn keyword input orange or not with keyword input
-  /* and display keyword in keyword display.
-  */
+  //
+  // Turn keyword input orange or not with keyword input
+  // and display keyword in keyword display.
+  //
   keywordDisplayLogic(term) {
     if (term) {
       $('.keyword-display').text(` - ${term}`);
@@ -127,9 +127,9 @@ class FormFuncts {
     }
   }
 
-  /*
-  /* if open_at data enable datetime input, add value, and check box.
-  */
+  //
+  // if open_at data enable datetime input, add value, and check box.
+  //
   setOpenAt(open_at) {
     if (open_at) {
       $('#open_at').val(open_at).prop('disabled', false);
@@ -140,9 +140,9 @@ class FormFuncts {
     }
   }
 
-  /*
-  /* Set checkboxes based on form data.
-  */
+  //
+  // Set checkboxes based on form data.
+  //
   setCheckboxes(data) {
     // inputs to run through and check or uncheck
     const inputIds = [
@@ -168,9 +168,9 @@ class FormFuncts {
     });
   }
 
-  /*
-  /* Set sort_by radio buttons,
-  */
+  //
+  // Set sort_by radio buttons,
+  //
   setSortBy(sort_by) {
     // set sort_by radio to stored value, un-check other options.
     const sortByOptions = ['best_match', 'rating', 'review_count', 'distance'];
@@ -180,9 +180,9 @@ class FormFuncts {
     });
   }
 
-  /*
-  /* For each price option if it is checked make icon green.
-  */
+  //
+  // For each price option if it is checked make icon green.
+  //
   setPriceGroupGreen() {
     // make dollar signs green
     $('#price-group')
@@ -193,9 +193,9 @@ class FormFuncts {
       });
   }
 
-  /*
-  /* Set sort_by radio buttons,
-  */
+  //
+  // Set sort_by radio buttons,
+  //
   setRadius(radius) {
     // enable radius input and update value if radius data present
     if (radius) {
@@ -225,9 +225,9 @@ class FormFuncts {
     }
   }
 
-  /*
-  /* When form is submitted check for location to make search.
-  */
+  //
+  // When form is submitted check for location to make search.
+  //
   locationSearch() {
     if (this.$locationInput.val()) {
       $('.spinner-zone').show();
@@ -236,9 +236,9 @@ class FormFuncts {
     }
   }
 
-  /*
-  /* Detect location button functionality. Call detectLocation.
-  */
+  //
+  // Detect location button functionality. Call detectLocation.
+  //
   addDetectLocationListener() {
     $('#detect-location').on('click', function (e) {
       $(this).children().removeClass('pulse-5');
@@ -246,15 +246,25 @@ class FormFuncts {
     });
   }
 
-  /*
-  /* Auto search with search term input change.
-  */
+  //
+  // Auto search with search term input change.
+  //
   addKeywordKeyupListener() {
     const this_ = this;
     this.$searchTerm.on('keyup', function (e) {
       clearTimeout(this_.keyupTimer);
-      $('.spinner-zone').show();
       const term = this_.$searchTerm.val();
+
+      // If user hits enter search Yelp and hide mobile keyboard with focusBlur.
+      const key = e.which || e.keyCode;
+      if (key == 13) {
+        IndexSearchObj.searchYelp();
+        this_.keywordDisplayLogic(term);
+        this_.focusBlur();
+        return;
+      }
+      // Else wait for keyup timer to expire and then search yelp.
+      $('.spinner-zone').show();
       this_.keyupTimer = setTimeout(function () {
         IndexSearchObj.searchYelp();
         this_.keywordDisplayLogic(term);
@@ -262,9 +272,9 @@ class FormFuncts {
     });
   }
 
-  /*
-  /* Auto search with other form input changes.
-  */
+  //
+  // Auto search with other form input changes.
+  //
   addFormChangeListener() {
     const this_ = this;
     this.$mainForm.on('change', '.onChange', function (e) {
@@ -284,11 +294,11 @@ class FormFuncts {
     });
   }
 
-  /*
-  /* Auto search with category input change.
-  /* Set clicked category to active.
-  /* Set category in local storage and display in filter display.
-  */
+  //
+  // Auto search with category input change.
+  // Set clicked category to active.
+  // Set category in local storage and display in filter display.
+  //
   addCategoryClickListener() {
     const this_ = this;
     this.$categoryButtons.on('click', 'button', function (e) {
@@ -304,9 +314,9 @@ class FormFuncts {
     });
   }
 
-  /*
-  /* Exclusive checkbox inputs "open now" and "open at" logic.
-  */
+  //
+  // Exclusive checkbox inputs "open now" and "open at" logic.
+  //
   initOpenNowAtToggleLogic() {
     // When "open now" checked uncheck "open at".
     $('#open_now').on('click', function (e) {
@@ -329,9 +339,9 @@ class FormFuncts {
     });
   }
 
-  /*
-  /* Clear All Filters button functionality.
-  */
+  //
+  // Clear All Filters button functionality.
+  //
   addClearFiltersListener() {
     const this_ = this;
     $('#clear-filters').on('click', function (e) {
@@ -342,9 +352,9 @@ class FormFuncts {
     });
   }
 
-  /*
-  /* Turn dollar signs green when checkbox is checked by user.
-  */
+  //
+  // Turn dollar signs green when checkbox is checked by user.
+  //
   addMakeDollarsGreenListener() {
     $('#price-group').on('change', function (e) {
       const parent = e.target.parentElement;
@@ -352,12 +362,12 @@ class FormFuncts {
     });
   }
 
-  /*
-  /* Enable and disable radius range input with power button
-  /* that is located under Search Radius header.
-  /* Turn button green when radius input is enabled.
-  /* Turn display background muted or white.
-  */
+  //
+  // Enable and disable radius range input with power button
+  // that is located under Search Radius header.
+  // Turn button green when radius input is enabled.
+  // Turn display background muted or white.
+  //
   initRadiusInputToggleLogic() {
     const this_ = this;
     $('#radius-check').on('click', function () {
@@ -372,9 +382,9 @@ class FormFuncts {
     });
   }
 
-  /*
-  /* Update radius display with range input change.
-  */
+  //
+  // Update radius display with range input change.
+  //
   initRadiusDisplayLogic() {
     $('#radius').on('change', function () {
       $('.radiusDisplay').text(
@@ -383,21 +393,21 @@ class FormFuncts {
     });
   }
 
-  /*
-  /* Turn active off for all category buttons.
-  */
+  //
+  // Turn active off for all category buttons.
+  //
   turnActiveOffCatBtns() {
     this.$categoryButtons.children().each(function (index) {
       $(this).removeClass('active');
     });
   }
 
-  /*
-  /* Set location value if there is a data object
-  /* and there is location attribute on that object.
-  /* Used by page-load navbar search to show results
-  /* at last entered location.
-  */
+  //
+  // Set location value if there is a data object
+  // and there is location attribute on that object.
+  // Used by page-load navbar search to show results
+  // at last entered location.
+  //
   setLocationValue() {
     let data = localStorage.getItem('formData');
     // Set location from storage if there was location previously given.
@@ -411,9 +421,9 @@ class FormFuncts {
     }
   }
 
-  /*
-  /* If filters are on show filter indicator.
-  */
+  //
+  // If filters are on show filter indicator.
+  //
   filterIndicatorCheck() {
     const formArray = this.$mainForm.serializeArray();
     // no need to show filter indicator for these inputs
@@ -447,27 +457,27 @@ class FormFuncts {
       });
   }
 
-  /*
-  /* Get current form data as obj array.
-  /* Store in local storage as "formData".
-  */
+  //
+  // Get current form data as obj array.
+  // Store in local storage as "formData".
+  //
   setFormDataArray(data) {
     data = data ? data : this.$mainForm.serializeArray();
     localStorage.setItem('formData', JSON.stringify(data));
   }
 
-  /*
-  /* Save transactions data in local storage.
-  */
+  //
+  // Save transactions data in local storage.
+  //
   setTransactions(transactions) {
     transactions = transactions ? transactions : this.getTransactions();
     localStorage.setItem('transactions', JSON.stringify(transactions));
   }
 
-  /*
-  /* Get current interface form data as array of strings.
-  /* Used to filter results after api call.
-  */
+  //
+  // Get current interface form data as array of strings.
+  // Used to filter results after api call.
+  //
   getTransactions() {
     const transactions = [];
     $('.interface:checked').each(function (index) {
@@ -478,20 +488,20 @@ class FormFuncts {
     return transactions;
   }
 
-  /*
-  /* Check if transactions have changed.
-  /* Compare form data to storage data.
-  */
+  //
+  // Check if transactions have changed.
+  // Compare form data to storage data.
+  //
   checkTransactionsChange() {
     const transactions = JSON.stringify(this.getTransactions());
     const prevTransactions = localStorage.getItem('transactions');
     return transactions !== prevTransactions;
   }
 
-  /*
-  /* Get current form data plus lat, lng, and category
-  /* as query string for search request api endpoint.
-  */
+  //
+  // Get current form data plus lat, lng, and category
+  // as query string for search request api endpoint.
+  //
   getFormData() {
     let data = this.$mainForm.serialize();
     data = `${data}&categories=${IndexAnimationsObj.category}&limit=50`;
