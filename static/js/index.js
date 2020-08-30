@@ -357,12 +357,12 @@ class IndexSearchLogic {
   // When user scrolls to bottom of page call lockOnScrollBottom.
   //
   addlockOnScrollBottomListener() {
-    this.scrollListener = setInterval(
-      function () {
-        this.lockOnScrollBottom();
-      }.bind(this),
-      400
-    );
+    // this.scrollListener = setInterval(
+    //   function () {
+    //     this.lockOnScrollBottom();
+    //   }.bind(this),
+    //   400
+    // );
   }
 
   //
