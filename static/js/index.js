@@ -357,7 +357,7 @@ class IndexSearchLogic {
   // When user scrolls to bottom of page call lockOnScrollBottom.
   //
   addlockOnScrollBottomListener() {
-    this.$scrollListener = document.addEventListener(
+    this.$scrollListener = window.addEventListener(
       'scroll',
       this.lockOnScrollBottom.bind(this),
       { passive: true, capture: true }
@@ -375,7 +375,7 @@ class IndexSearchLogic {
       $(window).scrollTop() + $(window).height() >
       $(document).height() - 100
     ) {
-      document.removeEventListener('scroll', this.lockOnScrollBottom, {
+      window.removeEventListener('scroll', this.lockOnScrollBottom, {
         passive: true,
         capture: true,
       });
