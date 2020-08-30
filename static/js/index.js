@@ -16,8 +16,8 @@ class IndexSearchLogic {
     this.addNavbarSearchListener();
     this.addExploreBtnsListeners();
     this.setLngLatInit();
-    const makeSearch = this.checkSearchInputOrCheckLocalStorage();
-    this.lockOnScrollBottom(makeSearch);
+    this.makeSearch = this.checkSearchInputOrCheckLocalStorage();
+    this.addlockOnScrollBottomListener();
   }
 
   //
@@ -85,7 +85,7 @@ class IndexSearchLogic {
         // Resize for map.
         window.dispatchEvent(new Event('resize'));
         $('.navbar-collapse').removeClass('open');
-        this.lockOnScrollBottom(false);
+        this.addlockOnScrollBottomListener();
       }.bind(this)
     );
     // Hero explore button lock view to bottom and search.
@@ -349,30 +349,52 @@ class IndexSearchLogic {
       setTimeout(() => {
         Geolocation_Obj.detectLocation();
       }, 600);
-    // If coords use those to search.
+    // If already watching location or if there are already coords to use.
     else if (Map_Obj.longitude) this.searchYelp();
   }
 
   //
-  // When user scrolls to bottom of page call hideHeroAndSearch()
-  // if makeSearch is true. Else hide hero animation.
+  // When user scrolls to bottom of page call lockOnScrollBottom.
   //
-  lockOnScrollBottom(makeSearch = true) {
-    // this.$scrollListener = $(window).on(
-    //   'scroll',
-    //   function () {
-    //     // when bottom of screen is scrolled to.
-    //     if (
-    //       $(window).scrollTop() + $(window).height() >
-    //       $(document).height() - 100
-    //     ) {
-    //       this.$scrollListener.off();
-    //       if (makeSearch) this.hideHeroAndSearch();
-    //       else $('.hero-animation').hide();
-    //     }
-    //   }.bind(this)
-    // );
+  addlockOnScrollBottomListener() {
+    this.$scrollListener = document.addEventListener(
+      'scroll',
+      this.lockOnScrollBottom.bind(this)
+    );
   }
+
+  //
+  // When page scrolled within 100px of the bottom of the page,
+  // lock the page to the bottom view (main-interface) by removing
+  // the hero animation. Search if makeSearch flag is true.
+  //
+  lockOnScrollBottom() {
+    // when bottom of screen is scrolled to.
+    if (
+      $(window).scrollTop() + $(window).height() >
+      $(document).height() - 100
+    ) {
+      document.removeEventListener('scroll', this.lockOnScrollBottom);
+      if (this.makeSearch) {
+        this.hideHeroAndSearch();
+        this.makeSearch = false;
+      } else $('.hero-animation').hide();
+    }
+  }
+  // this.$scrollListener = $(window).on(
+  //   'scroll',
+  //   function () {
+  //     // when bottom of screen is scrolled to.
+  //     if (
+  //       $(window).scrollTop() + $(window).height() >
+  //       $(document).height() - 100
+  //     ) {
+  //       this.$scrollListener.off();
+  //       if (makeSearch) this.hideHeroAndSearch();
+  //       else $('.hero-animation').hide();
+  //     }
+  //   }.bind(this)
+  // );
 
   //
   // Set Lng/lat data from hidden inputs then remove hidden inputs.
