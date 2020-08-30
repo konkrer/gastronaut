@@ -255,16 +255,17 @@ class FormFuncts {
       clearTimeout(this_.keyupTimer);
       const term = this_.$searchTerm.val();
 
+      $('.spinner-zone').show();
       // If user hits enter search Yelp and hide mobile keyboard with focusBlur.
       const key = e.which || e.keyCode;
       if (key == 13) {
+        $;
         IndexSearchObj.searchYelp();
         this_.keywordDisplayLogic(term);
         this_.focusBlur();
         return;
       }
       // Else wait for keyup timer to expire and then search yelp.
-      $('.spinner-zone').show();
       this_.keyupTimer = setTimeout(function () {
         IndexSearchObj.searchYelp();
         this_.keywordDisplayLogic(term);

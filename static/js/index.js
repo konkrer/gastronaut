@@ -359,7 +359,8 @@ class IndexSearchLogic {
   addlockOnScrollBottomListener() {
     this.$scrollListener = document.addEventListener(
       'scroll',
-      this.lockOnScrollBottom.bind(this)
+      this.lockOnScrollBottom.bind(this),
+      { passive: true }
     );
   }
 
