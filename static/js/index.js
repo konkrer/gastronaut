@@ -360,7 +360,7 @@ class IndexSearchLogic {
     this.$scrollListener = window.addEventListener(
       'scroll',
       this.lockOnScrollBottom.bind(this),
-      { passive: true, capture: true }
+      { passive: true }
     );
   }
 
@@ -375,9 +375,8 @@ class IndexSearchLogic {
       $(window).scrollTop() + $(window).height() >
       $(document).height() - 100
     ) {
-      window.removeEventListener('scroll', this.lockOnScrollBottom, {
+      window.removeEventListener('scroll', this.lockOnScrollBottom.bind(this), {
         passive: true,
-        capture: true,
       });
       if (this.makeSearch) {
         this.hideHeroAndSearch();
