@@ -10,7 +10,7 @@ class IndexSearchLogic {
 
     // Scroll position listener to detect scroll to bottom
     // of page to hide globe animation and lock control panel view.
-    this.scrollLockerOn = true;
+    this.$scrollListener = null;
 
     this.addNavbarTogglerListener();
     this.addNavbarSearchListener();
@@ -85,8 +85,7 @@ class IndexSearchLogic {
         // Resize for map.
         window.dispatchEvent(new Event('resize'));
         $('.navbar-collapse').removeClass('open');
-        // this.addlockOnScrollBottomListener();
-        this.scrollLockerOn = true;
+        this.addlockOnScrollBottomListener();
       }.bind(this)
     );
     // Hero explore button lock view to bottom and search.
@@ -358,9 +357,10 @@ class IndexSearchLogic {
   // When user scrolls to bottom of page call lockOnScrollBottom.
   //
   addlockOnScrollBottomListener() {
-    window.addEventListener('scroll', this.lockOnScrollBottom.bind(this), {
-      passive: true,
-    });
+    this.$scrollListener = $(window).on(
+      'scroll',
+      this.lockOnScrollBottom.bind(this)
+    );
   }
 
   //
@@ -369,36 +369,19 @@ class IndexSearchLogic {
   // the hero animation. Search if makeSearch flag is true.
   //
   lockOnScrollBottom() {
-    if (!this.scrollLockerOn) return;
     // when bottom of screen is scrolled to.
     if (
       $(window).scrollTop() + $(window).height() >
       $(document).height() - 100
     ) {
-      // window.removeEventListener('scroll', this.lockOnScrollBottom.bind(this), {
-      //   passive: true,
-      // });
-      this.scrollLockerOn = false;
+      this.$scrollListener.off();
+      delete this.$scrollListener;
       if (this.makeSearch) {
         this.hideHeroAndSearch();
         this.makeSearch = false;
       } else $('.hero-animation').hide();
     }
   }
-  // this.$scrollListener = $(window).on(
-  //   'scroll',
-  //   function () {
-  //     // when bottom of screen is scrolled to.
-  //     if (
-  //       $(window).scrollTop() + $(window).height() >
-  //       $(document).height() - 100
-  //     ) {
-  //       this.$scrollListener.off();
-  //       if (makeSearch) this.hideHeroAndSearch();
-  //       else $('.hero-animation').hide();
-  //     }
-  //   }.bind(this)
-  // );
 
   //
   // Set Lng/lat data from hidden inputs then remove hidden inputs.
