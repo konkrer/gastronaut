@@ -10,7 +10,7 @@ class IndexSearchLogic {
 
     // Scroll position listener to detect scroll to bottom
     // of page to hide globe animation and lock control panel view.
-    this.$scrollListener = null;
+    this.scrollListener = null;
 
     this.addNavbarTogglerListener();
     this.addNavbarSearchListener();
@@ -357,7 +357,12 @@ class IndexSearchLogic {
   // When user scrolls to bottom of page call lockOnScrollBottom.
   //
   addlockOnScrollBottomListener() {
-    window.onscroll = this.lockOnScrollBottom.bind(this);
+    this.scrollListener = setInterval(
+      function () {
+        this.lockOnScrollBottom();
+      }.bind(this),
+      400
+    );
   }
 
   //
@@ -371,9 +376,8 @@ class IndexSearchLogic {
       $(window).scrollTop() + $(window).height() >
       $(document).height() - 100
     ) {
-      window.onscroll = null;
-      // delete this.$scrollListener;
-      if (this.makeSearch) {
+      clearInterval(this.scrollListener);
+      if (this.makeSearch && !this.firstCardsAdded) {
         this.hideHeroAndSearch();
         this.makeSearch = false;
       } else $('.hero-animation').hide();
