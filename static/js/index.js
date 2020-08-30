@@ -358,12 +358,7 @@ class IndexSearchLogic {
   // When user scrolls to bottom of page call lockOnScrollBottom.
   //
   addlockOnScrollBottomListener() {
-    this.scrollListener = setInterval(
-      function () {
-        this.lockOnScrollBottom();
-      }.bind(this),
-      400
-    );
+    this.scrollListener = setTimeout(() => this.lockOnScrollBottom(), 4000);
   }
 
   //
@@ -372,17 +367,17 @@ class IndexSearchLogic {
   // the hero animation. Search if makeSearch flag is true.
   //
   lockOnScrollBottom() {
-    // when bottom of screen is scrolled to.
-    if (
-      window.pageYOffset + window.innerHeight >
-      document.body.clientHeight - 100
-    ) {
-      clearInterval(this.scrollListener);
-      if (this.makeSearch && !this.firstCardsAdded) {
-        this.hideHeroAndSearch();
-        this.makeSearch = false;
-      } else $('.hero-animation').hide();
-    }
+    // // when bottom of screen is scrolled to.
+    // if (
+    //   window.pageYOffset + window.innerHeight >
+    //   document.body.clientHeight - 100
+    // ) {
+    // clearInterval(this.scrollListener);
+    if (this.makeSearch && !this.firstCardsAdded) {
+      this.hideHeroAndSearch();
+      this.makeSearch = false;
+    } else $('.hero-animation').hide();
+    // }
   }
 
   //
