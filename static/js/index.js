@@ -10,7 +10,7 @@ class IndexSearchLogic {
 
     // Scroll position listener to detect scroll to bottom
     // of page to hide globe animation and lock control panel view.
-    this.$scrollListener = null;
+    this.scrollLockerOn = true;
 
     this.addNavbarTogglerListener();
     this.addNavbarSearchListener();
@@ -85,7 +85,8 @@ class IndexSearchLogic {
         // Resize for map.
         window.dispatchEvent(new Event('resize'));
         $('.navbar-collapse').removeClass('open');
-        this.addlockOnScrollBottomListener();
+        // this.addlockOnScrollBottomListener();
+        this.scrollLockerOn = true;
       }.bind(this)
     );
     // Hero explore button lock view to bottom and search.
@@ -357,11 +358,9 @@ class IndexSearchLogic {
   // When user scrolls to bottom of page call lockOnScrollBottom.
   //
   addlockOnScrollBottomListener() {
-    this.$scrollListener = window.addEventListener(
-      'scroll',
-      this.lockOnScrollBottom.bind(this),
-      { passive: true }
-    );
+    window.addEventListener('scroll', this.lockOnScrollBottom.bind(this), {
+      passive: true,
+    });
   }
 
   //
@@ -370,14 +369,16 @@ class IndexSearchLogic {
   // the hero animation. Search if makeSearch flag is true.
   //
   lockOnScrollBottom() {
+    if (!this.scrollLockerOn) return;
     // when bottom of screen is scrolled to.
     if (
       $(window).scrollTop() + $(window).height() >
       $(document).height() - 100
     ) {
-      window.removeEventListener('scroll', this.lockOnScrollBottom.bind(this), {
-        passive: true,
-      });
+      // window.removeEventListener('scroll', this.lockOnScrollBottom.bind(this), {
+      //   passive: true,
+      // });
+      this.scrollLockerOn = false;
       if (this.makeSearch) {
         this.hideHeroAndSearch();
         this.makeSearch = false;
