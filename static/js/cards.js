@@ -198,9 +198,9 @@ class CardsModalsFactory {
         <div class="modal-content">
           <div class="modal-header">
             <div></div>
-            <h5 class="modal-title text-warning" id="businessDetailTitle">
+            <h4 class="modal-title text-warning" id="businessDetailTitle">
               ${name}
-            </h5>
+            </h4>
             <button
               type="button"
               class="close ssp"
@@ -572,7 +572,7 @@ class CardModalTextHtmlFunctions {
       : '';
     // If there are report cards prepend with Reports header and add see more reports button.
     return reportCards
-      ? `<h4 class="text-left text-warning ml-3 ml-lg-5 mt-5 mb-4">Mission Reports</h4>${reportCards}${seeMoreBtn}`
+      ? `<h5 class="text-left text-warning opacity-9 ml-3 ml-lg-5 mt-5 mb-4">Mission Reports</h5>${reportCards}${seeMoreBtn}`
       : '';
   }
 
@@ -616,7 +616,7 @@ class CardModalTextHtmlFunctions {
 
     // Prepend header if there are Yelp review cards.
     return reportCards
-      ? `<h4 class="text-left txt-yelp-red ml-3 ml-lg-5 mt-5 mb-4">Yelps</h4>${reportCards}`
+      ? `<h5 class="text-left txt-yelp-red ml-3 ml-lg-5 mt-5 mb-4">Yelps</h5>${reportCards}`
       : '';
   }
 

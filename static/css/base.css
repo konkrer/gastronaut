@@ -315,6 +315,10 @@ body {
   position: fixed;
 }
 
+.opacity-9 {
+  opacity: 0.9;
+}
+
 .opaque {
   opacity: 0;
 }
