@@ -1,7 +1,6 @@
 :root {
   --font-main: 'Source Sans Pro', sans-serif;
   --vh-minus-navbar: calc(100vh - 53px);
-  --my-warning: #ff8b3f;
   --my-green: #3bdb53;
   --my-info: #050836;
   --my-info-alt: #430986;
@@ -152,10 +151,6 @@ body {
   color: black !important;
 }
 
-.txt-warning {
-  color: var(--my-warning) !important;
-}
-
 .txt-green {
   color: var(--my-green) !important;
 }
@@ -181,7 +176,7 @@ body {
 }
 
 .txt-yelp-red {
-  color: #d32323 !important;
+  color: hsla(0, 72%, 48%, 0.9) !important;
 }
 
 .bg-green {
@@ -190,10 +185,6 @@ body {
 
 .bg-purp {
   background-color: var(--my-info);
-}
-
-.bg-orange {
-  background-color: var(--my-warning) !important;
 }
 
 .bg-black {
@@ -298,8 +289,8 @@ body {
 }
 
 .orange-outline {
-  text-shadow: var(--my-warning) 1px 1px 1px, var(--my-warning) -1px -1px 1px,
-    var(--my-warning) 1px -1px 1px, var(--my-warning) -1px 1px 1px;
+  text-shadow: var(--warning) 1px 1px 1px, var(--warning) -1px -1px 1px,
+    var(--warning) 1px -1px 1px, var(--warning) -1px 1px 1px;
 }
 
 .yellow-outline {
@@ -355,7 +346,7 @@ body::-webkit-scrollbar {
 }
 
 body::-webkit-scrollbar-thumb {
-  background-color: var(--my-warning);
+  background-color: var(--warning);
   border-radius: 5px;
 }
 
@@ -421,6 +412,9 @@ body::-webkit-scrollbar-thumb:hover {
     transform: scale(1.2);
     transition: 0.4s;
   }
+  .card-text-noHover:hover {
+    color: unset !important;
+  }
 }
 
 /* preloader */
@@ -446,8 +440,8 @@ body::-webkit-scrollbar-thumb:hover {
   height: 100px;
   width: 100px;
   border: 4px solid transparent;
-  border-top-color: var(--my-warning);
-  border-left-color: var(--my-warning);
+  border-top-color: var(--warning);
+  border-left-color: var(--warning);
   border-radius: 50%;
   -webkit-animation: spin 1.5s linear infinite;
   animation: spin 1.5s linear infinite;

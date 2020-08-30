@@ -338,6 +338,7 @@ class IndexSearchLogic {
   hideHeroAndSearch() {
     $('.hero-animation').hide();
     $('.alert').hide();
+    $('.spinner-zone').show();
     IndexAnimationsObj.scrollCategoriesToCurrent();
     // if there is given location request search
     if (FormFunctsObj.$locationInput.val()) this.searchYelp();

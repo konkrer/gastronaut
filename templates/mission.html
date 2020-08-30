@@ -37,12 +37,12 @@
   <div class="middle-gap py-3 px-5 py-sm-1 p-lg-0 flx-std">
     {% if user.username != 'Former User' %}
     <a href="/user/profile/{{user.username}}">
-      <h4 class="txt-warning brand-outline mr-5">
+      <h4 class="text-warning brand-outline mr-5">
         <em>@{{user.username}}</em>
       </h4>
     </a>
     {% else %}
-    <h4 class="txt-warning brand-outline mr-5">
+    <h4 class="text-warning brand-outline mr-5">
       <em>@{{user.username}}</em>
     </h4>
     {% endif %}

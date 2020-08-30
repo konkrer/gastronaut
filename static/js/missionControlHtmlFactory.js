@@ -23,7 +23,7 @@ class MissionControlHtmFactory {
       <a class="font-weight-bold " 
         data-toggle="collapse" href="#mission-form" 
         role="button" aria-expanded="false" aria-controls="mission-form">
-        <div  class="txt-warning hoverBlue">
+        <div  class="text-warning hoverBlue">
           <span class="panel-toggle pt-1 rounded-right">
             ${editor ? 'Edit Details ' : 'Details '}
           <i class="fas fa-caret-down fa-xs text-dark ml-2"></i>
@@ -194,29 +194,29 @@ class MissionControlHtmFactory {
               <span class="mapBtn mr-2" data-toggle="tooltip" title="Show on Map" data-lng="${
                 el.longitude
               }" data-lat="${el.latitude}">
-                <i class="fas fa-map-marked-alt brand-outline txt-warning iconBtn"></i>
+                <i class="fas fa-map-marked-alt brand-outline text-warning iconBtn"></i>
               </span>
               <span class="detailsBtn mr-2" data-toggle="tooltip" title="Show Details" data-id="${
                 el.id
               }">
-                <i class="fas fa-clipboard-list brand-outline txt-warning iconBtn"></i>
+                <i class="fas fa-clipboard-list brand-outline text-warning iconBtn"></i>
               </span>
               <span class="flagBtn mr-2" data-toggle="tooltip" title="Plant a Flag" data-name="${
                 el.name
               }">
-                <i class="fas fa-flag brand-outline txt-warning iconBtn"></i>
+                <i class="fas fa-flag brand-outline text-warning iconBtn"></i>
               </span>
               <span data-toggle="tooltip" title="Write Report">
                 <a target="_blank" href="/report?business_id=${
                   el.id
                 }&cancel_url=javascript:Base_Obj.close_current_tab()">
-                  <i class="fas fa-pen-alt brand-outline txt-warning iconBtn"></i>
+                  <i class="fas fa-pen-alt brand-outline text-warning iconBtn"></i>
                 </a>
               </span>
               ${
                 missionData.mission.editor
                   ? `<span class = "removeBusinessBtn ml-2" data-toggle="tooltip" title="Remove from mission">
-                      <i class="fas fa-trash-alt brand-outline txt-warning iconBtn"></i>
+                      <i class="fas fa-trash-alt brand-outline text-warning iconBtn"></i>
                      </span>`
                   : ''
               }
@@ -240,7 +240,7 @@ class MissionControlHtmFactory {
     const html = `
       <a class="font-weight-bold " data-toggle="collapse" href="#create-form" 
         role="button" aria-expanded="false" aria-controls="mission-form">
-        <div class="hoverOpaque txt-warning hoverBlue">
+        <div class="hoverOpaque text-warning hoverBlue">
           <span class="panel-toggle rounded-right"
             >Create Mission<i class="fas fa-caret-down fa-xs text-dark ml-2"></i
           ></span>

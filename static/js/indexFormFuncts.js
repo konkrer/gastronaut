@@ -120,10 +120,10 @@ class FormFuncts {
   keywordDisplayLogic(term) {
     if (term) {
       $('.keyword-display').text(` - ${term}`);
-      this.$searchTerm.val(term).addClass('bg-orange');
+      this.$searchTerm.val(term).addClass('bg-warning');
     } else {
       $('.keyword-display').text(``);
-      this.$searchTerm.val('').removeClass('bg-orange');
+      this.$searchTerm.val('').removeClass('bg-warning');
     }
   }
 

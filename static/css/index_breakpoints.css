@@ -368,9 +368,6 @@
   #mission-choices a:hover {
     color: var(--my-info) !important;
   }
-  .card-text-noHover:hover {
-    color: unset;
-  }
   .my-card li a:hover {
     color: white;
   }
@@ -386,7 +383,7 @@
   .map-toggle:hover,
   .toggleCards:hover,
   button.mapboxgl-ctrl-fullscreen:hover {
-    background-color: var(--my-warning) !important;
+    background-color: var(--warning) !important;
     transition: 0.4s;
     transform: scale(1.1);
     border-radius: 5px;

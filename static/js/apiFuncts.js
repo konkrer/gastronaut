@@ -257,7 +257,7 @@ class ApiFuncts {
       }
       if (!resp || resp.data.error) {
         $('#mission-choices .feedback').html(
-          '<p class="txt-warning">Error</p>'
+          '<p class="text-warning">Error</p>'
         );
         Sentry.captureMessage(
           'Something went wrong: api_functs.addBusinessToMisionListener'
@@ -307,7 +307,7 @@ class ApiFuncts {
         }
         if (!resp || resp.data.error) {
           $('#mission-choices .feedback').html(
-            '<p class="txt-warning">Error</p>'
+            '<p class="text-warning">Error</p>'
           );
           Sentry.captureMessage(
             'Something went wrong: api_functs.addBusinessToMisionListener'

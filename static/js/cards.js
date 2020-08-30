@@ -45,7 +45,7 @@ class CardsModalsFactory {
     return `
     <div class="my-card flx-std no-results"
     >
-      <div class="txt-warning brand-outline txt-xxl">
+      <div class="text-warning brand-outline txt-xxl">
       No Results!
       </div>
     </div>
@@ -115,14 +115,14 @@ class CardsModalsFactory {
     }
         </p>
         <button
-          class="btn btn-sm btn-primary-alt2 btn-my-card mr-2 mr-sm-1 mr-md-2 px-3 px-sm-2 px-md--3 brand-outline txt-warning detailsBtnCard"
+          class="btn btn-sm btn-primary-alt2 btn-my-card mr-2 mr-sm-1 mr-md-2 px-3 px-sm-2 px-md--3 brand-outline text-warning detailsBtnCard"
           data-toggle="tooltip"
           title="Details"
         >
           <i class="fas fa-clipboard-list fa-lg"></i>
         </button>
         <button
-          class="btn btn-sm btn-primary-alt2 btn-my-card cardMapButton brand-outline txt-warning mr-2 mr-sm-1 mr-md-2 px-3 px-sm-2 px-md--3"
+          class="btn btn-sm btn-primary-alt2 btn-my-card cardMapButton brand-outline text-warning mr-2 mr-sm-1 mr-md-2 px-3 px-sm-2 px-md--3"
           data-toggle="tooltip"
           title="Show on Map"
         >
@@ -142,7 +142,7 @@ class CardsModalsFactory {
             data-id="${id}"
           >
             <i class="fas fa-plus-square mr-2"></i>
-            <i class="fas fa-rocket fa-lg txt-warning brand-outline"></i>
+            <i class="fas fa-rocket fa-lg text-warning brand-outline"></i>
           </button>
         </span>
       </div>
@@ -198,7 +198,7 @@ class CardsModalsFactory {
         <div class="modal-content">
           <div class="modal-header">
             <div></div>
-            <h5 class="modal-title txt-warning" id="businessDetailTitle">
+            <h5 class="modal-title text-warning" id="businessDetailTitle">
               ${name}
             </h5>
             <button
@@ -314,10 +314,10 @@ class CardModalTextHtmlFunctions {
   makeReviewStarsWithHalves(rating) {
     let stars = '';
     for (let idx = 0; idx < parseInt(rating); idx++) {
-      stars = `${stars}${'<i class="far fa-star fa-lg yellow-outline mr-2"></i>'}`;
+      stars = `${stars}${'<i class="far fa-star fa-lg yellow-outline text-secondary mr-2"></i>'}`;
     }
     if (rating % 1)
-      stars = `${stars}${'<i class="far fa-star-half fa-lg yellow-outline mr-2"></i>'}`;
+      stars = `${stars}${'<i class="far fa-star-half fa-lg yellow-outline text-secondary mr-2"></i>'}`;
     return stars;
   }
 
@@ -488,13 +488,13 @@ class CardModalTextHtmlFunctions {
           data-id="${id}"
         >
           <i class="fas fa-plus-square mr-2"></i>
-          <i class="fas fa-rocket fa-lg txt-warning brand-outline"></i>
+          <i class="fas fa-rocket fa-lg text-warning brand-outline"></i>
         </button>
       </span>
       <span data-toggle="tooltip" title="Write Report">
         <a href="/report?business_id=${id}&cancel_url=javascript:Base_Obj.close_current_tab()" target="_blank">
           <button type="button" class="btn btn-primary-alt2 mr-1 writeReport">      
-            <i class="fas fa-pen-alt brand-outline txt-warning iconBtn fa-lg"></i>
+            <i class="fas fa-pen-alt brand-outline text-warning iconBtn fa-lg"></i>
           </button>
         </a>
       </span>
@@ -537,7 +537,7 @@ class CardModalTextHtmlFunctions {
         <h5 class="lead txt-green black-outline-1"><small>Business Report</small></h5>
         <div class="card-text">
           <a href="/user/profile/${username}" target="_blank">
-            <em class="txt-warning black-outline-1"> by @${username}</em>
+            <em class="text-warning black-outline-1"> by @${username}</em>
           </a>
           <div class="txt-smlr">
             ${submitted_on}
@@ -572,7 +572,7 @@ class CardModalTextHtmlFunctions {
       : '';
     // If there are report cards prepend with Reports header and add see more reports button.
     return reportCards
-      ? `<h4 class="text-left text-info ml-3 ml-lg-5 mt-4 mb-4">Mission Reports</h4>${reportCards}${seeMoreBtn}`
+      ? `<h4 class="text-left text-warning ml-3 ml-lg-5 mt-5 mb-4">Mission Reports</h4>${reportCards}${seeMoreBtn}`
       : '';
   }
 
@@ -597,7 +597,7 @@ class CardModalTextHtmlFunctions {
         </h5>
         <div class="my-2 txt-xs">${this.makeReviewStarsWithHalves(rating)}</div>
         <div class="card-text">
-          <em class="txt-warning black-outline-1"> by ${name}</em>
+          <em class="text-warning black-outline-1"> by ${name}</em>
           <div class="txt-smlr">
             ${time_created}
           </div>
@@ -616,7 +616,7 @@ class CardModalTextHtmlFunctions {
 
     // Prepend header if there are Yelp review cards.
     return reportCards
-      ? `<h4 class="text-left text-info ml-3 ml-lg-5 mt-4 mb-4">Yelps</h4>${reportCards}`
+      ? `<h4 class="text-left txt-yelp-red ml-3 ml-lg-5 mt-5 mb-4">Yelps</h4>${reportCards}`
       : '';
   }
 

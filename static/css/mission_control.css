@@ -79,7 +79,7 @@ a[href='#mission-select-form'] {
   background-color: var(--light);
 }
 #businesses-list::-webkit-scrollbar-thumb {
-  background-color: var(--my-warning);
+  background-color: var(--warning);
   border-radius: 5px;
 }
 #businesses-list::-webkit-scrollbar-thumb:hover {
