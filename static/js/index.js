@@ -357,10 +357,7 @@ class IndexSearchLogic {
   // When user scrolls to bottom of page call lockOnScrollBottom.
   //
   addlockOnScrollBottomListener() {
-    this.$scrollListener = $(window).on(
-      'scroll',
-      this.lockOnScrollBottom.bind(this)
-    );
+    window.onscroll = this.lockOnScrollBottom.bind(this);
   }
 
   //
@@ -374,8 +371,8 @@ class IndexSearchLogic {
       $(window).scrollTop() + $(window).height() >
       $(document).height() - 100
     ) {
-      this.$scrollListener.off();
-      delete this.$scrollListener;
+      window.onscroll = null;
+      // delete this.$scrollListener;
       if (this.makeSearch) {
         this.hideHeroAndSearch();
         this.makeSearch = false;
