@@ -336,7 +336,7 @@ class IndexSearchLogic {
   // Hide hero animation and make yelp search.
   //
   hideHeroAndSearch() {
-    $('.hero-animation').hide();
+    // $('.hero-animation').hide();
     $('.alert').hide();
     $('.spinner-zone').show();
     IndexAnimationsObj.scrollCategoriesToCurrent();
@@ -377,11 +377,10 @@ class IndexSearchLogic {
       document.body.clientHeight - 100
     ) {
       this.$scrollListener.off();
-      // if (this.makeSearch && !this.firstCardsAdded) {
-      //   this.hideHeroAndSearch();
-      //   this.makeSearch = false;
-      // } else
-      $('.hero-animation').hide();
+      if (this.makeSearch && !this.firstCardsAdded) {
+        this.hideHeroAndSearch();
+        this.makeSearch = false;
+      } else $('.hero-animation').hide();
     }
   }
 

@@ -244,7 +244,7 @@ class CardsModalsFactory {
               ${this.funct.makeTransactionsHtml(transactions)}
               ${this.funct.makePhoneHtml(phone, display_phone)}
               <li class="list-group-item bg-transparent">
-              <a target="_blank"
+              <a target="_blank" class="opacity-9"
                  href="https://www.google.com/maps/dir/?api=1&origin=${this.funct.makeOriginString()}&destination=${lat},${lng}&dir_action=navigate"
                 >
                   <div>${street ? street : ''}</div>
@@ -342,7 +342,7 @@ class CardModalTextHtmlFunctions {
     return phone
       ? `
       <li class="list-group-item bg-transparent"> 
-        <a href="tel:${phone}">${display_phone}</a> 
+        <a href="tel:${phone}" class="opacity-9">${display_phone}</a> 
       </li>`
       : '';
   }
@@ -466,7 +466,7 @@ class CardModalTextHtmlFunctions {
       <a href="${url}" class="txt-yelp-red" target="_blank" data-toggle="tooltip" title="See on Yelp">
         <i class="fab fa-yelp fa-2x grow-1_2-hover" ></i>
       </a>
-      <a class="ml-3" target="_blank"
+      <a class="ml-3 opacity-9" target="_blank"
       href="https://google.com/search?q=${name} ${city} ${state} ${country}"
       data-toggle="tooltip" title="Google &quot;${name}&quot;">
         <i class="fab fa-searchengin fa-2x grow-1_2-hover"></i>
@@ -607,7 +607,7 @@ class CardModalTextHtmlFunctions {
         ${text}
       </div>
       <div class="card-footer text-right">
-        <a href="${url}" target="_blank">Read More</a>
+        <a href="${url}" target="_blank" class="opacity-9">Read More</a>
       </div>
     </div>`;
 
@@ -702,7 +702,7 @@ class CardModalTextHtmlFunctions {
   addReadMoreText(text, report_id) {
     if (text.length > 500)
       return `
-      <a href="/report/${report_id}" class="float-right" target="_blank"
+      <a href="/report/${report_id}" class="float-right opacity-9" target="_blank"
       >Read More</a>`;
     return '';
   }
