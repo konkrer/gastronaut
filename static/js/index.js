@@ -82,6 +82,7 @@ class IndexSearchLogic {
         $('.hero-animation').toggle();
         $('.alert').hide();
         $('nav.navbar').removeClass('display-flex-important');
+        // Resize for map.
         window.dispatchEvent(new Event('resize'));
         $('.navbar-collapse').removeClass('open');
         this.lockOnScrollBottom(false);
@@ -357,20 +358,20 @@ class IndexSearchLogic {
   // if makeSearch is true. Else hide hero animation.
   //
   lockOnScrollBottom(makeSearch = true) {
-    this.$scrollListener = $(window).on(
-      'scroll',
-      function () {
-        // when bottom of screen is scrolled to.
-        if (
-          $(window).scrollTop() + $(window).height() >
-          $(document).height() - 100
-        ) {
-          this.$scrollListener.off();
-          if (makeSearch) this.hideHeroAndSearch();
-          else $('.hero-animation').hide();
-        }
-      }.bind(this)
-    );
+    // this.$scrollListener = $(window).on(
+    //   'scroll',
+    //   function () {
+    //     // when bottom of screen is scrolled to.
+    //     if (
+    //       $(window).scrollTop() + $(window).height() >
+    //       $(document).height() - 100
+    //     ) {
+    //       this.$scrollListener.off();
+    //       if (makeSearch) this.hideHeroAndSearch();
+    //       else $('.hero-animation').hide();
+    //     }
+    //   }.bind(this)
+    // );
   }
 
   //
@@ -552,7 +553,7 @@ class ParamsChange {
 
 class ButtonsLogics {
   constructor() {
-    this.addMapBusinessBtnListeners();
+    this.addMapBusinessBtnListener();
     this.addMapToggleBtnListener();
     this.addCardsToggleBtnListener();
     this.addBusinessDetailsListeners();
@@ -563,15 +564,18 @@ class ButtonsLogics {
   }
 
   //
-  // Show restaurant marker and fit bounds when card map button is clicked.
+  // Listen for card map button click and call mapBusiness.
   //
-  addMapBusinessBtnListeners() {
+  addMapBusinessBtnListener() {
     const this_ = this;
     $('.card-track-inner').on('click', '.cardMapButton', function () {
       this_.mapBusiness($(this));
     });
   }
 
+  //
+  // Show restaurant marker and fit bounds when card map button is clicked.
+  //
   mapBusiness($el) {
     const lng = $el.next().children().data('lng');
     const lat = $el.next().children().data('lat');
