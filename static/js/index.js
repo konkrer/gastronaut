@@ -73,19 +73,16 @@ class IndexSearchLogic {
   }
 
   addExploreBtnsListeners() {
-    // Navbar explore button toggles view lock to bottom
-    // and toggles globe animation display.
+    // Navbar explore button closes navbar slideout menu.
     $('.explore-nav').on(
       'click',
       function (e) {
         e.preventDefault();
-        $('.hero-animation').toggle();
         $('.alert').hide();
         $('nav.navbar').removeClass('display-flex-important');
-        // Resize for map.
-        window.dispatchEvent(new Event('resize'));
+        // // Resize for map.
+        // window.dispatchEvent(new Event('resize'));
         $('.navbar-collapse').removeClass('open');
-        this.addlockOnScrollBottomListener();
       }.bind(this)
     );
     // Hero explore button lock view to bottom and search.
@@ -336,7 +333,7 @@ class IndexSearchLogic {
   // Hide hero animation and make yelp search.
   //
   hideHeroAndSearch() {
-    // $('.hero-animation').hide();
+    $('.hero-animation').remove();
     $('.alert').hide();
     $('.spinner-zone').show();
     IndexAnimationsObj.scrollCategoriesToCurrent();

@@ -6,6 +6,7 @@
   --my-info-alt: #430986;
   --my-purp: #1c0536;
   --my-secondary: #757575;
+  --my-orange-dark: #ff6701;
   --primary: #03109b !important;
   --primary-alt: #213a52;
   --primary-alt2: #0b105a;
@@ -161,6 +162,10 @@ body {
 
 .txt-info {
   color: var(--my-info) !important;
+}
+
+.txt-orange-dark {
+  color: var(--my-orange-dark);
 }
 
 .txt-purp {
@@ -355,7 +360,7 @@ body::-webkit-scrollbar-thumb {
 }
 
 body::-webkit-scrollbar-thumb:hover {
-  background-color: #ff6701;
+  background-color: var(--my-orange-dark);
 }
 
 .navbar-traverse {

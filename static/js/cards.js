@@ -244,11 +244,11 @@ class CardsModalsFactory {
               ${this.funct.makeTransactionsHtml(transactions)}
               ${this.funct.makePhoneHtml(phone, display_phone)}
               <li class="list-group-item bg-transparent">
-              <a target="_blank" class="opacity-9"
+              <a target="_blank"
                  href="https://www.google.com/maps/dir/?api=1&origin=${this.funct.makeOriginString()}&destination=${lat},${lng}&dir_action=navigate"
                 >
-                  <div>${street ? street : ''}</div>
-                  <div>${city_disp ? city_disp : ''}</div>
+                  <div class="opacity-9">${street ? street : ''}</div>
+                  <div class="opacity-9">${city_disp ? city_disp : ''}</div>
                 </a>
               </li>
               <li class="list-group-item bg-transparent card-text-noHover">
@@ -572,7 +572,7 @@ class CardModalTextHtmlFunctions {
       : '';
     // If there are report cards prepend with Reports header and add see more reports button.
     return reportCards
-      ? `<h5 class="text-left text-warning opacity-9 ml-3 ml-lg-5 mt-5 mb-4">Mission Reports</h5>${reportCards}${seeMoreBtn}`
+      ? `<h5 class="text-left txt-orange-dark ml-3 ml-lg-5 mt-5 mb-4">Mission Reports</h5>${reportCards}${seeMoreBtn}`
       : '';
   }
 
