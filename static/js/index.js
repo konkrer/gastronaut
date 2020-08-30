@@ -357,12 +357,12 @@ class IndexSearchLogic {
   // When user scrolls to bottom of page call lockOnScrollBottom.
   //
   addlockOnScrollBottomListener() {
-    // this.scrollListener = setInterval(
-    //   function () {
-    //     this.lockOnScrollBottom();
-    //   }.bind(this),
-    //   400
-    // );
+    this.scrollListener = setInterval(
+      function () {
+        this.lockOnScrollBottom();
+      }.bind(this),
+      400
+    );
   }
 
   //
@@ -373,8 +373,8 @@ class IndexSearchLogic {
   lockOnScrollBottom() {
     // when bottom of screen is scrolled to.
     if (
-      $(window).scrollTop() + $(window).height() >
-      $(document).height() - 100
+      window.pageYOffset + window.innerHeight >
+      document.body.clientHeight - 100
     ) {
       clearInterval(this.scrollListener);
       if (this.makeSearch && !this.firstCardsAdded) {
