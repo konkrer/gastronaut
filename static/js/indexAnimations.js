@@ -28,14 +28,14 @@ class IndexAnimations {
       el: '.hero-animation',
       mouseControls: true,
       touchControls: true,
-      gyroControls: true,
+      gyroControls: false,
       minHeight: 200.0,
       minWidth: 200.0,
       scale: 1.0,
-      scaleMobile: 1.0,
+      scaleMobile: 0.5,
       color: 0xbc7aa,
-      color2: 0x8f8f8f,
-      size: 1.0,
+      color2: 0xffbb00, // mellow white 0x8f8f8f
+      size: 1.4,
       backgroundColor: 0x0b105a,
     });
   }
