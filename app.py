@@ -1082,7 +1082,6 @@ def check_google_token():
 
     # ID token is valid. Get the user's Google Account ID.
     google_id = idinfo['sub']
-    capture_message(f'google id={google_id}')
 
     user = User.query.filter_by(password=google_id).first()
 

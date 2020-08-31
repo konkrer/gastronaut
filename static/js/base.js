@@ -198,32 +198,37 @@ class BaseLogic {
   }
 
   //
-  // Listen for user logging out and log user out of this app with
-  // google if user signed in through google.
+  // Listen for user logging out and call logoutGoogle.
   //
   addLogoutGoogleListener() {
     const this_ = this;
     $('#logout-form').submit(function (e) {
-      // The first time this function is called check for google login.
-      // Next time it is triggered it will run un-abated and call endpoint.
-      if (this_.checkGoogleLogin) {
-        e.preventDefault();
-
-        gapi.load('auth2', async function () {
-          /* Ready. Make a call to gapi.auth2.init or some other API */
-          await gapi.auth2.init({
-            client_id:
-              '992789148520-btgg6dtlrk8rkght89rfvdbfgu2ljeut.apps.googleusercontent.com',
-          });
-          const auth2 = gapi.auth2.getAuthInstance();
-          if (auth2) await auth2.signOut();
-        });
-
-        this_.checkGoogleLogin = false;
-
-        // $(this).trigger(e.type);
-      }
+      this_.logoutGoogle(e, $(this), this_);
     });
+  }
+
+  //
+  // log user out of this app with google if user signed in through google.
+  //
+  logoutGoogle(e, $el, class_instance) {
+    // The first time this function is called check for google login and logout from google.
+    // Then trigger event again and do not preventDefault thereby calling Gastronaut logout endpoint.
+    if (class_instance.checkGoogleLogin) {
+      e.preventDefault();
+
+      // Load and sign user out if signed in.
+      gapi.load('auth2', async function () {
+        await gapi.auth2.init({
+          client_id:
+            '992789148520-btgg6dtlrk8rkght89rfvdbfgu2ljeut.apps.googleusercontent.com',
+        });
+        const auth2 = gapi.auth2.getAuthInstance();
+        if (auth2) await auth2.signOut();
+      });
+      // Set flag false and trigger event again.
+      class_instance.checkGoogleLogin = false;
+      $el.trigger(e.type);
+    }
   }
 
   //

@@ -7,6 +7,7 @@
 <head>
   {% block head %}
   <meta name="description" content="User edit profile page." />
+  <script defer src="/static/js/deleteUser.js"></script>
   {% endblock %}
 </head>
 
@@ -66,7 +67,12 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <form method="POST" action="/user/delete" class="form-inline">
+        <form
+          method="POST"
+          action="/user/delete"
+          class="form-inline"
+          id="delete-user-form"
+        >
           <div class="modal-body">
             <p class="txt-white-k">
               Are you sure you want to delete your account?

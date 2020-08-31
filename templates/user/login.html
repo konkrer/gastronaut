@@ -7,7 +7,13 @@
 <head>
   {% block head %}
   <meta name="description" content="User login page." />
-  <link rel=“canonical” href=“https://gastronaut.life/login" /> {% endblock %}
+  <meta
+    name="google-signin-client_id"
+    content="992789148520-btgg6dtlrk8rkght89rfvdbfgu2ljeut.apps.googleusercontent.com"
+  />
+  <link rel=“canonical” href=“https://gastronaut.life/login" />
+  <script src="/static/js/googleLogin.js" async defer></script>
+  {% endblock %}
 </head>
 
 <main>
@@ -31,6 +37,14 @@
               LogIn
             </button>
           </form>
+          <hr class="mt-4" />
+          <div class="text-center my-4">- OR -</div>
+          <div class="text-center">
+            <div
+              class="g-signin2 d-inline-block"
+              data-onsuccess="onSignIn"
+            ></div>
+          </div>
         </div>
       </div>
     </div>
