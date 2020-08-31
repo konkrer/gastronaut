@@ -327,7 +327,7 @@ def user_edit():
             error_logging(e)
 
     if request.method == 'POST':
-        flash("Please fix all form errors.", "danger")
+        flash("Please fix all form errors.", "warning")
 
     return render_template('user/edit_user.html', form=form)
 
@@ -1082,12 +1082,13 @@ def check_google_token():
 
     # ID token is valid. Get the user's Google Account ID.
     google_id = idinfo['sub']
+    capture_message(f'google id={google_id}')
 
     user = User.query.filter_by(password=google_id).first()
 
     # If not user with this google id try to create one.
     if not user:
-        capture_message(dir(idinfo))
+        capture_message(idinfo.items())
         email = data['email']
         username = data['name']
         image_url = data['image_url']

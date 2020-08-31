@@ -7,6 +7,7 @@ class BaseLogic {
     this.feedbackClearTimer;
     this.locationsOptionsHtmlCache = {};
     this.locationAutocompleteCache = {};
+    this.checkGoogleLogin = true;
     this.addPreloaderRemover();
     this.addPreferencesListeners();
     this.addHomeAddressAutocompleteListerner();
@@ -16,6 +17,7 @@ class BaseLogic {
     this.addReportsDblclickListeners();
     this.addFeedbackListener();
     this.addSignupLoginListener();
+    this.addLogoutGoogleListener();
   }
 
   // Remove preloader overlay when page animations fully loaded.
@@ -192,6 +194,35 @@ class BaseLogic {
 
       $('.signup').prop('href', `/signup?next_url=${next_url}`);
       $('.login').prop('href', `/login?next_url=${next_url}`);
+    });
+  }
+
+  //
+  // Listen for user logging out and log user out of this app with
+  // google if user signed in through google.
+  //
+  addLogoutGoogleListener() {
+    const this_ = this;
+    $('#logout-form').submit(function (e) {
+      // The first time this function is called check for google login.
+      // Next time it is triggered it will run un-abated and call endpoint.
+      if (this_.checkGoogleLogin) {
+        e.preventDefault();
+
+        gapi.load('auth2', async function () {
+          /* Ready. Make a call to gapi.auth2.init or some other API */
+          await gapi.auth2.init({
+            client_id:
+              '992789148520-btgg6dtlrk8rkght89rfvdbfgu2ljeut.apps.googleusercontent.com',
+          });
+          const auth2 = gapi.auth2.getAuthInstance();
+          if (auth2) await auth2.signOut();
+        });
+
+        this_.checkGoogleLogin = false;
+
+        // $(this).trigger(e.type);
+      }
     });
   }
 

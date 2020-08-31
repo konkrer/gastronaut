@@ -28,17 +28,17 @@ class AddUserForm(UserBaseForm):
         InputRequired(message="Password cannot be blank."),
         Length(min=6, max=60)])
 
-    def validate_username(form, field):
-        """Make sure username not in use."""
-        if User.query.filter_by(username=form.username.data).first():
-            form.username.errors.append("Username already taken!")
-            raise ValidationError
-
     def validate_email(form, field):
         """Make sure email not in use."""
         if User.query.filter_by(email=form.email.data).first():
             form.email.errors.append(
                 "Email already associated with account!")
+            raise ValidationError
+
+    def validate_username(form, field):
+        """Make sure username not in use."""
+        if User.query.filter_by(username=form.username.data).first():
+            form.username.errors.append("Username already taken!")
             raise ValidationError
 
 
@@ -71,24 +71,29 @@ class EditUserForm(UserBaseForm):
 
     def validate_email(form, field):
         """Make sure email is not in use
-           unless it's the current user's email.
-        """
+           unless it's the current user's email."""
 
         user = User.query.filter_by(email=form.email.data).first()
 
         if user and not user == g.user:
-            form.username.errors.append(
-                "Email already associated with account!")
+            form.email.errors = [
+                "Email already associated with account!",
+                *form.email.errors
+            ]
+            raise ValidationError
 
     def validate_username(form, field):
         """Make sure username is not in use
-           unless it's the current user's username.
-        """
+           unless it's the current user's username."""
 
         user = User.query.filter_by(username=form.username.data).first()
 
         if user and not user == g.user:
-            form.username.errors.append("Username already taken!")
+            form.username.errors = [
+                "Username already taken!",
+                *form.username.errors
+            ]
+            raise ValidationError
 
 
 class LoginForm(FlaskForm):

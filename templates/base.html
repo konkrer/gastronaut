@@ -78,6 +78,11 @@
       defer
       src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"
     ></script>
+    <script
+      src="https://apis.google.com/js/platform.js?onload=init"
+      async
+      defer
+    ></script>
     <script defer src="/static/js/offcanvas.js"></script>
     <script defer src="/static/js/base.js"></script>
     {% block head %}{% endblock %}
@@ -198,7 +203,11 @@
           </li>
         </ul>
         {% if g.user %}
-        <form action="/logout?next_url={{request_full_path}}" method="post">
+        <form
+          action="/logout?next_url={{request_full_path}}"
+          method="post"
+          id="logout-form"
+        >
           <button class="navbar-logout mr-4 btn p-0 my-4 my-lg-0" type="submit">
             Logout
           </button>
