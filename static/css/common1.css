@@ -147,9 +147,3 @@
     width: 85%;
   }
 }
-
-@media (hover: hover) and (pointer: fine) {
-  .hover-primary:hover {
-    color: #2a9fd6 !important;
-  }
-}

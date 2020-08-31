@@ -5,7 +5,7 @@ from wtforms.fields.html5 import URLField, EmailField
 from flask_wtf.file import FileField
 from wtforms.validators import (
     InputRequired, Length, Email,
-    Optional, URL, ValidationError)
+    Optional, URL, ValidationError, Regexp)
 from models import User
 from flask import g
 
@@ -13,7 +13,7 @@ from flask import g
 class UserBaseForm(FlaskForm):
     email = EmailField("Email", validators=[
                        InputRequired(message="Email cannot be blank."),
-                       Length(min=6, max=320),
+                       Length(min=5, max=320),
                        Email(check_deliverability=True,
                              message="Invalid Email address")])
 
@@ -24,9 +24,11 @@ class UserBaseForm(FlaskForm):
 
 class AddUserForm(UserBaseForm):
 
-    password = PasswordField("Password", validators=[
+    password = PasswordField("Password",  validators=[
         InputRequired(message="Password cannot be blank."),
-        Length(min=6, max=60)])
+        Length(min=8, max=60),
+        Regexp("^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$", message='Please match the given requirements for password.')],  # noqa e501
+        description="Minimum one each - uppercase letter, lowercase letter, number, and special character.")  # noqa e501
 
     def validate_email(form, field):
         """Make sure email not in use."""
@@ -99,14 +101,14 @@ class EditUserForm(UserBaseForm):
 class LoginForm(FlaskForm):
     email = EmailField("Email", validators=[
         InputRequired(message="Email cannot be blank."),
-        Length(min=6, max=60),
+        Length(min=5, max=320),
         Email(check_deliverability=True,
               message="Invalid Email address")])
 
     password = PasswordField("Password", validators=[
         InputRequired(
             message="Password cannot be blank."),
-        Length(min=6, max=60)])
+        Length(min=8, max=60)])
 
 
 class ReportBaseForm(FlaskForm):

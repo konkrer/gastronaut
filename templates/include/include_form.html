@@ -1,24 +1,64 @@
-{{ form.hidden_tag() }} {% for field in form if field.widget.input_type !=
-'hidden' %}
+<!-- Hidden tags. -->
+{{ form.hidden_tag() }}
+<!-- For each non-hidden field. -->
+{% for field in form if field.widget.input_type != 'hidden' %}
 
 <div class="form-group">
-  {{ field.label }} {% if field.flags.required %}*{% endif %} {% if field.type
-  == "TextAreaField" %} {% if field.name == 'bio' %}
-  {{field(class_="form-control", rows=8, maxlength=500) }} {% else %}
-  {{field(class_="form-control", rows=8) }} {% endif %} {% elif field.type ==
-  'FileField' %}{% if field.object_data %}
+  <!-- Show field label. -->
+  {{ field.label }}
+  <!-- Show asterik for required fields. -->
+  {% if field.flags.required %}*{% endif %}
+  <!-- Start field type/name differentiation. -->
+  {% if field.type == "EmailField" %}
+  <!-- Email field. Email regex from: https://regular-expressions.mobi/email.html?wlr=1 -->
+  {{field(class_="form-control", minlength=5, maxlength=320,
+  pattern="[a-z0-9!#$%&'*+/=?^_‘{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_‘{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
+  }}
+  <!-- If username field -->
+  {% elif field.name == "username" %}
+  <!-- Username field -->
+  {{field(class_="form-control", minlength=2, maxlength=30) }}
+  <!-- If password field. -->
+  {% elif field.type == "PasswordField" %}
+  <span
+    class="float-right txt-smlr mt-1 mr-2 hover-primary"
+    id="toggle-show-password"
+    >Show Password</span
+  >
+  <!-- Password field. Password regex from: https://stackoverflow.com/a/21456918/11164558 -->
+  {{field(class_="form-control", minlength=8, maxlength=60,
+  pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{4,}$") }}
+  <!-- If textarea field -->
+  {% elif field.type == "TextAreaField" %}
+  <!-- If user bio field -->
+  {% if field.name == 'bio' %}
+  <!-- Textarea bio field -->
+  {{field(class_="form-control", rows=8, maxlength=500) }}
+  <!-- If regular textarea field -->
+  {% else %} {{field(class_="form-control", rows=8) }} {% endif %}
+  <!-- If file field -->
+  {% elif field.type == 'FileField' %}
+  <!-- If there is previous file field filename show to user. -->
+  {% if field.object_data %}
   <div class="mb-1 txt-smlr">
     Current File:
     <span class="text-info currFile">{{field.object_data[94:]}}</span
     ><a href="#" class="float-right fileClear mr-2">clear</a>
   </div>
-  {% endif %} {{field(class_="form-control") }} {% else %}
-  {{field(class_="form-control") }} {% endif %}
-  <small>{{field.description}}</small> {% for error in field.errors %}
-  <b class="form-text text-warning mt-0">
-    {{ error }}
-  </b>
+  {% endif %}
+  <!-- Filefield input.-->
+  {{field(class_="form-control") }}
+  <!-- If generic field -->
+  {% else %} {{field(class_="form-control") }}
+  <!-- End field type/name differentiation. -->
+  {% endif %}
+
+  <!-- Show field description. -->
+  <small>{{field.description}}</small>
+
+  <!-- Show all error for field. -->
+  {% for error in field.errors %}
+  <b class="form-text text-warning mt-0"> {{ error }} </b>
   {% endfor %}
 </div>
-
 {% endfor %}

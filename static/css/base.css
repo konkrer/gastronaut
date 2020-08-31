@@ -424,6 +424,9 @@ body::-webkit-scrollbar-thumb:hover {
   .card-text-noHover:hover {
     color: unset !important;
   }
+  .hover-primary:hover {
+    color: #2a9fd6 !important;
+  }
 }
 
 /* preloader */
