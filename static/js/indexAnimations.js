@@ -32,10 +32,10 @@ class IndexAnimations {
       minHeight: 200.0,
       minWidth: 200.0,
       scale: 1.0,
-      scaleMobile: 0.3,
+      scaleMobile: 0.5,
       color: 0xbc7aa,
       color2: 0xe7ae0f, // mellow white 0x8f8f8f
-      size: 1.4,
+      size: 1.3,
       backgroundColor: 0x0b105a,
     });
   }
