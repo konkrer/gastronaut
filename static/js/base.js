@@ -18,6 +18,7 @@ class BaseLogic {
     this.addFeedbackListener();
     this.addSignupLoginListener();
     this.addLogoutGoogleListener();
+    this.enableServiceWorker();
   }
 
   // Remove preloader overlay when page animations fully loaded.
@@ -227,7 +228,6 @@ class BaseLogic {
             async () => {
               const auth2 = gapi.auth2.getAuthInstance();
               if (auth2) await auth2.signOut();
-              console.log('Success!');
               // Set flag false and trigger event again.
               class_instance.checkGoogleLogin = false;
               $el.trigger(e.type);
@@ -240,7 +240,6 @@ class BaseLogic {
             }
           );
       });
-      console.log('test');
     }
   }
 
