@@ -1,3 +1,5 @@
+/* Used by Bootstrap navbar */
+
 $(function () {
   'use strict';
 

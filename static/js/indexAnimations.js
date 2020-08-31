@@ -12,9 +12,30 @@ class IndexAnimations {
     this.justSearchedYelp = false;
     this.category = null;
     this.windowResizeCardScrollResetTimer;
+    this.heroAnimation = null;
+    this.initHeroAnimation();
     this.toggleSidebarListeners();
     this.addWindowResizeListener();
     this.initMiscAnimtions();
+  }
+
+  //
+  // Globe hero animation.
+  //
+  initHeroAnimation() {
+    this.heroAnimation = VANTA.GLOBE({
+      el: '.hero-animation',
+      mouseControls: true,
+      touchControls: true,
+      minHeight: 200.0,
+      minWidth: 200.0,
+      scale: 1.0,
+      scaleMobile: 1.5,
+      color: 0xbc7aa,
+      color2: 0x8f8f8f,
+      size: 1.0,
+      backgroundColor: 0x0b105a,
+    });
   }
 
   // Function to count how many card widths the user has scrolled off

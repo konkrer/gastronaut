@@ -333,7 +333,8 @@ class IndexSearchLogic {
   // Hide hero animation and make yelp search.
   //
   hideHeroAndSearch() {
-    $('.hero-animation').remove();
+    IndexAnimationsObj.heroAnimation.destroy();
+    $('.hero-animation').hide();
     $('.alert').hide();
     $('.spinner-zone').show();
     IndexAnimationsObj.scrollCategoriesToCurrent();
