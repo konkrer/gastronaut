@@ -6,6 +6,8 @@ import os
 import boto3
 from uuid import uuid4
 from types import SimpleNamespace
+from google.oauth2 import id_token
+from google.auth.transport import requests as requests_google
 from sentry_sdk.integrations.flask import FlaskIntegration
 from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration  # noqa F401
 from sentry_sdk import (capture_message, capture_exception,
@@ -33,6 +35,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 S3_CLIENT = boto3.client('s3')
 S3_RESOURCE = boto3.resource('s3')
+GOOGLE_O_AUTH_CLIENT_ID = '992789148520-btgg6dtlrk8rkght89rfvdbfgu2ljeut.apps.googleusercontent.com'  # noqa E501
 
 
 # Dev / Production setup differentiation:
@@ -63,6 +66,7 @@ else:
     MAILGUN_DOMAIN = os.environ.get('MAILGUN_DOMAIN')
     S3_BUCKET_NAME = os.environ.get('S3_BUCKET_NAME')
     CLOUDFRONT_DOMAIN_NAME = os.environ.get('CLOUDFRONT_DOMAIN_NAME')
+
     DEBUG = False
 
 
@@ -1029,7 +1033,7 @@ def add_business():
     return jsonify({'success': 'Added!'})
 
 
-@app.route('/feedback', methods=['POST'])
+@app.route('/v1/feedback', methods=['POST'])
 @add_user_to_g
 def submit_feedback():
     """Endpoint for user to submit feedback to be emailed to developer."""
@@ -1056,6 +1060,61 @@ def submit_feedback():
         return jsonify({'error': 'Error sending message', 'color': 'warning'})
 
     return jsonify({'success': 'Feedback Received!', 'color': 'green'})
+
+
+@app.route('/v1/check-google-token')
+def check_google_token():
+    """Endpoint to check validity of google user token and sign user in,
+       or create new account for user. Return success message for successful
+       user creation or sign-in."""
+
+    data = request.json()
+
+    user_token = data['idtoken']
+
+    try:
+        idinfo = id_token.verify_oauth2_token(
+            user_token, requests_google.Request(), GOOGLE_O_AUTH_CLIENT_ID)
+
+    except ValueError as e:
+        error_logging(e)
+        return jsonify({'error': f'Autorization error: {e}'})
+
+    # ID token is valid. Get the user's Google Account ID.
+    google_id = idinfo['sub']
+
+    user = User.query.filter_by(password=google_id).first()
+
+    # If not user with this google id try to create one.
+    if not user:
+        email = idinfo['email']
+        username = idinfo['name']
+
+        if User.query.filter_by(email=email).first():
+            return jsonify({
+                'error': 'Email already in use. Please log in using email and password.'  # noqa e501
+                })
+
+        # If username taken add nonce until valid username is formed.
+        if User.query.filter_by(username=username).first():
+            nonce = 1
+            username = f'{username}{nonce}'
+            while User.query.filter_by(username=username).first():
+                nonce += 1
+                username = f'{username}{nonce}'
+
+        try:
+            user = User(email=email, username=username, password=google_id)
+            db.session.add(user)
+            db.session.commit()
+            user.add_bookmarks()
+        except Exception as e:
+            error_logging(e)
+            return jsonify({'error': f'Error creating new user: {e}'})
+
+    session['user_id'] = user.id
+    flash(f"Welcome {user.username}!", "success")
+    return jsonify({'success': 'User logged in.'})
 
 
 #  $$    $$   $$$$$$$$  x$Y       $$$$$$$   $$$$$$$$  $$$$$$$$
@@ -1087,8 +1146,8 @@ def get_coords_from_IP_address(request):
     """Call API and geolocate IP address."""
 
     # get IP address
-    ip_address_raw = request.environ.get('HTTP_X_FORWARDED_FOR',
-                                         request.remote_addr)
+    ip_address_raw = request.environ.get(
+        'HTTP_X_FORWARDED_FOR', request.remote_addr)
     # get first (leftmost) address for Heroku
     ip_address = ip_address_raw.split(',')[0].strip()
     # IP geolocation

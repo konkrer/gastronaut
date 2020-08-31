@@ -149,7 +149,7 @@ class BaseLogic {
   }
 
   //
-  // Call /feedback endpoint when user submits feedback.
+  // Call /v1/feedback endpoint when user submits feedback.
   //
   addFeedbackListener() {
     $('#user-feedback').submit(async function (e) {
@@ -160,7 +160,7 @@ class BaseLogic {
         email: $(this).find('input[type="email"]').val(),
       };
       try {
-        var resp = await axios.post('/feedback', feedback_data);
+        var resp = await axios.post('/v1/feedback', feedback_data);
       } catch (error) {
         Sentry.captureException(error);
         $('.feedback').text('Internal Error. Try again later.');
