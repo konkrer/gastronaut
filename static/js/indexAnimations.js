@@ -13,6 +13,7 @@ class IndexAnimations {
     this.category = null;
     this.windowResizeCardScrollResetTimer;
     this.heroAnimation = null;
+    this.heroColorAlt = false;
     this.initHeroAnimation();
     this.toggleSidebarListeners();
     this.addWindowResizeListener();
@@ -27,10 +28,11 @@ class IndexAnimations {
       el: '.hero-animation',
       mouseControls: true,
       touchControls: true,
+      gyroControls: true,
       minHeight: 200.0,
       minWidth: 200.0,
       scale: 1.0,
-      scaleMobile: 1.5,
+      scaleMobile: 1.0,
       color: 0xbc7aa,
       color2: 0x8f8f8f,
       size: 1.0,
