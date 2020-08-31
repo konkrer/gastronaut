@@ -218,15 +218,20 @@ class BaseLogic {
 
       // Load and sign user out if signed in.
       gapi.load('auth2', function () {
-        gapi.auth2.init({
-          client_id:
-            '992789148520-btgg6dtlrk8rkght89rfvdbfgu2ljeut.apps.googleusercontent.com',
-        });
+        gapi.auth2
+          .init({
+            client_id:
+              '992789148520-btgg6dtlrk8rkght89rfvdbfgu2ljeut.apps.googleusercontent.com',
+          })
+          .then(
+            async () => {
+              const auth2 = gapi.auth2.getAuthInstance();
+              if (auth2) await auth2.signOut();
+              console.log('Success!');
+            },
+            err => Sentry.captureException(err)
+          );
       });
-      if (gapi.auth2) {
-        const auth2 = gapi.auth2.getAuthInstance();
-        if (auth2) await auth2.signOut();
-      }
 
       // Set flag false and trigger event again.
       class_instance.checkGoogleLogin = false;
