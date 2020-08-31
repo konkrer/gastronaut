@@ -218,12 +218,23 @@ class BaseLogic {
 
       // Load and sign user out if signed in.
       gapi.load('auth2', async function () {
-        await gapi.auth2.init({
-          client_id:
-            '992789148520-btgg6dtlrk8rkght89rfvdbfgu2ljeut.apps.googleusercontent.com',
-        });
-        const auth2 = gapi.auth2.getAuthInstance();
-        if (auth2) await auth2.signOut();
+        gapi.auth2
+          .init({
+            client_id:
+              '992789148520-btgg6dtlrk8rkght89rfvdbfgu2ljeut.apps.googleusercontent.com',
+          })
+          .then(
+            async function () {
+              const auth2 = gapi.auth2.getAuthInstance();
+              if (auth2) {
+                const res = await auth2.signOut();
+                console.log(`auth2 user signed out res=${res}`);
+              }
+            },
+            function (error) {
+              console.error(`gapi.auth2.init error: ${error.error}`);
+            }
+          );
       });
       // Set flag false and trigger event again.
       class_instance.checkGoogleLogin = false;

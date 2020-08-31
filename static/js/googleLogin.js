@@ -3,14 +3,9 @@
 async function onSignIn(googleUser) {
   // Get google idtoken for user.
   const idtoken = googleUser.getAuthResponse().id_token;
-  // Get google profile for user.
-  const profile = googleUser.getBasicProfile();
 
   const data = {
     idtoken,
-    name: profile.getName(),
-    image_url: profile.getImageUrl(),
-    email: profile.getEmail(),
   };
 
   // Try logging user in.

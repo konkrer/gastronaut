@@ -1087,10 +1087,9 @@ def check_google_token():
 
     # If not user with this google id try to create one.
     if not user:
-        capture_message(idinfo.items())
-        email = data['email']
-        username = data['name']
-        image_url = data['image_url']
+        email = idinfo['email']
+        username = idinfo['name']
+        image_url = idinfo['picture']
 
         # If email already in use user should sign in using email and password.
         if User.query.filter_by(email=email).first():

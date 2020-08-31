@@ -212,7 +212,7 @@
             Logout
           </button>
         </form>
-        {% else %}
+        {% elif request.endpoint not in ['signup', 'login'] %}
         <a
           class="navbar-signup mr-4 btn p-0 my-4 my-lg-0 signLogBtn"
           href="#signupModal"
