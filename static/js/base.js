@@ -217,15 +217,15 @@ class BaseLogic {
       e.preventDefault();
 
       // Load and sign user out if signed in.
-      gapi.load('auth2', async function () {
+      gapi.load('auth2', function () {
         gapi.auth2
           .init({
             client_id:
               '992789148520-btgg6dtlrk8rkght89rfvdbfgu2ljeut.apps.googleusercontent.com',
           })
           .then(
-            async function () {
-              const auth2 = gapi.auth2.getAuthInstance();
+            async function (GoogleAuth) {
+              const auth2 = GoogleAuth.getAuthInstance();
               if (auth2) {
                 const res = await auth2.signOut();
                 console.log(`auth2 user signed out res=${res}`);
