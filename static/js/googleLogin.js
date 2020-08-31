@@ -4,7 +4,9 @@ async function onSignIn(googleUser) {
   // Get google idtoken for user.
   const idtoken = googleUser.getAuthResponse().id_token;
   // Get next url to navigate to after sign in.
-  const next_url = window.location.search.replace('next_url=', '');
+  const next_url = window.location.search
+    .replace('?next_url=', '')
+    .replace(/;/g, '&');
 
   // Try logging user in.
   try {

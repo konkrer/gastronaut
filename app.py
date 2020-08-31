@@ -1062,7 +1062,7 @@ def submit_feedback():
     return jsonify({'success': 'Feedback Received!', 'color': 'green'})
 
 
-@app.route('/v1/check-google-token')
+@app.route('/v1/check-google-token', methods=['POST'])
 def check_google_token():
     """Endpoint to check validity of google user token and sign user in,
        or create new account for user. Return success message for successful
