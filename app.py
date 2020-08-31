@@ -1068,7 +1068,7 @@ def check_google_token():
        or create new account for user. Return success message for successful
        user creation or sign-in."""
 
-    data = request.json()
+    data = request.json
 
     user_token = data['idtoken']
 
@@ -1087,9 +1087,12 @@ def check_google_token():
 
     # If not user with this google id try to create one.
     if not user:
-        email = idinfo['email']
-        username = idinfo['name']
+        capture_message(dir(idinfo))
+        email = data['email']
+        username = data['name']
+        image_url = data['image_url']
 
+        # If email already in use user should sign in using email and password.
         if User.query.filter_by(email=email).first():
             return jsonify({
                 'error': 'Email already in use. Please log in using email and password.'  # noqa e501
@@ -1104,7 +1107,8 @@ def check_google_token():
                 username = f'{username}{nonce}'
 
         try:
-            user = User(email=email, username=username, password=google_id)
+            user = User(email=email, username=username,
+                        password=google_id, avatar_url=image_url)
             db.session.add(user)
             db.session.commit()
             user.add_bookmarks()
