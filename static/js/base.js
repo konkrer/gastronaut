@@ -217,7 +217,7 @@ class BaseLogic {
       e.preventDefault();
 
       // Load and sign user out if signed in.
-      await gapi.load('auth2', function () {
+      gapi.load('auth2', function () {
         gapi.auth2.init({
           client_id:
             '992789148520-btgg6dtlrk8rkght89rfvdbfgu2ljeut.apps.googleusercontent.com',
