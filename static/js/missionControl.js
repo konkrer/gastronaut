@@ -53,6 +53,8 @@ class MissionControl {
       .get();
 
     let lastMissionId = localStorage.getItem('currMissionId');
+    // If not lastMissionId show tips modal.
+    if (!lastMissionId) setTimeout(() => $('#tipsModal').modal(), 10000);
 
     // If the last mission loaded is still in user missions.
     if (currMissions.includes(lastMissionId)) {

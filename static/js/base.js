@@ -88,6 +88,7 @@ class BaseLogic {
   // Add official home address selection listener.
   //
   addOfficalHomeAddressListener() {
+    const this_ = this;
     $('#home_address').on('keyup', function (e) {
       const key = e.which || e.keyCode;
       // If a location suggestion was clicked or
@@ -112,16 +113,16 @@ class BaseLogic {
   // Add clear home address listener.
   //
   addClearHomeAddressListener() {
-    $('#preferencesModal label[for="home_address_official"] a').click(function (
-      e
-    ) {
-      e.preventDefault();
-      $('#home_address_official').val('').prop('placeholder', '');
-      $('#home_coords').val('');
-      this_.updatePreferences(1);
-      // Make home button open preferences modal by clearing coords.
-      $('.map-routing .home').data('lng', '').data('lat', '');
-    });
+    $('#preferencesModal label[for="home_address_official"] a').click(
+      function (e) {
+        e.preventDefault();
+        $('#home_address_official').val('').prop('placeholder', '');
+        $('#home_coords').val('');
+        this.updatePreferences(1);
+        // Make home button open preferences modal by clearing coords.
+        $('.map-routing .home').data('lng', '').data('lat', '');
+      }.bind(this)
+    );
   }
 
   //

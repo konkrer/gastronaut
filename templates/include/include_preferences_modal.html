@@ -1,5 +1,5 @@
 <div
-  class="modal fade"
+  class="modal fade ssp txt-medium"
   id="preferencesModal"
   tabindex="-1"
   role="dialog"
@@ -10,7 +10,7 @@
     <div class="modal-content">
       {% if g.user %}
       <div class="modal-header">
-        <h5 class="modal-title text-warning" id="preferencesModalLabel">
+        <h5 class="modal-title text-warning museo" id="preferencesModalLabel">
           Preferences
         </h5>
         <button
@@ -27,8 +27,8 @@
         context %}{% set preferences = g.user.preferences %}
 
         <form id="preferences-boolean" action="#" class="mb-4">
-          <h5 class="txt-medium text-dark mb-4">
-            <strong>Gastronaut Search</strong>
+          <h5 class="txt-xl text-dark mb-4">
+            <strong>Gastronaut Explore</strong>
           </h5>
           <div class="custom-control custom-switch">
             <input
@@ -54,7 +54,7 @@
         </form>
         <hr />
         <form id="preferences-text" action="#" class="mt-4">
-          <h5 class="txt-medium text-dark mb-3">
+          <h5 class="txt-xl text-dark mb-3">
             <strong>Navigation</strong>
           </h5>
           <div class="form-group border border-secondary rounded p-2">
@@ -94,7 +94,7 @@
           <input type="hidden" name="home_coords" id="home_coords" />
         </form>
       </div>
-      <div class="modal-footer" style="position: relative;">
+      <div class="modal-footer" style="position: relative">
         <div class="feedback txt-green"></div>
         <button
           type="button"

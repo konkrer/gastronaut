@@ -1,8 +1,6 @@
 {% extends 'base.html' %}
 
-<title>
-  {% block title %}User Profile{% endblock %}
-</title>
+<title>{% block title %}User Profile{% endblock %}</title>
 
 <head>
   {% block head %}
@@ -19,7 +17,7 @@
 
 <main>
   {% block main %}
-  <div class="spinner-zone flx-std rounded-bottom" style="display: none;">
+  <div class="spinner-zone flx-std rounded-bottom" style="display: none">
     <div class="spinner-border txt-green" role="status">
       <span class="sr-only">Loading...</span>
     </div>
@@ -42,15 +40,17 @@
           <div class="">
             <h4
               id="sidebar-username"
-              class="text-warning brand-outline font-italic"
+              class="text-warning brand-outline font-italic museo"
             >
               @{{ user.username }}
             </h4>
-            <p class="txt-green byline pl-3 pl-sm-0">
+            <p class="txt-green byline pl-3 pl-sm-0 ssp">
               {{user.byline or 'A short snippet about you'}}
             </p>
 
-            <div class="user-location text-left d-inline-block mt-1 mt-sm-0">
+            <div
+              class="user-location text-left d-inline-block mt-1 mt-sm-0 ssp"
+            >
               <div
                 class="fa fa-map-marker fa-2x txt-green d-inline-block"
               ></div>
@@ -151,7 +151,7 @@
         </ul>
         <div class="col col-lg-9">
           <section
-            class="bio-section text-left mt-5 mt-sm-3 mt-md-5 txt-white-k"
+            class="bio-section text-left mt-5 mt-sm-3 mt-md-5 txt-white-k ssp txt-medium"
           >
             {% if user.bio %} {% for p in user.bio.split('\n') %}
             <p>{{p}}</p>

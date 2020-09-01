@@ -1,8 +1,6 @@
 {% extends 'base.html' %}
 
-<title>
-  {% block title %}Mission Control{% endblock %}
-</title>
+<title>{% block title %}Mission Control{% endblock %}</title>
 
 <div>
   {% block head %}
@@ -37,14 +35,14 @@
 
 <main>
   {% block main %}
-  <div id="map" style="position: absolute;">
+  <div id="map" style="position: absolute">
     <script src="../static/js/map.js"></script>
     <script>
       Map_Obj.renderMiniMap([-85, 26.8], 2.5);
     </script>
   </div>
   {% include '/include/include_nav_btns.html' %}
-  <div class="spinner-zone flx-std rounded-bottom" style="display: none;">
+  <div class="spinner-zone flx-std rounded-bottom" style="display: none">
     <div class="spinner-border txt-green" role="status">
       <span class="sr-only">Loading...</span>
     </div>
@@ -124,9 +122,9 @@
                 %}
                 <option value="{{mission.id}}">{{mission.name}}</option>
                 {% else %}
-                <option value="{{mission.id}}"
-                  >{{mission.name}} (imported)</option
-                >
+                <option value="{{mission.id}}">
+                  {{mission.name}} (imported)
+                </option>
                 {% endif %} {% endfor %}
               </select>
             </div>
@@ -153,7 +151,7 @@
         <div
           id="directions-panel"
           class="border-bottom border-light"
-          style="display: none;"
+          style="display: none"
         >
           <a
             class="font-weight-bold"
@@ -295,7 +293,7 @@
     </div>
   </div>
   <div
-    class="modal fade"
+    class="modal fade ssp txt-medium"
     id="tipsModal"
     tabindex="-1"
     role="dialog"
@@ -318,19 +316,38 @@
           </button>
         </div>
         <div class="modal-body">
-          <p class="txt-lg font-weight-bold">Map</p>
           <p>
-            <span class="pr-1">Desktop:</span> Use the second mouse button or
-            the Ctrl/Command key with a mouse drag to rotate and/or tilt the
-            map.
+            <span
+              class="navbar-brand fw-900 text-warning brand-outline museo mr-1 p-0"
+              href="/"
+            >
+              Gastronaut</span
+            >
+            allows you to collect and group restaurants, bars, and more into
+            missions of gastronomical adventure! Add your favorite spots or find
+            some new places you want to experience. Plant a flag for the mission
+            goals you complete and don't forget to share any missions you think
+            others might enjoy.
           </p>
           <p>
-            <span class="pr-1">Mobile:</span> Putting two fingers on the screen
-            and immediately sliding up or down changes the tilt.
+            Have something to say? Write a Mission Report for either the
+            business or the mission as a whole - look for the pen
+            <i class="fas fa-pen-alt brand-outline text-warning mx-1"></i>
+            button.
+          </p>
+          <p class="txt-lg font-weight-bold mt-4">Map</p>
+          <p>
+            <span class="pr-1 text-info">Desktop:</span> Use the second mouse
+            button or the Ctrl/Command key with a mouse drag to rotate and/or
+            tilt the map.
+          </p>
+          <p>
+            <span class="pr-1 text-info">Mobile:</span> Putting two fingers on
+            the screen and immediately sliding up or down changes the tilt.
           </p>
           <div
             class="flx-row-around width-100 bg-dark rounded my-5"
-            style="height: 50px;"
+            style="height: 50px"
           >
             <div class="bg-trans-b rounded p-2 border border-secondary">
               <i class="fas fa-angle-double-left fa-lg"></i>
@@ -340,15 +357,13 @@
             </div>
             <div class="text-light tip-label">Toggle Sidebar</div>
           </div>
-          <p class="text-lg">Recommended:</p>
+          <p class="text-info">Recommended:</p>
           <p>
             On mobile save app to your home screen for best user experience. The
             permanent full-screen allows better interaction with the user
             interface and better navigation experience.
           </p>
-          <p>
-            On desktop press F11 to toggle full-screen mode.
-          </p>
+          <p>On desktop press F11 to toggle full-screen mode.</p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">
@@ -410,7 +425,7 @@
                 list="datalist-location"
               />
               <datalist id="datalist-location"></datalist>
-              <small class="mt-1 font-italic bg-warning rounded px-1"
+              <small class="mt-1 font-italic bg-warning rounded px-2"
                 >NOTE: You must click detect location for navigation follow you
                 as you commute.</small
               >

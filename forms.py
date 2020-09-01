@@ -28,7 +28,7 @@ class AddUserForm(UserBaseForm):
         InputRequired(message="Password cannot be blank."),
         Length(min=8, max=60),
         Regexp("^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$", message='Please match the given requirements for password.')],  # noqa e501
-        description="Minimum one each - uppercase letter, lowercase letter, number, and special character.")  # noqa e501
+        description="Minimum one each - uppercase letter, lowercase letter, number, special character.")  # noqa e501
 
     def validate_email(form, field):
         """Make sure email not in use."""
