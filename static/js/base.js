@@ -23,9 +23,7 @@ class BaseLogic {
 
   // Remove preloader overlay when page animations fully loaded.
   addPreloaderRemover() {
-    window.onload = () => {
-      $('.preloader-div').fadeOut(500);
-    };
+    window.addEventListener('load', () => $('.preloader-div').fadeOut(500));
   }
 
   // User Preferences listeners

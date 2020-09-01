@@ -24,8 +24,15 @@
     rel="stylesheet"
   />
   <script src="../static/js/modernizer.js"></script>
-  <script src="https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.js"></script>
-  <script src="https://unpkg.com/@mapbox/mapbox-sdk/umd/mapbox-sdk.min.js"></script>
+  <script
+    defer
+    src="https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.js"
+  ></script>
+  <script
+    defer
+    src="https://unpkg.com/@mapbox/mapbox-sdk/umd/mapbox-sdk.min.js"
+  ></script>
+  <script defer src="../static/js/map.js"></script>
   <script defer src="../static/js/three.r119.min.js"></script>
   <script defer src="../static/js/vanta.globe.min.js"></script>
   <script defer src="../static/js/NoSleep.min.js"></script>
@@ -35,6 +42,7 @@
   <script defer src="../static/js/indexFormFuncts.js"></script>
   <script defer src="../static/js/index.js"></script>
   <script defer src="../static/js/apiFuncts.js"></script>
+  <script defer src="/static/js/ztext.min.js"></script>
   <script
     defer
     type="text/javascript"
@@ -45,7 +53,7 @@
 
 <main>
   {% block main %}
-  <div class="spinner-zone flx-std rounded-bottom" style="display: none;">
+  <div class="spinner-zone flx-std rounded-bottom" style="display: none">
     <div class="spinner-border txt-green" role="status">
       <span class="sr-only">Loading...</span>
     </div>
@@ -53,13 +61,21 @@
   <div class="hero-animation">
     <div
       class="row justify-content-around align-items-center"
-      style="height: 100%;"
+      style="height: 100%"
     >
       <header
-        class="col-8 col-sm-5 col-md-4 col-lg-5 col-xl-3 text-center"
-        style="font-size: 5px;"
+        class="col-8 col-md-7 col-lg-8 col-xl-7 text-center"
+        style="font-size: 5px"
       >
-        <h1 class="display-1-k text-warning brand-outline">Gastronaut</h1>
+        <h1 class="display-1-k text-warning brand-outline">
+          <span
+            data-z
+            data-z-layers="20"
+            data-z-depth="0.25em"
+            data-z-perspective="400px"
+            >Gastronaut</span
+          >
+        </h1>
         <div class="text-center hero-lead mx-auto">
           <h2 class="display-2-k lead-k">Explore the world of food.</h2>
           <a
@@ -139,15 +155,14 @@
 
         <div class="map-track border-top border-secondary">
           <div id="map" class="bg-map-red">
-            <script src="../static/js/map.js"></script>
             <script>
-              Map_Obj.renderMiniMap();
+              window.addEventListener('load', () => Map_Obj.renderMiniMap());
             </script>
           </div>
           <div class="directions-col">
             <div
               class="bg-trans-b2"
-              style="display: none;"
+              style="display: none"
               id="directions-panel"
             >
               <div
@@ -158,7 +173,7 @@
                 <div>
                   <div class="flx-std pt-1 directionsCaret">
                     <i class="fas fa-caret-right"></i>
-                    <i class="fas fa-caret-left" style="display: none;"></i>
+                    <i class="fas fa-caret-left" style="display: none"></i>
                   </div>
                 </div>
                 <div>
@@ -166,14 +181,14 @@
                     <i class="fas fa-clipboard-list fa-lg"></i>
                   </div>
                 </div>
-                <span class="pl-1 pl-sm-2 pb-lg-2 pt-1" style="display: none;"
+                <span class="pl-1 pl-sm-2 pb-lg-2 pt-1" style="display: none"
                   >Directions <span class="profileDisplay"></span
                 ></span>
               </div>
               <div
                 id="directions-text"
                 class="pt-3 hoverBgWhite"
-                style="display: none;"
+                style="display: none"
               >
                 <ol></ol>
               </div>
