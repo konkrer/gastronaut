@@ -302,7 +302,9 @@ class MapObj {
         this.addGeoJsonLine(coordinates, routeKey);
         // Make sure camera zooms into user on new route
         // with next location watch update.
-        Geolocation_Obj.madeFirstUpdate = false;
+        setTimeout(() => {
+          Geolocation_Obj.madeFirstUpdate = false;
+        }, 1000);
       }
     }
   }
@@ -451,7 +453,7 @@ class MapObj {
     this.restMarker = this.addMarker(this.restCoords, html);
     this.homeMarker = this.restMarker;
     // If initiating home routing make btn active and fit bounds.
-    if (!$el.hasClass('.homeActive')) {
+    if (!$el.hasClass('homeActive')) {
       $el.addClass('homeActive');
       this.fitBounds();
     }
@@ -518,7 +520,6 @@ class MapObj {
   // Get directions from Mapbox
   //
   async getDirections() {
-    alert(this.heading);
     const options = this.makeDirectionsOptions();
     const resp = await this.mapboxClient.directions
       .getDirections(options)
