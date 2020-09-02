@@ -384,6 +384,9 @@ class MapObj {
         bearing: heading,
         pitch: this.mappyBoi.getMaxPitch(),
       });
+      this.latitude = lat;
+      this.longitude = lng;
+      this.heading = heading;
     }
   }
 
@@ -412,9 +415,8 @@ class MapObj {
       if (lng) {
         const lat = $(this).data('lat');
         this_.restCoords = [lng, lat];
-        $(this).addClass('homeActive');
         this_.markerStyle = 1;
-        this_.addHomeMarkerRouteFitBounds();
+        this_.addHomeMarkerRouteFitBounds($(this));
         // If on mission-control page set currentRestMarkerIdx to -1 to indicate home destination active.
         if (typeof MissionControlNavigationObj !== 'undefined')
           MissionControlNavigationObj.currentRestMarkerIdx = -1;
@@ -428,7 +430,7 @@ class MapObj {
   //
   // Add a home marker, show directions, and fit bounds to user position and home location.
   //
-  addHomeMarkerRouteFitBounds() {
+  addHomeMarkerRouteFitBounds($el) {
     // Replace home marker in case home location has changed.
     if (this.homeMarker) this.homeMarker.remove();
     // If on index page remove previous restMarker
@@ -448,7 +450,11 @@ class MapObj {
     // specifically so have both point to same marker
     this.restMarker = this.addMarker(this.restCoords, html);
     this.homeMarker = this.restMarker;
-    this.fitBounds();
+    // If initiating home routing make btn active and fit bounds.
+    if (!$el.hasClass('.homeActive')) {
+      $el.addClass('homeActive');
+      this.fitBounds();
+    }
     this.showDirectionsAndLine();
     if ($('#directions-panel').hasClass('directionsShow'))
       IndexButtonsLogicsObj.toggleDirectionsDiv();
@@ -512,6 +518,7 @@ class MapObj {
   // Get directions from Mapbox
   //
   async getDirections() {
+    alert(this.heading);
     const options = this.makeDirectionsOptions();
     const resp = await this.mapboxClient.directions
       .getDirections(options)

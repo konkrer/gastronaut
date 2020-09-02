@@ -147,12 +147,16 @@ class GeolocationObj {
     } = position;
 
     // If in navigation mode zoom in to user and align for user heading.
+    // Update lat/lng/heading if user moved enough for zoom update.
     if (Map_Obj.currentRoute) Map_Obj.flyToUser(lng, lat, heading);
+    else {
+      //Else update lat/lng/heading
+      this.latitude = lat;
+      this.longitude = lng;
+      this.heading = heading;
+    }
 
     this.madeFirstUpdate = true;
-    Map_Obj.latitude = lat;
-    Map_Obj.longitude = lng;
-    Map_Obj.heading = heading;
     Map_Obj.addUserMarker();
     // insert lng, lat as placeholder in location input.
     $('#location').prop(
