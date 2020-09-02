@@ -302,9 +302,7 @@ class MapObj {
         this.addGeoJsonLine(coordinates, routeKey);
         // Make sure camera zooms into user on new route
         // with next location watch update.
-        setTimeout(() => {
-          this.madeFirstUpdate = false;
-        }, 1000);
+        Geolocation_Obj.madeFirstUpdate = false;
       }
     }
   }
@@ -394,7 +392,7 @@ class MapObj {
   // and heading adjust for flyToUser method.
   //
   warrantsNewHeading(lng, lat) {
-    const precision = 0.00001;
+    const precision = 0.000015;
     if (
       Math.abs(this.longitude - lng) >= precision ||
       Math.abs(this.latitude - lat) >= precision
