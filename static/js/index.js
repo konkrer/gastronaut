@@ -262,7 +262,7 @@ class IndexSearchLogic {
       Map_Obj.latitude = lat;
       // Set location placeholder back to 'Location'.
       FormFunctsObj.$locationInput.prop('placeholder', `Location`);
-      // store coords, render map, note rendered first coords map
+      // store coords
       localStorage.setItem('coords', JSON.stringify([lng, lat]));
     }
   }
@@ -490,13 +490,14 @@ class ParamsChange {
 
     // if there is lng/lat data but no previous stored coordinates data
     if (Map_Obj.longitude && !prevCoords) {
+      // Store coords.
       localStorage.setItem(
         'coords',
         JSON.stringify([Map_Obj.longitude, Map_Obj.latitude])
       );
       // if there is not a location given having coordinates warrants an API call
       if (!FormFunctsObj.$locationInput.val()) return true;
-      // if no location given and new and old coordinates to compare:
+      // Else if no location given and new and old coordinates to compare:
     } else if (
       !FormFunctsObj.$locationInput.val() &&
       Map_Obj.longitude &&
@@ -510,10 +511,12 @@ class ParamsChange {
         Map_Obj.latitude.toFixed(this.coordsPercision) !==
           prevLat.toFixed(this.coordsPercision)
       ) {
+        // Store coords.
         localStorage.setItem(
           'coords',
           JSON.stringify([Map_Obj.longitude, Map_Obj.latitude])
         );
+        // Warrants an API call.
         return true;
       }
     }
