@@ -160,7 +160,7 @@ class IndexSearchLogic {
   //
   postSearchDomManipulation(currFormState) {
     $('.spinner-zone').hide();
-    ButtonsLogicsObj.showCardTrack();
+    IndexButtonsLogicsObj.showCardTrack();
     FormFunctsObj.filterIndicatorCheck(currFormState);
   }
 
@@ -786,7 +786,7 @@ class ButtonsLogics {
     }
     // If active navigation following user:
     if (Geolocation_Obj.locationWatcher) {
-      // Disable location watcher.
+      // Disable location watcher which may have infrequent updates.
       Geolocation_Obj.clearLocationWatching();
       // Make camera zoom into user on location update from location watcher after brief delay.
       setTimeout(() => {
@@ -884,5 +884,5 @@ class ButtonsLogics {
 }
 
 const ParamsChangeObj = new ParamsChange();
-const ButtonsLogicsObj = new ButtonsLogics();
+const IndexButtonsLogicsObj = new ButtonsLogics();
 const IndexSearchObj = new IndexSearchLogic();

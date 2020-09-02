@@ -73,9 +73,23 @@ class GeolocationObj {
     // note user allowed geolocation
     localStorage.setItem('geoAllowed', true);
     // Post geolocation actions depending on page.
-    // If index page.
-    if (typeof IndexSearchObj !== 'undefined') IndexSearchObj.searchYelp();
-    // Else mission-control page.
+    // If on index page.
+    if (typeof IndexSearchObj !== 'undefined') {
+      // If currently in navi mode on phone.
+      if (Map_Obj.currentRoute && Map_Obj.isMobileScreen()) {
+        // Hide sidebar and card track.
+        if (IndexAnimationsObj.sidebarOpen) IndexAnimationsObj.toggleSidebar();
+        if (!$('.card-map-zone').hasClass('cards-collapse'))
+          IndexButtonsLogicsObj.toggleCards();
+        Map_Obj.showDirectionsAndLine();
+        // Delete form data cache as user position on map does not match
+        // user location from stored data. If after detecting location user
+        // enters last entered location new yelp search will now be executed.
+        localStorage.setItem('formData', null);
+        // Else search Yelp.
+      } else IndexSearchObj.searchYelp();
+    }
+    // Else on mission-control page.
     else MissionControlNavigationObj.startLocationSuccess();
 
     // Watch location. Pause to ensure when in navigation mode the first location

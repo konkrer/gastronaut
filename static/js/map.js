@@ -148,7 +148,7 @@ class MapObj {
       $('.map-routing .home').removeClass('homeActive');
       this.showDirectionsAndLine();
       if ($('#directions-panel').hasClass('directionsShow'))
-        ButtonsLogicsObj.toggleDirectionsDiv();
+        IndexButtonsLogicsObj.toggleDirectionsDiv();
     }
     this.fitBounds();
   }
@@ -300,6 +300,9 @@ class MapObj {
         const [legs, coordinates] = directionsData;
         this.addDirectionsText(legs, routeKey);
         this.addGeoJsonLine(coordinates, routeKey);
+        // Make sure camera zooms into user on new route
+        // with next location watch update.
+        this.madeFirstUpdate = false;
       }
     }
   }
@@ -368,7 +371,7 @@ class MapObj {
   //
   // Follow user during active follow navigation with heading alignment.
   // Only update on lng or lat change larger than precision to prevent heading
-  // and coords jitter.
+  // and coords jitter. Called by Geolocation_Obj.watchSuccess.
   //
   flyToUser(lng, lat, heading) {
     // Make first update right away to zoom into user at active following navigation start.
@@ -448,7 +451,7 @@ class MapObj {
     this.fitBounds();
     this.showDirectionsAndLine();
     if ($('#directions-panel').hasClass('directionsShow'))
-      ButtonsLogicsObj.toggleDirectionsDiv();
+      IndexButtonsLogicsObj.toggleDirectionsDiv();
   }
 
   //
