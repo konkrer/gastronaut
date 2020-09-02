@@ -1,19 +1,20 @@
 'use strict';
 
+//
 // Scroll Mapping and sidebar animations for index page.
+//
 class IndexAnimations {
   constructor() {
     this.$cardTrack = $('#scrl4');
     this.cardsLeftGlobal;
     this.currCard = 0;
     this.cardScrollTimer;
-    this.cardScrollTrackerAndMapper;
     this.sidebarOpen = true;
     this.justSearchedYelp = false;
     this.category = null;
     this.windowResizeCardScrollResetTimer;
     this.heroAnimation = null;
-    this.heroColorAlt = false;
+    this.trakerMapperBound = this.trakerMapper.bind(this);
     this.initHeroAnimation();
     this.toggleSidebarListeners();
     this.addWindowResizeListener();
@@ -36,12 +37,14 @@ class IndexAnimations {
       color: 0xbc7aa,
       color2: 0xe7ae0f, // mellow white 0x8f8f8f
       size: 1.3,
-      backgroundColor: 0x0b105a,
+      backgroundColor: 0x0b1168,
     });
   }
 
+  //
   // Function to count how many card widths the user has scrolled off
   // to the left in the card track dragscroll div.
+  //
   countCards() {
     if ($('.my-card')[0]) {
       let margin = window.innerWidth >= 1200 ? 62.6 : 52.8;
@@ -53,8 +56,10 @@ class IndexAnimations {
     }
   }
 
+  //
   // Set the scroll left to equal the current card width times the number of
   // cards that were scrolled off to the left.
+  //
   setCardsScrollLeft() {
     if (this.cardsLeftGlobal) {
       let margin = window.innerWidth >= 1200 ? 62.6 : 52.8;
@@ -63,28 +68,36 @@ class IndexAnimations {
     }
   }
 
+  //
   // Scroll listener and current card mapper for card track.
+  //
   setCardScrollTrackerMapper() {
-    this.cardScrollTrackerAndMapper = this.$cardTrack.on(
-      'scroll',
+    document
+      .querySelector('#scrl4')
+      .addEventListener('scroll', this.trakerMapperBound, {
+        passive: true,
+      });
+  }
+
+  //
+  // Track scroll position and map current card.
+  //
+  trakerMapper() {
+    this.countCards();
+    clearTimeout(this.cardScrollTimer);
+
+    if (!Map_Obj.mapOpen || !$('.my-card')[0]) return;
+
+    this.cardScrollTimer = setTimeout(
       function () {
-        this.countCards();
-        clearTimeout(this.cardScrollTimer);
+        const focusCardIdx = Number.parseInt(this.cardsLeftGlobal + 0.5);
 
-        if (!Map_Obj.mapOpen || !$('.my-card')[0]) return;
+        if (focusCardIdx === this.currCard) return;
 
-        this.cardScrollTimer = setTimeout(
-          function () {
-            const focusCardIdx = Number.parseInt(this.cardsLeftGlobal + 0.5);
-
-            if (focusCardIdx === this.currCard) return;
-
-            this.currCard = focusCardIdx;
-            this.mapCurrCard(this.currCard);
-          }.bind(this),
-          700
-        );
-      }.bind(this)
+        this.currCard = focusCardIdx;
+        this.mapCurrCard(this.currCard);
+      }.bind(this),
+      700
     );
   }
 
@@ -113,10 +126,16 @@ class IndexAnimations {
     });
   }
 
+  //
   // Sidebar toggle logic.
+  //
   async toggleSidebar() {
     // Prevent unnecessary scroll mapping events.
-    if (this.cardScrollTrackerAndMapper) this.cardScrollTrackerAndMapper.off();
+    document
+      .querySelector('#scrl4')
+      .removeEventListener('scroll', this.trakerMapperBound, {
+        passive: true,
+      });
 
     // If not on mobile -
     // Fade cards out then hide cards.

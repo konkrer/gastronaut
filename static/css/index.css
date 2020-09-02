@@ -11,16 +11,16 @@
 .hero-animation h2 {
   font-weight: 200;
 }
-
+/* Gastronaut lettering */
 .z-text {
-  transform: rotateX(17deg);
+  transform: rotateX(12deg);
 }
 .z-layer:not(:first-child) {
   color: #1e1e20;
   text-shadow: none;
 }
 .z-layer:last-child {
-  color: #27a1aa;
+  color: rgb(173, 120, 20);
 }
 
 .hero-lead {

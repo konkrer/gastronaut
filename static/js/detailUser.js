@@ -10,6 +10,7 @@ class StickyScroll {
     this.avatarCol = document.querySelector('.avatar-col');
     this.avatarColOffset = null; // ACO
     this.adjustedACO = null;
+    this.adjustProfilePositionBound = this.adjustProfilePosition.bind(this);
 
     this.addScrollListener();
     this.addTabslistListener();
@@ -59,7 +60,9 @@ class StickyScroll {
   // Add scroll listener to set profile section top offset.
   //
   addScrollListener() {
-    $(window).scroll(this.adjustProfilePosition.bind(this));
+    window.addEventListener('scroll', this.adjustProfilePositionBound, {
+      passive: true,
+    });
   }
 
   //
@@ -106,7 +109,7 @@ class StickyScroll {
   // When phone orientation changes update profile position.
   //
   addResizeListener() {
-    window.addEventListener('resize', this.adjustProfilePosition.bind(this));
+    window.addEventListener('resize', this.adjustProfilePositionBound);
   }
 }
 

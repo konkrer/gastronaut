@@ -29,6 +29,14 @@ class MapObj {
       { color: '#00ff26' },
       { color: 'var(--my-info-alt)' },
     ];
+    this.userMarkerOptions = [
+      { color: '#00ff26' },
+      {
+        element: $('<div class="marker navi-marker">').get()[0],
+        anchor: 'center',
+        offset: [0, 0],
+      },
+    ];
     this.fitBoundsOptions = [
       {
         padding: { top: 120, bottom: 10, left: 80, right: 80 },
@@ -84,7 +92,7 @@ class MapObj {
     if (!this.longitude) return;
     if (this.userMarker) this.userMarker.remove();
     this.userMarker = new mapboxgl.Marker(
-      this.markerOptions[this.userMarkerStyle]
+      this.userMarkerOptions[this.userMarkerStyle]
     )
       .setLngLat([this.longitude, this.latitude])
       .setPopup(
