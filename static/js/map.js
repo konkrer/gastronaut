@@ -302,7 +302,9 @@ class MapObj {
         this.addGeoJsonLine(coordinates, routeKey);
         // Make sure camera zooms into user on new route
         // with next location watch update.
-        this.madeFirstUpdate = false;
+        setTimeout(() => {
+          this.madeFirstUpdate = false;
+        }, 1000);
       }
     }
   }
