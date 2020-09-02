@@ -392,7 +392,7 @@ class MapObj {
   // and heading adjust for flyToUser method.
   //
   warrantsNewHeading(lng, lat) {
-    const precision = 0.000007;
+    const precision = 0.00001;
     if (
       Math.abs(this.longitude - lng) >= precision ||
       Math.abs(this.latitude - lat) >= precision
@@ -542,7 +542,7 @@ class MapObj {
           coordinates: [this.longitude, this.latitude],
           approach: 'curb',
           bearing: this.heading ? [this.heading, 45] : null,
-          radius: 'unlimited',
+          radius: 30,
         },
         {
           coordinates: this.restCoords,
