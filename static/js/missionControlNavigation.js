@@ -34,18 +34,16 @@ class MissionControlNavigation {
       )
         return;
       // Navigation profile.
+      Map_Obj.changedProfile = Map_Obj.profile !== $(this).data('profile');
       const profile = $(this).data('profile');
-      // If same destination as last destination and profile the same return.
-      if (
-        this_.lastRestMarkerIdx === this_.currentRestMarkerIdx &&
-        Map_Obj.profile === profile
-      )
-        return;
       Map_Obj.profile = profile;
       $('.profileDisplay').text(Map_Obj.profileDict[profile]);
-      // If navigation active change lastRestMarker to default color and call startLocationSuccess.
+      // If navigation active.
       if (Map_Obj.currentRoute) {
-        MissionControlObj.changeMarkerColor(this_.lastRestMarkerIdx, null);
+        // If new destination.
+        if (this.lastRestMarkerIdx !== this.currentRestMarkerIdx)
+          // change lastRestMarker to default color.
+          MissionControlObj.changeMarkerColor(this_.lastRestMarkerIdx, null);
         this_.startLocationSuccess();
       }
       // Else have user pick starting location.
@@ -139,16 +137,20 @@ class MissionControlNavigation {
   //
   startLocationSuccess() {
     Map_Obj.showDirectionsAndLine();
-    // If not routing to home.
-    if (this.currentRestMarkerIdx !== -1)
+    // If not routing to home and routing to new destination.
+    if (
+      this.currentRestMarkerIdx !== -1 &&
+      this.lastRestMarkerIdx !== this.currentRestMarkerIdx
+    )
       // Change marker that was routed to to alternate color.
       MissionControlObj.changeMarkerColor(
         this.currentRestMarkerIdx,
         $('#businesses-list .list-group-item').eq(this.currentRestMarkerIdx),
         1
       );
-    // If routing to home make home button active.
-    else $('.map-routing .home').addClass('homeActive');
+    // Make sure home button is active on nav restart to home.
+    else if (this.currentRestMarkerIdx === -1)
+      $('.map-routing .home').addClass('homeActive');
     // Set lastRestMarker to know what to turn back to original color marker.
     this.lastRestMarkerIdx = this.currentRestMarkerIdx;
     this.postDirectionsMapAdjustments();
@@ -167,7 +169,10 @@ class MissionControlNavigation {
   postDirectionsMapAdjustments() {
     Map_Obj.closePopupsArray();
     Map_Obj.restMarker.togglePopup();
-    Map_Obj.fitBounds();
+    // If new navigation profile fit-bounds.
+    if (Map_Obj.changedProfile) Map_Obj.fitBounds();
+    // Else skip fit-bounds for re-routing and reset changedProfile flag to true.
+    else Map_Obj.changedProfile = true;
   }
 
   //

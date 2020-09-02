@@ -153,7 +153,7 @@ class MapObj {
     }
     // If new navigation profile fit-bounds.
     if (this.changedProfile) this.fitBounds();
-    // Else skip for re-routing to not fit-bounds.
+    // Else skip fit-bounds for re-routing and reset changedProfile flag to true.
     else this.changedProfile = true;
   }
 
