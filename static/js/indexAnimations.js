@@ -101,7 +101,10 @@ class IndexAnimations {
     );
   }
 
+  //
   // Add marker and fit bounds with data found in current card.
+  // If changed profile is false it means navigation is re-routing
+  //
   mapCurrCard() {
     const $focusCard = $('.my-card').eq(this.currCard);
     if ($focusCard.hasClass('dummy-card')) return;
@@ -115,7 +118,9 @@ class IndexAnimations {
       Map_Obj.addRestMarkerAndFitBounds([+lng, +lat], name, id);
   }
 
+  //
   // Listen for sidebar button click or drag and toggle sidebar.
+  //
   toggleSidebarListeners() {
     const boundToggleSidebar = this.toggleSidebar.bind(this);
     $('.sidebar-toggle-btn').on('click', boundToggleSidebar);

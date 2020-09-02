@@ -24,6 +24,7 @@ class MapObj {
     this.routeCache = new Set();
     this.directionsCache = {};
     this.profile = null;
+    this.changedProfile = true;
     // options
     this.markerOptions = [
       { color: '#00ff26' },
@@ -150,7 +151,10 @@ class MapObj {
       if ($('#directions-panel').hasClass('directionsShow'))
         IndexButtonsLogicsObj.toggleDirectionsDiv();
     }
-    this.fitBounds();
+    // If new navigation profile fit-bounds.
+    if (this.changedProfile) this.fitBounds();
+    // Else skip for re-routing to not fit-bounds.
+    else this.changedProfile = true;
   }
 
   //

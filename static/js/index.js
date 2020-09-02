@@ -771,6 +771,7 @@ class ButtonsLogics {
   //
   async startNavigation(e) {
     const $el = $(e.currentTarget);
+    Map_Obj.changedProfile = Map_Obj.profile !== $el.data('profile');
     Map_Obj.profile = $el.data('profile');
     Map_Obj.markerStyle = 1;
     Map_Obj.userMarkerStyle = 1;
@@ -778,8 +779,8 @@ class ButtonsLogics {
     this.navStartDOMAdjustments($el);
     // If currently navigating home show route for newly selected navigation profile.
     if ($('.map-routing .home').hasClass('homeActive')) {
-      Map_Obj.showDirectionsAndLine();
       Map_Obj.fitBounds();
+      Map_Obj.showDirectionsAndLine();
       // Else use IndexAnimationsObj to map current (center) card's business and route.
     } else {
       // Pause to allow user to click home btn before mapping restaurant.
