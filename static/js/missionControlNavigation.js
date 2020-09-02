@@ -136,6 +136,7 @@ class MissionControlNavigation {
   // If start coordinates were determined start navigation.
   //
   startLocationSuccess() {
+    // Get show route.
     Map_Obj.showDirectionsAndLine();
     // If not routing to home and routing to new destination.
     if (
@@ -155,12 +156,20 @@ class MissionControlNavigation {
     this.lastRestMarkerIdx = this.currentRestMarkerIdx;
     this.postDirectionsMapAdjustments();
     $('#navigationModal').modal('hide');
-    $('#businesses-list').removeClass('show');
     $('#directions-panel').show();
     $('.map-routing .home').fadeIn();
     $('.map-routing .reset').fadeIn();
+    // Make current button active.
     Map_Obj.clearNavBtnsActive();
     $(`.map-routing div[data-profile="${Map_Obj.profile}"]`).addClass('active');
+    // Wait to see if location watcher is enbaled to determine if sidebar should
+    // be closed for following user navigation.
+    setTimeout(() => {
+      // If navi following user close sidebar.
+      if (Geolocation_Obj.locationWatcher && MissionControlObj.sidebarOpen)
+        MissionControlObj.toggleSidebar();
+      else $('#businesses-list').removeClass('show');
+    }, 2500);
   }
 
   //

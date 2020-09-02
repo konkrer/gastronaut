@@ -4,7 +4,7 @@
 // Class to hold geolocation and watch location functionality
 // and related functionality.
 //
-class GeolocationObj {
+class GeolocationLogic {
   constructor() {
     this.locationWatcher = null;
     this.madeFirstUpdate = null; // Set true after locationWatcher makes first update.
@@ -215,4 +215,4 @@ class GeolocationObj {
   }
 }
 
-const Geolocation_Obj = new GeolocationObj();
+const Geolocation_Obj = new GeolocationLogic();
