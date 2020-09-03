@@ -14,8 +14,8 @@ class IndexAnimations {
     this.category = null;
     this.windowResizeCardScrollResetTimer;
     this.heroAnimation = null;
+    // this.initHeroAnimation();
     this.trakerMapperBound = this.trakerMapper.bind(this);
-    this.initHeroAnimation();
     this.toggleSidebarListeners();
     this.addWindowResizeListener();
     this.initMiscAnimtions();

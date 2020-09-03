@@ -328,7 +328,7 @@ class IndexSearchLogic {
   // Hide hero animation and make yelp search.
   //
   async hideHeroAndSearch() {
-    IndexAnimationsObj.heroAnimation.destroy();
+    // IndexAnimationsObj.heroAnimation.destroy();
     $('.hero-animation').hide();
     $('.alert').hide();
     $('.spinner-zone').show();
