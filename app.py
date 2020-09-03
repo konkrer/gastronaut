@@ -24,7 +24,8 @@ from forms import (
 from static.py_modules.decorators import add_user_to_g, login_required
 from static.py_modules.yelp_helper import (
     YELP_CATEGORIES, no_alcohol, first_letters, parse_query_params,
-    YELP_URL)
+    YELP_URL, FOURSQUARE_URL, foursq_params, foursq_venue_params,
+    add_reports_data, add_foursquare_data)
 
 
 app = Flask(__name__)
@@ -602,7 +603,8 @@ def search_yelp():
 @app.route('/v1/business_detail/<business_id>')
 @add_user_to_g
 def business_detail_yelp(business_id):
-    """API endpoint to relay business search to Yelp business search."""
+    """API endpoint to get Yelp business details, Yelp business reviews,
+       Foursquare venue id, and Foursquare business details."""
 
     headers = {'Authorization': f'Bearer {YELP_API_KEY}'}
 
@@ -617,22 +619,32 @@ def business_detail_yelp(business_id):
             f'{YELP_URL}/businesses/{business_id}/reviews', headers=headers)
         if not res2.ok:
             res2.raise_for_status()
+        # Get Foursquare venue id
+        params_venue = foursq_venue_params(request)
+        res3 = requests.get(
+            f'{FOURSQUARE_URL}/venues/search', params=params_venue)
     except Exception as e:
         error_logging(e)
         return jsonify({'error': repr(e)})
 
+    if res3.ok:
+        # Try to get premium request.
+        try:
+            venue_id = res3.json()['response']['venues'][0]['id']
+            # Get Foursquare business details
+            res4 = requests.get(
+                f'{FOURSQUARE_URL}/venues/{venue_id}', params=foursq_params())
+        # If over limit our data response won't contain foursquare data.
+        except Exception as e:
+            error_logging(e)
+
     data = res.json()
     data['reviews'] = res2.json()['reviews']
-
-    business = Business.query.get(business_id)
-
-    if business:
-        reports = Report.get_business_reports_users(business.id)
-        # Max 3 reports. If there are more than 3 set 'more_results' to True.
-        data['reports'] = reports[:3]
-        data['more_results'] = len(reports) > 3
-    else:
-        data['reports'] = []
+    # Add gastronaut reports for this business if any.
+    data = add_reports_data(business_id, data)
+    # Add foursquare data if any.
+    if res3.ok and res4.ok:
+        data = add_foursquare_data(data, res4.json())
 
     return data
 

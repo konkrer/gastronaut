@@ -33,7 +33,7 @@ class MissionControl {
     this.addBusinessClickListener();
     this.addBusinessDblclickListener();
     this.addBusinessMapListener();
-    this.addDetailsListenerBlocker();
+    this.addDetailsListener();
     this.addGoalCompletedListener();
     this.addRemoveBusinessListener();
     this.addSidebarListeners();
@@ -217,6 +217,9 @@ class MissionControl {
     }
   }
 
+  //
+  // Post create mission actions.
+  //
   async createMissionSuccess(data) {
     const mission = data.mission;
     // update mission-load-select with new <option>.
@@ -474,12 +477,14 @@ class MissionControl {
   }
 
   //
-  // Prevent double clicks on details button from making two calls.
+  // Details button listener. Make fake event object and call getShowBusinessDetails.
   //
-  addDetailsListenerBlocker() {
+  addDetailsListener() {
     const this_ = this;
-    $('#businesses-list').on('click', '.detailsBtn', function () {
+    $('#businesses-list').on('click', '.bussinessListdetailsBtn', function (e) {
       if (this_.businessClickBlocker) return;
+      const fakeE = this_.getFakeE($(this).parents('.list-group-item'));
+      ApiFunctsObj.getShowBusinessDetails(fakeE);
     });
   }
 
@@ -556,11 +561,11 @@ class MissionControl {
         MissionControlNavigationObj.postDirectionsMapAdjustments();
         // DOM adjustments.
         $('.map-routing .home').removeClass('homeActive');
-        $('#directions-text').removeClass('show');
         // Set timer to hide businesses list. Allows time for double clicking event
         // to register before hiding list.
         setTimeout(() => {
           $('#businesses-list').removeClass('show');
+          $('#directions-text').removeClass('show');
         }, 500);
       }
     });
@@ -603,10 +608,10 @@ class MissionControl {
   addBusinessDblclickListener() {
     const this_ = this;
     this.$infoCol.on('dblclick', '.list-group-item', function () {
-      const fake_e = { currentTarget: $(this).find('.detailsBtn').get()[0] };
+      const fakeE = this_.getFakeE($(this));
       this_.businessMapper($(this).find('.mapBtn'));
       setTimeout(() => {
-        ApiFunctsObj.getShowBusinessDetails(fake_e);
+        ApiFunctsObj.getShowBusinessDetails(fakeE);
       }, 2000);
     });
   }
@@ -655,14 +660,14 @@ class MissionControl {
   //
   goalCompletedSuccess($el, success, mission_id) {
     let newMarker, completed;
-    const id = $el.parent().data('id');
+    const [id, name, lng, lat] = this.extractDataListGroupItem(
+      $el.parents('.list-group-item')
+    );
     const idx = $el.parent().data('idx');
-    const name = $el.data('name');
-    const html = `<span class="detailsBtn" data-id="${id}">
+    const html = `<span class="detailsBtn" data-id="${id}" data-name="${name}" data-latlng="${lat},${lng}">
                 ${name}</span>`;
-    // get marker for this business and extract coords, then remove.
+    // get marker for this business then remove.
     const marker = Map_Obj.restMarkers[idx];
-    const { lng, lat } = marker._lngLat;
     marker.remove();
     if (success === 'Goal Completed!') {
       // add flag marker
@@ -705,10 +710,9 @@ class MissionControl {
         MissionControlNavigationObj.lastRestMarkerHtml = null;
         return;
       }
-      const id = $el.children().data('id');
-      const name = $el.text();
+      const [id, name, lng, lat] = this.extractDataListGroupItem($el);
       // Make new html for new marker
-      html = `<span class="detailsBtn" data-id="${id}">
+      html = `<span class="detailsBtn" data-id="${id}" data-name="${name} data-latlng="${lat},${lng}">
                       ${name}</span>`;
     }
     // Get marker for this business and extract coords, then remove.
@@ -846,6 +850,36 @@ class MissionControl {
     const businesses = this.missionCache[missionId].businesses;
     if (businesses) Map_Obj.fitBoundsArray(businesses);
     $('#businesses-list').removeClass('show');
+  }
+
+  //
+  // Make fake event (e) for getShowBusinessDetails.
+  // $el is list-group-item for business.
+  //
+  getFakeE($el) {
+    const [id, name, lng, lat] = this.extractDataListGroupItem($el);
+    return {
+      currentTarget: {
+        dataset: {
+          id,
+          name,
+          latlng: `${lat},${lng}`,
+        },
+      },
+    };
+  }
+
+  //
+  // Get Id, name, lat, and lng from list group item for business.
+  //
+  extractDataListGroupItem($el) {
+    const id = $el.children().data('id');
+    const name = $el.find('.flagBtn').data('name');
+    const $mapBtn = $el.find('.mapBtn');
+    const lng = $mapBtn.data('lng');
+    const lat = $mapBtn.data('lat');
+
+    return [id, name, lng, lat];
   }
 }
 

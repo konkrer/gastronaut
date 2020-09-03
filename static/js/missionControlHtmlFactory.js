@@ -196,9 +196,7 @@ class MissionControlHtmFactory {
               }" data-lat="${el.latitude}">
                 <i class="fas fa-map-marked-alt brand-outline text-warning iconBtn"></i>
               </span>
-              <span class="detailsBtn mr-2" data-toggle="tooltip" title="Show Details" data-id="${
-                el.id
-              }">
+              <span class="bussinessListdetailsBtn mr-2" data-toggle="tooltip" title="Show Details">
                 <i class="fas fa-clipboard-list brand-outline text-warning iconBtn"></i>
               </span>
               <span class="flagBtn mr-2" data-toggle="tooltip" title="Plant a Flag" data-name="${

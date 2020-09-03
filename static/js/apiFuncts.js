@@ -164,15 +164,20 @@ class ApiFuncts {
     let business_result_data;
 
     const business_id = e.currentTarget.dataset.id;
+    const name = e.currentTarget.dataset.name;
+    const latlng = e.currentTarget.dataset.latlng;
 
     if (this.business_results_cache[business_id])
       business_result_data = this.business_results_cache[business_id];
     else {
       try {
-        var resp = await axios.get(`/v1/business_detail/${business_id}`);
+        var resp = await axios.get(`/v1/business_detail/${business_id}`, {
+          params: { name, latlng },
+        });
       } catch (err) {
         Sentry.captureException(err);
         $('.spinner-zone').hide();
+        alert('Yelp Api Error. Please try again. E1');
         return;
       }
       if (!resp || resp.data.error) {
@@ -182,6 +187,7 @@ class ApiFuncts {
           }`
         );
         $('.spinner-zone').hide();
+        alert('Yelp Api Error. Please try again. E2');
         return;
       }
       business_result_data = resp.data;

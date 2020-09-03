@@ -139,7 +139,7 @@ class MapObj {
   //
   addRestMarkerAndFitBounds(restCoords, name, id) {
     this.restCoords = restCoords;
-    const html = `<span class="detailsBtn mr-2" data-id="${id}">
+    const html = `<span class="detailsBtn mr-2" data-id="${id}" data-name="${name}" data-latlng="${restCoords[1]},${restCoords[0]}">
                     ${name}</span>`;
     if (this.restMarker) this.restMarker.remove();
     if (this.homeMarker) this.homeMarker.remove();
@@ -225,7 +225,7 @@ class MapObj {
     this.restMarkers = array.reduce((acc, el, idx) => {
       const coords = [el.longitude, el.latitude];
       // On mission load use first business for restCoords for navigation.
-      const html = `<span class="detailsBtn mr-2" data-id="${el.id}">
+      const html = `<span class="detailsBtn mr-2" data-id="${el.id}" data-name="${el.name}" data-latlng="${coords[1]},${coords[0]}">
       ${el.name}</span>`;
 
       const openPopup = this.isMobileScreen() ? false : true;

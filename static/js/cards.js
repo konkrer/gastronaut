@@ -173,15 +173,18 @@ class CardsModalsFactory {
     // unpack data items for card display
     const {
       name,
+      photos,
+      categories,
+      is_closed,
       rating,
       review_count,
       price,
-      categories,
+      transactions,
+      delivery_url,
+      menu_url,
+      website_url,
       phone,
       display_phone,
-      transactions,
-      is_closed,
-      photos,
       hours,
       coordinates: { latitude: lat, longitude: lng },
       location: {
@@ -223,9 +226,8 @@ class CardsModalsFactory {
           </div>
           <div class="modal-body">
             <p class="card-text px-4 txt-lg">
-              ${this.funct.makeCategoriesText(categories)} ${
-      is_closed ? '- Closed' : ''
-    }
+            ${is_closed ? 'Closed -' : ''} 
+            ${this.funct.makeCategoriesText(categories)}
             </p>
             <p class="txt-green dark-green-outline txt-lg">
               ${is_open_now ? 'Open Now <i class="far fa-clock ml-1"></i>' : ''}
@@ -242,6 +244,9 @@ class CardsModalsFactory {
                 ${this.funct.makePriceDollars(price)}
               </li>
               ${this.funct.makeTransactionsHtml(transactions)}
+              ${this.funct.makeDeliveryHtml(delivery_url)}
+              ${this.funct.makeMenuHtml(menu_url)}
+              ${this.funct.makeWebsiteHtml(website_url)}
               ${this.funct.makePhoneHtml(phone, display_phone)}
               <li class="list-group-item bg-transparent">
               <a target="_blank"
@@ -333,6 +338,54 @@ class CardModalTextHtmlFunctions {
     }, '');
 
     return `<li class="list-group-item bg-transparent card-text-noHover">${trans_text}</li>`;
+  }
+
+  //
+  // Make delivery html for detail modal.
+  //
+  makeDeliveryHtml(delivery_url) {
+    return delivery_url
+      ? `
+      <li class="list-group-item bg-transparent">
+        <a target="_blank"
+          href="${delivery_url}"
+          >
+          Order Delivery
+        </a>
+      </li>`
+      : '';
+  }
+
+  //
+  // Make delivery html for detail modal.
+  //
+  makeMenuHtml(menu_url) {
+    return menu_url
+      ? `
+      <li class="list-group-item bg-transparent">
+        <a target="_blank"
+          href="${menu_url}"
+          >
+          See Menu
+        </a>
+      </li>`
+      : '';
+  }
+
+  //
+  // Make website html for detail modal.
+  //
+  makeWebsiteHtml(url) {
+    return url
+      ? `
+      <li class="list-group-item bg-transparent">
+        <a target="_blank"
+          href="${url}"
+          >
+          Website
+        </a>
+      </li>`
+      : '';
   }
 
   //

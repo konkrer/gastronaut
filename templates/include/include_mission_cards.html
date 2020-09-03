@@ -23,9 +23,7 @@
         <div class="txt-smlr">
           {{mission.date_shared.strftime('%a %b %d, %Y')}}
         </div>
-        <div class="txt-smlr">
-          {{mission.city}} {{mission.state}}
-        </div>
+        <div class="txt-smlr">{{mission.city}} {{mission.state}}</div>
       </div>
       {% if mission.description %}
       <p class="card-text txt-green-alt black-outline-1 mt-3">
@@ -35,7 +33,12 @@
     </div>
     <ul class="list-group list-group-flush">
       {% for business in mission.businesses %}
-      <li class="list-group-item detailsBtn" data-id="{{business.id}}">
+      <li
+        class="list-group-item detailsBtn"
+        data-id="{{business.id}}"
+        data-name="{{business.name}}"
+        data-latlng="{{business.latitude}},{{business.longitude}}"
+      >
         {{business.name}}
       </li>
       {% endfor %}
@@ -62,17 +65,15 @@
         <span class="">
           {% if g.user.id in mission.likes %}
           <i class="fas fa-thumbs-up fa-lg"></i>
-          <i class="far fa-thumbs-up fa-lg" style="display: none;"></i>
+          <i class="far fa-thumbs-up fa-lg" style="display: none"></i>
           {% else %}
           <i class="far fa-thumbs-up fa-lg"></i>
-          <i class="fas fa-thumbs-up fa-lg" style="display: none;"></i>
+          <i class="fas fa-thumbs-up fa-lg" style="display: none"></i>
           {% endif %}
         </span>
       </a>
       {% endif %}
-      <span class="px-3 text-dark likes">
-        {{mission.likes | length}}
-      </span>
+      <span class="px-3 text-dark likes"> {{mission.likes | length}} </span>
       {% if not g.user %}
       <button
         type="button"
@@ -104,24 +105,16 @@
         <em class="text-warning font-weight-bold black-outline-1">
           by @gastronaut</em
         >
-        <div class="txt-smlr">
-          Wed Jul 3, 2020
-        </div>
-        <div class="txt-smlr">
-          San Francisco CA
-        </div>
+        <div class="txt-smlr">Wed Jul 3, 2020</div>
+        <div class="txt-smlr">San Francisco CA</div>
       </div>
       <p class="card-text txt-green-alt black-outline-1 mt-3">
         <em>Your mission description will go here.</em>
       </p>
     </div>
     <ul class="list-group list-group-flush">
-      <li class="list-group-item">
-        I'm a mission goal
-      </li>
-      <li class="list-group-item">
-        Another goal
-      </li>
+      <li class="list-group-item">I'm a mission goal</li>
+      <li class="list-group-item">Another goal</li>
       <li class="list-group-item">
         Goals are restaurants or bars on your gastronomical mission
       </li>
@@ -130,12 +123,8 @@
       <span class="text-primary">
         <i class="fas fa-thumbs-up fa-lg"></i>
       </span>
-      <span class="px-3 text-dark likes">
-        257
-      </span>
-      <span class="text-primary float-right">
-        Add to Missions
-      </span>
+      <span class="px-3 text-dark likes"> 257 </span>
+      <span class="text-primary float-right"> Add to Missions </span>
     </div>
   </div>
   <div class="card d-inline-block m-2 text-left card-shadow-slight">
@@ -148,24 +137,16 @@
         <em class="text-warning font-weight-bold black-outline-1">
           by @gastronaut</em
         >
-        <div class="txt-smlr">
-          Wed Jul 3, 2020
-        </div>
-        <div class="txt-smlr">
-          San Francisco CA
-        </div>
+        <div class="txt-smlr">Wed Jul 3, 2020</div>
+        <div class="txt-smlr">San Francisco CA</div>
       </div>
       <p class="card-text txt-green-alt black-outline-1 mt-3">
         <em>Your mission description will go here.</em>
       </p>
     </div>
     <ul class="list-group list-group-flush">
-      <li class="list-group-item">
-        I'm a mission goal
-      </li>
-      <li class="list-group-item">
-        Another goal
-      </li>
+      <li class="list-group-item">I'm a mission goal</li>
+      <li class="list-group-item">Another goal</li>
       <li class="list-group-item">
         Goals are restaurants or bars on your gastronomical mission
       </li>
@@ -174,12 +155,8 @@
       <span>
         <i class="fas fa-thumbs-up fa-lg text-primary"></i>
       </span>
-      <span class="px-3 text-dark likes">
-        6437
-      </span>
-      <span class="text-primary float-right">
-        Add to Missions
-      </span>
+      <span class="px-3 text-dark likes"> 6437 </span>
+      <span class="text-primary float-right"> Add to Missions </span>
     </div>
   </div>
   {% else %}
@@ -188,9 +165,7 @@
   >
     <div class="card-header pt-3">
       <h5 class="card-title font-weight-bold black-outline-1-2 mb-0">
-        <span class="txt-white-k hover-primary">
-          >_<
-        </span>
+        <span class="txt-white-k hover-primary"> >_< </span>
       </h5>
     </div>
   </div>
@@ -199,9 +174,7 @@
   >
     <div class="card-header pt-3">
       <h5 class="card-title font-weight-bold black-outline-1-2 mb-0">
-        <span class="text-info hover-primary">
-          Nothing Found!
-        </span>
+        <span class="text-info hover-primary"> Nothing Found! </span>
       </h5>
     </div>
   </div>
@@ -210,9 +183,7 @@
   >
     <div class="card-header pt-3">
       <h5 class="card-title font-weight-bold black-outline-1-2 mb-0">
-        <span class="txt-white-k hover-primary">
-          >_<
-        </span>
+        <span class="txt-white-k hover-primary"> >_< </span>
       </h5>
     </div>
   </div>

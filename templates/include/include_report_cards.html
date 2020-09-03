@@ -11,6 +11,8 @@
       <h5
         class="card-title font-weight-bold black-outline-1-2 detailsBtn hover-primary mb-0"
         data-id="{{b.id}}"
+        data-name="{{b.name}}"
+        data-latlng="{{b.latitude}},{{b.longitude}}"
       >
         {{b.name}}
       </h5>
@@ -75,10 +77,10 @@
         <span class="">
           {% if g.user.id in report.likes %}
           <i class="fas fa-thumbs-up fa-lg"></i>
-          <i class="far fa-thumbs-up fa-lg" style="display: none;"></i>
+          <i class="far fa-thumbs-up fa-lg" style="display: none"></i>
           {% else %}
           <i class="far fa-thumbs-up fa-lg"></i>
-          <i class="fas fa-thumbs-up fa-lg" style="display: none;"></i>
+          <i class="fas fa-thumbs-up fa-lg" style="display: none"></i>
           {% endif %}
         </span>
       </a>
@@ -118,12 +120,8 @@
         <em class="text-warning black-outline-1 font-weight-bold">
           by @gastronaut</em
         >
-        <div class="txt-smlr ssp">
-          Wed Jul 3, 2020
-        </div>
-        <div class="txt-smlr ssp">
-          San Francisco CA
-        </div>
+        <div class="txt-smlr ssp">Wed Jul 3, 2020</div>
+        <div class="txt-smlr ssp">San Francisco CA</div>
       </div>
     </div>
     <div class="card-body">
@@ -133,12 +131,8 @@
       <span>
         <i class="fas fa-thumbs-up fa-lg text-primary"></i>
       </span>
-      <span class="px-3 text-dark likes">
-        58
-      </span>
-      <span class="card-link float-right text-primary">
-        Read More
-      </span>
+      <span class="px-3 text-dark likes"> 58 </span>
+      <span class="card-link float-right text-primary"> Read More </span>
     </div>
   </div>
   <div
@@ -157,12 +151,8 @@
         <em class="text-warning black-outline-1 font-weight-bold">
           by @gastronaut</em
         >
-        <div class="txt-smlr ssp">
-          Wed Jul 3, 2020
-        </div>
-        <div class="txt-smlr ssp">
-          San Francisco CA
-        </div>
+        <div class="txt-smlr ssp">Wed Jul 3, 2020</div>
+        <div class="txt-smlr ssp">San Francisco CA</div>
       </div>
     </div>
     <div class="card-body">
@@ -172,12 +162,8 @@
       <span>
         <i class="fas fa-thumbs-up fa-lg text-primary"></i>
       </span>
-      <span class="px-3 text-dark likes">
-        137
-      </span>
-      <span class="card-link float-right text-primary">
-        Read More
-      </span>
+      <span class="px-3 text-dark likes"> 137 </span>
+      <span class="card-link float-right text-primary"> Read More </span>
     </div>
   </div>
   {% else %}
@@ -186,9 +172,7 @@
   >
     <div class="card-header pt-3">
       <h5 class="card-title font-weight-bold black-outline-1-2 mb-0">
-        <span class="txt-white-k hover-primary">
-          >_<
-        </span>
+        <span class="txt-white-k hover-primary"> >_< </span>
       </h5>
     </div>
   </div>
@@ -197,9 +181,7 @@
   >
     <div class="card-header pt-3">
       <h5 class="card-title font-weight-bold black-outline-1-2 mb-0">
-        <span class="text-info hover-primary">
-          Nothing Found!
-        </span>
+        <span class="text-info hover-primary"> Nothing Found! </span>
       </h5>
     </div>
   </div>
@@ -208,9 +190,7 @@
   >
     <div class="card-header pt-3">
       <h5 class="card-title font-weight-bold black-outline-1-2 mb-0">
-        <span class="txt-white-k hover-primary">
-          >_<
-        </span>
+        <span class="txt-white-k hover-primary"> >_< </span>
       </h5>
     </div>
   </div>

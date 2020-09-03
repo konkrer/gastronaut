@@ -5,14 +5,21 @@ from datetime import datetime, timezone, timedelta
 import requests
 import logging
 import os
+from models import Business, Report
 
 
 YELP_URL = 'https://api.yelp.com/v3'
+FOURSQUARE_URL = 'https://api.foursquare.com/v2'
+FOURSQUARE_CLIENT_ID = 'LPDJ2QH35HQTX2PNF0QNE4YHEJPOWLY0OMORXDUZ3O1DX1QO'
 
 API_KEY = os.environ.get('GOOGLE_API_KEY')
 
-if not API_KEY:
+# If production environment
+if API_KEY:
+    FOURSQUARE_CLIENT_SECRET = os.environ.get('FOURSQUARE_CLIENT_SECRET')
+else:
     from development_local.local_settings import GOOGLE_API_KEY as API_KEY
+    from development_local.local_settings import FOURSQUARE_CLIENT_SECRET
 
 
 def parse_query_params(multi_dict):
@@ -229,9 +236,65 @@ def no_alcohol():
     return [r for r in new_list if r[1] not in bad_list]
 
 
-# from csv:
-# get yelp categories data in tuples as: (display name, category name)
-# with open('yelp_restaurant_categories.txt') as f:
-#     cat_data = f.read().splitlines()
-# cat_data = [tuple(x.split(',')) for x in cat_data]
-# print(cat_data)
+def foursq_params():
+    """Make base query parameters for foursquare."""
+
+    return {
+        'client_id': FOURSQUARE_CLIENT_ID,
+        'client_secret': FOURSQUARE_CLIENT_SECRET,
+        'v': '20200902'
+    }
+
+
+def foursq_venue_params(request):
+    """Make query parameters for foursquare venue search."""
+
+    name = request.args['name']
+    latlng = request.args['latlng']
+
+    return {'query': name, 'll': latlng, **foursq_params()}
+
+
+def add_reports_data(business_id, data):
+    """Add reports to data dict if business is in database and there are
+       reports. Add 3 reports for display in details modal."""
+
+    business = Business.query.get(business_id)
+
+    if business:
+        reports = Report.get_business_reports_users(business.id)
+        # Get 3 reports.
+        data['reports'] = reports[:3]
+        # If there are more than 3 reviews set 'more_results' to True.
+        data['more_results'] = len(reports) > 3
+    else:
+        data['reports'] = []
+
+    return data
+
+
+def add_foursquare_data(data, resp_data):
+    """Add foursquare data to data dict."""
+
+    if not resp_data['meta']['code'] == 200:
+        return data
+
+    venue = resp_data['response']['venue']
+
+    if venue.get('url'):
+        data['website_url'] = venue['url'].replace('\\', '')
+
+    if venue.get('delivery'):
+        if venue['delivery'].get('url'):
+            data['delivery_url'] = venue['delivery']['url'].replace('\\', '')
+
+    if venue.get('menu'):
+        menu = venue['menu']
+        if menu.get('mobileUrl'):
+            data['menu_url'] = menu['mobileUrl'].replace('\\', '')
+        elif menu.get('url'):
+            data['menu_url'] = menu['url'].replace('\\', '')
+        elif menu.get('externalUrl'):
+            data['menu_url'] = menu['externalUrl'].replace('\\', '')
+
+    return data

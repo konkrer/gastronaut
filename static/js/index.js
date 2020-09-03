@@ -705,8 +705,8 @@ class ButtonsLogics {
   }
 
   //
-  // Get the mission-btn (add to mission) button which holds the business id and call
-  // getShowBusinessDetails.
+  // Get the mission-btn (add to mission) button which holds the
+  // business data and call getShowBusinessDetails.
   //
   getBtnAndShowDetails() {
     // Get the details button.
@@ -720,6 +720,10 @@ class ButtonsLogics {
       currentTarget: {
         dataset: {
           id: $addToMissionBtn.data('id'),
+          name: $addToMissionBtn.data('name'),
+          latlng: `${$addToMissionBtn.data('lat')},${$addToMissionBtn.data(
+            'lng'
+          )}`,
         },
       },
     };
