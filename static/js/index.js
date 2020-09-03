@@ -567,6 +567,7 @@ class ButtonsLogics {
     this.addNavigationListener();
     this.addToggleDirectionsDivListener();
     this.addCancelNavigationListener();
+    this.addOffsetBtnListener();
   }
 
   //
@@ -888,6 +889,13 @@ class ButtonsLogics {
     $('div.home').fadeOut().removeClass('homeHorizontal');
     $('div.reset').fadeOut().removeClass('resetHorizontal');
     $('.map-routing .home').removeClass('homeActive');
+  }
+
+  addOffsetBtnListener() {
+    $('.card-track').on('click', '.offset-btn', function () {
+      const topOffset = $(this).parents('.my-card').offset().top;
+      $(this).text(topOffset);
+    });
   }
 }
 

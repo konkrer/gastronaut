@@ -108,6 +108,7 @@ class CardsModalsFactory {
         class="my-card-img-div"
       ></div>
       <div class="card-body">
+        <button class="offset-btn">offset top</button>
         <h5 class="card-title txt-black"><b>${name}</b></h5>
         <p class="card-text">
           ${this.funct.makeCategoriesText(categories)} ${
