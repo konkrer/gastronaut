@@ -306,7 +306,7 @@ class BaseLogic {
   }
 
   //
-  // Inline sleep timer function. Dealay in ms.
+  // Inline sleep timer function. Delay in ms.
   //
   sleep(delay) {
     return new Promise(resolve => {

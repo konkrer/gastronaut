@@ -11,8 +11,8 @@ class IndexSearchLogic {
     this.addNavbarSearchListener();
     this.addExploreBtnsListeners();
     this.setLngLatInit();
-    this.makeSearch = this.checkSearchInputOrCheckLocalStorage();
-    this.addlockOnScrollBottomListener();
+    const addLockOnScrollBottom = this.checkSearchInputOrCheckLocalStorage();
+    if (addLockOnScrollBottom) this.addlockOnScrollBottomListener();
   }
 
   //
@@ -327,12 +327,16 @@ class IndexSearchLogic {
   //
   // Hide hero animation and make yelp search.
   //
-  hideHeroAndSearch() {
+  async hideHeroAndSearch() {
     IndexAnimationsObj.heroAnimation.destroy();
     $('.hero-animation').hide();
     $('.alert').hide();
     $('.spinner-zone').show();
     IndexAnimationsObj.scrollCategoriesToCurrent();
+    // Wait for map to load before searching Yelp.
+    while (Map_Obj.mappyBoi === null) {
+      await Base_Obj.sleep(500);
+    }
     // if there is given location request search
     if (FormFunctsObj.$locationInput.val()) this.searchYelp();
     // if no given location but allowing location sharing detect location
@@ -348,7 +352,7 @@ class IndexSearchLogic {
   }
 
   //
-  // When user scrolls to bottom of page call lockOnScrollBottom.
+  // When user scrolls call lockOnScrollBottom.
   //
   addlockOnScrollBottomListener() {
     window.addEventListener('scroll', this.lockOnScrollBottom.bind(this), {
@@ -359,7 +363,6 @@ class IndexSearchLogic {
   //
   // When page scrolled within 100px of the bottom of the page,
   // lock the page to the bottom view (main-interface) by removing
-  // the hero animation. Search if makeSearch flag is true.
   //
   lockOnScrollBottom() {
     // when bottom of screen is scrolled to.
@@ -370,10 +373,7 @@ class IndexSearchLogic {
       window.removeEventListener('scroll', this.lockOnScrollBottom, {
         passive: true,
       });
-      if (this.makeSearch && !this.firstCardsAdded) {
-        this.hideHeroAndSearch();
-        this.makeSearch = false;
-      } else $('.hero-animation').hide();
+      this.hideHeroAndSearch();
     }
   }
 
@@ -403,7 +403,7 @@ class IndexSearchLogic {
   // If there is navbar search term value on page load then
   // execute navbarSearch function on the passed in value.
   // Otherwise check local storage for form data to load.
-  // Return true or false if a further Yelp search is needed.
+  // Return true or false if lockOnScrollBottomListener is necessary.
   //
   checkSearchInputOrCheckLocalStorage() {
     if ($('.navbar form.searchForm input').val()) {
