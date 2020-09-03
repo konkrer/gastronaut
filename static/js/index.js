@@ -892,7 +892,7 @@ class ButtonsLogics {
   }
 
   addOffsetBtnListener() {
-    $('.card-track').on('click', '.offset-btn', function () {
+    $('main').on('click', '.offset-btn', function () {
       const topOffset = $(this).parents('.my-card').offset().top;
       $(this).text(topOffset);
     });
