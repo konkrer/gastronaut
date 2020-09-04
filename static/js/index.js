@@ -320,14 +320,14 @@ class IndexSearchLogic {
       CardsModalsFactoryObj.getCardsHtml(data.data.businesses)
     );
     IndexAnimationsObj.setCardScrollTrackerMapper();
-    // Get offset of first added next card to move misaligned cards up. (hacky bug fix)
+    // Get first added next card to move misaligned cards up. (hacky bug fix)
+    const firstCard = $('.my-card').eq(this.offset * 50);
+    // Increment offset.
+    this.offset++;
     setTimeout(() => {
-      const firstCard = $('.my-card').eq(this.offset * 50);
-      // const topOffset = firstCard.offset().top;
+      // Add text to firstCard to move misaligned cards up. (hacky bug fix)
       firstCard.find('.offset-btn').text('bugs are fun!');
-      // Increment offset.
-      this.offset++;
-    }, 9000);
+    }, 400);
 
     if (this.resultsRemaining)
       setTimeout(() => {
