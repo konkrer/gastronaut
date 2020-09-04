@@ -602,7 +602,7 @@ def search_yelp():
 
 @app.route('/v1/business_detail/<business_id>')
 @add_user_to_g
-def business_detail_yelp(business_id):
+def business_details(business_id):
     """API endpoint to get Yelp business details, Yelp business reviews,
        Foursquare venue id, and Foursquare business details."""
 

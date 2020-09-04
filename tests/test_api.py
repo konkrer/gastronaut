@@ -47,16 +47,18 @@ class APIViewTests(TestCase):
         self.assertIn('businesses', data)
 
     def test_yelp_business_detail(self):
-        """Test reaching the Yelp API for business detail  data."""
+        """Test reaching the Yelp API for business detail data."""
 
-        resp = self.client.get('/v1/business_detail/Kx1WExNj5ogaFe0cyg9L6A')
+        resp = self.client.get(
+            '/v1/business_detail/Kx1WExNj5ogaFe0cyg9L6A?name=Little+Nepal&latlng=37.7391,-122.41361'  # noqa e501
+        )
         data = resp.get_json()
 
         self.assertEqual(resp.status_code, 200)
         self.assertIn('name', data)
         self.assertEqual(data['name'], 'Little Nepal')
 
-    def test_reports_flag_yelp_business_detail(self):
+    def test_reports_yelp_business_detail(self):
         """Test that calling business detail on a business that has reports
            written about it includes details about that business.
 
@@ -77,7 +79,8 @@ class APIViewTests(TestCase):
         db.session.commit()
 
         with self.client as c:
-            resp = c.get('/v1/business_detail/iUockw0CUssKZLyoGJYEXA')
+            resp = c.get(
+                '/v1/business_detail/iUockw0CUssKZLyoGJYEXA?name=Cuisine+of+Nepal&latlng=37.74097,-122.42318')
             data = resp.get_json()
 
         self.assertEqual(resp.status_code, 200)
@@ -106,7 +109,7 @@ class APIViewTests(TestCase):
             with c.session_transaction() as sess:
                 sess['user_id'] = u1.id
             c.post('/v1/preferences',
-                   json={'boolean': True, 'show_alcohol': False})
+                   json={'Boolean': True, 'show_alcohol': False})
 
         u1 = User.query.get(u1.id)
 

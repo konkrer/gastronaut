@@ -29,7 +29,7 @@ class UserViewsTestCase(TestCase):
         self.client = app.test_client()
 
         self.user = User.register(email="test@test.com",
-                                  username="tester1", password="tester1")
+                                  username="tester1", password="tester1$A")
 
     def tearDown(self):
 
@@ -41,7 +41,7 @@ class UserViewsTestCase(TestCase):
     def test_signup_view(self):
 
         form_data = {'email': 'tester2@test.com',
-                     'username': 'tester2', 'password': 'tester2'}
+                     'username': 'tester2', 'password': 'tester2$A'}
 
         with self.client as c:
             resp = c.post('/signup', data=form_data,
@@ -59,7 +59,7 @@ class UserViewsTestCase(TestCase):
 
     def test_login_view(self):
 
-        form_data = {'email': 'test@test.com', 'password': 'tester1'}
+        form_data = {'email': 'test@test.com', 'password': 'tester1$A'}
 
         with self.client as c:
             resp = c.post('/login', data=form_data,
