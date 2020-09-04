@@ -322,9 +322,9 @@ class IndexSearchLogic {
     IndexAnimationsObj.setCardScrollTrackerMapper();
     // Get offset of first added next card to move misaligned cards up. (hacky bug fix)
     setTimeout(() => {
-      const firstCard = $('.my-card').eq(this.offset * 50 + 1);
-      const topOffset = firstCard.offset().top;
-      firstCard.find('.offset-btn').text(topOffset);
+      const firstCard = $('.my-card').eq(this.offset * 50);
+      // const topOffset = firstCard.offset().top;
+      firstCard.find('.offset-btn').text('bugs are fun!');
       // Increment offset.
       this.offset++;
     }, 9000);
