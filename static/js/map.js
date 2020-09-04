@@ -73,7 +73,7 @@ class MapObj {
   //
   // Render Map.
   //
-  renderMiniMap(mapCenter = [-85, 26.8], zoom = 1.3, navControl = false) {
+  renderMap(mapCenter = [-85, 26.8], zoom = 1.3, navControl = false) {
     mapboxgl.accessToken = this.accessToken;
     this.mappyBoi = new mapboxgl.Map({
       container: 'map',

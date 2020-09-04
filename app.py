@@ -612,13 +612,11 @@ def business_detail_yelp(business_id):
         # Get business details
         res = requests.get(
             f'{YELP_URL}/businesses/{business_id}', headers=headers)
-        if not res.ok:
-            res.raise_for_status()
+        res.raise_for_status()
         # Get reviews for business
         res2 = requests.get(
             f'{YELP_URL}/businesses/{business_id}/reviews', headers=headers)
-        if not res2.ok:
-            res2.raise_for_status()
+        res2.raise_for_status()
         # Get Foursquare venue id
         params_venue = foursq_venue_params(request)
         res3 = requests.get(

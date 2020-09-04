@@ -346,9 +346,9 @@ class IndexSearchLogic {
     $('.alert').hide();
     $('.spinner-zone').show();
     IndexAnimationsObj.scrollCategoriesToCurrent();
-    // Wait for map to load before searching Yelp.
+    // Make sure map has loaded before searching Yelp.
     while (Map_Obj.mappyBoi === null) {
-      await Base_Obj.sleep(500);
+      await Base_Obj.sleep(100);
     }
     // if there is given location request search
     if (FormFunctsObj.$locationInput.val()) this.searchYelp();
