@@ -312,7 +312,6 @@ class IndexSearchLogic {
       return;
     }
     const data = await this.searchApiCall(true);
-    this.offset++;
     if (data === false) return;
 
     this.resultsRemaining -= data.data.businesses.length;
@@ -320,6 +319,11 @@ class IndexSearchLogic {
       CardsModalsFactoryObj.getCardsHtml(data.data.businesses)
     );
     IndexAnimationsObj.setCardScrollTrackerMapper();
+    // Get offset of first added next card to move misaligned cards up. (hacky bug fix)
+    $('.my-card')
+      .eq(this.offset * 50 + 1)
+      .offset();
+    this.offset++;
 
     if (this.resultsRemaining)
       setTimeout(() => {

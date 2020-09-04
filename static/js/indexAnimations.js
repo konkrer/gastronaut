@@ -199,10 +199,10 @@ class IndexAnimations {
     this.justSearchedYelp = false;
   }
 
-  /*
-  /* Restaurant categories auto scroll to last chosen category.
-  /* Function to scroll last selected category into view.
-  */
+  //
+  // Restaurant categories auto scroll to last chosen category.
+  // Function to scroll last selected category into view.
+  //
   scrollCategoriesToCurrent() {
     let currCat = this.category || localStorage.getItem('category');
     if (!currCat) return;
@@ -230,10 +230,10 @@ class IndexAnimations {
     FormFunctsObj.focusBlur();
   }
 
-  /* 
-  /* Reset card scroll position after resize events
-  /* to keep same card centered.
-  */
+  //
+  // Reset card scroll position after resize events
+  // to keep same card centered.
+  //
   addWindowResizeListener() {
     window.addEventListener('resize', () => {
       clearTimeout(this.windowResizeCardScrollResetTimer);
@@ -246,33 +246,32 @@ class IndexAnimations {
     });
   }
 
+  //
+  // Initalize miscelaneous animations.
+  //
   initMiscAnimtions() {
+    //
     //Pulse Animations for location and search buttons
     // Pulse with mouseover.
+    //
     $('.jsPulser').each(function (i) {
       $(this).on('mouseover', function (e) {
         $(this).children().addClass('pulse-5');
       });
     });
+    //
     // Stop pulsing with mouseout.
+    //
     $('.jsPulser').each(function (i) {
       $(this).on('mouseout', function (e) {
         $(this).children().removeClass('pulse-5');
       });
     });
+    //
     //Open more tips modal when user clicks more tips button.
+    //
     $('.moreTips').click(() => {
       $('#tips-2-modal').modal();
-    });
-    /* Make map icon grow when hovered.
-  /* Add grow-1_3 class to map icon 
-  /* with hover of containing div. 
-  */
-    $('.jsGrow').on('mouseover', function (e) {
-      $(this).children().addClass('grow-1_3');
-    });
-    $('.jsGrow').on('mouseout', function (e) {
-      $(this).children().removeClass('grow-1_3');
     });
   }
 }
