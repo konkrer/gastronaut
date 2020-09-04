@@ -580,7 +580,6 @@ class ButtonsLogics {
     this.addNavigationListener();
     this.addToggleDirectionsDivListener();
     this.addCancelNavigationListener();
-    this.addOffsetBtnListener();
   }
 
   //
