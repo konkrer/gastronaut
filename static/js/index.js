@@ -7,6 +7,7 @@ class IndexSearchLogic {
     this.resultsRemaining = 0;
     this.offset = 0;
     this.paginationListener = null;
+    this.nextCardsBlocker = false;
     this.addNavbarTogglerListener();
     this.addNavbarSearchListener();
     this.addExploreBtnsListeners();
@@ -224,6 +225,7 @@ class IndexSearchLogic {
       IndexAnimationsObj.setCardScrollTrackerMapper();
       setTimeout(() => {
         this.addNextCardsListener();
+        this.nextCardsBlocker = false;
       }, 1000);
     } else {
       // if no cards no restMarker should be visible.
@@ -300,6 +302,8 @@ class IndexSearchLogic {
   // If more results remain, call API, make cards.
   //
   async addNextCards() {
+    if (this.nextCardsBlocker) return;
+    this.nextCardsBlocker = true;
     if (!this.resultsRemaining || this.offset === 20) {
       CardsModalsFactoryObj.addDummyCard();
       setTimeout(() => {
@@ -320,6 +324,7 @@ class IndexSearchLogic {
     if (this.resultsRemaining)
       setTimeout(() => {
         this.addNextCardsListener();
+        this.nextCardsBlocker = false;
       }, 10000);
     else CardsModalsFactoryObj.addDummyCard();
   }
