@@ -313,17 +313,22 @@ class IndexSearchLogic {
     }
     const data = await this.searchApiCall(true);
     if (data === false) return;
-
+    // Update remaining results.
     this.resultsRemaining -= data.data.businesses.length;
+    // Add cards.
     $('.card-track-inner').append(
       CardsModalsFactoryObj.getCardsHtml(data.data.businesses)
     );
     IndexAnimationsObj.setCardScrollTrackerMapper();
     // Get offset of first added next card to move misaligned cards up. (hacky bug fix)
-    $('.my-card')
-      .eq(this.offset * 50 + 1)
-      .offset();
-    this.offset++;
+    setTimeout(() => {
+      const topOffset = $('.my-card')
+        .eq(this.offset * 50 + 1)
+        .offset();
+      alert(`Topoffset = ${topOffset}`);
+      // Increment offset.
+      this.offset++;
+    }, 2000);
 
     if (this.resultsRemaining)
       setTimeout(() => {
