@@ -12,10 +12,10 @@ class IndexAnimations {
     this.sidebarOpen = true;
     this.justSearchedYelp = false;
     this.category = null;
-    this.windowResizeCardScrollResetTimer;
-    this.heroAnimation = null;
-    // this.initHeroAnimation();
+    this.windowResizeCardScrollResetTimer = null;
     this.trakerMapperBound = this.trakerMapper.bind(this);
+    this.heroAnimation = null;
+    this.initHeroAnimation();
     this.toggleSidebarListeners();
     this.addWindowResizeListener();
     this.initMiscAnimtions();

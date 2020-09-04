@@ -7,7 +7,7 @@ class IndexSearchLogic {
     this.resultsRemaining = 0;
     this.offset = 0;
     this.paginationListener = null;
-    this.nextCardsBlocker = false;
+    this.nextCardsBlocker = false; // Prevent race condition loading next cards twice.
     this.addNavbarTogglerListener();
     this.addNavbarSearchListener();
     this.addExploreBtnsListeners();
@@ -333,7 +333,7 @@ class IndexSearchLogic {
   // Hide hero animation and make yelp search.
   //
   async hideHeroAndSearch() {
-    // IndexAnimationsObj.heroAnimation.destroy();
+    IndexAnimationsObj.heroAnimation.destroy();
     $('.hero-animation').hide();
     $('.alert').hide();
     $('.spinner-zone').show();
