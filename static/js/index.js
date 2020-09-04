@@ -326,7 +326,7 @@ class IndexSearchLogic {
     this.offset++;
     setTimeout(() => {
       // Add text to firstCard to move misaligned cards up. (hacky bug fix)
-      firstCard.find('.offset-btn').text('bugs are fun!');
+      firstCard.find('.offset-fix').text('_');
     }, 400);
 
     if (this.resultsRemaining)
@@ -902,13 +902,6 @@ class ButtonsLogics {
     $('div.home').fadeOut().removeClass('homeHorizontal');
     $('div.reset').fadeOut().removeClass('resetHorizontal');
     $('.map-routing .home').removeClass('homeActive');
-  }
-
-  addOffsetBtnListener() {
-    $('main').on('click', '.offset-btn', function () {
-      const topOffset = $(this).parents('.my-card').offset().top;
-      $(this).text(topOffset);
-    });
   }
 }
 
