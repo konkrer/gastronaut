@@ -28,12 +28,13 @@ _Why Gastronaut?_
 
 ## Stack
 
-JavaScript, Python/Flask, Flask-SQLAlchemy, Postgres, jQuery, API integration (internal and external), Mapbox, HTML, CSS, Flask-Bcrypt, WTForms, Heroku, Jinja, Bootstrap, Sentry, Modernizr, Unittest, Jasmine.
+JavaScript, Python/Flask, Flask-SQLAlchemy, Postgres, jQuery, API integration (internal and external), Mapbox, HTML, CSS, Flask-Bcrypt, WTForms, Heroku, Jinja, Bootstrap, Sentry, Modernizr, Unittest.
 
 ## APIs
 
-This app uses the Yelp API for business data [Yelp](https://www.yelp.com/fusion 'yelp.com/fusion'),  
-IPWHOIS API for IP geocoding. [IPWHOIS](https://ipwhois.io/ 'ipwhois.io'), Google
-Maps API for the Time Zone API and geocoding API.
+This app uses the Yelp API for most business data [Yelp](https://www.yelp.com/fusion 'yelp.com/fusion'),  
+Foursquare API for menu, delivery, and website links [Foursquare](https://foursquare.com 'foursquare.com'),  
+IPWHOIS API for IP geocoding. [IPWHOIS](https://ipwhois.io/ 'ipwhois.io'),  
+Google Maps Platform API for the Time Zone API and geocoding API. [Google Maps](https://cloud.google.com/maps-platform/ 'cloud.google.com/maps-platform/')
 
 \*_This app was created as a capstone project for Springboard Software Engineering fellowship. This is capstone one of two._
