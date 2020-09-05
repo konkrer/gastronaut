@@ -212,7 +212,8 @@ YELP_CATEGORIES = [
     ('Tex-Mex', 'tex-mex'), ('Thai', 'thai'), ('Turkish', 'turkish'),
     ('Ukrainian', 'ukrainian'), ('Uzbek', 'uzbek'), ('Vegan', 'vegan'),
     ('Vegetarian', 'vegetarian'), ('Vietnamese', 'vietnamese'),
-    ('Waffles', 'waffles'), ('Wineries', 'wineries'), ('Wraps', 'wraps')
+    ('Waffles', 'waffles'), ('Wine Bars', 'wine_bars'),
+    ('Wineries', 'wineries'), ('Wraps', 'wraps')
 ]
 
 # get alphabetized first letter list of categories. [first_let, #id_to_call]
