@@ -300,7 +300,12 @@ class MapObj {
     if (cachedData && new Date().getTime() - cachedData < 600000)
       this.reloadRoute(routeKey);
     else {
-      const directionsData = await this.getDirections();
+      try {
+        var directionsData = await this.getDirections();
+      } catch (error) {
+        Sentry.captureException(error);
+        alert(`Huston, we have a problem: ${error.message}`);
+      }
 
       if (directionsData) {
         const [legs, coordinates] = directionsData;
