@@ -18,11 +18,11 @@ email-validator = "*"
 flask-bcrypt = "*"
 gunicorn = "*"
 requests = "*"
-sentry-sdk = {extras = ["flask"],version = "==0.17.1"}
 newrelic = "*"
 boto3 = "*"
 flask-migrate = "*"
 google-auth = "*"
+sentry-sdk = {extras = ["flask"],version = "==0.17.3"}
 
 [requires]
 python_version = "3.8"

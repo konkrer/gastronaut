@@ -44,7 +44,7 @@ def parse_query_params(multi_dict):
         ]:
             attributes += f'{key},'
         # convert open at datetime to utc timestamp if present.
-        elif key == 'open_at':
+        elif key == 'open_at' and value:
             utc_timestamp = get_timestamp(multi_dict, value)
             if not utc_timestamp:
                 continue
