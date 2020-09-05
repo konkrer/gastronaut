@@ -21,7 +21,7 @@ class MapObj {
     this.restMarker = null; // restaurant marker for index page. Also used for navigation dest.
     this.restMarkers = []; // restaurant markers for mission-control page.
     this.currentRoute = null;
-    this.routeCache = new Set();
+    this.routeCache = {};
     this.directionsCache = {};
     this.profile = null;
     this.changedProfile = true;
@@ -295,8 +295,10 @@ class MapObj {
   async showDirectionsAndLine() {
     // Make route key based on start and end location and navigation profile.
     const routeKey = this.makeRouteKey();
-
-    if (this.routeCache.has(routeKey)) this.reloadRoute(routeKey);
+    const cachedData = this.routeCache[routeKey];
+    // Use cached data if data and data is less than 10 minutes old.
+    if (cachedData && new Date().getTime() - cachedData < 600000)
+      this.reloadRoute(routeKey);
     else {
       const directionsData = await this.getDirections();
 
@@ -317,6 +319,7 @@ class MapObj {
   // Reload route (map source) to new layer.
   //
   reloadRoute(routeKey) {
+    debugger;
     if (this.currentRoute === routeKey) return;
     if (this.currentRoute) this.mappyBoi.removeLayer(this.currentRoute);
     this.currentRoute = routeKey;
@@ -356,7 +359,7 @@ class MapObj {
       paint: this.paint,
     });
     this.currentRoute = routeKey;
-    this.routeCache.add(routeKey);
+    this.routeCache[routeKey] = new Date().getTime();
   }
 
   //

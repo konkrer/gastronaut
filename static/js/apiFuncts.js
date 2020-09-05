@@ -88,12 +88,14 @@ class ApiFuncts {
         // If there's cached business data for the detail modal.
         if (business_id && this_.business_results_cache[business_id]) {
           //  Update the liked attribute for this report.
-          this_.business_results_cache[business_id].reports.forEach(report => {
-            if (report_id === report.report_id) {
-              report.liked = !report.liked;
-              report.likes = resp.data.likes;
+          this_.business_results_cache[business_id].data.reports.forEach(
+            report => {
+              if (report_id === report.report_id) {
+                report.liked = !report.liked;
+                report.likes = resp.data.likes;
+              }
             }
-          });
+          );
         }
         // Like buttons that will need their state updated.
         const like_btns = [$(this)];
@@ -167,8 +169,10 @@ class ApiFuncts {
     const name = e.currentTarget.dataset.name;
     const latlng = e.currentTarget.dataset.latlng;
 
-    if (this.business_results_cache[business_id])
-      business_result_data = this.business_results_cache[business_id];
+    const cachedData = this.business_results_cache[business_id];
+    // Use cached data if data and data is less than 10 minutes old.
+    if (cachedData && new Date().getTime() - cachedData.timestamp < 600000)
+      business_result_data = cachedData.data;
     else {
       try {
         var resp = await axios.get(`/v1/business_detail/${business_id}`, {
@@ -191,7 +195,10 @@ class ApiFuncts {
         return;
       }
       business_result_data = resp.data;
-      this.business_results_cache[business_id] = business_result_data;
+      this.business_results_cache[business_id] = {
+        data: business_result_data,
+        timestamp: new Date().getTime(),
+      };
     }
     $('.spinner-zone').hide();
     this.showDetailModal(business_result_data);
