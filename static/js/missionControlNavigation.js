@@ -99,7 +99,7 @@ class MissionControlNavigation {
         let coords = Base_Obj.locationAutocompleteCache[location];
         if (!coords) {
           // Geocode user provided address.
-          const features = await Map_Obj.geocode(location);
+          const features = await Base_Obj.geocode(location);
           if (features.length === 0) {
             alert('No location found. Please fix location input.');
             return;

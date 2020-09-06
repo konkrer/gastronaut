@@ -5,9 +5,6 @@
 //
 class MapObj {
   constructor() {
-    this.accessToken =
-      'pk.eyJ1Ijoia29ua3JlciIsImEiOiJja2NiNnI3bjgyMjVnMnJvNmJ6dTF0enlmIn0.AH_5N70IYIX4_tslm49Kmw';
-    this.mapboxClient = mapboxSdk({ accessToken: this.accessToken });
     this.mapOpen = true;
     this.mappyBoi = null; // rendered map object
     this.longitude = null; // user longitude data
@@ -74,7 +71,7 @@ class MapObj {
   // Render Map.
   //
   renderMap(mapCenter = [-85, 26.8], zoom = 1.3, navControl = false) {
-    mapboxgl.accessToken = this.accessToken;
+    mapboxgl.accessToken = Base_Obj.mapBoxaccessToken;
     this.mappyBoi = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/konkrer/ckd9yhr2a0oaf1iplamr9t21y', // <<<<< remove /draft in production
@@ -260,33 +257,6 @@ class MapObj {
   clearMapArray() {
     this.restMarkers.forEach(el => el.remove());
     this.restMarkers = [];
-  }
-
-  //
-  // Use Mapbox geocoding to find address and coords for address.
-  // Return feature list of locations with coords.
-  //
-  async geocode(query) {
-    // Get coords for proximity for geocoding. Use user coords or restCoords.
-    const proximityCoords = this.longitude
-      ? [this.longitude, this.latitude]
-      : this.restCoords;
-    // Cannot have ';' in query string for mapbox.
-    query = query.replace(';', ',');
-    try {
-      var resp = await this.mapboxClient.geocoding
-        .forwardGeocode({
-          query,
-          proximity: proximityCoords,
-        })
-        .send();
-    } catch (error) {
-      Sentry.captureException(error);
-      return [];
-    }
-
-    if (resp.statusCode !== 200) return [];
-    return resp.body.features;
   }
 
   //
@@ -533,7 +503,7 @@ class MapObj {
   //
   async getDirections() {
     const options = this.makeDirectionsOptions();
-    const resp = await this.mapboxClient.directions
+    const resp = await Base_Obj.mapboxClient.directions
       .getDirections(options)
       .send();
 

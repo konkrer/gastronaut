@@ -3,6 +3,9 @@
 // Basic logic common to all pages.
 class BaseLogic {
   constructor() {
+    this.mapBoxaccessToken =
+      'pk.eyJ1Ijoia29ua3JlciIsImEiOiJja2NiNnI3bjgyMjVnMnJvNmJ6dTF0enlmIn0.AH_5N70IYIX4_tslm49Kmw';
+    this.mapboxClient = mapboxSdk({ accessToken: this.mapBoxaccessToken });
     this.preferencesTimer;
     this.feedbackClearTimer;
     this.locationsOptionsHtmlCache = {};
@@ -272,7 +275,7 @@ class BaseLogic {
     if (this.locationsOptionsHtmlCache[query])
       return this.locationsOptionsHtmlCache[query];
     // Get suggestions.
-    const features = await Map_Obj.geocode(query);
+    const features = await this.geocode(query);
     // Make html <option> for each suggestion and cache coords associated with each suggestion.
     let options = features.reduce((acc, el) => {
       this.locationAutocompleteCache[el.place_name] = el.geometry.coordinates;
@@ -280,6 +283,39 @@ class BaseLogic {
     }, '');
     this.locationsOptionsHtmlCache[query] = options;
     return options;
+  }
+
+  //
+  // Use Mapbox geocoding to find address and coords for address.
+  // Return feature list of locations with coords.
+  //
+  async geocode(query) {
+    // Get coords for proximity for geocoding. Use user coords or restCoords if available.
+    let proximityCoords;
+    if (typeof Map_Obj !== 'undefined') {
+      proximityCoords = Map_Obj.longitude
+        ? [Map_Obj.longitude, Map_Obj.latitude]
+        : Map_Obj.restCoords;
+    } else {
+      proximityCoords = null;
+    }
+
+    // Cannot have ';' in query string for mapbox.
+    query = query.replace(';', ',');
+    try {
+      var resp = await this.mapboxClient.geocoding
+        .forwardGeocode({
+          query,
+          proximity: proximityCoords,
+        })
+        .send();
+    } catch (error) {
+      Sentry.captureException(error);
+      return [];
+    }
+
+    if (resp.statusCode !== 200) return [];
+    return resp.body.features;
   }
 
   //
