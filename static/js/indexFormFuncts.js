@@ -23,7 +23,7 @@ class FormFuncts {
       { name: 'price-4', value: '4' },
       { name: 'sort_by', value: 'best_match' },
     ];
-
+    // Auto-complete listener and callback.
     Base_Obj.addLocationAutocompleteListener(this.locationSearch.bind(this));
     this.addDetectLocationListener();
     this.addKeywordKeyupListener();
@@ -226,7 +226,7 @@ class FormFuncts {
   }
 
   //
-  // When form is submitted check for location to make search.
+  // Callback for user clicking location choice or pressing enter.
   //
   locationSearch() {
     if (this.$locationInput.val()) {
@@ -252,24 +252,16 @@ class FormFuncts {
   addKeywordKeyupListener() {
     const this_ = this;
     this.$searchTerm.on('keyup', function (e) {
-      clearTimeout(this_.keyupTimer);
-      const term = this_.$searchTerm.val();
-
-      $('.spinner-zone').show();
       // If user hits enter search Yelp and hide mobile keyboard with focusBlur.
       const key = e.which || e.keyCode;
       if (key == 13) {
-        $;
-        IndexSearchObj.searchYelp();
+        $('.spinner-zone').show();
+        const term = this_.$searchTerm.val();
         this_.keywordDisplayLogic(term);
+        IndexSearchObj.searchYelp();
         this_.focusBlur();
         return;
       }
-      // Else wait for keyup timer to expire and then search yelp.
-      this_.keyupTimer = setTimeout(function () {
-        IndexSearchObj.searchYelp();
-        this_.keywordDisplayLogic(term);
-      }, this_.autoSearchDelay);
     });
   }
 
