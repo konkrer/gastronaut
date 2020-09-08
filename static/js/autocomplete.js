@@ -85,6 +85,7 @@ class SimpleAutocomplete {
     if (optionFlag === 1) {
       // If no datalist element
       if (!this._datalistOuter) {
+        alert(this._datalistOuter);
         throw new TypeError(
           `No ${this.idString} found. SimpleAutocomplete can not initalize.`
         );
