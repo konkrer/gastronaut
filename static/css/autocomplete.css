@@ -9,7 +9,7 @@
 
 .datalist-header {
   border-bottom: 1px #afafaf solid;
-  height: 25px;
+  height: 30px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -18,7 +18,7 @@
 }
 
 .datalist-header .close-datalist.html-entity {
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .datalist-outer .datalist option {

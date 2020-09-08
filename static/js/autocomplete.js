@@ -124,7 +124,7 @@ class SimpleAutocomplete {
 
     // Add X symbol using FontAwesome or not.
     if (this.useFA)
-      closeSpan = '<i class="fas fa-window-close close-datalist"></i>';
+      closeSpan = '<i class="fas fa-window-close fa-lg close-datalist"></i>';
     else closeSpan = '<span class="close-datalist html-entity">&#x274E</span>';
 
     header.innerHTML = closeSpan;
