@@ -11,6 +11,7 @@ class BaseLogic {
     this.locationsOptionsHtmlCache = {};
     this.locationAutocompleteCache = {};
     this.checkGoogleLogin = true;
+    this.sleep(5000);
     this.Autocomplete_Obj = new SimpleAutocomplete(
       this.officalHomeAddressSelector.bind(this),
       true
