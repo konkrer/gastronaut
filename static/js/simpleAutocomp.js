@@ -3,8 +3,8 @@
 /**
  * Class for autocomplete display and choice functionality.
  *
- * Use: Set up the html in the advised manner. githublink
- *      As you set the datalist property updated contents will be
+ * Use: Set up the html in the advised manner. https://github.com/konkrer/simpleAutocomplete
+ *      As you set the datalist or the datalistElements property updated contents will be
  *      displayed. As the user selects options they will entered
  *      as the value of the associated text input. An optional
  *      callback can be called upon option selection.
@@ -17,11 +17,13 @@
  * Inputs: Callback --> Function. (default: null)
  *           Optional function to be called after user suggestion selection.
  *
- *         FontAwsome --> Boolean. (default: false)
+ *         fontAwesome --> Boolean. (default: false)
  *           If font awesome icons are available and desired for the close button.
  *
  *         multiAutoCompID --> Number. (default: 0)
- *           Id corresponding for autocomplete instances.
+ *           Id differentiator for when there are multiple SimpleAutocomplete instances.
+ *           Leave the first one default. Set the next one to one, then increment for each
+ *           additional SimpleAutocomplete added to the next integer (i.e. - 1, 2, 3...).
  *
  *         marginTop --> String. (default: null)
  *           String setting for CSS margin-top to adjust datalist position to input.
@@ -35,30 +37,32 @@
 class SimpleAutocomplete {
   constructor(
     callback = null,
-    fontAwsome = false,
+    fontAwesome = false,
     multiAutoCompID = 0,
     marginTop = null,
     fixed = false
   ) {
     this.callback = callback;
-    this.useFA = fontAwsome;
+    this.useFA = fontAwesome;
     this.marginTop = marginTop;
     this.fixed = fixed;
-    // Id string for getting the datalist element for this class instance to suggest/ fill value.
+    // Id string for getting the datalist element for this class instance.
     this.idString = `datalist-autocomplete${
       multiAutoCompID ? '-' + multiAutoCompID : ''
     }`;
+    // Datalist element for this class instance.
     this._datalistOuter = document.getElementById(this.idString);
     const ok = this.checkSetup(1);
+    // Fail gracefully if there is no associated datalist on page.
     if (!ok) return;
-    this._datalistOuter.classList.add('datalist-outer');
     if (this.marginTop) this._datalistOuter.style.marginTop = this.marginTop;
     if (this.fixed) this._datalistOuter.style.position = 'fixed';
-    this._datalist = null;
+    this._datalist = null; // The div that will contain the <option> elements.
     this._value = null; // Last selected autocomplete value.
     this.associatedInput = this._datalistOuter.previousElementSibling;
+    // Raise error if there is not an associatedInput.
     this.checkSetup(2);
-    this.addDatalistInnerDivs(); // Add head and datalist to datalistOuter.
+    this.addDatalistInnerDivs(); // Add header and datalist to datalistOuter.
     this.addCloseDataListListener();
     this.addOptionSelectListener();
   }
@@ -72,6 +76,19 @@ class SimpleAutocomplete {
     if (!results) this._datalistOuter.style.display = 'none';
     else {
       this._datalist.innerHTML = results;
+      this._datalistOuter.style.display = 'block';
+    }
+  }
+
+  /**
+   * @param {array} results
+   *
+   * Fill datalist with given DOM elements and show datalist.
+   */
+  set datalistElements(results) {
+    if (results.length === 0) this._datalistOuter.style.display = 'none';
+    else {
+      this._datalist.append(...results);
       this._datalistOuter.style.display = 'block';
     }
   }
@@ -110,6 +127,8 @@ class SimpleAutocomplete {
    * Add head and body to datalist.
    */
   addDatalistInnerDivs() {
+    this._datalistOuter.classList.add('datalist-outer');
+
     const header = this.makeDatalistHeader();
     const body = document.createElement('div');
     body.classList.add('datalist');
@@ -171,7 +190,7 @@ class SimpleAutocomplete {
    * Actions to perform after user selects an autocomplete option.
    */
   optionSelected(e) {
-    // Must click <option>.
+    // Must click <option> with value set.
     if (!e.target.value) return;
     this.closeDatalist();
     this.associatedInput.value = e.target.value;
