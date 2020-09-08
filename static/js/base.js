@@ -11,11 +11,16 @@ class BaseLogic {
     this.locationsOptionsHtmlCache = {};
     this.locationAutocompleteCache = {};
     this.checkGoogleLogin = true;
-    this.sleep(5000);
-    this.Autocomplete_Obj = new SimpleAutocomplete(
-      this.officalHomeAddressSelector.bind(this),
-      true
+    setTimeout(
+      function () {
+        this.Autocomplete_Obj = new SimpleAutocomplete(
+          this.officalHomeAddressSelector.bind(this),
+          true
+        );
+      }.bind(this),
+      5000
     );
+
     this.Autocomplete_Obj_1 = null;
     this.addPreloaderRemover();
     this.addPreferencesListeners();
