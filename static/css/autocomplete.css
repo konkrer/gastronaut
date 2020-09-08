@@ -9,7 +9,7 @@
 
 .datalist-header {
   border-bottom: 1px #afafaf solid;
-  height: 20px;
+  height: 25px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
