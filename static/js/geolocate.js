@@ -92,6 +92,8 @@ class GeolocationLogic {
     }
     // Else on mission-control page.
     else MissionControlNavigationObj.startLocationSuccess();
+    // Close suggestions datalist.
+    Base_Obj.Autocomplete_Obj_1.closeDatalist();
 
     // Watch location. Pause to ensure when in navigation mode the first location
     // update causes camera to zoom in to user and is not negated by subsequent fit bounds call.

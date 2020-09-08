@@ -15,6 +15,7 @@ class BaseLogic {
       this.officalHomeAddressSelector.bind(this),
       true
     );
+    this.Autocomplete_Obj_1 = null;
     this.addPreloaderRemover();
     this.addPreferencesListeners();
     this.addHomeAddressAutocompleteListerner();
@@ -246,12 +247,19 @@ class BaseLogic {
   // Autocomplete location functionality for pages that call this function.
   //
   addLocationAutocompleteListener(callback) {
-    this.Autocomplete_Obj_1 = new SimpleAutocomplete(callback, true, 1, '30px');
+    this.Autocomplete_Obj_1 = new SimpleAutocomplete(
+      callback,
+      true,
+      1,
+      '30px',
+      true
+    );
     const this_ = this;
     $('#location').on('keyup', async function (e) {
       const key = e.which || e.keyCode;
       // If user presses enter locationSearch.
       if (key === 13) {
+        this_.Autocomplete_Obj_1.closeDatalist();
         if (callback) callback();
         return;
       }

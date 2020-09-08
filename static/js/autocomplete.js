@@ -32,17 +32,22 @@ class SimpleAutocomplete {
     callback = null,
     fontAwsome = false,
     multiAutoCompID = 0,
-    marginTop = null
+    marginTop = null,
+    fixed = false
   ) {
     this.callback = callback;
     this.useFA = fontAwsome;
     this.marginTop = marginTop;
+    this.fixed = fixed;
     // Id string for getting the datalist element for this class instance to suggest/ fill value.
     this.idString = `datalist-autocomplete${
       multiAutoCompID ? '-' + multiAutoCompID : ''
     }`;
     this._datalistOuter = document.getElementById(this.idString);
     this.checkSetup(1);
+    this._datalistOuter.classList.add('datalist-outer');
+    if (this.marginTop) this._datalistOuter.style.marginTop = this.marginTop;
+    if (this.fixed) this._datalistOuter.style.position = 'fixed';
     this._datalist = null;
     this._value = null; // Last selected autocomplete value.
     this.associatedInput = this._datalistOuter.previousElementSibling;
@@ -92,8 +97,6 @@ class SimpleAutocomplete {
       throw new TypeError(
         'No previous sibling input element found ! Please see setup instructions.'
       );
-    this._datalistOuter.classList.add('datalist-outer');
-    if (this.marginTop) this._datalistOuter.style.marginTop = this.marginTop;
   }
 
   /**
@@ -117,16 +120,14 @@ class SimpleAutocomplete {
     header.classList.add('datalist-header');
 
     // Close datalist button.
-    const closeSpan = document.createElement('span');
-    closeSpan.style.float = 'right';
+    let closeSpan;
 
     // Add X symbol using FontAwesome or not.
     if (this.useFA)
-      closeSpan.innerHTML =
-        '<i class="fas fa-window-close close-datalist"></i>';
-    else closeSpan.innerHTML = '<span class="close-datalist">&#x274E</span>';
+      closeSpan = '<i class="fas fa-window-close close-datalist"></i>';
+    else closeSpan = '<span class="close-datalist html-entity">&#x274E</span>';
 
-    header.appendChild(closeSpan);
+    header.innerHTML = closeSpan;
 
     return header;
   }
