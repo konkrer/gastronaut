@@ -11,10 +11,13 @@ class BaseLogic {
     this.locationsOptionsHtmlCache = {};
     this.locationAutocompleteCache = {};
     this.checkGoogleLogin = true;
+    this.Autocomplete_Obj = new SimpleAutocomplete(
+      this.officalHomeAddressSelector.bind(this),
+      true
+    );
     this.addPreloaderRemover();
     this.addPreferencesListeners();
     this.addHomeAddressAutocompleteListerner();
-    this.addOfficalHomeAddressListener();
     this.addClearHomeAddressListener();
     this.addAlertCloseListener();
     this.addReportsDblclickListeners();
@@ -75,39 +78,33 @@ class BaseLogic {
       const key = e.which || e.keyCode;
       // If a location suggestion was clicked or
       // if user presses enter.
-      if (key === undefined || key === 13) {
+      if (key === 13) {
         return;
       }
       const query = $(this).val();
       const options = await this_.autocompleteLocation(query);
 
-      $('#datalist-home_address').html(options);
+      this_.Autocomplete_Obj.datalist = options;
     });
   }
 
   //
   // Add official home address selection listener.
   //
-  addOfficalHomeAddressListener() {
-    const this_ = this;
-    $('#home_address').on('keyup', function (e) {
-      const key = e.which || e.keyCode;
-      // If a location suggestion was clicked or
-      // if user presses enter.
-      if (key === undefined) {
-        const offical_address = $(this).val();
-        $('#home_address_official')
-          .val(offical_address)
-          .prop('placeholder', offical_address);
-        $('#home_address').val('');
-        const locationCoords = this_.locationAutocompleteCache[offical_address];
-        $('#home_coords').val(locationCoords);
-        $('.map-routing .home')
-          .data('lng', locationCoords[0])
-          .data('lat', locationCoords[1]);
-        this_.updatePreferences(1);
-      }
-    });
+  officalHomeAddressSelector() {
+    const offical_address = this.Autocomplete_Obj.value;
+    $('#home_address_official')
+      .val(offical_address)
+      .prop('placeholder', offical_address);
+    $('#home_address').val('');
+    const locationCoords = this.locationAutocompleteCache[offical_address];
+    // Home coords hidden input to relay coords data to back-end.
+    $('#home_coords').val(locationCoords);
+    // Set/update coords data in home button for navigation purposes.
+    $('.map-routing .home')
+      .data('lng', locationCoords[0])
+      .data('lat', locationCoords[1]);
+    this.updatePreferences(1);
   }
 
   //
@@ -249,19 +246,19 @@ class BaseLogic {
   // Autocomplete location functionality for pages that call this function.
   //
   addLocationAutocompleteListener(callback) {
+    this.Autocomplete_Obj_1 = new SimpleAutocomplete(callback, true, 1, '30px');
     const this_ = this;
     $('#location').on('keyup', async function (e) {
       const key = e.which || e.keyCode;
-      // If a location suggestion was clicked or
-      // if user presses enter locationSearch.
-      if (key === undefined || key === 13) {
+      // If user presses enter locationSearch.
+      if (key === 13) {
         if (callback) callback();
         return;
       }
       const query = $(this).val();
       const options = await this_.autocompleteLocation(query);
-      // Put suggestions in input list - datalist-location.
-      $('#datalist-location').html(options);
+      // Put suggestions in autocomplete datalist.
+      this_.Autocomplete_Obj_1.datalist = options;
     });
   }
 
@@ -279,7 +276,7 @@ class BaseLogic {
     // Make html <option> for each suggestion and cache coords associated with each suggestion.
     let options = features.reduce((acc, el) => {
       this.locationAutocompleteCache[el.place_name] = el.geometry.coordinates;
-      return `${acc}<option value="${el.place_name}"></option>`;
+      return `${acc}<option value="${el.place_name}">${el.place_name}</option>`;
     }, '');
     this.locationsOptionsHtmlCache[query] = options;
     return options;

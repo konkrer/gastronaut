@@ -1,0 +1,28 @@
+.datalist-outer {
+  background-color: white;
+  border-radius: 5px;
+  color: #222222;
+  padding: 0 1rem 1rem 1rem;
+  position: fixed;
+  margin-top: 5px;
+  z-index: 100;
+}
+
+.datalist-header {
+  border-bottom: 1px #afafaf solid;
+  height: 25px;
+}
+
+.datalist-outer .datalist option {
+  padding-top: 0.3rem;
+}
+
+.datalist-outer .datalist option:nth-child(even) {
+  background-color: #dee4ea;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .datalist-outer option:hover {
+    background-color: skyblue !important;
+  }
+}

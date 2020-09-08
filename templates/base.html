@@ -46,14 +46,14 @@
       href="https://d1mhc0bouqz8wk.cloudfront.net/static/images/safari-pinned-tab.svg"
       color="#ff8b3f"
     />
-
-    <link rel="stylesheet" href="/static/css/base.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@200;400;600;900&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,600;0,700;1,300;1,700;1,900&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/static/css/offcanvas.css" />
+    <link rel="stylesheet" href="/static/css/base.css" />
+    <link rel="stylesheet" href="/static/css/autocomplete.css" />
 
     <script
       src="https://browser.sentry-cdn.com/5.22.3/bundle.min.js"
@@ -101,6 +101,7 @@
     <script src="https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.js"></script>
     <script src="https://unpkg.com/@mapbox/mapbox-sdk/umd/mapbox-sdk.min.js"></script>
     <script defer src="/static/js/offcanvas.js"></script>
+    <script defer src="/static/js/autocomplete.js"></script>
     <script defer src="/static/js/base.js"></script>
     {% block head %}{% endblock %}
   </head>
@@ -180,13 +181,14 @@
                 >Profile</a
               >
               {% endif %}
-              <button
-                class="dropdown-item preferences-btn"
+              <a
+                class="dropdown-item"
                 data-toggle="modal"
+                href="#preferencesModal"
                 data-target="#preferencesModal"
               >
                 Preferences
-              </button>
+              </a>
               {% if request.endpoint in ['index', 'mission_control'] %}
               <a
                 class="dropdown-item"

@@ -29,12 +29,6 @@ body {
   padding-right: 16px !important;
 }
 
-.navbar .preferences-btn {
-  color: white;
-  border: none;
-  background-color: transparent;
-}
-
 .navbar-logout:hover {
   color: white !important;
 }

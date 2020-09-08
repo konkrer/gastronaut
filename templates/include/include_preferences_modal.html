@@ -58,9 +58,11 @@
             <strong>Navigation</strong>
           </h5>
           <div class="form-group border border-secondary rounded p-2">
-            <label for="home_address_official" class="txt-medium txt-white-k"
+            <label
+              for="home_address_official"
+              class="txt-medium txt-white-k w-100 no-hover"
               >Home Address<span class="float-right txt-sm m-1"
-                ><a href="#">Clear</a></span
+                ><a href="#" class="float-right mr-2">Clear</a></span
               ></label
             >
             <input
@@ -82,14 +84,8 @@
               class="form-control"
               placeholder="Enter home address"
               autocomplete="off"
-              list="datalist-home_address"
             />
-            <small class="form-text"
-              >Don't use road abbreviations, use whole word - street, avenue,
-              lane, etc.</small
-            >
-            <small class="form-text">Enter proper address with commas.</small>
-            <datalist id="datalist-home_address"></datalist>
+            <datalist id="datalist-autocomplete"></datalist>
           </div>
           <input type="hidden" name="home_coords" id="home_coords" />
         </form>

@@ -294,7 +294,6 @@ class MapObj {
   // Reload route (map source) to new layer.
   //
   reloadRoute(routeKey) {
-    debugger;
     if (this.currentRoute === routeKey) return;
     if (this.currentRoute) this.mappyBoi.removeLayer(this.currentRoute);
     this.currentRoute = routeKey;

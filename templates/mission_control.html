@@ -403,7 +403,7 @@
               Enter a starting location or click the detect location button
               <i class="fas fa-street-view mx-1"></i>
             </label>
-            <div class="input-group mb-2 mt-3">
+            <div class="input-group mt-3">
               <div class="input-group-prepend">
                 <div
                   class="input-group-text jsPulser"
@@ -422,13 +422,15 @@
                 name="location"
                 placeholder="Starting Location"
                 maxlength="256"
-                list="datalist-location"
+                autocomplete="off"
               />
-              <datalist id="datalist-location"></datalist>
-              <small class="mt-1 font-italic bg-warning rounded px-2"
-                >NOTE: You must click detect location for navigation follow you
-                as you commute.</small
-              >
+              <datalist id="datalist-autocomplete-1"></datalist>
+            </div>
+            <div
+              class="mt-1 bg-warning rounded px-2 mb-3 font-weight-bold txt-smlr"
+            >
+              <em>NOTE:</em> You must click detect location for navigation
+              follow you as you commute.
             </div>
             {% if g.user.preferences.home_address %}
             <div class="startFromHomeDiv">
