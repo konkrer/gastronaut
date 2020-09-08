@@ -11,20 +11,25 @@
  *
  *      Create one autocomplete class instance per autocomplete display
  *      needed per page. Increment multiAutoCompID input and the
- *      corisponding HTML id appropriately. (i.e. datalist-autocomplete,
+ *      corresponding HTML id appropriately. (i.e. datalist-autocomplete,
  *      datalist-autocomplete-1, datalist-autocomplete-2).
  *
- * Inputs: Callback --> Fuction. (default: null)
- *           Optional function to be called after suggestion selection.
+ * Inputs: Callback --> Function. (default: null)
+ *           Optional function to be called after user suggestion selection.
  *
  *         FontAwsome --> Boolean. (default: false)
- *           If font awesome icons are available.
+ *           If font awesome icons are available and desired for the close button.
  *
  *         multiAutoCompID --> Number. (default: 0)
- *           Id diferentiation for autocomplete instance.
+ *           Id corresponding for autocomplete instances.
  *
  *         marginTop --> String. (default: null)
- *           String setting for css margin-top to adjust datalist postion to input.
+ *           String setting for CSS margin-top to adjust datalist position to input.
+ *
+ *         fixed --> Boolean. (default: false)
+ *           Set to true to make datalist have a position: fixed instead of absolute.
+ *           Use as necessary to ensure the entirety of the datalist is visible when the
+ *           containing div is too small to allow full datalist to be visible.
  */
 
 class SimpleAutocomplete {
@@ -44,7 +49,8 @@ class SimpleAutocomplete {
       multiAutoCompID ? '-' + multiAutoCompID : ''
     }`;
     this._datalistOuter = document.getElementById(this.idString);
-    this.checkSetup(1);
+    const ok = this.checkSetup(1);
+    if (!ok) return;
     this._datalistOuter.classList.add('datalist-outer');
     if (this.marginTop) this._datalistOuter.style.marginTop = this.marginTop;
     if (this.fixed) this._datalistOuter.style.position = 'fixed';
@@ -77,7 +83,7 @@ class SimpleAutocomplete {
     return this._value;
   }
 
-  /**s
+  /**
    * Make sure HTML is setup correctly to use SimpleAutocomplete.
    */
   checkSetup(optionFlag) {
@@ -85,13 +91,13 @@ class SimpleAutocomplete {
     if (optionFlag === 1) {
       // If no datalist element
       if (!this._datalistOuter) {
-        alert(this._datalistOuter);
-        throw new TypeError(
+        console.error(
           `No ${this.idString} found. SimpleAutocomplete can not initalize.`
         );
+        return false;
       }
-      // If setup ok so far return.
-      return;
+      // If setup ok so far return true.
+      return true;
     }
     // Option 2 check associated text input exists.
     if (this.associatedInput.type !== 'text')
@@ -147,7 +153,7 @@ class SimpleAutocomplete {
    * Close Datalist.
    */
   closeDatalist(e) {
-    // If there is an event object and the click was not the close datalist buton return.
+    // If there is an event object and the click was not the close datalist button return.
     if (e && ![...e.target.classList.values()].includes('close-datalist'))
       return;
     // Close datalist.

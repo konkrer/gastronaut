@@ -11,20 +11,18 @@ class BaseLogic {
     this.locationsOptionsHtmlCache = {};
     this.locationAutocompleteCache = {};
     this.checkGoogleLogin = true;
-    setTimeout(
-      function () {
-        this.Autocomplete_Obj = new SimpleAutocomplete(
-          this.officalHomeAddressSelector.bind(this),
-          true
-        );
-      }.bind(this),
-      5000
-    );
+    // If preferences modal available for setting preferences (user logged in).
+    if (document.getElementById('datalist-autocomplete')) {
+      this.Autocomplete_Obj = new SimpleAutocomplete(
+        this.officalHomeAddressSelector.bind(this),
+        true
+      );
+      this.addHomeAddressAutocompleteListerner();
+    }
 
     this.Autocomplete_Obj_1 = null;
     this.addPreloaderRemover();
     this.addPreferencesListeners();
-    this.addHomeAddressAutocompleteListerner();
     this.addClearHomeAddressListener();
     this.addAlertCloseListener();
     this.addReportsDblclickListeners();
