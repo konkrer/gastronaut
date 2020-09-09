@@ -17,13 +17,13 @@
  * Inputs: Callback --> Function. (default: null)
  *           Optional function to be called after user suggestion selection.
  *
- *         fontAwesome --> Boolean. (default: false)
- *           If font awesome icons are available and desired for the close button.
- *
  *         multiAutoCompID --> Number. (default: 0)
  *           Id differentiator for when there are multiple SimpleAutocomplete instances.
  *           Leave the first one default. Set the next one to one, then increment for each
  *           additional SimpleAutocomplete added to the next integer (i.e. - 1, 2, 3...).
+ *
+ *         fontAwesome --> Boolean. (default: false)
+ *           If font awesome icons are available and desired for the close button.
  *
  *         marginTop --> String. (default: null)
  *           String setting for CSS margin-top to adjust datalist position to input.
@@ -37,8 +37,8 @@
 class SimpleAutocomplete {
   constructor(
     callback = null,
-    fontAwesome = false,
     multiAutoCompID = 0,
+    fontAwesome = false,
     marginTop = null,
     fixed = false
   ) {

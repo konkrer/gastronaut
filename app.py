@@ -876,7 +876,7 @@ def remove_from_mission(mission_id):
     return jsonify({'success': 'Business Removed from Mission!'})
 
 
-@app.route('/v1/mission/like<mission_id>', methods=['POST'])
+@app.route('/v1/mission/like/<mission_id>', methods=['POST'])
 @add_user_to_g
 def like_mission(mission_id):
     """Endpoint to like and un-like missions."""
@@ -987,7 +987,7 @@ def goal_completed(mission_id):
     return jsonify(out)
 
 
-@app.route('/v1/report/like<report_id>', methods=['POST'])
+@app.route('/v1/report/like/<report_id>', methods=['POST'])
 @add_user_to_g
 def like_report(report_id):
     """Endpoint to like and un-like reports."""

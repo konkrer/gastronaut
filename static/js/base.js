@@ -15,6 +15,7 @@ class BaseLogic {
     if (document.getElementById('datalist-autocomplete')) {
       this.Autocomplete_Obj = new SimpleAutocomplete(
         this.officalHomeAddressSelector.bind(this),
+        0,
         true
       );
       this.addHomeAddressAutocompleteListerner();
@@ -253,8 +254,8 @@ class BaseLogic {
   addLocationAutocompleteListener(callback) {
     this.Autocomplete_Obj_1 = new SimpleAutocomplete(
       callback,
-      true,
       1,
+      true,
       '30px',
       true
     );

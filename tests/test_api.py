@@ -157,7 +157,7 @@ class ReportApiTestCase(TestCase):
                 sess['user_id'] = self.user2.id
 
             db.session.add(self.report)
-            resp = c.post(f'/v1/report/like{self.report.id}')
+            resp = c.post(f'/v1/report/like/{self.report.id}')
 
         self.assertEqual(resp.json['success'], 'added')
         report = Report.query.get(self.report.id)
@@ -176,7 +176,7 @@ class ReportApiTestCase(TestCase):
             with c.session_transaction() as sess:
                 sess['user_id'] = self.user2.id
 
-            resp = c.post(f'/v1/report/like{self.report.id}')
+            resp = c.post(f'/v1/report/like/{self.report.id}')
 
         self.assertEqual(resp.json['success'], 'removed')
         report = Report.query.get(self.report.id)
@@ -227,7 +227,7 @@ class MissionApiTestCase(TestCase):
                 sess['user_id'] = self.user2.id
 
             db.session.add(self.mission)
-            resp = c.post(f'/v1/mission/like{self.mission.id}')
+            resp = c.post(f'/v1/mission/like/{self.mission.id}')
 
         self.assertEqual(resp.json['success'], 'added')
         mission = Mission.query.get(self.mission.id)
@@ -246,7 +246,7 @@ class MissionApiTestCase(TestCase):
             with c.session_transaction() as sess:
                 sess['user_id'] = self.user2.id
 
-            resp = c.post(f'/v1/mission/like{self.mission.id}')
+            resp = c.post(f'/v1/mission/like/{self.mission.id}')
 
         self.assertEqual(resp.json['success'], 'removed')
         mission = Mission.query.get(self.mission.id)
