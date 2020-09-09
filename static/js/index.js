@@ -33,6 +33,8 @@ class IndexSearchLogic {
   //
   addNavbarSearchListener() {
     $('.navbar form.searchForm').submit(
+
+      // jcb - use ES6 arrow function instead of bind
       function (e) {
         e.preventDefault();
         this.navbarSearch();
@@ -63,7 +65,7 @@ class IndexSearchLogic {
       FormFunctsObj.turnActiveOffCatBtns();
       $('#All').addClass('active');
       location.href = '#';
-      location.href = '#All';
+      location.href = '#All';   // jcb- any reason for setting the href twice?
     }
     this.hideHeroAndSearch();
   }
@@ -561,6 +563,9 @@ class ParamsChange {
     return false;
   }
 }
+
+
+// jcb - consider moving button logic into it's own javascript file
 
 // Buttons Logic ---------------------------------------------------------- //
 // Buttons Logic ---------------------------------------------------------- //

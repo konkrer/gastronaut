@@ -37,10 +37,15 @@ class ApiFuncts {
       try {
         var resp = await axios.post(`/v1/mission/like${mission_id}`);
       } catch (err) {
+
+        // jcb - in many of my projects, I wrap the calls to Sentry (or other third party logging) in my own logging javascript file
+        // This allows adding common data like "user" to every message logged or the ability to switch out third party loggers
         Sentry.captureException(err);
         return;
       }
       if (!resp || resp.data.error) {
+
+        // jcb - Consider passing response error in Additional Data to Sentry
         Sentry.captureMessage(
           'Something went wrong: api_functs.addLikeMissionListener'
         );
@@ -181,6 +186,8 @@ class ApiFuncts {
       } catch (err) {
         Sentry.captureException(err);
         $('.spinner-zone').hide();
+
+        // jcb - consider a better UI dialog for errors
         alert('Yelp Api Error. Please try again. E1');
         return;
       }
@@ -220,9 +227,10 @@ class ApiFuncts {
   /* may be needed to create a new business in the database.
   */
   addMissionBtnDataCacheListener() {
-    const this_ = this;
-    $('main').on('click', '.mission-btn', function () {
-      this_.cacheMissionBtnData($(this));
+
+    // jcb - instead of using the this/that trick, you can use an arrow function so it is automatically bound
+    $('main').on('click', '.mission-btn', () => {
+      this.cacheMissionBtnData($(this));
     });
   }
 
