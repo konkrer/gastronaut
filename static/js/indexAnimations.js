@@ -219,7 +219,6 @@ class IndexAnimations {
     };
 
     if (currCat in converter) currCat = converter[currCat];
-    location.href = '#';
     location.href = `#${currCat[0].toUpperCase()}${currCat.substr(1, 2)}`;
     const $scrl3 = $('#scrl3');
     // move scrolled category a little lower for better visibility.

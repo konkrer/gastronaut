@@ -8,6 +8,7 @@ class IndexSearchLogic {
     this.offset = 0;
     this.paginationListener = null;
     this.nextCardsBlocker = false; // Prevent race condition loading next cards twice.
+    this.blockLockScrollBottm = false; // Prevent race condition firing event twice.
     this.addNavbarTogglerListener();
     this.addNavbarSearchListener();
     this.addExploreBtnsListeners();
@@ -32,14 +33,10 @@ class IndexSearchLogic {
   // Navbar search listener.
   //
   addNavbarSearchListener() {
-    $('.navbar form.searchForm').submit(
-
-      // jcb - use ES6 arrow function instead of bind
-      function (e) {
-        e.preventDefault();
-        this.navbarSearch();
-      }.bind(this)
-    );
+    $('.navbar form.searchForm').submit(e => {
+      e.preventDefault();
+      this.navbarSearch();
+    });
   }
 
   //
@@ -47,6 +44,7 @@ class IndexSearchLogic {
   //
   navbarSearch() {
     $('.spinner-zone').show();
+    // Hide slide-out navbar menu.
     $('.navbar-collapse').removeClass('open');
     $('nav.navbar').removeClass('display-flex-important');
     const term = $('.navbar form.searchForm input').val();
@@ -64,14 +62,15 @@ class IndexSearchLogic {
       $('.cat-display').text('All');
       FormFunctsObj.turnActiveOffCatBtns();
       $('#All').addClass('active');
-      location.href = '#';
-      location.href = '#All';   // jcb- any reason for setting the href twice?
+      location.href = '#All';
     }
+    // Avoid double yelp search if lockOnScrollBottotmListener is active.
+    this.blockLockScrollBottm = true;
     this.hideHeroAndSearch();
   }
 
   addExploreBtnsListeners() {
-    // Navbar explore button closes navbar slideout menu.
+    // Navbar explore button closes navbar slide out menu.
     $('.explore-nav').on(
       'click',
       function (e) {
@@ -385,6 +384,9 @@ class IndexSearchLogic {
       window.pageYOffset + window.innerHeight >
       document.body.clientHeight - 100
     ) {
+      // Avoid multiple events firing this function more than once.
+      if (this.blockLockScrollBottm) return;
+      this.blockLockScrollBottm = true;
       window.removeEventListener('scroll', this.lockOnScrollBottom, {
         passive: true,
       });
@@ -443,472 +445,4 @@ class IndexSearchLogic {
   }
 }
 
-// ParamsChange -----------------------------------------------------------  //
-// ParamsChange -----------------------------------------------------------  //
-// ParamsChange -----------------------------------------------------------  //
-// ParamsChange -----------------------------------------------------------  //
-// ParamsChange -----------------------------------------------------------  //
-// ParamsChange -----------------------------------------------------------  //
-
-class ParamsChange {
-  constructor() {}
-  //
-  // Check for changes that warrant a new Yelp API call.
-  // Form, category, significant GPS change, or no stored data warrant API call.
-  // Called functions update local storage if they detect changes.
-  //
-  checkParameterChange(lastData, currFormState) {
-    // set change to true if a new API call is warranted.
-    let change = false;
-    // Coordinate precision used to look for lng/lat changes
-    // which would warrant new Yelp API call for fresh data.
-    this.coordsPercision = 3;
-
-    change = this.checkFormChanges(change, currFormState);
-
-    change = this.checkCoordsChange(change);
-
-    change = this.checkCategoryChange(change);
-
-    if (!change) change = this.checkLastData(lastData);
-
-    return change;
-  }
-
-  //
-  // Check if control panel form data has changed.
-  //
-  checkFormChanges(change, currFormState) {
-    const prevFormState = localStorage.getItem('formData');
-
-    // if form data changed warrants API call
-    if (JSON.stringify(currFormState) !== prevFormState) {
-      FormFunctsObj.setFormDataArray(currFormState);
-      return true;
-    }
-    // Else if open now selected always make a new api call
-    else if ($('#open_now').prop('checked') === true) return true;
-
-    // TODO: Add 30sec or greater data age then make new api call.
-    // when open_now selected.
-
-    // TODO: Add 1 day age or greater data age then make new api call
-    // general search functionality.
-    return change;
-  }
-
-  //
-  // Check if user coordinates have changed.
-  //
-  checkCoordsChange(change) {
-    const prevCoords = JSON.parse(localStorage.getItem('coords'));
-
-    // if there is lng/lat data but no previous stored coordinates data
-    if (Map_Obj.longitude && !prevCoords) {
-      // Store coords.
-      localStorage.setItem(
-        'coords',
-        JSON.stringify([Map_Obj.longitude, Map_Obj.latitude])
-      );
-      // if there is not a location given having coordinates warrants an API call
-      if (!FormFunctsObj.$locationInput.val()) return true;
-      // Else if no location given and new and old coordinates to compare:
-    } else if (
-      !FormFunctsObj.$locationInput.val() &&
-      Map_Obj.longitude &&
-      prevCoords
-    ) {
-      const [prevLng, prevLat] = prevCoords;
-      // if coordinates have changed beyond precision threshold:
-      if (
-        Map_Obj.longitude.toFixed(this.coordsPercision) !==
-          prevLng.toFixed(this.coordsPercision) ||
-        Map_Obj.latitude.toFixed(this.coordsPercision) !==
-          prevLat.toFixed(this.coordsPercision)
-      ) {
-        // Store coords.
-        localStorage.setItem(
-          'coords',
-          JSON.stringify([Map_Obj.longitude, Map_Obj.latitude])
-        );
-        // Warrants an API call.
-        return true;
-      }
-    }
-    return change;
-  }
-
-  //
-  // Check if the category has changed.
-  //
-  checkCategoryChange(change) {
-    const prevCategory = localStorage.getItem('category');
-
-    // category change warrants an API call
-    if (prevCategory !== IndexAnimationsObj.category) {
-      localStorage.setItem('category', IndexAnimationsObj.category);
-      return true;
-    }
-    return change;
-  }
-
-  //
-  // Check if their is previous data stored in local storage.
-  //
-  checkLastData(lastData) {
-    // if there is no stored yelp data must make api call
-    if (!lastData || ['undefined', 'false'].includes(lastData)) {
-      return true;
-    }
-    return false;
-  }
-}
-
-
-// jcb - consider moving button logic into it's own javascript file
-
-// Buttons Logic ---------------------------------------------------------- //
-// Buttons Logic ---------------------------------------------------------- //
-// Buttons Logic ---------------------------------------------------------- //
-// Buttons Logic ---------------------------------------------------------- //
-// Buttons Logic ---------------------------------------------------------- //
-// Buttons Logic ---------------------------------------------------------- //
-// Buttons Logic ---------------------------------------------------------- //
-
-class ButtonsLogics {
-  constructor() {
-    this.addMapBusinessBtnListener();
-    this.addMapToggleBtnListener();
-    this.addCardsToggleBtnListener();
-    this.addBusinessDetailsListeners();
-    this.addWriteReportListener();
-    this.addNavigationListener();
-    this.addToggleDirectionsDivListener();
-    this.addCancelNavigationListener();
-  }
-
-  //
-  // Listen for card map button click and call mapBusiness.
-  //
-  addMapBusinessBtnListener() {
-    const this_ = this;
-    $('.card-track-inner').on('click', '.cardMapButton', function () {
-      this_.mapBusiness($(this));
-    });
-  }
-
-  //
-  // Show restaurant marker and fit bounds when card map button is clicked.
-  //
-  mapBusiness($el) {
-    const lng = $el.next().children().data('lng');
-    const lat = $el.next().children().data('lat');
-    const name = $el.next().children().data('name');
-    const id = $el.next().children().data('id');
-    if (!Map_Obj.mapOpen) this.toggleMap();
-    Map_Obj.addRestMarkerAndFitBounds([+lng, +lat], name, id);
-  }
-
-  //
-  // Toggle map listener.
-  //
-  addMapToggleBtnListener() {
-    const this_ = this;
-    $('.showMap').on('click', this.toggleMap);
-    $('.showMap').on('dragstart', this.toggleMap);
-    $('.showMap').on('touchstart', function (e) {
-      e.preventDefault();
-      this_.toggleMap();
-    });
-  }
-
-  //
-  // Toggle map button functionality. Open and close map.
-  //
-  toggleMap() {
-    // If map is open and cards are hidden show cards.
-    if (Map_Obj.mapOpen && $('.card-map-zone').hasClass('cards-collapse')) {
-      $('.card-map-zone').removeClass('cards-collapse');
-      $('.card-track').show();
-      // Toggle toggle cards icon.
-      $('.toggleCards')
-        .children()
-        .each(function (index) {
-          $(this).toggleClass('d-none');
-        });
-      // make sure correct cards show.
-      IndexAnimationsObj.setCardsScrollLeft();
-    }
-    // Toggle all map items.
-    $('.card-map-zone').toggleClass('map-collapse');
-    $('#map').toggle();
-    $('.mapBtns').toggle();
-    $('.map-toggle').toggleClass('toggle-on-map');
-    $('.map-track').toggleClass(['border-top', 'border-secondary']);
-    if ($('#directions-panel').hasClass('show'))
-      $('#directions-panel').removeClass('show').hide();
-    if (Map_Obj.mapOpen) {
-      Map_Obj.mapOpen = false;
-    } else {
-      Map_Obj.mapOpen = true;
-      Map_Obj.mappyBoi.resize();
-      if ($('div.map-routing .reset').hasClass('resetHorizontal'))
-        $('#directions-panel').addClass('show').fadeIn();
-    }
-  }
-
-  //
-  // Cards toggle listener.
-  //
-  addCardsToggleBtnListener() {
-    const this_ = this;
-    $('.toggleCards').on('click', this.toggleCards);
-    $('.toggleCards').on('dragstart', this.toggleCards);
-    $('.toggleCards').on('touchstart', function (e) {
-      e.preventDefault();
-      this_.toggleCards();
-    });
-  }
-
-  //
-  // Show/hide cards functionality. Big/small map.
-  //
-  toggleCards() {
-    $('.card-map-zone').toggleClass('cards-collapse');
-    $('.card-track').toggle();
-    Map_Obj.mappyBoi.resize();
-    // toggle up/down arrow
-    $('.toggleCards')
-      .children()
-      .each(function (index) {
-        $(this).toggleClass('d-none');
-      });
-    if (!$('.card-map-zone').hasClass('cards-collapse')) {
-      IndexAnimationsObj.setCardsScrollLeft();
-    }
-  }
-
-  //
-  // Show cards functionality for search Yelp. If cards are hidden
-  // they will be shown after search Yelp.
-  //
-  showCardTrack() {
-    if ($('.card-map-zone').hasClass('cards-collapse')) {
-      $('.card-map-zone').removeClass('cards-collapse');
-      $('.card-track').show();
-      Map_Obj.mappyBoi.resize();
-      $('.toggleCards')
-        .children()
-        .each(function (index) {
-          $(this).toggleClass('d-none');
-        });
-    }
-  }
-
-  //
-  // Card business detail listeners.
-  //
-  addBusinessDetailsListeners() {
-    const this_ = this;
-    $('.card-track-inner').on(
-      'click',
-      '.detailsBtnCard',
-      this.getBtnAndShowDetails
-    );
-    $('.card-track-inner').on(
-      'dblclick',
-      '.my-card.mr-card',
-      this.getBtnAndShowDetails
-    );
-  }
-
-  //
-  // Get the mission-btn (add to mission) button which holds the
-  // business data and call getShowBusinessDetails.
-  //
-  getBtnAndShowDetails() {
-    // Get the details button.
-    const detailBtn = $(this).hasClass('detailsBtnCard')
-      ? $(this)
-      : $(this).find('.detailsBtnCard');
-
-    const $addToMissionBtn = detailBtn.next().next().children();
-
-    const fakeE = {
-      currentTarget: {
-        dataset: {
-          id: $addToMissionBtn.data('id'),
-          name: $addToMissionBtn.data('name'),
-          latlng: `${$addToMissionBtn.data('lat')},${$addToMissionBtn.data(
-            'lng'
-          )}`,
-        },
-      },
-    };
-
-    ApiFunctsObj.getShowBusinessDetails(fakeE);
-  }
-
-  //
-  // Listen for the write report button click in the business detail modal
-  // and call add_report with business information as parameters. This is
-  // to be able to create a new business entry in Database if necessary.
-  //
-  addWriteReportListener() {
-    $('#business-detail-modal').on('click', '.writeReport', function (e) {
-      e.preventDefault();
-      const reportUrl = $(this).parent().prop('href');
-      const $missionBtn = $(this).parent().parent().prev().find('.mission-btn');
-
-      const params = {
-        city: $missionBtn.data('city'),
-        state: $missionBtn.data('state'),
-        country: $missionBtn.data('country'),
-        name: $missionBtn.data('name'),
-        lng: $missionBtn.data('lng'),
-        lat: $missionBtn.data('lat'),
-      };
-
-      // https://attacomsian.com/blog/javascript-convert-object-to-query-string-parameters
-      const queryString = new URLSearchParams(params);
-
-      window.open(`${reportUrl}&${queryString}`);
-    });
-  }
-
-  //
-  // Add navigation start buttons listener.
-  //
-  addNavigationListener() {
-    $('.map-track').on(
-      'click',
-      '.directionsBtn',
-      this.startNavigation.bind(this)
-    );
-  }
-
-  //
-  // Start navigation. Update Map_Obj state, add alternate colored user marker,
-  // get route for appropriate destination.
-  //
-  async startNavigation(e) {
-    const $el = $(e.currentTarget);
-    Map_Obj.changedProfile = Map_Obj.profile !== $el.data('profile');
-    Map_Obj.profile = $el.data('profile');
-    Map_Obj.markerStyle = 1;
-    Map_Obj.userMarkerStyle = 1;
-    Map_Obj.addUserMarker();
-    this.navStartDOMAdjustments($el);
-    // If currently navigating home show route for newly selected navigation profile.
-    if ($('.map-routing .home').hasClass('homeActive')) {
-      Map_Obj.fitBounds();
-      Map_Obj.showDirectionsAndLine();
-      // Else use IndexAnimationsObj to map current (center) card's business and route.
-    } else {
-      // Pause to allow user to click home btn before mapping restaurant.
-      if (!Map_Obj.currentRoute) await Base_Obj.sleep(1500);
-      // If user didn't click home btn map current card.
-      if (!Map_Obj.homeMarker) IndexAnimationsObj.mapCurrCard();
-    }
-    // If active navigation following user:
-    if (Geolocation_Obj.locationWatcher) {
-      // Disable location watcher which may have infrequent updates.
-      Geolocation_Obj.clearLocationWatching();
-      // Make camera zoom into user on location update from location watcher after brief delay.
-      setTimeout(() => {
-        // Enable frequent updates with location watcher.
-        Geolocation_Obj.enableLocationWatcher(1);
-        // Keep screen on.
-        Geolocation_Obj.enableNoSleep();
-      }, 2000);
-      // If on phone size screen close sidebar and card track for full-screen navigation.
-      if (Map_Obj.isMobileScreen()) {
-        if (IndexAnimationsObj.sidebarOpen) IndexAnimationsObj.toggleSidebar();
-        if (!$('.card-map-zone').hasClass('cards-collapse')) this.toggleCards();
-      }
-    }
-  }
-
-  //
-  // Make adjustments to DOM elements for visual change of navigation start.
-  //
-  navStartDOMAdjustments($el) {
-    Map_Obj.clearNavBtnsActive();
-    $el.addClass('active');
-    $('.map-routing').addClass('horizontal');
-    $('.walk').addClass('walkHorizontal');
-    $('.bike').addClass('bikeHorizontal');
-    $('div.home').fadeIn().addClass('homeHorizontal');
-    $('div.reset').fadeIn().addClass('resetHorizontal');
-    $('.profileDisplay').text(Map_Obj.profileDict[Map_Obj.profile]);
-    $('#directions-panel').addClass('show').fadeIn();
-  }
-
-  //
-  // Add listener to show text directions.
-  //
-  addToggleDirectionsDivListener() {
-    const this_ = this;
-    $('.map-track').on('click', '.directionsToggle', this.toggleDirectionsDiv);
-  }
-
-  //
-  // Show directions text and alter directionsToggle alignment (vertical to horizontal).
-  //
-  toggleDirectionsDiv() {
-    $('.directionsToggle')
-      .toggleClass(['h-100', 'border-bottom', 'border-dark', 'bg-trans-b0'])
-      .children()
-      .each(function () {
-        $(this).toggleClass('d-inline-block');
-      });
-    $('.directionsClipboard').toggleClass('pr-sm-1');
-    $('.directionsHeader').toggle();
-    // flip left/right arrow
-    $('.directionsCaret')
-      .children()
-      .each(function () {
-        $(this).toggle();
-      });
-    $('#directions-panel').toggleClass('directionsShow');
-    $('#directions-text').toggle();
-  }
-
-  //
-  // Cancel navigation listener.
-  //
-  addCancelNavigationListener() {
-    $('.map-track').on(
-      'click',
-      '.map-routing div.reset',
-      function () {
-        Map_Obj.clearRouting();
-        Map_Obj.markerStyle = 0;
-        Map_Obj.userMarkerStyle = 0;
-        Map_Obj.addUserMarker();
-        Map_Obj.userMarker.togglePopup();
-        IndexAnimationsObj.mapCurrCard();
-        if ($('#directions-panel').hasClass('directionsShow'))
-          this.toggleDirectionsDiv();
-        this.navEndDOMAdjustments();
-      }.bind(this)
-    );
-  }
-
-  //
-  // Make adjustments to DOM elements for visual change of navigation end.
-  //
-  navEndDOMAdjustments() {
-    $('#directions-panel').removeClass('show').fadeOut();
-    $('.map-routing').removeClass('horizontal');
-    $('.walk').removeClass('walkHorizontal');
-    $('.bike').removeClass('bikeHorizontal');
-    $('div.home').fadeOut().removeClass('homeHorizontal');
-    $('div.reset').fadeOut().removeClass('resetHorizontal');
-    $('.map-routing .home').removeClass('homeActive');
-  }
-}
-
-const ParamsChangeObj = new ParamsChange();
-const IndexButtonsLogicsObj = new ButtonsLogics();
 const IndexSearchObj = new IndexSearchLogic();
