@@ -1,3 +1,5 @@
+// jcb - recommend placing all third party JS in another folder to make it easier to know what is your code vs third party
+
 /*! modernizr 3.6.0 (Custom Build) | MIT *
  * https://modernizr.com/download/?-inputtypes !*/
 !(function (e, t, n) {

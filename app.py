@@ -220,6 +220,9 @@ def unauthorized(e):
     return render_template("401.html"), 401
 
 
+## jcb - consider moving groups of routes into their own files using blueprints or importing app.
+## https://stackoverflow.com/questions/11994325/how-to-divide-flask-app-into-multiple-py-files 
+
 #
 #     $$    $$    $$$.    $$$$$$$$  $$$$$<
 #     $$    $$  $$$ $$$   $$^^^^^^  $$$$$$$$
