@@ -1,6 +1,6 @@
 'use strict';
 
-class MissionControlHtmFactory {
+class MissionControlHtmlFactory {
   constructor() {}
 
   //

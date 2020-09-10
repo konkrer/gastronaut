@@ -10,16 +10,20 @@ from models import connect_db
 from static.py_modules.helper_functions import HelperFunctions as H
 # Blueprints
 from api.api import api_b_p
+from api.api_mission import api_mission_b_p
+from api.api_report import api_report_b_p
 from user_views.user_views import user_views_b_p
 from main_views.main_views import main_views_b_p
-from reports_crea_edit.reports_crea_edit import reports_crea_edit_b_p
+from reports_crud.reports_crud import reports_crud_b_p
 
 
 app = Flask(__name__)
 app.register_blueprint(main_views_b_p)
 app.register_blueprint(api_b_p, url_prefix='/v1')
+app.register_blueprint(api_mission_b_p, url_prefix='/v1/mission')
+app.register_blueprint(api_report_b_p, url_prefix='/v1/report')
 app.register_blueprint(user_views_b_p, url_prefix='/user')
-app.register_blueprint(reports_crea_edit_b_p, url_prefix='/report')
+app.register_blueprint(reports_crud_b_p, url_prefix='/report')
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
     'DATABASE_URL', 'postgresql:///gastronaut')

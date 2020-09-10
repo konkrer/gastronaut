@@ -134,7 +134,7 @@ class ApiFuncts {
       e.preventDefault();
       const mission_id = $(this).data('mission_id');
       try {
-        var resp = await axios.post(`/v1/add_mission/${mission_id}`);
+        var resp = await axios.post(`/v1/mission/add/${mission_id}`);
       } catch (err) {
         Sentry.captureException(err);
         return;

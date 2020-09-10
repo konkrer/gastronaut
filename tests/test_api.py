@@ -264,14 +264,14 @@ class MissionApiTestCase(TestCase):
             db.session.add(self.mission)
 
             # test adding mission
-            resp = c.post(f'/v1/add_mission/{self.mission.id}')
+            resp = c.post(f'/v1/mission/add/{self.mission.id}')
 
             self.assertEqual(resp.json['success'], 'Mission Added!')
             user2 = User.query.get(self.user2.id)
             self.assertIn(self.mission, user2.missions)
 
             # test repeat adding does nothing
-            resp = c.post(f'/v1/add_mission/{self.mission.id}')
+            resp = c.post(f'/v1/mission/add/{self.mission.id}')
 
             self.assertEqual(resp.json['success'], 'Mission Already Added.')
             user2 = User.query.get(self.user2.id)
@@ -292,14 +292,14 @@ class MissionApiTestCase(TestCase):
             db.session.add(self.mission)
 
             # test adding mission
-            resp = c.post(f'/v1/remove_mission/{self.mission.id}')
+            resp = c.post(f'/v1/mission/remove/{self.mission.id}')
 
             self.assertEqual(resp.json['success'], 'Mission Removed!')
             user2 = User.query.get(self.user2.id)
             self.assertNotIn(self.mission, user2.missions)
 
             # test repeat removing does nothing
-            resp = c.post(f'/v1/remove_mission/{self.mission.id}')
+            resp = c.post(f'/v1/mission/remove/{self.mission.id}')
 
             self.assertEqual(resp.json['success'], 'Mission Already Removed.')
             user2 = User.query.get(self.user2.id)

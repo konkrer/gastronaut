@@ -24,8 +24,8 @@ if not os.environ.get('SECRET_KEY'):
 else:
     S3_BUCKET_NAME = os.environ.get('S3_BUCKET_NAME')
 
-reports_crea_edit_b_p = Blueprint(
-    'reports_crea_edit', __name__, template_folder='templates')
+reports_crud_b_p = Blueprint(
+    'reports_crud', __name__, template_folder='templates')
 
 
 #  $$$$$$$$   $$$$$$$   $$$$$$$     $$$$$$'   x$$$$$$$   $$$$$$$$
@@ -39,7 +39,7 @@ reports_crea_edit_b_p = Blueprint(
 """ Report CRUD"""
 
 
-@reports_crea_edit_b_p.route('/<report_id>')
+@reports_crud_b_p.route('/<report_id>')
 @add_user_to_g
 def report_detail(report_id):
     """Report detail view."""
@@ -47,11 +47,11 @@ def report_detail(report_id):
     report = Report.query.get_or_404(report_id)
     user = report.user
 
-    return H.render_template('reports_crea_edit/report.html', reports=[report],
+    return H.render_template('reports_crud/report.html', reports=[report],
                              user=user)
 
 
-@reports_crea_edit_b_p.route("/", methods=['GET', 'POST'])
+@reports_crud_b_p.route("/", methods=['GET', 'POST'])
 @add_user_to_g
 @login_required
 def add_report():
@@ -114,11 +114,11 @@ def add_report():
         flash("Please fix all form errors.", "warning")
 
     return H.render_template(
-        "reports_crea_edit/add_report.html", form=form, model=model,
+        "reports_crud/add_report.html", form=form, model=model,
         kind=kind)
 
 
-@reports_crea_edit_b_p.route("/<report_id>/edit", methods=['GET', 'POST'])
+@reports_crud_b_p.route("/<report_id>/edit", methods=['GET', 'POST'])
 @add_user_to_g
 @login_required
 def edit_report(report_id):
@@ -158,11 +158,11 @@ def edit_report(report_id):
         flash("Please fix all form errors.", "warning")
 
     return H.render_template(
-        "reports_crea_edit/edit_report.html", form=form, model=model,
+        "reports_crud/edit_report.html", form=form, model=model,
         kind=kind, report_id=report_id)
 
 
-@reports_crea_edit_b_p.route('/<report_id>/delete', methods=['POST'])
+@reports_crud_b_p.route('/<report_id>/delete', methods=['POST'])
 @add_user_to_g
 @login_required
 def delete_report(report_id):

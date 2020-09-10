@@ -9,7 +9,7 @@ class MissionControl {
     this.sidebarOpen = true;
     this.$infoCol = $('#info-col');
     this.feedbackTimer = null;
-    this.htmFactory = new MissionControlHtmFactory();
+    this.htmlFactory = new MissionControlHtmlFactory();
     Map_Obj.userMarkerStyle = 1; // Set user marker to alternate style.
 
     this.addEventListeners();
@@ -96,7 +96,7 @@ class MissionControl {
     )
       // Wait for mission details to be populated then show create form.
       setTimeout(() => {
-        this.htmFactory.showCreateForm();
+        this.htmlFactory.showCreateForm();
       }, 500);
   }
 
@@ -134,10 +134,10 @@ class MissionControl {
       this.missionCache[mission_id] = resp.data;
       missionData = resp.data;
     }
-    this.htmFactory.fillForm(missionData.mission);
-    this.htmFactory.showLikes(missionData.mission);
+    this.htmlFactory.fillForm(missionData.mission);
+    this.htmlFactory.showLikes(missionData.mission);
     this.mapBusinesses(missionData.businesses);
-    this.htmFactory.listBusinesses(missionData);
+    this.htmlFactory.listBusinesses(missionData);
     // make mission report <a> element point to report with current mission id.
     $('#write-mission-report').prop(
       'href',
@@ -177,7 +177,7 @@ class MissionControl {
   // Create new mission button listener.
   //
   addCreateMissionListener() {
-    $('#create-mission-btn').on('click', this.htmFactory.showCreateForm);
+    $('#create-mission-btn').on('click', this.htmlFactory.showCreateForm);
     this.$infoCol.on('submit', '#create-form', this.createMission.bind(this));
   }
 
@@ -289,7 +289,7 @@ class MissionControl {
       function () {
         const mission_id = localStorage.getItem('currMissionId');
         const missionData = this.missionCache[mission_id];
-        this.htmFactory.fillForm(missionData.mission);
+        this.htmlFactory.fillForm(missionData.mission);
       }.bind(this)
     );
   }
@@ -436,7 +436,7 @@ class MissionControl {
         const mission_id = $('#mission-form input[name="id"]').val();
 
         try {
-          var resp = await axios.post(`/v1/remove_mission/${mission_id}`);
+          var resp = await axios.post(`/v1/mission/remove/${mission_id}`);
         } catch (error) {
           Sentry.captureException(error);
           return;
