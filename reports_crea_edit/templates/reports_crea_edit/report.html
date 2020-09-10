@@ -1,8 +1,6 @@
 {% extends 'base.html' %}
 
-<title>
-  {% block title %}Report{% endblock %}
-</title>
+<title>{% block title %}Report{% endblock %}</title>
 
 <head>
   {% block head %}
@@ -26,7 +24,7 @@
 
 <main>
   {% block main %}
-  <div class="spinner-zone flx-std rounded-bottom" style="display: none;">
+  <div class="spinner-zone flx-std rounded-bottom" style="display: none">
     <div class="spinner-border txt-green" role="status">
       <span class="sr-only">Loading...</span>
     </div>
@@ -37,7 +35,7 @@
 
   <div class="middle-gap py-3 px-5 p-sm-0 flx-std">
     <a href="/user/profile/{{user.username}}">
-      <h4 class="text-warning brand-outline">
+      <h4 class="text-warning brand-outline museo">
         <em>@{{user.username}}</em>
       </h4>
     </a>

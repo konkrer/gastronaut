@@ -94,15 +94,15 @@
         class="btn btn-sm btn-outline-primary float-right px-3 px-sm-2 px-md-3 ml-3 ml-md-4 mb-2"
         >Edit Report</a
       >
-      {% endif %} {% if not request.endpoint == 'report_detail' and report.text
-      | length > 500 %}
+      {% endif %} {% if not request.endpoint ==
+      'reports_crea_edit.report_detail' and report.text | length > 500 %}
       <a href="/report/{{report.id}}" class="card-link float-right"
         >Read More</a
       >
       {% endif %}
     </div>
   </div>
-  {% endfor %} {% elif request.endpoint in ['user_detail'] %}
+  {% endfor %} {% elif request.endpoint in ['user_views.user_detail'] %}
 
   <div
     class="card d-inline-block my-2 mx-1 text-left mb-3 mb-lg-4 card-shadow-slight"

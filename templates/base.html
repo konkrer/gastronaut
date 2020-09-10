@@ -135,12 +135,14 @@
         <ul class="navbar-nav mr-auto fw-200">
           {% from '/macros/nav_link.html' import nav_link_active with context %}
 
-          <li class="nav-item {{ nav_link_active('index') }}">
+          <li class="nav-item {{ nav_link_active('main_views.index') }}">
             <a class="nav-link explore-nav" href="/"
               ><span class="sr-only">(current)</span>Explore</a
             >
           </li>
-          <li class="nav-item {{ nav_link_active('mission_control') }}">
+          <li
+            class="nav-item {{ nav_link_active('main_views.mission_control') }}"
+          >
             {% if g.user %}
             <a class="nav-link" href="/mission-control">Mission Control</a>
             {% else %}
@@ -153,13 +155,17 @@
             >
             {% endif %}
           </li>
-          <li class="nav-item {{ nav_link_active('missions') }}">
+          <li class="nav-item {{ nav_link_active('main_views.missions') }}">
             <a class="nav-link" href="/missions">Missions</a>
           </li>
-          <li class="nav-item {{ nav_link_active('mission_reports') }}">
+          <li
+            class="nav-item {{ nav_link_active('main_views.mission_reports') }}"
+          >
             <a class="nav-link" { href="/reports">Mission Reports</a>
           </li>
-          <li class="nav-item {{ nav_link_active('user_detail') }} dropdown">
+          <li
+            class="nav-item {{ nav_link_active('user_views.user_detail') }} dropdown"
+          >
             <a
               class="nav-link dropdown-toggle"
               href="#"
@@ -192,7 +198,8 @@
               >
                 Preferences
               </a>
-              {% if request.endpoint in ['index', 'mission_control'] %}
+              {% if request.endpoint in ['main_views.index',
+              'main_views.mission_control'] %}
               <a
                 class="dropdown-item"
                 href="#tipsModal"
@@ -234,7 +241,8 @@
             Logout
           </button>
         </form>
-        {% elif request.endpoint not in ['signup', 'login'] %}
+        {% elif request.endpoint not in ['user_views.signup',
+        'user_views.login'] %}
         <a
           class="navbar-signup mr-4 btn p-0 my-4 my-lg-0 signLogBtn"
           href="#signupModal"
@@ -292,7 +300,7 @@
     <main>{% block main %} {% endblock %}</main>
 
     <!-- Modal -->
-    {% if not request.endpoint in ['mission_control'] %} {% include
+    {% if not request.endpoint in ['main_views.mission_control'] %} {% include
     'include/include_signup_login_modal.html' %} {% endif %} {% include
     "/include/include_feedback_modal.html" %}{% include
     "/include/include_preferences_modal.html" with context %}

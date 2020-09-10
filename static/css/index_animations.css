@@ -77,7 +77,7 @@
 }
 
 .sidebarExpand {
-  animation: sideBExp 0.4s ease-in forwards;
+  animation: sideBExp 0.4s ease-in normal;
 }
 
 @keyframes sideBExp {

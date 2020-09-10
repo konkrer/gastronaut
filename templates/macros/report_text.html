@@ -1,8 +1,8 @@
-{% macro report_text(report) %} {% if request.endpoint in ['mission_reports',
-'user_detail', 'business_reports_detail'] %} {% if report.text[500:] %} {% set
-text = report.text[:500] + '...' %} {% else %} {% set text = report.text[:500]
-%} {% endif %} {% for p in text.split('\n') %}
+{% macro report_text(report) %} {% if request.endpoint in
+['reports_crea_edit.report_detail'] %} {% for p in report.text.split('\n') %}
 <p>{{p}}</p>
-{%- endfor %} {% else %} {% for p in report.text.split('\n') %}
+{% endfor %} {% else %} {% if report.text[500:] %} {% set text =
+report.text[:500] + '...' %} {% else %} {% set text = report.text[:500] %} {%
+endif %} {% for p in text.split('\n') %}
 <p>{{p}}</p>
-{% endfor %} {% endif %} {% endmacro %}
+{%- endfor %} {% endif %} {% endmacro %}
