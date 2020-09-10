@@ -130,7 +130,7 @@ class HelperFunctions:
         if next_page:
             del request_args['next_']
         else:
-            next_page = 'index'
+            next_page = 'main_views.index'
 
         return url_for(next_page, **request_args)
 
