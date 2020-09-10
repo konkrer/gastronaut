@@ -44,7 +44,7 @@ class UserViewsTestCase(TestCase):
                      'username': 'tester2', 'password': 'tester2$A'}
 
         with self.client as c:
-            resp = c.post('/signup', data=form_data,
+            resp = c.post("/user/signup", data=form_data,
                           follow_redirects=True)
 
         html = resp.get_data(as_text=True)
@@ -62,7 +62,7 @@ class UserViewsTestCase(TestCase):
         form_data = {'email': 'test@test.com', 'password': 'tester1$A'}
 
         with self.client as c:
-            resp = c.post('/login', data=form_data,
+            resp = c.post("/user/login", data=form_data,
                           follow_redirects=True)
 
         html = resp.get_data(as_text=True)
@@ -77,7 +77,7 @@ class UserViewsTestCase(TestCase):
             with c.session_transaction() as sess:
                 sess['user_id'] = self.user.id
 
-            resp = c.post('/logout', follow_redirects=True)
+            resp = c.post('/user/logout', follow_redirects=True)
 
         html = resp.get_data(as_text=True)
 

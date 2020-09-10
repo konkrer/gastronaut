@@ -226,7 +226,7 @@
         </ul>
         {% if g.user %}
         <form
-          action="/logout?next_url={{request_full_path}}"
+          action="/user/logout?next_url={{request_full_path}}"
           method="post"
           id="logout-form"
         >

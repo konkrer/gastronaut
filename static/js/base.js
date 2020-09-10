@@ -198,8 +198,8 @@ class BaseLogic {
     $('body').on('click', '.signLogBtn', function () {
       const next_url = $(this).data('next_url');
 
-      $('.signup').prop('href', `/signup?next_url=${next_url}`);
-      $('.login').prop('href', `/login?next_url=${next_url}`);
+      $('.signup').prop('href', `/user/signup?next_url=${next_url}`);
+      $('.login').prop('href', `/user/login?next_url=${next_url}`);
     });
   }
 

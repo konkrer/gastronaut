@@ -24,12 +24,12 @@ GOOGLE_O_AUTH_CLIENT_ID = '992789148520-btgg6dtlrk8rkght89rfvdbfgu2ljeut.apps.go
 
 # Dev / Production setup differentiation:
 #
-# if development server enable debugging and load local keys.
+# if development server load local keys.
 if not os.environ.get('SECRET_KEY'):
     from development_local.local_settings import (
         YELP_API_KEY, MAILGUN_API_KEY, MAILGUN_DOMAIN)
 #
-# if production server enable sentry and load environ variables.
+# if production server load environ variables.
 else:
     YELP_API_KEY = os.environ.get('YELP_API_KEY')
     MAILGUN_API_KEY = os.environ.get('MAILGUN_API_KEY')

@@ -76,7 +76,7 @@ class HelperFunctions:
     @classmethod
     def error_logging(self, e):
         """Log error when dev environment, sentry capture when production."""
-        if DEBUG:
+        if self.DEBUG:
             logging.error(repr(e))
         else:
             capture_exception(e)
@@ -84,7 +84,7 @@ class HelperFunctions:
     @classmethod
     def message_logging(self, message):
         """Log message when dev environment, sentry capture when production."""
-        if DEBUG:
+        if self.DEBUG:
             logging.warning(message)
         else:
             capture_message(message)
