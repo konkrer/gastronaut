@@ -5,6 +5,7 @@ from datetime import datetime, timezone, timedelta
 import requests
 import logging
 import os
+from flask import g
 from models import Business, Report
 
 
@@ -149,6 +150,16 @@ def get_tz_data(lat, lng, timestamp):
         return
 
     return resp.json()
+
+
+def get_yelp_categories():
+    """Return Yelp Categories.
+       If user prefers not to see alcohol choices show no-alcohol list.
+    """
+    if (not g.user) or (g.user and g.user.preferences.show_alcohol):
+        return YELP_CATEGORIES
+    else:
+        return no_alcohol()
 
 
 YELP_CATEGORIES = [
