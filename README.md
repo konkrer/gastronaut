@@ -20,12 +20,10 @@ _Why Gastronaut?_
 
 - Want to share your experience? Write a mission report and let the world know.
 
-- Start a Gastronaut Group and share a mission with friends or family to invite them to join you as you complete your mission. Maybe you're going to visit all the restaurants and they can meet you when you go. Or maybe you’ll each visit or order food from the restaurants and have some gastronomical experiences to share.
   <br/>
   <br/>
 
-![Gastronaut homepage image](https://repository-images.githubusercontent.com/273343895/72ed7000-c4a6-11ea-86d4-cc8412d6e11a)
-
+![Gastronaut homepage image](https://repository-images.githubusercontent.com/273343895/b7a47180-f42b-11ea-9bc3-47e4adbbe92c)
 Features:  
 
 - Quick and easy browsing of restaurants, bars, and more in your location, or whatever location you enter.
@@ -36,11 +34,11 @@ Features:
 
 - Built-in navigation to take you to your destination. The built-in navigation is minimalistic at this point lacking turn-by-turn directions or auto-rerouting as you commute, but can be useful when you are familiar with the area you are in.
 
-- For the built-in navigation, manual re-routing when you go off course is implemented. Click the navigation button (or the home button) you clicked to start navigation. This is less than ideal and not super easy to do while you are driving as the buttons are small, but it demonstrates the re-routing that will happen when automatic re-routing is implemented.
+- For the built-in navigation, manual re-routing when you go off course is implemented. Click the navigation button (or the home button) you clicked to start navigation. This is far less than ideal and unadvised to do while you are driving as the buttons are small, but it demonstrates the re-routing that will happen when automatic re-routing is implemented in the future.
 
 - You can launch Google Maps navigation by clicking the business address in the business detail modal for a more robust navigation solution (open with the details button, by double-clicking the card for the business, or clicking the business name on the mission or report card).
 
-- Menu, website, and delivery links in the business detail modal when available. And always available is the magnifying glass icon to launch a google search for the business as well as a link to Yelp for the business.
+- Menu, website, and delivery links in the business detail modal when available. And always available is the magnifying glass icon to launch a Google search for the business as well as a link to Yelp for the business.
 
 - Create missions of businesses you want to visit so you can remember to experience the things you find interesting. Or create missions to share a curated list with others.
 
@@ -56,13 +54,46 @@ Note: If the built-in navigation routes you in the wrong direction upon navigati
 
 ## Stack
 
-JavaScript, Python/Flask, Flask-SQLAlchemy, Postgres, jQuery, API integration (internal and external), Mapbox, HTML, CSS, Flask-Bcrypt, WTForms, Heroku, Jinja, Bootstrap, Sentry, Modernizr, Unittest.
+- JavaScript
+- Python/Flask
+- Flask-SQLAlchemy
+- Flask Blueprints
+- PostgreSQL
+- jQuery
+- Axios
+- API integration (internal and external)
+- Mapbox
+- Heroku
+- AWS S3
+- AWS CloudFront7
+- HTML
+- CSS
+- Flask-Bcrypt
+- WTForms
+- Jinja
+- Bootstrap
+- Unittest
+- Sentry
+- Google Analytics
+- Mailgun
+- Modernizr
+- FontAwesome.
+
+From GitHub - utilities and animation:  
+
+- [asvd/dragscroll](https://github.com/asvd/dragscroll 'github.com/asvd/dragscroll') - To allow drag-scrolling of the cards on the index page. 
+- [richtr/NoSleep.js](https://github.com/richtr/NoSleep.js 'github.com/richtr/NoSleep.js') - To keep the screen on when navigation is actively following user as they commute.
+- [https://github.com/tengbao/vanta](https://github.com/tengbao/vanta 'github.com/tengbao/vanta') For the globe animation on index page.
+- [bennettfeely/bennett](https://github.com/bennettfeely/bennett/tree/master/ztext 'github.com/bennettfeely/bennett/tree/master/ztext') - For ztext for 3D typography on index page hero animation text.
+
+
 
 ## APIs
 
-This app uses the Yelp API for most business data [Yelp](https://www.yelp.com/fusion 'yelp.com/fusion'),  
-Foursquare API for menu, delivery, and website links [Foursquare](https://foursquare.com 'foursquare.com'),  
-IPWHOIS API for IP geocoding. [IPWHOIS](https://ipwhois.io/ 'ipwhois.io'),  
-Google Maps Platform API for the Time Zone API and geocoding API. [Google Maps](https://cloud.google.com/maps-platform/ 'cloud.google.com/maps-platform/')
+This app uses the [Yelp](https://www.yelp.com/fusion 'yelp.com/fusion') API for most business data,  
+[Foursquare](https://foursquare.com 'foursquare.com') API for menu, delivery, and website links,  
+[IPWHOIS](https://ipwhois.io/ 'ipwhois.io') API for IP geocoding.,  
+[MapBox](https://www.mapbox.com/ 'mapbox.com') SDK for navigation routing, directions, and location geocoding,     
+[Google Maps](https://cloud.google.com/maps-platform/ 'cloud.google.com/maps-platform/') Platform API for the Time Zone API and geocoding API. 
 
 \*_This app was created as a capstone project for Springboard Software Engineering fellowship. This is capstone one of two._
