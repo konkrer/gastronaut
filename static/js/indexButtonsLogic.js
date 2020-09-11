@@ -96,7 +96,7 @@ class ButtonsLogics {
       'touchstart',
       e => {
         e.preventDefault();
-        this_toggleCards();
+        this.toggleCards();
       },
       { passive: false }
     );
