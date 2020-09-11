@@ -32,7 +32,7 @@ def login_required(func):
             request_args = request.args.to_dict()
 
             return redirect(url_for(
-                'signup', next_=next_page, **request_args))
+                'user_views.signup', next_=next_page, **request_args))
 
         return func(*args, **kwargs)
     return wrapper
