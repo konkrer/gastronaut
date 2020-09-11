@@ -39,13 +39,16 @@ class ButtonsLogics {
   // Toggle map listener.
   //
   addMapToggleBtnListener() {
-    const this_ = this;
     $('.showMap').on('click', this.toggleMap);
     $('.showMap').on('dragstart', this.toggleMap);
-    $('.showMap').on('touchstart', function (e) {
-      e.preventDefault();
-      this_.toggleMap();
-    });
+    document.querySelector('.showMap').addEventListener(
+      'touchstart',
+      e => {
+        e.preventDefault();
+        this.toggleMap();
+      },
+      { passive: false }
+    );
   }
 
   //
@@ -87,13 +90,16 @@ class ButtonsLogics {
   // Cards toggle listener.
   //
   addCardsToggleBtnListener() {
-    const this_ = this;
     $('.toggleCards').on('click', this.toggleCards);
     $('.toggleCards').on('dragstart', this.toggleCards);
-    $('.toggleCards').on('touchstart', function (e) {
-      e.preventDefault();
-      this_.toggleCards();
-    });
+    document.querySelector('.toggleCards').addEventListener(
+      'touchstart',
+      e => {
+        e.preventDefault();
+        this_toggleCards();
+      },
+      { passive: false }
+    );
   }
 
   //

@@ -125,10 +125,14 @@ class IndexAnimations {
     const boundToggleSidebar = this.toggleSidebar.bind(this);
     $('.sidebar-toggle-btn').on('click', boundToggleSidebar);
     $('.sidebar-toggle-btn').on('dragstart', boundToggleSidebar);
-    $('.sidebar-toggle-btn').on('touchstart', function (e) {
-      e.preventDefault();
-      boundToggleSidebar();
-    });
+    document.querySelector('.sidebar-toggle-btn').addEventListener(
+      'touchstart',
+      e => {
+        e.preventDefault();
+        boundToggleSidebar();
+      },
+      { passive: false }
+    );
   }
 
   //
