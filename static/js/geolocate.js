@@ -14,7 +14,7 @@ class GeolocationLogic {
       {
         enableHighAccuracy: true,
         timeout: 20000,
-        maximumAge: 30000,
+        maximumAge: 10000,
       },
       {
         enableHighAccuracy: true,
@@ -153,9 +153,9 @@ class GeolocationLogic {
     if (Map_Obj.currentRoute) Map_Obj.flyToUser(lng, lat, heading);
     else {
       //Else update lat/lng/heading
-      this.latitude = lat;
-      this.longitude = lng;
-      this.heading = heading;
+      Map_Obj.latitude = lat;
+      Map_Obj.longitude = lng;
+      Map_Obj.heading = heading;
     }
 
     this.madeFirstUpdate = true;
