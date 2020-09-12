@@ -46,6 +46,7 @@ class SimpleAutocomplete {
     this.useFA = fontAwesome;
     this.marginTop = marginTop;
     this.fixed = fixed;
+    this.closeDatalistBound = this.closeDatalist.bind(this);
     // Id string for getting the datalist element for this class instance.
     this.idString = `datalist-autocomplete${
       multiAutoCompID ? '-' + multiAutoCompID : ''
@@ -62,6 +63,7 @@ class SimpleAutocomplete {
     this.associatedInput = this._datalistOuter.previousElementSibling;
     // Raise error if there is not an associatedInput.
     this.checkSetup(2);
+    this.addClassAndListener();
     this.addDatalistInnerDivs(); // Add header and datalist to datalistOuter.
     this.addCloseDataListListener();
     this.addOptionSelectListener();
@@ -73,6 +75,7 @@ class SimpleAutocomplete {
    * Fill datalist with given HTML and show datalist.
    */
   set datalist(results) {
+    // If nothing to display hide datalist.
     if (!results) this._datalistOuter.style.display = 'none';
     else {
       this._datalist.innerHTML = results;
@@ -86,6 +89,7 @@ class SimpleAutocomplete {
    * Fill datalist with given DOM elements and show datalist.
    */
   set datalistElements(results) {
+    // If nothing to display hide datalist.
     if (results.length === 0) this._datalistOuter.style.display = 'none';
     else {
       this._datalist.append(...results);
@@ -124,12 +128,25 @@ class SimpleAutocomplete {
   }
 
   /**
+   * Add class and blur event listener.
+   */
+  addClassAndListener() {
+    // Datalist in HTML (datalist-autocomplete, etc.) add class datalist-outer for styling.
+    this._datalistOuter.classList.add('datalist-outer');
+    // Blur event listener.
+    // Close data list when input loses focus after short delay.
+    // Delay allows optionSelected to execute before hiding the datalist.
+    this.associatedInput.addEventListener('blur', () => {
+      setTimeout(() => this.closeDatalistBound(), 200);
+    });
+  }
+
+  /**
    * Add head and body to datalist.
    */
   addDatalistInnerDivs() {
-    this._datalistOuter.classList.add('datalist-outer');
-
     const header = this.makeDatalistHeader();
+
     const body = document.createElement('div');
     body.classList.add('datalist');
     this._datalist = body;

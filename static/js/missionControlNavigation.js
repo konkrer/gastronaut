@@ -13,7 +13,7 @@ class MissionControlNavigation {
     this.addDetectLocationListener();
     this.addStartFromHomeListener();
     // Add location autocomplete listener.
-    Base_Obj.addLocationAutocompleteListener();
+    Base_Obj.addLocationAutocompleteListener(null, '37px', false);
     // Location entry or restart navigation.
     this.addNavStartListener();
     this.addNavEndListener();

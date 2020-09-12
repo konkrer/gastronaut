@@ -24,7 +24,11 @@ class FormFuncts {
       { name: 'sort_by', value: 'best_match' },
     ];
     // Auto-complete listener and callback.
-    Base_Obj.addLocationAutocompleteListener(this.locationSearch.bind(this));
+    Base_Obj.addLocationAutocompleteListener(
+      this.locationSearch.bind(this),
+      '30px',
+      true
+    );
     this.addDetectLocationListener();
     this.addKeywordKeyupListener();
     this.addFormChangeListener();

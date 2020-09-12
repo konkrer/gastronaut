@@ -10,6 +10,7 @@ class GeolocationLogic {
     this.madeFirstUpdate = null; // Set true after locationWatcher makes first update.
     this.noSleep = new NoSleep();
     this.noSleepActive = false;
+    // locationWatcher options:
     this.options = [
       {
         enableHighAccuracy: true,
@@ -30,6 +31,7 @@ class GeolocationLogic {
   //
   detectLocation() {
     if ('geolocation' in navigator) {
+      $('.spinner-zone').show();
       // Make detect location button pulse while geolocation is happening.
       $('#detect-location').children().addClass('pulse');
       // Reset
@@ -87,11 +89,15 @@ class GeolocationLogic {
         }
         // Show new route.
         Map_Obj.showDirectionsAndLine();
+        $('spinner-zone').hide();
         // Else search Yelp.
       } else IndexSearchObj.searchYelp();
     }
     // Else on mission-control page.
-    else MissionControlNavigationObj.startLocationSuccess();
+    else {
+      $('spinner-zone').hide();
+      MissionControlNavigationObj.startLocationSuccess();
+    }
     // Close suggestions datalist.
     Base_Obj.Autocomplete_Obj_1.closeDatalist();
 

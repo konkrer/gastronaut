@@ -251,13 +251,13 @@ class BaseLogic {
   //
   // Autocomplete location functionality for pages that call this function.
   //
-  addLocationAutocompleteListener(callback) {
+  addLocationAutocompleteListener(callback, marginTop, fixed) {
     this.Autocomplete_Obj_1 = new SimpleAutocomplete(
       callback,
       1,
       true,
-      '30px',
-      true
+      marginTop,
+      fixed
     );
     const this_ = this;
     $('#location').on('keyup', async function (e) {
