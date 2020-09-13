@@ -9,6 +9,8 @@ from forms import (
 from static.py_modules.decorators import add_user_to_g, login_required
 from static.py_modules.helper_functions import HelperFunctions as H
 
+render_template = H.render_template
+
 
 user_views_b_p = Blueprint('user_views',
                            __name__, template_folder='templates')
@@ -61,7 +63,7 @@ def signup():
 
     # Create URL for login button that passes all URL data.
     login_url = request.full_path.replace("/signup", "/login")
-    return H.render_template(
+    return render_template(
         'user_views/signup.html', form=form, login_url=login_url)
 
 
@@ -96,8 +98,8 @@ def login():
 
     # Create URL for signin button that passes all URL data.
     signup_url = request.full_path.replace('login', 'signup')
-    return H.render_template('user_views/login.html', form=form,
-                             signup_url=signup_url)
+    return render_template('user_views/login.html', form=form,
+                           signup_url=signup_url)
 
 
 @user_views_b_p.route("/edit", methods=['GET', 'POST'])
@@ -125,7 +127,7 @@ def user_edit():
     if request.method == 'POST':
         flash("Please fix all form errors.", "warning")
 
-    return H.render_template('user_views/edit_user.html', form=form)
+    return render_template('user_views/edit_user.html', form=form)
 
 
 @user_views_b_p.route("/profile/<username>")
@@ -148,13 +150,13 @@ def user_detail(username):
     else:
         user = User.query.filter_by(username=username).first()
         if not user:
-            return H.render_template('404.html')
+            return render_template('404.html')
 
     shared_missions = [m for m in user.my_missions if m.is_public]
 
-    return H.render_template("user_views/detail_user.html",
-                             user=user, missions=shared_missions,
-                             reports=user.reports)
+    return render_template("user_views/detail_user.html",
+                           user=user, missions=shared_missions,
+                           reports=user.reports)
 
 
 @user_views_b_p.route('/logout', methods=['POST'])

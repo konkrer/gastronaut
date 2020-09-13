@@ -10,6 +10,8 @@ from forms import AddReportForm, EditReportForm
 from static.py_modules.decorators import add_user_to_g, login_required
 from static.py_modules.helper_functions import HelperFunctions as H
 
+render_template = H.render_template
+
 
 S3_CLIENT = boto3.client('s3')
 
@@ -47,8 +49,8 @@ def report_detail(report_id):
     report = Report.query.get_or_404(report_id)
     user = report.user
 
-    return H.render_template('reports_crud/report.html', reports=[report],
-                             user=user)
+    return render_template('reports_crud/report.html', reports=[report],
+                           user=user)
 
 
 @reports_crud_b_p.route("/", methods=['GET', 'POST'])
@@ -113,7 +115,7 @@ def add_report():
     if request.method == 'POST':
         flash("Please fix all form errors.", "warning")
 
-    return H.render_template(
+    return render_template(
         "reports_crud/add_report.html", form=form, model=model,
         kind=kind)
 
@@ -157,7 +159,7 @@ def edit_report(report_id):
     if request.method == 'POST':
         flash("Please fix all form errors.", "warning")
 
-    return H.render_template(
+    return render_template(
         "reports_crud/edit_report.html", form=form, model=model,
         kind=kind, report_id=report_id)
 

@@ -70,29 +70,47 @@ class SimpleAutocomplete {
   }
 
   /**
-   * @param {string} results
+   * @param {array} suggestions
    *
-   * Fill datalist with given HTML and show datalist.
+   * Make HTML <option> elements from array of string suggestions and add to datalist.
    */
-  set datalist(results) {
+  showSuggestions(suggestions) {
     // If nothing to display hide datalist.
-    if (!results) this._datalistOuter.style.display = 'none';
+    if (suggestions.length === 0) this._datalistOuter.style.display = 'none';
     else {
-      this._datalist.innerHTML = results;
+      // Make HTML string for options from suggestions array.
+      const suggestionsHTML = suggestions.reduce((acc, el) => {
+        return `${acc}<option value="${el}">${el}</option>`;
+      }, '');
+      this._datalist.innerHTML = suggestionsHTML;
       this._datalistOuter.style.display = 'block';
     }
   }
 
   /**
-   * @param {array} results
+   * @param {string} options
+   *
+   * Fill datalist with given HTML and show datalist.
+   */
+  set datalist(options) {
+    // If nothing to display hide datalist.
+    if (!options) this._datalistOuter.style.display = 'none';
+    else {
+      this._datalist.innerHTML = options;
+      this._datalistOuter.style.display = 'block';
+    }
+  }
+
+  /**
+   * @param {array} options
    *
    * Fill datalist with given DOM elements and show datalist.
    */
-  set datalistElements(results) {
+  set datalistElements(options) {
     // If nothing to display hide datalist.
-    if (results.length === 0) this._datalistOuter.style.display = 'none';
+    if (options.length === 0) this._datalistOuter.style.display = 'none';
     else {
-      this._datalist.append(...results);
+      this._datalist.append(...options);
       this._datalistOuter.style.display = 'block';
     }
   }
@@ -210,7 +228,7 @@ class SimpleAutocomplete {
     // Must click <option> with value set.
     if (!e.target.value) return;
     this.closeDatalist();
-    this.associatedInput.value = e.target.value;
+    this.associatedInput.value = e.target.innerText;
     this._value = e.target.value;
     if (this.callback) this.callback();
   }

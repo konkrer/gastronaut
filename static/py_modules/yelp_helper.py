@@ -243,7 +243,8 @@ def no_alcohol():
 
     new_list[0] = ('All', 'restaurants,food')
 
-    bad_list = ['bars', 'breweries', 'cocktailbars', 'divebars', 'wineries']
+    bad_list = ['bars', 'breweries', 'cocktailbars',
+                'divebars', 'wine_bars', 'wineries']
 
     return [r for r in new_list if r[1] not in bad_list]
 

@@ -7,6 +7,8 @@ from static.py_modules.decorators import add_user_to_g, login_required
 from static.py_modules.yelp_helper import first_letters, get_yelp_categories
 from static.py_modules.helper_functions import HelperFunctions as H
 
+render_template = H.render_template
+
 main_views_b_p = Blueprint('main_views', __name__, template_folder='templates')
 
 
@@ -29,7 +31,7 @@ def index():
 
     lat, lng = H.get_coords_from_IP_address(request)
 
-    return H.render_template(
+    return render_template(
         'main_views/index.html',
         YELP_CATEGORIES=get_yelp_categories(),
         first_letters=first_letters,
@@ -74,7 +76,7 @@ def mission_control():
 
     missions.sort(key=lambda x: x.name.lower())
 
-    return H.render_template(
+    return render_template(
         'main_views/mission_control.html', missions=missions)
 
 
@@ -90,8 +92,8 @@ def missions():
     else:
         missions = Mission.search(query_params)
 
-    return H.render_template('main_views/missions.html', missions=missions,
-                             form_data=query_params)
+    return render_template('main_views/missions.html', missions=missions,
+                           form_data=query_params)
 
 
 @main_views_b_p.route('/missions/<mission_id>')
@@ -106,8 +108,8 @@ def mission_detail(mission_id):
 
     user = mission.author
 
-    return H.render_template('main_views/mission.html', missions=[mission],
-                             user=user)
+    return render_template('main_views/mission.html', missions=[mission],
+                           user=user)
 
 
 @main_views_b_p.route('/reports')
@@ -122,8 +124,8 @@ def mission_reports():
     else:
         reports = Report.search(query_params)
 
-    return H.render_template('main_views/reports.html', reports=reports,
-                             form_data=query_params)
+    return render_template('main_views/reports.html', reports=reports,
+                           form_data=query_params)
 
 
 @main_views_b_p.route('/reports/business/<business_id>')
@@ -141,5 +143,5 @@ def business_reports_detail(business_id):
                     'state': business.state, 'country': business.country,
                     'sort_by': 'recent'}
 
-    return H.render_template('main_views/reports.html', reports=reports,
-                             form_data=query_params)
+    return render_template('main_views/reports.html', reports=reports,
+                           form_data=query_params)
