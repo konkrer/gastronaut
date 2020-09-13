@@ -79,10 +79,10 @@ class SimpleAutocomplete {
     if (suggestions.length === 0) this._datalistOuter.style.display = 'none';
     else {
       // Make HTML string for options from suggestions array.
-      const suggestionsHTML = suggestions.reduce((acc, el) => {
+      const optionsHTML = suggestions.reduce((acc, el) => {
         return `${acc}<option value="${el}">${el}</option>`;
       }, '');
-      this._datalist.innerHTML = suggestionsHTML;
+      this._datalist.innerHTML = optionsHTML;
       this._datalistOuter.style.display = 'block';
     }
   }

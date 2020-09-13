@@ -65,10 +65,13 @@ class CardsModalsFactory {
   }
 
   //
-  // Report error of api call to user.
+  // Report error of Yelp api call to user.
   //
-  errorCard(data) {
-    alert(`${data.error.code}, ${data.error.description}`);
+  errorCard(error) {
+    if (error.code && error.description)
+      alert(`${error.code}, ${error.description}`);
+    else if (error.message) alert(error.message);
+    else alert("Something's not quite right... Please try again later.");
   }
 
   //

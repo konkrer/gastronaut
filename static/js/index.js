@@ -100,16 +100,16 @@ class IndexSearchLogic {
     if (useOffset) queryData += `&offset=${this.offset * 50}`;
     // Axios get search endpoint with query data
     try {
-      var data = await axios.get(`/v1/search?${queryData}`);
+      var resp = await axios.get(`/v1/search?${queryData}`);
     } catch (error) {
       alert(`Yelp API Error ${error.message}`);
       return false;
     }
-    if (data.data.error) {
-      CardsModalsFactoryObj.errorCard(data.data);
+    if (resp.data.error) {
+      CardsModalsFactoryObj.errorCard(resp.data.error);
       return false;
     }
-    return data;
+    return resp;
   }
 
   //

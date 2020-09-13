@@ -57,7 +57,7 @@ def search_yelp():
                            params=params, headers=headers)
     except Exception as e:
         H.error_logging(e)
-        return jsonify({'error': repr(e)})
+        return jsonify({'error': {'message': repr(e)}})
 
     return res.json()
 
