@@ -184,7 +184,7 @@ class ApiFuncts {
       } catch (err) {
         Sentry.captureException(err);
         $('.spinner-zone').hide();
-        alert('Yelp Api Error. Please try again. E1');
+        alert(`Yelp Api Error. Please try again. - ${err.message}`);
         return;
       }
       if (!resp || resp.data.error) {
@@ -194,7 +194,9 @@ class ApiFuncts {
           }`
         );
         $('.spinner-zone').hide();
-        alert('Yelp Api Error. Please try again. E2');
+        alert(
+          `Yelp Api Error. Please try again. - ${resp ? resp.data.error : ''}`
+        );
         return;
       }
       business_result_data = resp.data;
