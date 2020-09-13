@@ -278,11 +278,9 @@ a.first-letter.active {
   margin-right: 50px;
 }
 
-.no-results {
-  background: url('https://media.giphy.com/media/Txh1UzI7d0aqs/giphy.gif');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+.my-card .my-card.no-results {
+  height: 60%;
+  width: 100%;
 }
 
 .my-card-img-div {

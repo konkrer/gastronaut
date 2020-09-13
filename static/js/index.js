@@ -100,16 +100,16 @@ class IndexSearchLogic {
     if (useOffset) queryData += `&offset=${this.offset * 50}`;
     // Axios get search endpoint with query data
     try {
-      var resp = await axios.get(`/v1/search?${queryData}`);
+      var { data } = await axios.get(`/v1/search?${queryData}`);
     } catch (error) {
       alert(`Yelp API Error ${error.message}`);
       return false;
     }
-    if (resp.data.error) {
-      CardsModalsFactoryObj.errorCard(resp.data.error);
+    if (data.error) {
+      CardsModalsFactoryObj.errorCard(data.error);
       return false;
     }
-    return resp;
+    return data;
   }
 
   //
@@ -141,7 +141,7 @@ class IndexSearchLogic {
       // unless transactions have changed.
       // NOTE: ["delivery", "pickup"] text changes places in
       // JSON from Yelp. Equality test only effective sometimes.
-      const jsonData = JSON.stringify(data.data);
+      const jsonData = JSON.stringify(data);
       if (jsonData === lastData) data = null;
       // save new data in local storage
       else localStorage.setItem('currData', jsonData);
@@ -152,7 +152,7 @@ class IndexSearchLogic {
 
     IndexAnimationsObj.justSearchedYelp = true;
     // If no new data use last data.
-    var data = data ? data.data : JSON.parse(lastData);
+    var data = data || JSON.parse(lastData);
 
     this.mapAndAddCardsForNewApiCall(data);
   }
@@ -315,10 +315,10 @@ class IndexSearchLogic {
     const data = await this.searchApiCall(true);
     if (data === false) return;
     // Update remaining results.
-    this.resultsRemaining -= data.data.businesses.length;
+    this.resultsRemaining -= data.businesses.length;
     // Add cards.
     $('.card-track-inner').append(
-      CardsModalsFactoryObj.getCardsHtml(data.data.businesses)
+      CardsModalsFactoryObj.getCardsHtml(data.businesses)
     );
     IndexAnimationsObj.setCardScrollTrackerMapper();
     // Get first added next card to move misaligned cards up. (hacky bug fix)

@@ -43,10 +43,12 @@ class CardsModalsFactory {
   //
   getNoResultsCard() {
     return `
-    <div class="my-card flx-std no-results"
-    >
-      <div class="text-warning brand-outline txt-xxl">
-      No Results!
+    <div class="my-card flx-std bg-transparent">
+      <div class="my-card no-results flx-std bg-light"
+      >
+        <div class="text-warning brand-outline txt-xxl">
+        No Results!
+        </div>
       </div>
     </div>
     `;
