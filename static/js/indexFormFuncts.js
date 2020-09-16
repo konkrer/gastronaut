@@ -11,7 +11,7 @@ class FormFuncts {
     this.$categoryButtons = $('#cat-btns');
 
     // Keyup timer for autosearch and keyup autosearch delay.
-    this.keyupTimer = null;
+    this.onchangeTimer = null;
     this.autoSearchDelay = 1000;
     // Used to reset form when passed into setForm method.
     this.defaultFormState = [
@@ -244,8 +244,10 @@ class FormFuncts {
   // Detect location button functionality. Call detectLocation.
   //
   addDetectLocationListener() {
+    const this_ = this;
     $('#detect-location').on('click', function (e) {
       $(this).children().removeClass('pulse-5');
+      clearTimeout(this_.onchangeTimer);
       Geolocation_Obj.detectLocation(e);
     });
   }
@@ -275,7 +277,7 @@ class FormFuncts {
   addFormChangeListener() {
     const this_ = this;
     this.$mainForm.on('change', '.onChange', function (e) {
-      clearTimeout(this_.keyupTimer);
+      clearTimeout(this_.onchangeTimer);
       // if the form change is the checking of "open at"
       // but no datetime entered yet return.
       if (
@@ -285,7 +287,7 @@ class FormFuncts {
       )
         return;
       $('.spinner-zone').show();
-      this_.keyupTimer = setTimeout(function () {
+      this_.onchangeTimer = setTimeout(function () {
         IndexSearchObj.searchYelp();
       }, this_.autoSearchDelay);
     });
@@ -299,13 +301,13 @@ class FormFuncts {
   addCategoryClickListener() {
     const this_ = this;
     this.$categoryButtons.on('click', 'button', function (e) {
-      clearTimeout(this_.keyupTimer);
+      clearTimeout(this_.onchangeTimer);
       $('.spinner-zone').show();
       IndexAnimationsObj.category = e.target.value;
       $('.cat-display').text(e.target.textContent);
       this_.turnActiveOffCatBtns();
       $(this).addClass('active');
-      this_.keyupTimer = setTimeout(function () {
+      this_.onchangeTimer = setTimeout(function () {
         IndexSearchObj.searchYelp();
       }, this_.autoSearchDelay);
     });
