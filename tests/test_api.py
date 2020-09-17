@@ -2,7 +2,7 @@
 
 from types import SimpleNamespace
 from unittest import TestCase
-from app import app, get_coords_from_IP_address
+from app import app, H
 from models import (db, User, Mission, Business, MissionBusiness,
                     Report, UserMission)
 
@@ -80,7 +80,7 @@ class APIViewTests(TestCase):
 
         with self.client as c:
             resp = c.get(
-                '/v1/business_detail/iUockw0CUssKZLyoGJYEXA?name=Cuisine+of+Nepal&latlng=37.74097,-122.42318')
+                '/v1/business_detail/iUockw0CUssKZLyoGJYEXA?name=Cuisine+of+Nepal&latlng=37.74097,-122.42318')  # noqa e501
             data = resp.get_json()
 
         self.assertEqual(resp.status_code, 200)
@@ -94,7 +94,7 @@ class APIViewTests(TestCase):
             environ={'HTTP_X_FORWARDED_FOR': '127.0.0.1'}, remote_addr=1
         )
 
-        lat, lng = get_coords_from_IP_address(fake_request)
+        lat, lng = H.get_coords_from_IP_address(fake_request)
 
         float(lat)
         float(lng)

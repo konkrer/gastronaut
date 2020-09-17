@@ -31,7 +31,7 @@ class GeolocationLogic {
   //
   detectLocation() {
     if ('geolocation' in navigator) {
-      $('.spinner-zone').show();
+      $('.spinner-zone').slideDown();
       // Make detect location button pulse while geolocation is happening.
       $('#detect-location').children().addClass('pulse');
       // Reset
@@ -136,7 +136,7 @@ class GeolocationLogic {
     }
     // Stop detect location button from pulsing.
     $('#detect-location').children().removeClass('pulse');
-    $('.spinner-zone').hide();
+    $('.spinner-zone').slideUp();
     // If there is previous location data use that for userMarker.
     if (Map_Obj.longitude) {
       Map_Obj.addUserMarker();

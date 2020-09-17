@@ -165,7 +165,7 @@ class ApiFuncts {
   /* Get business details from yelp and show details modal.
   */
   async getShowBusinessDetails(e) {
-    $('.spinner-zone').show();
+    $('.spinner-zone').slideDown();
     let business_result_data;
 
     const business_id = e.currentTarget.dataset.id;
@@ -183,7 +183,7 @@ class ApiFuncts {
         });
       } catch (err) {
         Sentry.captureException(err);
-        $('.spinner-zone').hide();
+        $('.spinner-zone').slideUp();
         alert(`Yelp Api Error. Please try again. - ${err.message}`);
         return;
       }
@@ -193,7 +193,7 @@ class ApiFuncts {
             resp ? resp.data.error : ''
           }`
         );
-        $('.spinner-zone').hide();
+        $('.spinner-zone').slideUp();
         alert(
           `Yelp Api Error. Please try again. - ${resp ? resp.data.error : ''}`
         );
@@ -205,7 +205,7 @@ class ApiFuncts {
         timestamp: new Date().getTime(),
       };
     }
-    $('.spinner-zone').hide();
+    $('.spinner-zone').slideUp();
     this.showDetailModal(business_result_data);
   }
 

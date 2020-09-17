@@ -234,7 +234,7 @@ class FormFuncts {
   //
   locationSearch() {
     if (this.$locationInput.val()) {
-      $('.spinner-zone').show();
+      $('.spinner-zone').slideDown();
       IndexSearchObj.searchYelp();
       this.focusBlur();
     }
@@ -261,7 +261,7 @@ class FormFuncts {
       // If user hits enter search Yelp and hide mobile keyboard with focusBlur.
       const key = e.which || e.keyCode;
       if (key == 13) {
-        $('.spinner-zone').show();
+        $('.spinner-zone').slideDown();
         const term = this_.$searchTerm.val();
         this_.keywordDisplayLogic(term);
         IndexSearchObj.searchYelp();
@@ -286,7 +286,7 @@ class FormFuncts {
         $('#open_at').val() === ''
       )
         return;
-      $('.spinner-zone').show();
+      $('.spinner-zone').slideDown();
       this_.onchangeTimer = setTimeout(function () {
         IndexSearchObj.searchYelp();
       }, this_.autoSearchDelay);
@@ -302,7 +302,7 @@ class FormFuncts {
     const this_ = this;
     this.$categoryButtons.on('click', 'button', function (e) {
       clearTimeout(this_.onchangeTimer);
-      $('.spinner-zone').show();
+      $('.spinner-zone').slideDown();
       IndexAnimationsObj.category = e.target.value;
       $('.cat-display').text(e.target.textContent);
       this_.turnActiveOffCatBtns();
@@ -344,7 +344,7 @@ class FormFuncts {
   addClearFiltersListener() {
     const this_ = this;
     $('#clear-filters').on('click', function (e) {
-      $('.spinner-zone').show();
+      $('.spinner-zone').slideDown();
       this_.setForm('default');
       this_.setFormTransactions([]);
       IndexSearchObj.searchYelp();

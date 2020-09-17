@@ -106,4 +106,5 @@ if not os.environ.get('SECRET_KEY'):
         req.headers["Pragma"] = "no-cache"
         req.headers["Expires"] = "0"
         req.headers['Cache-Control'] = 'public, max-age=0'
+
         return req

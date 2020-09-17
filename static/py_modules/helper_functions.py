@@ -8,7 +8,7 @@ import boto3
 from uuid import uuid4
 from sentry_sdk import (capture_message, capture_exception)
 from flask import (request, flash, redirect, url_for, g,
-                   render_template as r_t)
+                   make_response, render_template as r_t)
 from werkzeug.utils import secure_filename
 from models import (db, Business, Report)
 
@@ -48,7 +48,7 @@ class HelperFunctions:
         pass
 
     @classmethod
-    def get_coords_from_IP_address(self, request):
+    def get_coords_from_IP_address(cls, request):
         """Call API and geolocate IP address."""
 
         # get IP address
@@ -61,7 +61,7 @@ class HelperFunctions:
             res = requests.get(f'http://ipwhois.app/json/{ip_address}')
             data = res.json()
         except Exception as e:
-            self.error_logging(e)
+            cls.error_logging(e)
             return '', ''
 
         lat = data.get('latitude', '')
@@ -69,34 +69,39 @@ class HelperFunctions:
 
         # if API limit message.
         if data.get('message'):
-            self.message_logging(data['message'])
+            cls.message_logging(data['message'])
 
         return lat, lng
 
     @classmethod
-    def error_logging(self, e):
+    def error_logging(cls, e):
         """Log error when dev environment, sentry capture when production."""
-        if self.DEBUG:
+        if cls.DEBUG:
             logging.error(repr(e))
         else:
             capture_exception(e)
 
     @classmethod
-    def message_logging(self, message):
+    def message_logging(cls, message):
         """Log message when dev environment, sentry capture when production."""
-        if self.DEBUG:
+        if cls.DEBUG:
             logging.warning(message)
         else:
             capture_message(message)
 
     @classmethod
-    def render_template(self, *args, **kwargs):
+    def render_template(cls, *args, **kwargs):
         """Wrap render_template and add debug flag to allow JS Sentry
         initalizating only when debug is False (Production Environment).
 
-        Add view args string for next functionality.
+        Add request_full_path string for next_url functionality.
+
+        Decode cancel_url requst argument for cancel button fuctionality.
+
+        Add security headers.
         """
 
+        # convert request.args to dict to be able to alter and unpack it.
         request_args = request.args.to_dict()
 
         # Encode a request_full_path variable for next_url functionality.
@@ -104,21 +109,42 @@ class HelperFunctions:
         # request parameters query string.
         request_args['request_full_path'] = request.full_path.replace('&', ';')
 
-        # Convert cancel_url back to string with &'s inline for href cancel btn
+        # Convert cancel_url back to string with &'s inline for cancel btn href
         request_args['cancel_url'] = request_args.get(
             'cancel_url', '/').replace(';', '&')
 
-        return r_t(
-            *args, debug=bool(self.DEBUG),
-            cfdn=self.CLOUDFRONT_DOMAIN_NAME, **kwargs, **request_args)
+        # Get string HTML output from calling render_template (aliased as r_t).
+        view_html = r_t(
+            *args, debug=bool(cls.DEBUG),
+            cfdn=cls.CLOUDFRONT_DOMAIN_NAME, **kwargs, **request_args)
+
+        # Make response object, add security headers, return response.
+        return cls.make_response_add_security_headers(view_html)
 
     @classmethod
-    def next_page_logic(self, request):
+    def make_response_add_security_headers(cls, view_html):
+        """Make response from HTML string produced by render template (r_t)
+           and add security headers."""
+
+        # Make response object
+        response = make_response(view_html)
+
+        # Add security headers.
+        response.headers["Strict-Transport-Security"] = "max-age=63072000"
+        response.headers["Content-Security-Policy"] = "frame-ancestors 'self'"
+        response.headers["X-Frame-Options"] = "SAMEORIGIN"
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-XSS-Protection"] = "1; mode=block"
+
+        return response
+
+    @classmethod
+    def next_page_logic(cls, request):
         """Next page redirect with proper URL from next data."""
-        return redirect(self.next_page_url(request))
+        return redirect(cls.next_page_url(request))
 
     @classmethod
-    def next_page_url(self, request):
+    def next_page_url(cls, request):
         """Next page URL logic."""
         request_args = request.args.to_dict()
 
@@ -135,7 +161,7 @@ class HelperFunctions:
         return url_for(next_page, **request_args)
 
     @classmethod
-    def check_for_existing_report(self, mission_id, business_id):
+    def check_for_existing_report(cls, mission_id, business_id):
         """Check for an existing report with matching mission_id
         or business_id."""
 
@@ -151,7 +177,7 @@ class HelperFunctions:
         return existing_report
 
     @classmethod
-    def add_new_business(self, business_id, data):
+    def add_new_business(cls, business_id, data):
         """Add new business logic for add report."""
 
         model = Business.create(
@@ -162,13 +188,13 @@ class HelperFunctions:
         try:
             db.session.commit()
         except Exception as e:
-            self.error_logging(e)
+            cls.error_logging(e)
             return False
 
         return model
 
     @classmethod
-    def check_file_upload_logic(self, form, relevant_data):
+    def check_file_upload_logic(cls, form, relevant_data):
         """File upload logic for storing files on S3."""
 
         f, path = None, ''
@@ -186,13 +212,13 @@ class HelperFunctions:
                 filename = secure_filename(f.filename)
                 path = f'static/uploads/reports/{unique_prefix}_{filename}'
                 relevant_data['photo_file'] = \
-                    f'{self.CLOUDFRONT_DOMAIN_NAME}/{path}'
+                    f'{cls.CLOUDFRONT_DOMAIN_NAME}/{path}'
                 f.seek(0)
 
         return form, relevant_data, f, path
 
     @classmethod
-    def check_file_upload_logic_w_clear(self, form):
+    def check_file_upload_logic_w_clear(cls, form):
         """File upload logic for storing files on S3
         with clear image functionality."""
 
@@ -223,7 +249,7 @@ class HelperFunctions:
                 unique_prefix = uuid4().hex
                 filename = secure_filename(f.filename)
                 path = f'static/uploads/reports/{unique_prefix}_{filename}'
-                form.photo_file.data = f'{self.CLOUDFRONT_DOMAIN_NAME}/{path}'
+                form.photo_file.data = f'{cls.CLOUDFRONT_DOMAIN_NAME}/{path}'
                 f.seek(0)
 
                 # If photo file was previously uploaded
@@ -234,9 +260,9 @@ class HelperFunctions:
         return form, f, path, old_file
 
     @classmethod
-    def s3_delete(self, url):
+    def s3_delete(cls, url):
         """Delete resource at URL location."""
 
-        s3_path = url.replace(f'{self.CLOUDFRONT_DOMAIN_NAME}/', '')
-        resp = self.S3_RESOURCE.Object(self.S3_BUCKET_NAME, s3_path).delete()
+        s3_path = url.replace(f'{cls.CLOUDFRONT_DOMAIN_NAME}/', '')
+        resp = cls.S3_RESOURCE.Object(cls.S3_BUCKET_NAME, s3_path).delete()
         return resp

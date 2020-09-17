@@ -4,6 +4,10 @@
   font-family: 'MuseoModerno', cursive;
 }
 
+.hero-animation > div.row {
+  height: 100%;
+}
+
 .hero-animation h1 {
   font-weight: 900;
 }

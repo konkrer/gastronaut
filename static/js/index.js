@@ -43,7 +43,7 @@ class IndexSearchLogic {
   // Navbar search function.
   //
   navbarSearch() {
-    $('.spinner-zone').show();
+    $('.spinner-zone').slideDown();
     // Hide slide-out navbar menu.
     $('.navbar-collapse').removeClass('open');
     $('nav.navbar').removeClass('display-flex-important');
@@ -132,7 +132,7 @@ class IndexSearchLogic {
       var data = await this.searchApiCall();
 
       if (data === false) {
-        $('.spinner-zone').hide();
+        $('.spinner-zone').slideUp();
         FormFunctsObj.filterIndicatorCheck();
         return;
       }
@@ -161,7 +161,7 @@ class IndexSearchLogic {
   // Post search DOM manipulation.
   //
   postSearchDomManipulation(currFormState) {
-    $('.spinner-zone').hide();
+    $('.spinner-zone').slideUp();
     IndexButtonsLogicsObj.showCardTrack();
     FormFunctsObj.filterIndicatorCheck(currFormState);
   }
@@ -345,7 +345,7 @@ class IndexSearchLogic {
     IndexAnimationsObj.heroAnimation.destroy();
     $('.hero-animation').hide();
     $('.alert').hide();
-    $('.spinner-zone').show();
+    $('.spinner-zone').slideDown();
     IndexAnimationsObj.scrollCategoriesToCurrent();
     // Make sure map has loaded before searching Yelp.
     while (Map_Obj.mappyBoi === null) {
