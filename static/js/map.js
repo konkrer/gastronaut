@@ -45,7 +45,7 @@ class MapObj {
         maxZoom: 18,
       },
       {
-        padding: { top: 80, bottom: 40, left: 200, right: 200 },
+        padding: { top: 80, bottom: 80, left: 200, right: 200 },
         maxZoom: 18,
       },
     ];
@@ -173,8 +173,8 @@ class MapObj {
   // Map list of business and fit bounds for outliers.
   //
   mapArrayAndFitBounds(array) {
-    this.fitBoundsArray(array);
     this.mapArray(array);
+    this.fitBoundsArray(array);
   }
 
   //
@@ -190,8 +190,8 @@ class MapObj {
       // Add user coords is user coords.
       if (this.longitude)
         newArray.push({ longitude: this.longitude, latitude: this.latitude });
-      // Add home coords if home coords.
-      if (this.restCoords)
+      // Add home coords if currently navigating home.
+      if (MissionControlNavigationObj.currentRestMarkerIdx === -1)
         newArray.push({
           longitude: this.restCoords[0],
           latitude: this.restCoords[1],
@@ -531,7 +531,7 @@ class MapObj {
           coordinates: [this.longitude, this.latitude],
           approach: 'curb',
           bearing: this.heading ? [this.heading, 45] : null,
-          radius: 30,
+          radius: 40,
         },
         {
           coordinates: this.restCoords,

@@ -146,7 +146,7 @@ class MissionControl {
     // Don't show business list on phones.
     if (Map_Obj.isMobileScreen()) $('#businesses-list').removeClass('show');
     else $('#businesses-list').addClass('show');
-    // Set currentRestMarkerIdx to be index for first business in list marker.
+    // Set currentRestMarkerIdx to be index for first business in list.
     MissionControlNavigationObj.currentRestMarkerIdx = 0;
     // If navigation mode active.
     if (Map_Obj.profile) {
