@@ -27,7 +27,8 @@
   >
   <!-- Password field. Password regex from: https://stackoverflow.com/a/21456918/11164558 -->
   {{field(class_="form-control", minlength=8, maxlength=60,
-  pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{4,}$") }}
+  pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{4,}$",
+  autocomplete="current-password") }}
   <!-- If textarea field -->
   {% elif field.type == "TextAreaField" %}
   <!-- If user bio field -->
