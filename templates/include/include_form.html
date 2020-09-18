@@ -12,12 +12,13 @@
   {% if field.type == "EmailField" %}
   <!-- Email field. Email regex from: https://regular-expressions.mobi/email.html?wlr=1 -->
   {{field(class_="form-control", minlength=5, maxlength=320,
-  pattern="[a-z0-9!#$%&'*+/=?^_‘{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_‘{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
-  }}
+  pattern="[a-z0-9!#$%&'*+/=?^_‘{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_‘{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?",
+  autocomplete="email") }}
   <!-- If username field -->
   {% elif field.name == "username" %}
   <!-- Username field -->
-  {{field(class_="form-control", minlength=2, maxlength=30) }}
+  {{field(class_="form-control", minlength=2, maxlength=30,
+  autocomplete="username") }}
   <!-- If password field. -->
   {% elif field.type == "PasswordField" %}
   <span
