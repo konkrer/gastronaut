@@ -89,13 +89,13 @@ class GeolocationLogic {
         }
         // Show new route.
         Map_Obj.showDirectionsAndLine();
-        $('spinner-zone').hide();
+        $('spinner-zone').slideUp();
         // Else search Yelp.
       } else IndexSearchObj.searchYelp();
     }
     // Else on mission-control page.
     else {
-      $('spinner-zone').hide();
+      $('spinner-zone').slideUp();
       MissionControlNavigationObj.startLocationSuccess();
     }
     // Close suggestions datalist.

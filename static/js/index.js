@@ -118,6 +118,7 @@ class IndexSearchLogic {
   async searchYelp() {
     // Make sure there is a location to search.
     if (!Map_Obj.latitude && FormFunctsObj.$locationInput.val() === '') {
+      $('.spinner-zone').slideUp();
       alert('Enter a location or press detect location.');
       return;
     }
