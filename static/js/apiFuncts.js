@@ -56,8 +56,9 @@ class ApiFuncts {
           .children()
           .children()
           .each(function () {
-            $(this).toggle();
+            $(this).toggleClass('d-none');
           });
+        // Update number of likes.
         $(this).next().text(resp.data.likes);
       }
     });
@@ -116,7 +117,7 @@ class ApiFuncts {
             .children()
             .children()
             .each(function (idx) {
-              $(this).toggle();
+              $(this).toggleClass('d-none');
             });
           // Update number of likes.
           $el.next().text(resp.data.likes);

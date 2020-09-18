@@ -295,7 +295,6 @@ class ButtonsLogics {
         $(this).toggleClass('d-inline-block');
       });
     $('.directionsClipboard').toggleClass('pr-sm-1');
-    $('.directionsHeader').toggle();
     // flip left/right arrow
     $('.directionsCaret')
       .children()
@@ -303,7 +302,6 @@ class ButtonsLogics {
         $(this).toggle();
       });
     $('#directions-panel').toggleClass('directionsShow');
-    $('#directions-text').toggle();
   }
 
   //

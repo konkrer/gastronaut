@@ -245,7 +245,7 @@ class CardsModalsFactory {
               >
                 ${this.funct.makeReviewStarsWithHalves(
                   rating
-                )} <span style="position: absolute;" class="ml-1">(${review_count})</span>
+                )} <span class="ml-1 p-absolute">(${review_count})</span>
               </li>
               <li class="list-group-item bg-transparent card-text-noHover">
                 ${this.funct.makePriceDollars(price)}
@@ -743,9 +743,9 @@ class CardModalTextHtmlFunctions {
           ${
             liked
               ? `<i class="fas fa-thumbs-up fa-lg"></i>
-                 <i class="far fa-thumbs-up fa-lg" style="display: none;"></i>`
+                 <i class="far fa-thumbs-up fa-lg d-none" ></i>`
               : `<i class="far fa-thumbs-up fa-lg"></i>
-                 <i class="fas fa-thumbs-up fa-lg" style="display: none;"></i>`
+                 <i class="fas fa-thumbs-up fa-lg d-none" ></i>`
           }
         </span>
       </a>

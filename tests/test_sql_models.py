@@ -198,7 +198,7 @@ class ReportModelTestCase(TestCase):
 
         self.report = Report.create(
             user_id=self.user.id, business_id='iUockw0CUssKZLyoGJYEXA',
-            text='Best dern nipplease fud i eva had!')
+            text='Best nepalese food I ever had!')
 
         db.session.commit()
 
@@ -237,7 +237,7 @@ class ReportModelTestCase(TestCase):
 
         hit = Report.search({
             'city': 'san francisco', 'state': 'ca',
-            'keywords': 'fud', 'country': 'us', 'sort_by': 'recent'})
+            'keywords': 'food', 'country': 'us', 'sort_by': 'recent'})
 
         self.assertListEqual([self.report], hit)
 

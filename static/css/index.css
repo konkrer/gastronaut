@@ -360,6 +360,7 @@ a.first-letter.active {
 .map-routing .reset,
 .map-routing .home {
   margin-top: 15px;
+  display: none;
 }
 
 .map-routing .active {
@@ -386,6 +387,10 @@ a.first-letter.active {
   transform: translate(240px, -222px);
 }
 
+#directions-panel {
+  display: none;
+}
+
 .map-track #directions-panel {
   font-size: 18px;
   width: 30px;
@@ -405,6 +410,14 @@ a.first-letter.active {
 
 .directionsCaret {
   width: 30px;
+}
+
+.directionsCaret i.fa-caret-left {
+  display: none;
+}
+
+.directionsToggle > span {
+  display: none;
 }
 
 #directions-text {
@@ -480,6 +493,10 @@ a.first-letter.active {
 /* for tips modal */
 .tip-label {
   width: 140px;
+}
+
+.tips-icon-legend {
+  height: 60px;
 }
 
 a:hover {

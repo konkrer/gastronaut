@@ -6,15 +6,7 @@
       async
       src="https://www.googletagmanager.com/gtag/js?id=UA-177276700-1"
     ></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag('js', new Date());
-
-      gtag('config', 'UA-177276700-1');
-    </script>
+    <script src="/static/js/googleLoginInit.js"></script>
 
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -64,12 +56,7 @@
       crossorigin="anonymous"
     ></script>
     {% if not debug %}
-    <script>
-      Sentry.init({
-        dsn:
-          'https://9d6aca2c56384459925ec4ecbf58afee@o415488.ingest.sentry.io/5306632',
-      });
-    </script>
+    <script src="/static/js/sentryInit.js"></script>
     {% endif %}
     <script
       src="https://kit.fontawesome.com/5c45c2d894.js"
@@ -109,9 +96,11 @@
     {% block head %}{% endblock %}
   </head>
   <body>
-    <div class="spinner-zone flx-std rounded-bottom" style="display: none">
-      <div class="spinner-border txt-green" role="status">
-        <span class="sr-only">Loading...</span>
+    <div class="spinner-zone rounded-bottom">
+      <div class="flx-std">
+        <div class="spinner-border txt-green" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
       </div>
     </div>
     <div class="preloader-div flx-std">

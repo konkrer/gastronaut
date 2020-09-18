@@ -166,8 +166,10 @@ class MissionControlHtmlFactory {
   //
   showLikes(data) {
     const icon = data.user_liked
-      ? '<i class="fas fa-thumbs-up fa-lg mr-1"></i><i class="far fa-thumbs-up fa-lg mr-1" style="display: none;"></i>'
-      : '<i class="far fa-thumbs-up fa-lg mr-1"></i><i class="fas fa-thumbs-up fa-lg mr-1" style="display: none;"></i>';
+      ? `<i class="fas fa-thumbs-up fa-lg mr-1"></i>
+         <i class="far fa-thumbs-up fa-lg mr-1 d-none" ></i>`
+      : `<i class="far fa-thumbs-up fa-lg mr-1">
+         </i><i class="fas fa-thumbs-up fa-lg mr-1 d-none" ></i>`;
     $('#likes-zone').html(`<span>${icon}</span>`);
     $('#likes-zone').next().text(data.likes);
     // if user is not editor allow liking/un-liking.

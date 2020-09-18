@@ -17,21 +17,13 @@
 
 <main>
   {% block main %}
-  <div
-    id="main-hero"
-    class=""
-    style="background: url({{user.get_banner}}); background-position: center; background-size: cover;"
-  ></div>
+  <div id="main-hero" data-url="{{user.get_banner}}"></div>
   <div class="middle-gap"></div>
   <div class="container">
     <div class="row justify-content-end mb-5">
       <div class="col-12 col-sm-3 avatar-col text-center">
         <div class="sticky-profile">
-          <div
-            style="background: url('{{ user.get_avatar }}'); background-position: center;
-              background-size: cover;"
-            id="profile-avatar"
-          ></div>
+          <div id="profile-avatar" data-url="{{ user.get_avatar }}"></div>
           <div class="">
             <h4
               id="sidebar-username"

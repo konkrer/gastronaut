@@ -130,11 +130,13 @@ class HelperFunctions:
         response = make_response(view_html)
 
         # Add security headers.
-        response.headers["Strict-Transport-Security"] = "max-age=63072000"
-        response.headers["Content-Security-Policy"] = "frame-ancestors 'self'"
-        response.headers["X-Frame-Options"] = "SAMEORIGIN"
-        response.headers["X-Content-Type-Options"] = "nosniff"
-        response.headers["X-XSS-Protection"] = "1; mode=block"
+        if not cls.DEBUG:
+            response.headers["Strict-Transport-Security"] = "max-age=63072000"
+            response.headers["Content-Security-Policy"] = "frame-ancestors 'self'"  # noqa e501
+            response.headers["X-Frame-Options"] = "SAMEORIGIN"
+            response.headers["X-Content-Type-Options"] = "nosniff"
+            response.headers["X-XSS-Protection"] = "1; mode=block"
+            response.headers["Content-Security-Policy"] = "script-src 'self' https://www.googletagmanager.com https://browser.sentry-cdn.com https://kit.fontawesome.com https://cdn.jsdelivr.net https://stackpath.bootstrapcdn.com https://code.jquery.com https://cdn.jsdelivr.net https://apis.google.com https://api.mapbox.com https://unpkg.com https://cdn.rawgit.com https://www.google-analytics.com; worker-src 'self'"  # noqa e501
 
         return response
 

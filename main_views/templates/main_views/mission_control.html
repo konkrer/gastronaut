@@ -8,10 +8,6 @@
     name="description"
     content="Missions control for Gastronaut missions."
   />
-  <meta
-    name="google-site-verification"
-    content="YPEc32npJcPQVaehmJQNayHLdC8eXBWeOUzEuHGQyts"
-  />
   <link rel="stylesheet" href="../static/css/common1.css" />
   <link rel="stylesheet" href="../static/css/index.css" />
   <link rel="stylesheet" href="../static/css/index_animations.css" />
@@ -33,13 +29,9 @@
 
 <main>
   {% block main %}
-  <div id="map" style="position: absolute">
+  <div id="map">
     <script src="../static/js/map.js"></script>
-    <script>
-      window.addEventListener('load', () =>
-        Map_Obj.renderMap([-85, 26.8], 2.5)
-      );
-    </script>
+    <script src="/static/js/initMapMissionControl.js"></script>
   </div>
   {% include '/include/include_nav_btns.html' %}
   <div
@@ -143,11 +135,7 @@
             </div>
           </a>
         </div>
-        <div
-          id="directions-panel"
-          class="border-bottom border-light"
-          style="display: none"
-        >
+        <div id="directions-panel" class="border-bottom border-light">
           <a
             class="font-weight-bold"
             data-toggle="collapse"
@@ -341,8 +329,7 @@
             the screen and immediately sliding up or down changes the tilt.
           </p>
           <div
-            class="flx-row-around width-100 bg-dark rounded my-5"
-            style="height: 50px"
+            class="flx-row-around width-100 bg-dark rounded my-5 tips-icon-legend"
           >
             <div class="bg-trans-b rounded p-2 border border-secondary">
               <i class="fas fa-angle-double-left fa-lg"></i>

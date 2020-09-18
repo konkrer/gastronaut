@@ -22,6 +22,22 @@ body {
   padding-right: 0px !important;
 }
 
+.spinner-zone {
+  position: fixed;
+  display: none;
+  top: 0;
+  width: 50px;
+  left: calc(50vw - 25px);
+  height: 53px;
+  z-index: 10000;
+  background-color: rgba(0, 0, 0, 0.76);
+}
+
+.spinner-zone > div {
+  height: 100%;
+  width: 100%;
+}
+
 .navbar {
   font-family: 'MuseoModerno', cursive;
   font-size: 0.8rem;
@@ -316,6 +332,10 @@ body {
 
 .p-fixed {
   position: fixed;
+}
+
+.p-absolute {
+  position: absolute;
 }
 
 .opacity-8 {

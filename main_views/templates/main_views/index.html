@@ -50,6 +50,7 @@
 
 <main>
   {% block main %}
+
   <div class="hero-animation">
     <div class="row justify-content-around align-items-center">
       <header class="col-8 col-md-7 col-lg-8 col-xl-7 text-center">
@@ -141,16 +142,10 @@
 
         <div class="map-track border-top border-secondary">
           <div id="map" class="bg-map-red">
-            <script>
-              window.addEventListener('load', () => Map_Obj.renderMap());
-            </script>
+            <script src="/static/js/initMapIndex.js"></script>
           </div>
           <div class="directions-col">
-            <div
-              class="bg-trans-b2"
-              style="display: none"
-              id="directions-panel"
-            >
+            <div class="bg-trans-b2" id="directions-panel">
               <div
                 class="directionsToggle hover-orange hoverOpaque h-100"
                 data-toggle="tooltip"
@@ -159,7 +154,7 @@
                 <div>
                   <div class="flx-std pt-1 directionsCaret">
                     <i class="fas fa-caret-right"></i>
-                    <i class="fas fa-caret-left" style="display: none"></i>
+                    <i class="fas fa-caret-left"></i>
                   </div>
                 </div>
                 <div>
@@ -167,15 +162,11 @@
                     <i class="fas fa-clipboard-list fa-lg"></i>
                   </div>
                 </div>
-                <span class="pl-1 pl-sm-2 pb-lg-2 pt-1" style="display: none"
+                <span class="pl-1 pl-sm-2 pb-lg-2 pt-1"
                   >Directions <span class="profileDisplay"></span
                 ></span>
               </div>
-              <div
-                id="directions-text"
-                class="pt-3 hoverBgWhite"
-                style="display: none"
-              >
+              <div id="directions-text" class="pt-3 hoverBgWhite">
                 <ol></ol>
               </div>
             </div>
@@ -214,14 +205,6 @@
   '/include/include_signup_login_modal.html' %} {% include
   '/include/include_business_detail_modal.html' %}
   <!-- END MODALS -->
-  <script>
-    // remove "Open At" option when no browser datetime input.
-    if (!Modernizr.inputtypes['datetime-local']) {
-      document.querySelectorAll('.openAt').forEach(div => {
-        div.style.display = 'none';
-      });
-    }
-  </script>
-  <script></script>
+  <script src="/static/js/modernizrDatetimeCheck.js"></script>
   {% endblock %}
 </main>

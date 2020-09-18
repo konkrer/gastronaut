@@ -113,4 +113,29 @@ class StickyScroll {
   }
 }
 
+/**
+ * Class to load background images for main-hero and user profile-avatar.
+ */
+class LoadBackgroundImgs {
+  constructor() {}
+
+  static setBanner() {
+    const bannerUrl = $('#main-hero').data('url');
+    document.documentElement.style.setProperty(
+      '--banner-url',
+      `url("${bannerUrl}")`
+    );
+  }
+
+  static setProfile() {
+    const profileUrl = $('#profile-avatar').data('url');
+    document.documentElement.style.setProperty(
+      '--profile-url',
+      `url("${profileUrl}")`
+    );
+  }
+}
+
+LoadBackgroundImgs.setBanner();
+LoadBackgroundImgs.setProfile();
 const StickyScrollObj = new StickyScroll();
