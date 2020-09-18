@@ -136,7 +136,7 @@ class HelperFunctions:
             response.headers["X-Frame-Options"] = "SAMEORIGIN"
             response.headers["X-Content-Type-Options"] = "nosniff"
             response.headers["X-XSS-Protection"] = "1; mode=block"
-            response.headers["Content-Security-Policy"] = "script-src 'self' https://www.googletagmanager.com https://browser.sentry-cdn.com https://kit.fontawesome.com https://cdn.jsdelivr.net https://stackpath.bootstrapcdn.com https://code.jquery.com https://cdn.jsdelivr.net https://apis.google.com https://api.mapbox.com https://unpkg.com https://cdn.rawgit.com https://www.google-analytics.com; worker-src 'self' blob:; object-src 'self'"  # noqa e501
+            response.headers["Content-Security-Policy"] = "script-src 'self' https://www.googletagmanager.com https://browser.sentry-cdn.com https://kit.fontawesome.com https://cdn.jsdelivr.net https://stackpath.bootstrapcdn.com https://code.jquery.com https://cdn.jsdelivr.net https://apis.google.com https://api.mapbox.com https://unpkg.com https://cdn.rawgit.com https://www.google-analytics.com; worker-src 'self' blob:; object-src 'self'; frame-ancestors 'self'; base-uri 'self'; form-action 'self'"  # noqa e501
 
         return response
 
@@ -200,6 +200,7 @@ class HelperFunctions:
         """File upload logic for storing files on S3."""
 
         f, path = None, ''
+
         if form.photo_file.data:
             f = form.photo_file.data
 
@@ -220,11 +221,10 @@ class HelperFunctions:
         return form, relevant_data, f, path
 
     @classmethod
-    def check_file_upload_logic_w_clear(cls, form):
-        """File upload logic for storing files on S3
-        with clear image functionality."""
+    def check_for_clear_file(cls, form):
+        """Check if user cleared file then manually clear file."""
 
-        f, path, old_file = None, '', ''
+        old_file = ''
 
         # In case user hit clear file button clear any
         # old data and note any old file for deletion.
@@ -233,10 +233,18 @@ class HelperFunctions:
             form.photo_file.data = None
             form.photo_file.object_data = None
 
-        # Else if photo file is a file object and not string URL set
+        return old_file
+
+    @classmethod
+    def check_file_upload_logic_w_clear(cls, form, old_file):
+        """File upload logic for storing files on S3."""
+
+        f, path = None, ''
+
+        # If photo file is a file object and not string URL set
         # form.photo_file.data to be an appropriate S3 url string.
         # Save file object as f.
-        elif form.photo_file.data and not isinstance(
+        if not old_file and form.photo_file.data and not isinstance(
             form.photo_file.data, str
         ):
             f = form.photo_file.data

@@ -129,9 +129,13 @@ def edit_report(report_id):
     report = Report.query.get_or_404(report_id)
     form = EditReportForm(obj=report)
 
-    if form.validate_on_submit():
+    # Check if file was cleared and remove from form to pass validation.
+    old_file = H.check_for_clear_file(form)
 
-        form, f, path, old_file = H.check_file_upload_logic_w_clear(form)
+    if form.validate_on_submit():
+        # File upload handling logic.
+        form, f, path, old_file = H.check_file_upload_logic_w_clear(
+            form, old_file)
 
         form.populate_obj(report)
 
