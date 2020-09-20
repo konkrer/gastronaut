@@ -22,6 +22,7 @@ class MapObj {
     this.directionsCache = {};
     this.profile = null;
     this.changedProfile = true;
+    this.jitterPrecision = 0.00002; // Coords must change more that this to warrant new heading.
     // options
     this.markerOptions = [
       { color: '#00ff26' },
@@ -358,7 +359,7 @@ class MapObj {
   //
   flyToUser(lng, lat, heading) {
     // Make first update right away to zoom into user at active following navigation start.
-    if (!Geolocation_Obj.madeFirstUpdate || this.warrantsNewHeading(lng, lat)) {
+    if (!Geolocation_Obj.madeFirstUpdate || this.warrantsGPSUpdate(lng, lat)) {
       this.mappyBoi.flyTo({
         center: [this.longitude, this.latitude],
         essential: true,
@@ -377,11 +378,10 @@ class MapObj {
   // Check if user has moved enough to warrant camera zoom
   // and heading adjust for flyToUser method.
   //
-  warrantsNewHeading(lng, lat) {
-    const precision = 0.000015;
+  warrantsGPSUpdate(lng, lat) {
     if (
-      Math.abs(this.longitude - lng) >= precision ||
-      Math.abs(this.latitude - lat) >= precision
+      Math.abs(this.longitude - lng) >= this.jitterPrecision ||
+      Math.abs(this.latitude - lat) >= this.jitterPrecision
     )
       return true;
     return false;

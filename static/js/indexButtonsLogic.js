@@ -3,6 +3,7 @@
  */
 class ButtonsLogics {
   constructor() {
+    this.routingDelay = 1500;
     this.addMapBusinessBtnListener();
     this.addMapToggleBtnListener();
     this.addCardsToggleBtnListener();
@@ -13,9 +14,9 @@ class ButtonsLogics {
     this.addCancelNavigationListener();
   }
 
-  //
-  // Listen for card map button click and call mapBusiness.
-  //
+  /**
+   * Listen for card map button click and call mapBusiness.
+   */
   addMapBusinessBtnListener() {
     const this_ = this;
     $('.card-track-inner').on('click', '.cardMapButton', function () {
@@ -23,9 +24,9 @@ class ButtonsLogics {
     });
   }
 
-  //
-  // Show restaurant marker and fit bounds when card map button is clicked.
-  //
+  /**
+   * Show restaurant marker and fit bounds when card map button is clicked.
+   */
   mapBusiness($el) {
     const lng = $el.next().children().data('lng');
     const lat = $el.next().children().data('lat');
@@ -35,60 +36,65 @@ class ButtonsLogics {
     Map_Obj.addRestMarkerAndFitBounds([+lng, +lat], name, id);
   }
 
-  //
-  // Toggle map listener.
-  //
+  /**
+   * Toggle map listener.
+   */
   addMapToggleBtnListener() {
-    $('.showMap').on('click', this.toggleMap);
-    $('.showMap').on('dragstart', this.toggleMap);
+    $('.showMap').on('click', this.toggleMap.bind(this));
+    $('.showMap').on('dragstart', this.toggleMap.bind(this));
     document.querySelector('.showMap').addEventListener(
       'touchstart',
       e => {
         e.preventDefault();
-        this.toggleMap();
+        this.toggleMap.bind(this)();
       },
       { passive: false }
     );
   }
 
-  //
-  // Toggle map button functionality. Open and close map.
-  //
+  /**
+   * Toggle map button functionality. Open and close map.
+   */
   toggleMap() {
     // If map is open and cards are hidden show cards.
     if (Map_Obj.mapOpen && $('.card-map-zone').hasClass('cards-collapse')) {
-      $('.card-map-zone').removeClass('cards-collapse');
-      $('.card-track').show();
-      // Toggle toggle cards icon.
-      $('.toggleCards')
-        .children()
-        .each(function (index) {
-          $(this).toggleClass('d-none');
-        });
+      this.showCardTrack();
       // make sure correct cards show.
       IndexAnimationsObj.setCardsScrollLeft();
     }
-    // Toggle all map items.
-    $('.card-map-zone').toggleClass('map-collapse');
-    $('#map').toggle();
-    $('.mapBtns').toggle();
-    $('.map-toggle').toggleClass('toggle-on-map');
-    $('.map-track').toggleClass(['border-top', 'border-secondary']);
-    if ($('#directions-panel').hasClass('show'))
-      $('#directions-panel').removeClass('show').hide();
+    // Toggle all map items and border.
+    this.toggleMapDOMToggle();
+
+    // If closing map.
     if (Map_Obj.mapOpen) {
       Map_Obj.mapOpen = false;
+      // If directions panel is visible hide it.
+      if ($('#directions-panel').hasClass('show'))
+        $('#directions-panel').removeClass('show').hide();
+      // If opening map.
     } else {
       Map_Obj.mapOpen = true;
       Map_Obj.mappyBoi.resize();
+      // If app in navigation mode show directions panel.
       if ($('div.map-routing .reset').hasClass('resetHorizontal'))
         $('#directions-panel').addClass('show').fadeIn();
     }
   }
 
-  //
-  // Cards toggle listener.
-  //
+  /**
+   * Toggle map DOM toggle adjustments.
+   */
+  toggleMapDOMToggle() {
+    // Toggle all map items and border.
+    $('.card-map-zone').toggleClass('map-collapse');
+    $('#map').toggle();
+    $('.mapBtns').toggle();
+    $('.map-toggle').toggleClass('toggle-on-map');
+    $('.map-track').toggleClass(['border-top', 'border-secondary']);
+  }
+  /**
+   * Cards toggle listener.
+   */
   addCardsToggleBtnListener() {
     $('.toggleCards').on('click', this.toggleCards);
     $('.toggleCards').on('dragstart', this.toggleCards);
@@ -102,9 +108,9 @@ class ButtonsLogics {
     );
   }
 
-  //
-  // Show/hide cards functionality. Big/small map.
-  //
+  /**
+   * Show/hide cards functionality. Big/small map.
+   */
   toggleCards() {
     $('.card-map-zone').toggleClass('cards-collapse');
     $('.card-track').toggle();
@@ -120,15 +126,17 @@ class ButtonsLogics {
     }
   }
 
-  //
-  // Show cards functionality for search Yelp. If cards are hidden
-  // they will be shown after search Yelp.
-  //
+  /**
+   * Show cards functionality.
+   */
   showCardTrack() {
     if ($('.card-map-zone').hasClass('cards-collapse')) {
+      // Show cards
       $('.card-map-zone').removeClass('cards-collapse');
       $('.card-track').show();
+      // Resize map.
       Map_Obj.mappyBoi.resize();
+      // Toggle toggle cards icon.
       $('.toggleCards')
         .children()
         .each(function (index) {
@@ -137,9 +145,9 @@ class ButtonsLogics {
     }
   }
 
-  //
-  // Card business detail listeners.
-  //
+  /**
+   * Card business detail listeners.
+   */
   addBusinessDetailsListeners() {
     const this_ = this;
     $('.card-track-inner').on(
@@ -154,10 +162,10 @@ class ButtonsLogics {
     );
   }
 
-  //
-  // Get the mission-btn (add to mission) button which holds the
-  // business data and call getShowBusinessDetails.
-  //
+  /**
+   * Get the mission-btn (add to mission) button which holds the
+   * business data and call getShowBusinessDetails.
+   */
   getBtnAndShowDetails() {
     // Get the details button.
     const detailBtn = $(this).hasClass('detailsBtnCard')
@@ -181,11 +189,11 @@ class ButtonsLogics {
     ApiFunctsObj.getShowBusinessDetails(fakeE);
   }
 
-  //
-  // Listen for the write report button click in the business detail modal
-  // and call add_report with business information as parameters. This is
-  // to be able to create a new business entry in Database if necessary.
-  //
+  /**
+   * Listen for the write report button click in the business detail modal
+   * and call add_report with business information as parameters. This is
+   * to be able to create a new business entry in Database if necessary.
+   */
   addWriteReportListener() {
     $('#business-detail-modal').on('click', '.writeReport', function (e) {
       e.preventDefault();
@@ -201,16 +209,15 @@ class ButtonsLogics {
         lat: $missionBtn.data('lat'),
       };
 
-      // https://attacomsian.com/blog/javascript-convert-object-to-query-string-parameters
       const queryString = new URLSearchParams(params);
 
       window.open(`${reportUrl}&${queryString}`);
     });
   }
 
-  //
-  // Add navigation start buttons listener.
-  //
+  /**
+   * Add navigation start buttons listener. Drive, walk, and cycle button.
+   */
   addNavigationListener() {
     $('.map-track').on(
       'click',
@@ -219,51 +226,43 @@ class ButtonsLogics {
     );
   }
 
-  //
-  // Start navigation. Update Map_Obj state, add alternate colored user marker,
-  // get route for appropriate destination.
-  //
-  async startNavigation(e) {
+  /**
+   * Start navigation.
+   *
+   * Update Map_Obj state, make DOM adjustments, call activeNaviActions if is
+   * active navigation following user, get route for appropriate destination.
+   */
+  startNavigation(e) {
+    // Get element user clicked.
     const $el = $(e.currentTarget);
+    // Set Map_Obj state and add user mark.
+    this.navStartSetMapObjState($el);
+    // Adjust page appearance and layout for navigation mode.
+    this.navStartDOMAdjustments($el);
+    // If active navigation following user call activeNaviActions.
+    if (Geolocation_Obj.locationWatcher) this.activeNaviActions();
+    // Logic for showing route on index page.
+    this.showRouteIndex();
+  }
+
+  /**
+   * Adjust state of Map_Obj for navigation.
+   * Add user marker to have user marker be navigation user icon.
+   *
+   * @param($el) jQuery element
+   */
+  navStartSetMapObjState($el) {
+    // Set if the profile has changed. Affects if fitBounds will be called.
     Map_Obj.changedProfile = Map_Obj.profile !== $el.data('profile');
     Map_Obj.profile = $el.data('profile');
     Map_Obj.markerStyle = 1;
     Map_Obj.userMarkerStyle = 1;
     Map_Obj.addUserMarker();
-    this.navStartDOMAdjustments($el);
-    // If currently navigating home show route for newly selected navigation profile.
-    if ($('.map-routing .home').hasClass('homeActive')) {
-      Map_Obj.fitBounds();
-      Map_Obj.showDirectionsAndLine();
-      // Else use IndexAnimationsObj to map current (center) card's business and route.
-    } else {
-      // Pause to allow user to click home btn before mapping restaurant.
-      if (!Map_Obj.currentRoute) await Base_Obj.sleep(1500);
-      // If user didn't click home btn map current card.
-      if (!Map_Obj.homeMarker) IndexAnimationsObj.mapCurrCard();
-    }
-    // If active navigation following user:
-    if (Geolocation_Obj.locationWatcher) {
-      // Disable location watcher which may have infrequent updates.
-      Geolocation_Obj.clearLocationWatching();
-      // Make camera zoom into user on location update from location watcher after brief delay.
-      setTimeout(() => {
-        // Enable frequent updates with location watcher.
-        Geolocation_Obj.enableLocationWatcher(1);
-        // Keep screen on.
-        Geolocation_Obj.enableNoSleep();
-      }, 2000);
-      // If on phone size screen close sidebar and card track for full-screen navigation.
-      if (Map_Obj.isMobileScreen()) {
-        if (IndexAnimationsObj.sidebarOpen) IndexAnimationsObj.toggleSidebar();
-        if (!$('.card-map-zone').hasClass('cards-collapse')) this.toggleCards();
-      }
-    }
   }
 
-  //
-  // Make adjustments to DOM elements for visual change of navigation start.
-  //
+  /**
+   * Make adjustments to DOM elements for visual change of navigation start.
+   */
   navStartDOMAdjustments($el) {
     Map_Obj.clearNavBtnsActive();
     $el.addClass('active');
@@ -276,9 +275,52 @@ class ButtonsLogics {
     $('#directions-panel').addClass('show').fadeIn();
   }
 
-  //
-  // Add listener to show text directions.
-  //
+  /**
+   * Actions to take after navigation start when is active navigation following user.
+   */
+  activeNaviActions() {
+    // Disable location watcher which may have infrequent updates.
+    Geolocation_Obj.clearLocationWatching();
+    // Make camera zoom into user on location update from location watcher after brief delay.
+    // Delay allows for route to be shown plus small delay.
+    const delay = this.routingDelay + 500;
+    setTimeout(() => {
+      // Enable frequent updates with location watcher.
+      Geolocation_Obj.enableLocationWatcher(1);
+      // Keep screen on.
+      Geolocation_Obj.enableNoSleep();
+    }, delay);
+    // If on phone size screen close sidebar and card track for full-screen navigation.
+    if (Map_Obj.isMobileScreen()) {
+      if (IndexAnimationsObj.sidebarOpen) IndexAnimationsObj.toggleSidebar();
+      if (!$('.card-map-zone').hasClass('cards-collapse')) this.toggleCards();
+    }
+  }
+
+  /**
+   * Show route logic.
+   *
+   * If going home show route.
+   * Otherwise use IndexAnimationsObj.mapCurrentCard to show route.
+   */
+  async showRouteIndex() {
+    // If currently navigating home show route for newly selected navigation profile.
+    if (Map_Obj.homeMarker) {
+      Map_Obj.fitBounds();
+      Map_Obj.showDirectionsAndLine();
+      // Else call IndexAnimationsObj.mapCurrentCard (center) to get and display route.
+    } else {
+      // Pause to allow user to click home btn before mapping route
+      // when navigation is first initated.
+      if (!Map_Obj.currentRoute) await Base_Obj.sleep(this.routingDelay);
+
+      IndexAnimationsObj.mapCurrCard();
+    }
+  }
+
+  /**
+   * Add listener to show text directions.
+   */
   addToggleDirectionsDivListener() {
     const this_ = this;
     $('.map-track').on('click', '.directionsToggle', this.toggleDirectionsDiv);
@@ -304,9 +346,9 @@ class ButtonsLogics {
     $('#directions-panel').toggleClass('directionsShow');
   }
 
-  //
-  // Cancel navigation listener.
-  //
+  /**
+   * Cancel navigation listener.
+   */
   addCancelNavigationListener() {
     $('.map-track').on(
       'click',
@@ -325,9 +367,9 @@ class ButtonsLogics {
     );
   }
 
-  //
-  // Make adjustments to DOM elements for visual change of navigation end.
-  //
+  /**
+   * Make adjustments to DOM elements for visual change of navigation end.
+   */
   navEndDOMAdjustments() {
     $('#directions-panel').removeClass('show').fadeOut();
     $('.map-routing').removeClass('horizontal');
