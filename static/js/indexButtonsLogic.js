@@ -3,7 +3,7 @@
  */
 class ButtonsLogics {
   constructor() {
-    this.routingDelay = 1500;
+    this.routingDelay = 2000;
     this.addMapBusinessBtnListener();
     this.addMapToggleBtnListener();
     this.addCardsToggleBtnListener();
@@ -241,8 +241,8 @@ class ButtonsLogics {
     this.navStartDOMAdjustments($el);
     // If active navigation following user call activeNaviActions.
     if (Geolocation_Obj.locationWatcher) this.activeNaviActions();
-    // Logic for showing route on index page.
-    this.showRouteIndex();
+    // Logic for showing route.
+    this.showRoute();
   }
 
   /**
@@ -298,22 +298,26 @@ class ButtonsLogics {
   }
 
   /**
-   * Show route logic.
+   * Show route logic for index page.
    *
    * If going home show route.
    * Otherwise use IndexAnimationsObj.mapCurrentCard to show route.
    */
-  async showRouteIndex() {
-    // If currently navigating home show route for newly selected navigation profile.
+  async showRoute() {
+    // If currently navigating home show route for selected navigation profile.
     if (Map_Obj.homeMarker) {
       Map_Obj.fitBounds();
       Map_Obj.showDirectionsAndLine();
       // Else call IndexAnimationsObj.mapCurrentCard (center) to get and display route.
     } else {
-      // Pause to allow user to click home btn before mapping route
-      // when navigation is first initated.
-      if (!Map_Obj.currentRoute) await Base_Obj.sleep(this.routingDelay);
-
+      // If navigation was just started:
+      if (!Map_Obj.currentRoute) {
+        // Pause to allow user to click home btn before mapping route.
+        await Base_Obj.sleep(this.routingDelay);
+        // If user clicked home button return.
+        if (Map_Obj.homeMarker) return;
+      }
+      // Map route.
       IndexAnimationsObj.mapCurrCard();
     }
   }
