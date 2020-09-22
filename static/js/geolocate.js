@@ -10,6 +10,7 @@ class GeolocationLogic {
     this.madeFirstUpdate = null; // Set true after locationWatcher makes first update.
     this.noSleep = new NoSleep();
     this.noSleepActive = false;
+    this.jitterPrecision = 0.000025; // Coords must change more that this to warrant GPS coords update.
     // locationWatcher options:
     this.options = [
       {
@@ -154,23 +155,38 @@ class GeolocationLogic {
       coords: { latitude: lat, longitude: lng, heading },
     } = position;
 
-    // If in navigation mode zoom in to user and align for user heading.
-    // Update lat/lng/heading if user moved enough for zoom update.
-    if (Map_Obj.currentRoute) Map_Obj.flyToUser(lng, lat, heading);
-    else {
-      //Else update lat/lng/heading
+    // Make first update right away allowing camera to zoom into user when
+    // actively following user at navigation start -
+    // or if GPS update is warranted by significant coords change.
+    if (!this.madeFirstUpdate || this.warrantsGPSUpdate(lng, lat)) {
       Map_Obj.latitude = lat;
       Map_Obj.longitude = lng;
       Map_Obj.heading = heading;
-    }
 
-    this.madeFirstUpdate = true;
-    Map_Obj.addUserMarker();
-    // insert lng, lat as placeholder in location input.
-    $('#location').prop(
-      'placeholder',
-      `lat: ${lat.toFixed(2)}, lng: ${lng.toFixed(2)}`
-    );
+      this.madeFirstUpdate = true;
+      Map_Obj.addUserMarker();
+      // insert lng, lat as placeholder in location input.
+      $('#location').prop(
+        'placeholder',
+        `lat: ${lat.toFixed(2)}, lng: ${lng.toFixed(2)}`
+      );
+
+      // If in navigation mode zoom in to user and align for user heading.
+      if (Map_Obj.profile) Map_Obj.flyToUser();
+    }
+  }
+
+  //
+  // Check if user has moved enough to warrant camera zoom
+  // and heading adjust for flyToUser method.
+  //
+  warrantsGPSUpdate(lng, lat) {
+    if (
+      Math.abs(Map_Obj.longitude - lng) >= this.jitterPrecision ||
+      Math.abs(Map_Obj.latitude - lat) >= this.jitterPrecision
+    )
+      return true;
+    return false;
   }
 
   //

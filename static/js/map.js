@@ -22,7 +22,6 @@ class MapObj {
     this.directionsCache = {};
     this.profile = null;
     this.changedProfile = true;
-    this.jitterPrecision = 0.00002; // Coords must change more that this to warrant new heading.
     // options
     this.markerOptions = [
       { color: '#00ff26' },
@@ -354,37 +353,17 @@ class MapObj {
 
   //
   // Follow user during active follow navigation with heading alignment.
-  // Only update on lng or lat change larger than precision to prevent heading
-  // and coords jitter. Called by Geolocation_Obj.watchSuccess.
+  // Called by Geolocation_Obj.watchSuccess.
   //
-  flyToUser(lng, lat, heading) {
-    // Make first update right away to zoom into user at active following navigation start.
-    if (!Geolocation_Obj.madeFirstUpdate || this.warrantsGPSUpdate(lng, lat)) {
-      this.mappyBoi.flyTo({
-        center: [this.longitude, this.latitude],
-        essential: true,
-        zoom: 16.5,
-        speed: 0.4,
-        bearing: heading,
-        pitch: this.mappyBoi.getMaxPitch(),
-      });
-      this.latitude = lat;
-      this.longitude = lng;
-      this.heading = heading;
-    }
-  }
-
-  //
-  // Check if user has moved enough to warrant camera zoom
-  // and heading adjust for flyToUser method.
-  //
-  warrantsGPSUpdate(lng, lat) {
-    if (
-      Math.abs(this.longitude - lng) >= this.jitterPrecision ||
-      Math.abs(this.latitude - lat) >= this.jitterPrecision
-    )
-      return true;
-    return false;
+  flyToUser() {
+    this.mappyBoi.flyTo({
+      center: [this.longitude, this.latitude],
+      essential: true,
+      zoom: 16.5,
+      speed: 0.3,
+      bearing: this.heading,
+      pitch: this.mappyBoi.getMaxPitch(),
+    });
   }
 
   //
