@@ -320,7 +320,7 @@ class ButtonsLogics {
       }
       // Map route.
       Map_Obj.showDirectionsAndLine();
-      this.fitBounds();
+      Map_Obj.fitBounds();
     }
   }
 
