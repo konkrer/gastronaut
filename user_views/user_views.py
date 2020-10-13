@@ -49,6 +49,7 @@ def signup():
         try:
             new_user = User.register(password=password, **relevant_data)
             session['user_id'] = new_user.id
+            session.permanent = True
             flash(f"Welcome {new_user.username}!", "success")
 
             return H.next_page_logic(request)
@@ -89,6 +90,7 @@ def login():
             form.password.errors.append("Password incorrect.")
         else:
             session['user_id'] = user.id
+            session.permanent = True
             flash(f"Welcome {user.username}!", 'success')
 
             return H.next_page_logic(request)
