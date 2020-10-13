@@ -33,7 +33,8 @@ class ButtonsLogics {
     const name = $el.next().children().data('name');
     const id = $el.next().children().data('id');
     if (!Map_Obj.mapOpen) this.toggleMap();
-    Map_Obj.addRestMarkerAndFitBounds([+lng, +lat], name, id);
+    if (isFinite(lat))
+      Map_Obj.addRestMarkerAndFitBounds([+lng, +lat], name, id);
   }
 
   /**
@@ -281,8 +282,8 @@ class ButtonsLogics {
   activeNaviActions() {
     // Disable location watcher which may have infrequent updates.
     Geolocation_Obj.clearLocationWatching();
-    // Make camera zoom into user on location update from location watcher after brief delay.
-    // Delay allows for route to be shown plus small delay.
+    // Make camera zoom into user on update from location watcher after brief delay.
+    // Delay allows for route to be shown plus a small additional delay (500ms).
     const delay = this.routingDelay + 500;
     setTimeout(() => {
       // Enable frequent updates with location watcher.
@@ -318,7 +319,8 @@ class ButtonsLogics {
         if (Map_Obj.homeMarker) return;
       }
       // Map route.
-      IndexAnimationsObj.mapCurrCard();
+      Map_Obj.showDirectionsAndLine();
+      this.fitBounds();
     }
   }
 
@@ -363,7 +365,8 @@ class ButtonsLogics {
         Map_Obj.userMarkerStyle = 0;
         Map_Obj.addUserMarker();
         Map_Obj.userMarker.togglePopup();
-        IndexAnimationsObj.mapCurrCard();
+        // IndexAnimationsObj.mapCurrCard();
+        Map_Obj.fitBounds();
         if ($('#directions-panel').hasClass('directionsShow'))
           this.toggleDirectionsDiv();
         this.navEndDOMAdjustments();

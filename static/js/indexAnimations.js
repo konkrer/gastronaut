@@ -92,6 +92,7 @@ class IndexAnimations {
       function () {
         const focusCardIdx = Number.parseInt(this.cardsLeftGlobal + 0.5);
 
+        // if focus card is current card return
         if (focusCardIdx === this.currCard) return;
 
         this.currCard = focusCardIdx;
@@ -103,23 +104,21 @@ class IndexAnimations {
 
   //
   // Add marker and fit bounds with data found in current card.
-  // If changed profile is false it means navigation is re-routing
   //
   mapCurrCard() {
+    // get the focused (center) card
     const $focusCard = $('.my-card').eq(this.currCard);
+    // if dummy card return
     if ($focusCard.hasClass('dummy-card')) return;
+    // map the focus card business
     const $mapButton = $focusCard.find('.cardMapButton');
-    const lat = $mapButton.next().children().data('lat');
-    const lng = $mapButton.next().children().data('lng');
-    const name = $mapButton.next().children().data('name');
-    const id = $mapButton.next().children().data('id');
-
-    if (isFinite(lat))
-      Map_Obj.addRestMarkerAndFitBounds([+lng, +lat], name, id);
+    IndexButtonsLogicsObj.mapBusiness($mapButton);
   }
 
   //
-  // Listen for sidebar button click or drag and toggle sidebar.
+  // Toggle sidebar
+  //
+  // Listen for sidebar button click, drag, or touchstart and toggle sidebar.
   //
   toggleSidebarListeners() {
     const boundToggleSidebar = this.toggleSidebar.bind(this);
