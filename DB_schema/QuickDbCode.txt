@@ -1,0 +1,62 @@
+User
+-
+id int PK
+email string  UNIQUE
+username string UNIQUE
+password string
+avatar string
+banner_url string
+byline string
+bio string
+city string
+state string
+country string
+is_admin bool
+preferences pickleType
+
+Mission
+-
+id int PK
+editor int FK >- User.id
+author int
+name string
+description string
+is_public bool
+date_shared datetime
+city string
+state string
+country string
+likes pickleType
+
+UserMission
+-
+user_id int FK >- User.id PK
+mission_id int FK >- Mission.id PK
+goals_completed pickleType
+
+Business
+-
+id int PK
+latitude float
+longitude float
+name string
+city string
+state string
+country string
+
+MissionBusiness
+-
+mission_id int FK >- Mission.id PK
+business_id int FK >- Business.id PK
+
+Report
+-
+id int PK
+user_id int FK >- User.id
+mission_id int FK >- Mission.id
+business_id int FK >- Business.id
+submitted_on datetime
+text string
+photo_url string
+photo_file string
+likes pickleType

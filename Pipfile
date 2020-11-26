@@ -22,7 +22,7 @@ newrelic = "*"
 boto3 = "*"
 flask-migrate = "*"
 google-auth = "*"
-sentry-sdk = {extras = ["flask"],version = "==0.17.4"}
+sentry-sdk = {extras = ["flask"], version = "*"}
 
 [requires]
 python_version = "3.8"
