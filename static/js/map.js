@@ -362,7 +362,7 @@ class MapObj {
       zoom: 16.5,
       speed: 0.3,
       bearing: this.heading,
-      pitch: this.mappyBoi.getMaxPitch(),
+      pitch: 60,
     });
   }
 

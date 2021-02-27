@@ -104,6 +104,11 @@
   border-radius: 50%;
 }
 
+/** stop map popups from opening with :foucus outline on close button */
+.mapboxgl-popup-close-button:focus {
+  outline: 0;
+}
+
 @media screen and (max-width: 315px) {
   #business-detail-modal .modal-footer a,
   #business-detail-modal .modal-footer button {

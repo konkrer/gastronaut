@@ -7,7 +7,7 @@ from models import (db, User, Mission, Business, MissionBusiness,
                     Report, UserMission)
 
 
-# Use test database and don't clutter tests with SQL
+# Use test database and don't clutter tests console output with SQL
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///gastronaut_test'
 app.config['SQLALCHEMY_ECHO'] = False
 
@@ -91,7 +91,7 @@ class APIViewTests(TestCase):
         """Test reaching the IPWhois API for data."""
 
         fake_request = SimpleNamespace(
-            environ={'HTTP_X_FORWARDED_FOR': '127.0.0.1'}, remote_addr=1
+            environ={'HTTP_X_FORWARDED_FOR': '34.221.74.60'}, remote_addr=1
         )
 
         lat, lng = H.get_coords_from_IP_address(fake_request)

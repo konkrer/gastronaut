@@ -132,7 +132,6 @@ class HelperFunctions:
         # Add security headers.
         if not cls.DEBUG:
             response.headers["Strict-Transport-Security"] = "max-age=63072000"
-            response.headers["Content-Security-Policy"] = "frame-ancestors 'self'"  # noqa e501
             response.headers["X-Frame-Options"] = "SAMEORIGIN"
             response.headers["X-Content-Type-Options"] = "nosniff"
             response.headers["X-XSS-Protection"] = "1; mode=block"
@@ -150,16 +149,20 @@ class HelperFunctions:
         """Next page URL logic."""
         request_args = request.args.to_dict()
 
+        # if there is a next url return that url
         if request_args.get('next_url'):
             # Return decoded next_url string.
             return request_args['next_url'].replace(';', '&')
 
+        # get the next page name and delete the dictionary entry
         next_page = request_args.get('next_')
         if next_page:
             del request_args['next_']
+        # else set next page to the home page
         else:
             next_page = 'main_views.index'
 
+        # return url for the next page
         return url_for(next_page, **request_args)
 
     @classmethod
