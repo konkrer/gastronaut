@@ -401,12 +401,12 @@ class IndexSearchLogic {
   //
   setLngLatInit() {
     FormFunctsObj.setLngLatFromHiddenInputs();
-    if (!Map_Obj.latitude) setCoordsFromStorage();
+    if (!Map_Obj.latitude) this.setCoordsFromStorage();
   }
 
   //
   // Check localStorage for coordinate data.
-  // Set script lng/lat. Return coords.
+  // Set Map_Obj lng/lat.
   //
   setCoordsFromStorage() {
     const coords = localStorage.getItem('coords');

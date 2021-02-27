@@ -12,6 +12,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="msapplication-TileColor" content="#2b5797" />
     <meta name="theme-color" content="#ff8b3f" />
+    <meta name="author" content="Richard Iannucelli" />
+
+    <meta property="og:title" content="Gastonaut" />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:image"
+      content="https://repository-images.githubusercontent.com/273343895/b7a47180-f42b-11ea-9bc3-47e4adbbe92c"
+    />
+    <meta property="og:url" content="https://gastronaut.life" />
+    <meta
+      property="og:description"
+      content="Find restaurants, bars, and more. Plan an mission, eat the food, plant a flag! Lead a life of adventure, lead a gastronaut life!"
+    />
 
     <title>{% block title %}{% endblock %}</title>
 
@@ -51,13 +64,14 @@
     <link rel="stylesheet" href="/static/css/simpleAutocomp.css" />
 
     <script
-      src="https://browser.sentry-cdn.com/5.26.0/bundle.min.js"
-      integrity="sha384-VGljl8BTZL6Py4DmlOaYmfkOwp8mD3PrmD2L+fN446PZpsrIHuDhX7mnV/L5KuNR"
+      src="https://browser.sentry-cdn.com/6.2.0/bundle.min.js"
+      integrity="sha384-PWBASVWyeEeNsEw6zDTEwryGvuiH1xuxnlu/n+GOI777vnfbqyYLzqCf+najQLoi"
       crossorigin="anonymous"
     ></script>
     {% if not debug %}
     <script src="/static/js/sentryInit.js"></script>
     {% endif %}
+
     <script
       src="https://kit.fontawesome.com/5c45c2d894.js"
       crossorigin="anonymous"

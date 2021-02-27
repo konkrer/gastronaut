@@ -12,6 +12,10 @@
   --primary-alt2: #0b105a;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   position: relative;
   font-family: 'Source Sans Pro', sans-serif;
