@@ -27,7 +27,8 @@ app.register_blueprint(user_views_b_p, url_prefix='/user')
 app.register_blueprint(reports_crud_b_p, url_prefix='/report')
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
-    'DATABASE_URL', 'postgresql:///gastronaut')
+    'DATABASE_URL', 'postgresql:///gastronaut').replace(
+        'postgres://', 'postgresql://', 1)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
@@ -43,7 +44,7 @@ if not os.environ.get('SECRET_KEY'):
     DEBUG = DebugToolbarExtension(app)
     logging.basicConfig(filename='gastronaut.log', level=logging.WARNING,
                         format='%(levelname)s:%(asctime)s:%(message)s')
-#
+
 # if production server enable sentry and load environ variables.
 else:
     sentry_init(

@@ -194,8 +194,8 @@ class Mission(db.Model):
     __table_args__ = (
         db.Index('order_date_shared_desc', date_shared.desc(),
                  postgresql_using='btree',
-                 postgres_ops={'date_shared': 'DESC'}),
-        db.Index('name_like', 'name', postgres_ops={
+                 postgresql_ops={'date_shared': 'DESC'}),
+        db.Index('name_like', 'name', postgresql_ops={
                  'name': 'text_pattern_ops'}),
     )
 
