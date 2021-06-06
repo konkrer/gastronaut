@@ -65,10 +65,11 @@ Note: If the built-in navigation routes you in the wrong direction upon navigati
 - Mapbox
 - Heroku
 - AWS S3
-- AWS CloudFront7
+- AWS CloudFront
 - HTML
 - CSS
 - Flask-Bcrypt
+- Google Auth
 - WTForms
 - Jinja
 - Bootstrap
