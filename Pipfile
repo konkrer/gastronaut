@@ -23,6 +23,7 @@ boto3 = "*"
 flask-migrate = "*"
 google-auth = "*"
 sentry-sdk = {extras = ["flask"], version = "*"}
+python-dotenv = "*"
 
 [requires]
-python_version = "3.8"
+python_version = "3.9"

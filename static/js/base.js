@@ -3,9 +3,10 @@
 // Basic logic common to all pages.
 class BaseLogic {
   constructor() {
-    this.mapBoxaccessToken =
+    // use public access token for development use or change URL restrictions on below token
+    this.mapBoxAccessToken =
       'pk.eyJ1Ijoia29ua3JlciIsImEiOiJja2NiNnI3bjgyMjVnMnJvNmJ6dTF0enlmIn0.AH_5N70IYIX4_tslm49Kmw';
-    this.mapboxClient = mapboxSdk({ accessToken: this.mapBoxaccessToken });
+    this.mapboxClient = mapboxSdk({ accessToken: this.mapBoxAccessToken });
     this.preferencesTimer;
     this.feedbackClearTimer;
     this.locationsOptionsHtmlCache = {};

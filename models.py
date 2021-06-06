@@ -1,4 +1,5 @@
 """Models for Gastronaut."""
+
 from datetime import datetime
 from flask import g
 from flask_bcrypt import Bcrypt

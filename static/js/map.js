@@ -71,7 +71,7 @@ class MapObj {
   // Render Map.
   //
   renderMap(mapCenter = [-85, 26.8], zoom = 1.3, navControl = false) {
-    mapboxgl.accessToken = Base_Obj.mapBoxaccessToken;
+    mapboxgl.accessToken = Base_Obj.mapBoxAccessToken;
     this.mappyBoi = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/konkrer/ckd9yhr2a0oaf1iplamr9t21y', // <<<<< remove /draft in production

@@ -64,8 +64,10 @@ class HelperFunctions:
             cls.error_logging(e)
             return '', ''
 
-        lat = data.get('latitude', '')
-        lng = data.get('longitude', '')
+        lat = data.get('latitude') if data.get(
+            'latitude') else '37.76089938976322'
+        lng = data.get('longitude') if data.get(
+            'longitude') else '-122.43644714355469'
 
         # if API limit message.
         if data.get('message'):

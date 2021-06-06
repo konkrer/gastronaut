@@ -8,13 +8,13 @@ class IndexSearchLogic {
     this.offset = 0;
     this.paginationListener = null;
     this.nextCardsBlocker = false; // Prevent race condition loading next cards twice.
-    this.blockLockScrollBottm = false; // Prevent race condition firing event twice.
+    this.blockLockScrollBottom = false; // Prevent race condition firing event twice.
     this.addNavbarTogglerListener();
     this.addNavbarSearchListener();
     this.addExploreBtnsListeners();
     this.setLngLatInit();
     const addLockOnScrollBottom = this.checkSearchInputOrCheckLocalStorage();
-    if (addLockOnScrollBottom) this.addlockOnScrollBottomListener();
+    if (addLockOnScrollBottom) this.addLockOnScrollBottomListener();
   }
 
   //
@@ -65,7 +65,7 @@ class IndexSearchLogic {
       location.href = '#All';
     }
     // Avoid double yelp search if lockOnScrollBottotmListener is active.
-    this.blockLockScrollBottm = true;
+    this.blockLockScrollBottom = true;
     this.hideHeroAndSearch();
   }
 
@@ -322,12 +322,12 @@ class IndexSearchLogic {
       CardsModalsFactoryObj.getCardsHtml(data.businesses)
     );
     IndexAnimationsObj.setCardScrollTrackerMapper();
-    // Get first added next card to move misaligned cards up. (hacky bug fix)
+    // Get first added next card to move misaligned cards up. (iphone bug fix)
     const firstCard = $('.my-card').eq(this.offset * 50);
     // Increment offset.
     this.offset++;
     setTimeout(() => {
-      // Add text to firstCard to move misaligned cards up. (hacky bug fix)
+      // Add text to firstCard to move misaligned cards up. (iphone bug fix)
       firstCard.find('.offset-fix').text('_');
     }, 400);
 
@@ -369,7 +369,7 @@ class IndexSearchLogic {
   //
   // When user scrolls call lockOnScrollBottom.
   //
-  addlockOnScrollBottomListener() {
+  addLockOnScrollBottomListener() {
     window.addEventListener('scroll', this.lockOnScrollBottom.bind(this), {
       passive: true,
     });
@@ -386,8 +386,8 @@ class IndexSearchLogic {
       document.body.clientHeight - 100
     ) {
       // Avoid multiple events firing this function more than once.
-      if (this.blockLockScrollBottm) return;
-      this.blockLockScrollBottm = true;
+      if (this.blockLockScrollBottom) return;
+      this.blockLockScrollBottom = true;
       window.removeEventListener('scroll', this.lockOnScrollBottom, {
         passive: true,
       });
