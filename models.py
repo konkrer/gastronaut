@@ -166,7 +166,7 @@ class Mission(db.Model):
 
     name = db.Column(db.String(50), nullable=False)
 
-    description = db.Column(db.String(100), nullable=True)
+    description = db.Column(db.String(150), nullable=True)
 
     is_public = db.Column(db.Boolean, default=False)
 

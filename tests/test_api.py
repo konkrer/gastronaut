@@ -8,7 +8,8 @@ from models import (db, User, Mission, Business, MissionBusiness,
 
 
 # Use test database and don't clutter tests console output with SQL
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///gastronaut_test'
+app.config['SQLALCHEMY_DATABASE_URI'] = \
+    'postgresql://postgres:postgres@localhost:5432/gastronaut_test'
 app.config['SQLALCHEMY_ECHO'] = False
 
 # Make Flask errors be real errors, rather than HTML pages with error info
@@ -18,8 +19,9 @@ app.config['TESTING'] = False
 app.config['DEBUG_TB_HOSTS'] = ['dont-show-debug-toolbar']
 
 
-db.drop_all()
-db.create_all()
+with app.app_context():
+    db.drop_all()
+    db.create_all()
 
 # py -m unittest tests/test_api.py
 

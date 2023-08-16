@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import (
     StringField, TextAreaField, PasswordField, HiddenField)
-from wtforms.fields.html5 import URLField, EmailField
+from wtforms.fields import URLField, EmailField
 from flask_wtf.file import FileField
 from wtforms.validators import (
     InputRequired, Length, Email,

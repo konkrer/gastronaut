@@ -8,7 +8,8 @@ from models import (db, User, DEFAULT_USER_IMAGE, Mission, Business,
 
 
 # Use test database and don't clutter tests with SQL
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///gastronaut_test'
+app.config['SQLALCHEMY_DATABASE_URI'] = \
+    'postgresql://postgres:postgres@localhost:5432/gastronaut_test'
 app.config['SQLALCHEMY_ECHO'] = False
 
 db.drop_all()
