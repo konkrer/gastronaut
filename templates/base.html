@@ -73,13 +73,12 @@
     <link rel="stylesheet" href="/static/css/base.css" />
     <link rel="stylesheet" href="/static/css/simpleAutocomp.css" />
 
+    {% if not debug %}
     <script
-      src="https://browser.sentry-cdn.com/6.5.1/bundle.min.js"
-      integrity="sha384-4+IdsjFHpxfo2PQYne6sV0ulAlOJbJHbeEy4vDPAt9kUmUb9t0W2HFp6I6rznkEP"
+      src="https://js.sentry-cdn.com/9d6aca2c56384459925ec4ecbf58afee.min.js"
       crossorigin="anonymous"
     ></script>
-    {% if not debug %}
-    <script src="/static/js/sentryInit.js"></script>
+    <!-- <script src="/static/js/sentryInit.js"></script> -->
     {% endif %}
 
     <script

@@ -88,7 +88,7 @@ class MapObj {
   //
   addUserMarker() {
     if (!this.longitude) return;
-    if (this.userMarker) this.userMarker.remove();
+    if (this.userMarker) this.removeMarker(this.userMarker);
     this.userMarker = new mapboxgl.Marker(
       this.userMarkerOptions[this.userMarkerStyle]
     )
@@ -138,8 +138,9 @@ class MapObj {
     this.restCoords = restCoords;
     const html = `<span class="detailsBtn mr-2" data-id="${id}" data-name="${name}" data-latlng="${restCoords[1]},${restCoords[0]}">
                     ${name}</span>`;
-    if (this.restMarker) this.restMarker.remove();
-    if (this.homeMarker) this.homeMarker.remove();
+
+    if (this.restMarker) this.removeMarker(this.restMarker);
+    if (this.homeMarker) this.removeMarker(this.homeMarker);
     this.restMarker = this.addMarker(restCoords, html);
     // If navigation active map route to this location.
     if (this.profile) {
@@ -242,6 +243,14 @@ class MapObj {
   }
 
   //
+  // Remove marker safely. (Avoid '_onOcclusionTimer' Error)
+  //
+  removeMarker(marker) {
+    clearTimeout(marker._occlusionTimer);
+    marker.remove();
+  }
+
+  //
   // Close all popups in marker array
   //
   closePopupsArray(array) {
@@ -255,7 +264,7 @@ class MapObj {
   // clear map of a list of points for mission-control.
   //
   clearMapArray() {
-    this.restMarkers.forEach(el => el.remove());
+    this.restMarkers.forEach(el => this.removeMarker(el));
     this.restMarkers = [];
   }
 
@@ -394,10 +403,10 @@ class MapObj {
   //
   addHomeMarkerRouteFitBounds($el) {
     // Replace home marker in case home location has changed.
-    if (this.homeMarker) this.homeMarker.remove();
+    if (this.homeMarker) this.removeMarker(this.homeMarker);
     // If on index page remove previous restMarker
     if (typeof IndexSearchObj !== 'undefined' && this.restMarker)
-      this.restMarker.remove();
+      this.removeMarker(this.restMarker);
     // If on mission control page turn last restMarker green again.
     if (typeof MissionControlNavigationObj !== 'undefined') {
       MissionControlObj.changeMarkerColor(
