@@ -28,7 +28,6 @@ app.register_blueprint(reports_crud_b_p, url_prefix='/report')
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
     'DATABASE_URL',
-    # 'postgresql:///gastronaut'
     'postgresql://postgres:postgres@localhost:5432/gastronaut'
 ).replace(
     'postgres://', 'postgresql://', 1)
