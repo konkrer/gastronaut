@@ -1,6 +1,7 @@
 local_settings.py
 development_local/
 seed.py
+seed_production.py
 static/uploads
 
 __pycache__/
