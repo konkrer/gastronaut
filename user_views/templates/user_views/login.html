@@ -39,14 +39,17 @@
           <hr class="mt-4" />
           <div class="text-center my-4">- OR -</div>
           <div class="text-center">
+            <script
+              src="https://accounts.google.com/gsi/client"
+              async
+              defer
+            ></script>
             <div
-              class="g-signin2 d-inline-block"
-              data-onsuccess="onSignIn"
-              data-width="240"
-              data-height="50"
-              data-longtitle="true"
-              data-theme="dark"
+              id="g_id_onload"
+              data-client_id="992789148520-btgg6dtlrk8rkght89rfvdbfgu2ljeut.apps.googleusercontent.com"
+              data-callback="onGoogleSignIn"
             ></div>
+            <div class="g_id_signin" data-type="standard"></div>
           </div>
         </div>
       </div>

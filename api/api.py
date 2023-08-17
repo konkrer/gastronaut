@@ -209,7 +209,7 @@ def check_google_token():
 
     data = request.json
 
-    user_token = data['idtoken']
+    user_token = data['credential']
 
     try:
         idinfo = id_token.verify_oauth2_token(
