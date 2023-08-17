@@ -11,7 +11,6 @@ class BaseLogic {
     this.feedbackClearTimer;
     this.locationsOptionsHtmlCache = {};
     this.locationAutocompleteCache = {};
-    this.checkGoogleLogin = true;
     // If preferences modal available for setting preferences (user logged in).
     if (document.getElementById('datalist-autocomplete')) {
       this.Autocomplete_Obj = new SimpleAutocomplete(
@@ -30,7 +29,6 @@ class BaseLogic {
     this.addReportsDblclickListeners();
     this.addFeedbackListener();
     this.addSignupLoginListener();
-    this.addLogoutGoogleListener();
     this.enableServiceWorker();
   }
 
@@ -202,52 +200,6 @@ class BaseLogic {
       $('.signup').prop('href', `/user/signup?next_url=${next_url}`);
       $('.login').prop('href', `/user/login?next_url=${next_url}`);
     });
-  }
-
-  //
-  // Listen for user logging out and call logoutGoogle.
-  //
-  addLogoutGoogleListener() {
-    const this_ = this;
-    $('#logout-form').submit(function (e) {
-      this_.logoutGoogle(e, $(this), this_);
-    });
-  }
-
-  //
-  // log user out of this app with google if user signed in through google.
-  //
-  async logoutGoogle(e, $el, class_instance) {
-    // The first time this function is called check for google login and logout from google.
-    // Then trigger event again and do not preventDefault thereby calling Gastronaut logout endpoint.
-    if (class_instance.checkGoogleLogin) {
-      e.preventDefault();
-
-      // Load and sign user out if signed in.
-      gapi.load('auth2', function () {
-        gapi.auth2
-          .init({
-            client_id:
-              '992789148520-btgg6dtlrk8rkght89rfvdbfgu2ljeut.apps.googleusercontent.com',
-          })
-          .then(
-            async () => {
-              const auth2 = gapi.auth2.getAuthInstance();
-              if (auth2) await auth2.signOut();
-              // Set flag false and trigger event again.
-              class_instance.checkGoogleLogin = false;
-              $el.trigger(e.type);
-            },
-            err => {
-              if (typeof Sentry !== 'undefined') Sentry.captureException(err);
-              console.error(err);
-              // Set flag false and trigger event again.
-              class_instance.checkGoogleLogin = false;
-              $el.trigger(e.type);
-            }
-          );
-      });
-    }
   }
 
   //
