@@ -239,7 +239,8 @@ class BaseLogic {
               $el.trigger(e.type);
             },
             err => {
-              Sentry.captureException(err);
+              if (typeof Sentry !== 'undefined') Sentry.captureException(err);
+              console.error(err);
               // Set flag false and trigger event again.
               class_instance.checkGoogleLogin = false;
               $el.trigger(e.type);
