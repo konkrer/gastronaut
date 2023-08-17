@@ -137,7 +137,7 @@ class HelperFunctions:
             response.headers["X-Frame-Options"] = "SAMEORIGIN"
             response.headers["X-Content-Type-Options"] = "nosniff"
             response.headers["X-XSS-Protection"] = "1; mode=block"
-            response.headers["Content-Security-Policy"] = "script-src 'self' 'unsafe-inline' https://bam.nr-data.net https://www.googletagmanager.com https://js.sentry-cdn.com https://kit.fontawesome.com https://cdn.jsdelivr.net https://stackpath.bootstrapcdn.com https://code.jquery.com https://cdn.jsdelivr.net https://apis.google.com https://api.mapbox.com https://unpkg.com https://cdn.rawgit.com https://www.google-analytics.com; worker-src 'self' blob:; object-src 'self'; frame-ancestors 'self'; base-uri 'self'; form-action 'self'"  # noqa e501
+            response.headers["Content-Security-Policy"] = "script-src 'self' 'unsafe-inline' https://bam.nr-data.net https://www.googletagmanager.com https://js.sentry-cdn.com https://kit.fontawesome.com https://cdn.jsdelivr.net https://stackpath.bootstrapcdn.com https://code.jquery.com https://cdn.jsdelivr.net https://apis.google.com https://api.mapbox.com https://unpkg.com https://cdn.rawgit.com https://www.google-analytics.com https://accounts.google.com/gsi/client; worker-src 'self' blob:; object-src 'self'; frame-ancestors 'self'; base-uri 'self'; form-action 'self'"  # noqa e501
 
         return response
 
