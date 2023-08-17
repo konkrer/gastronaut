@@ -111,11 +111,14 @@
     {% block head %}{% endblock %}
   </head>
   <body>
+    {% if not g.user %}
     <div
       id="g_id_onload"
       data-client_id="992789148520-btgg6dtlrk8rkght89rfvdbfgu2ljeut.apps.googleusercontent.com"
       data-callback="onGoogleSignIn"
     ></div>
+    {% endif %}
+
     <div class="spinner-zone rounded-bottom">
       <div class="flx-std">
         <div class="spinner-border txt-green" role="status">
