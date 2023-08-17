@@ -104,9 +104,18 @@
     <script defer src="/static/js/simpleAutocomp.js"></script>
 
     <script defer src="/static/js/base.js"></script>
+
+    <script src="/static/js/googleLogin.js"></script>
+    <script async defer src="https://accounts.google.com/gsi/client"></script>
+
     {% block head %}{% endblock %}
   </head>
   <body>
+    <div
+      id="g_id_onload"
+      data-client_id="992789148520-btgg6dtlrk8rkght89rfvdbfgu2ljeut.apps.googleusercontent.com"
+      data-callback="onGoogleSignIn"
+    ></div>
     <div class="spinner-zone rounded-bottom">
       <div class="flx-std">
         <div class="spinner-border txt-green" role="status">
