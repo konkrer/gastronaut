@@ -96,7 +96,7 @@ class GeolocationLogic {
     }
     // Else on mission-control page.
     else {
-      $('spinner-zone').slideUp();
+      $('.spinner-zone').slideUp();
       MissionControlNavigationObj.startLocationSuccess();
     }
     // Close suggestions datalist.
