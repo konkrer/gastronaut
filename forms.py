@@ -130,8 +130,8 @@ class ReportBaseForm(FlaskForm):
             Either enter a photo URL or
             choose an image file to include an image. 4MB max.""")
 
-    def validate(self):
-        if not super().validate():
+    def validate(self, **kwargs):
+        if not super().validate(kwargs):
             return False
         if self.photo_url.data and self.photo_file.data:
             msg = 'Please specify Photo URL or upload a photo, not both'
