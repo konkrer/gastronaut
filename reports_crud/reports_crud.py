@@ -59,6 +59,7 @@ def report_detail(report_id):
 def add_report():
     """Write Report View."""
 
+    error_occured = False
     mission_id = request.args.get('mission_id')
     business_id = request.args.get('business_id')
 
@@ -88,6 +89,7 @@ def add_report():
             return redirect(url_for('.report_detail', report_id=report.id))
 
         except Exception as e:
+            error_occured = True
             db.session.rollback()
             flash("Error Creating Report!", 'danger')
             H.error_logging(e)
@@ -112,7 +114,7 @@ def add_report():
             if model is False:
                 return BadRequest
 
-    if request.method == 'POST':
+    if request.method == 'POST' and not error_occured:
         flash("Please fix all form errors.", "warning")
 
     return render_template(
@@ -126,6 +128,7 @@ def add_report():
 def edit_report(report_id):
     """Report edit view."""
 
+    error_occured = False
     report = Report.query.get_or_404(report_id)
     form = EditReportForm(obj=report)
 
@@ -149,6 +152,7 @@ def edit_report(report_id):
             return redirect(url_for('.report_detail', report_id=report.id))
 
         except Exception as e:
+            error_occured = True
             db.session.rollback()
             flash("Error Editing Report!", 'danger')
             H.error_logging(e)
@@ -160,7 +164,7 @@ def edit_report(report_id):
         model = Business.query.get_or_404(report.business_id)
         kind = 'Business'
 
-    if request.method == 'POST':
+    if request.method == 'POST' and not error_occured:
         flash("Please fix all form errors.", "warning")
 
     return render_template(
