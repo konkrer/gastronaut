@@ -86,19 +86,26 @@ def login():
 
         if user is None:
             form.email.errors.append("Email not found.")
-        elif user is False:
+        elif user == (False, "Google_ID"):
+            form.email.errors.append(
+                "Given email is associated with a Google Account. "
+                'Please sign in using the "Sign in with Google" button.')
+        elif user == (False, "Password"):
             form.password.errors.append("Password incorrect.")
-        else:
+        elif user == (False, "Bcrypt"):
+            form.password.errors.append("Bcrypt Error.")
+        elif isinstance(user, User):
             session['user_id'] = user.id
             session.permanent = True
             flash(f"Welcome {user.username}!", 'success')
-
             return H.next_page_logic(request)
+        else:
+            form.email.errors.append("Login Error!")
 
     if request.method == 'POST':
         flash("Please fix all form errors.", "warning")
 
-    # Create URL for signin button that passes all URL data.
+    # Create URL for sign in button that passes all URL data.
     signup_url = request.full_path.replace('login', 'signup')
     return render_template('user_views/login.html', form=form,
                            signup_url=signup_url)

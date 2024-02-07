@@ -92,15 +92,22 @@ class User(db.Model):
     def authenticate(cls, email, password):
         """Return a user instance if credentials are as expected."""
 
-        u = cls.query.filter_by(email=email).first()
-        if not u:
+        user = cls.query.filter_by(email=email).first()
+        if not user:
             # return None for no email match in database
             return None
 
-        if bcrypt.check_password_hash(u.password, password):
-            return u
-        else:
-            return False
+        # if password is google ID force user to use google sign-in
+        if not user.password.startswith('$2b'):
+            return (False, 'Google_ID')
+
+        try:
+            if bcrypt.check_password_hash(user.password, password):
+                return user
+            else:
+                return (False, "Password")
+        except ValueError:
+            return (False, "Bcrypt")
 
     @property
     def get_avatar(self):
